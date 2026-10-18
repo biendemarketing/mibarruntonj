@@ -140,19 +140,22 @@ export function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Modo de vista: 'grid' (cuadrícula normal) o 'compact' (compacta/horizontal)
+  // Modo de vista: 'compact' (compacta/horizontal con cards más pequeñas) o 'grid' (cuadrícula normal)
   const [viewMode, setViewMode] = useState(() => {
     try {
-      return localStorage.getItem('mb-vista') || 'grid';
+      const saved = localStorage.getItem('mb-vista-v2');
+      if (saved) return saved;
+      return 'compact';
     } catch {
-      return 'grid';
+      return 'compact';
     }
   });
 
   const handleToggleViewMode = () => {
     setViewMode((prev) => {
-      const next = prev === 'grid' ? 'compact' : 'grid';
+      const next = prev === 'compact' ? 'grid' : 'compact';
       try {
+        localStorage.setItem('mb-vista-v2', next);
         localStorage.setItem('mb-vista', next);
       } catch {}
       return next;
