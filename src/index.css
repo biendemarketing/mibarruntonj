@@ -289,12 +289,14 @@ input, textarea, select {
 
 @media (min-width: 769px) {
   .brand-header-inner {
-    padding: 0.95rem 1.25rem;
+    padding: 0.95rem 1.5rem;
+    display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
     text-align: left;
-    gap: 1.25rem;
+    gap: 1.5rem;
+    max-width: 1400px;
   }
 }
 
@@ -409,25 +411,41 @@ input, textarea, select {
   }
 }
 
-/* Barra de Búsqueda Integrada en el Header */
-.header-search-bar-wrap {
-  position: relative;
-  width: 100%;
-  max-width: 520px;
-  margin-top: 1.15rem;
+/* Fila Principal de Controles (Buscador ancho centrado + Acciones a la derecha) */
+.header-main-controls-row {
   display: flex;
   align-items: center;
-  gap: 0.65rem;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 540px;
+  margin-top: 1.15rem;
+  position: relative;
+  z-index: 60;
+}
+
+.header-search-bar-wrap {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
   z-index: 60;
 }
 
 @media (min-width: 769px) {
+  .header-main-controls-row {
+    display: contents;
+  }
+
   .header-search-bar-wrap {
     margin-top: 0;
-    max-width: 440px;
+    width: 100%;
+    max-width: 680px;
+    margin: 0 auto;
     flex: 1;
-    margin-left: 2rem;
-    margin-right: 1.5rem;
+    display: flex;
+    justify-content: center;
+    padding: 0 1rem;
   }
 }
 
@@ -778,7 +796,32 @@ input, textarea, select {
   transform: scale(0.94);
 }
 
-/* Botón de Carrito en Header Desktop: Al lado de la hamburguesa, mismo tamaño, solo icono y solo en escritorio */
+/* Botón de Favoritos en Header Desktop: Al lado del carrito, solo en escritorio */
+.header-desktop-fav-btn {
+  display: none !important;
+}
+
+@media (min-width: 769px) {
+  .header-desktop-fav-btn {
+    display: grid !important;
+    position: relative;
+  }
+
+  .header-desktop-fav-btn.active,
+  .header-desktop-fav-btn.has-items {
+    background: rgba(227, 24, 55, 0.95) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 16px rgba(227, 24, 55, 0.45);
+  }
+
+  .header-desktop-fav-btn:hover {
+    background: var(--rojo-hover) !important;
+    color: #ffffff !important;
+    transform: scale(1.06);
+  }
+}
+
+/* Botón de Carrito en Header Desktop: Al lado del botón de favoritos, mismo tamaño, solo icono y solo en escritorio */
 .header-desktop-cart-btn {
   display: none !important;
 }
@@ -820,6 +863,11 @@ input, textarea, select {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.28);
   border: none !important;
   animation: cartBadgePulse 1.8s infinite;
+}
+
+.header-fav-badge {
+  background-color: var(--naranja) !important;
+  color: #ffffff !important;
 }
 
 @media (max-width: 480px) {
@@ -1559,7 +1607,7 @@ input, textarea, select {
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border: none !important;
-  border-radius: 12px;
+  border-radius: 8px;
   overflow: hidden;
   box-shadow: var(--shadow-sm);
   display: flex;
@@ -1786,7 +1834,7 @@ input, textarea, select {
   flex-direction: row;
   align-items: stretch;
   height: 120px;
-  border-radius: 14px;
+  border-radius: 8px;
   overflow: hidden;
   background-color: var(--card-bg);
   backdrop-filter: blur(14px);
@@ -5003,7 +5051,7 @@ html.dark, html:not(.dark), body {
   top: calc(100% + 8px);
   left: 0;
   width: 100%;
-  max-width: 460px;
+  max-width: 680px;
   background-color: var(--bg-card);
   border-radius: 16px;
   padding: 0.95rem 1.1rem;

@@ -288,7 +288,7 @@ export function ProductCard({
               aria-label={`Agregar ${dish.name}`}
             >
               <Plus size={15} />
-              <span>Elegir</span>
+              <span>Ordenar</span>
             </button>
           )}
         </div>

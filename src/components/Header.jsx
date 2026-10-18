@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Search, ShoppingCart, Moon, Sun, Menu, LayoutGrid, Rows3, MapPin, Phone, SlidersHorizontal, Sparkles } from 'lucide-react';
+import { Search, ShoppingCart, Moon, Sun, Menu, LayoutGrid, Rows3, MapPin, Phone, SlidersHorizontal, Sparkles, Heart } from 'lucide-react';
 import { FacebookIcon, InstagramIcon, WhatsAppIcon } from './Icons';
 
 const POPULAR_SEARCHES = [
@@ -24,7 +24,10 @@ export function Header({
   filters = { onlyWithPhoto: false, priceSort: 'none', priceRange: 'all' },
   onUpdateFilter,
   onResetFilters,
-  hasActiveFilters = false
+  hasActiveFilters = false,
+  favoritesCount = 0,
+  showFavoritesOnly = false,
+  onToggleFavorites
 }) {
   const totalCount = cart.getTotalCount();
   const formattedTotal = cart.getFormattedTotal();
@@ -144,8 +147,10 @@ export function Header({
           </div>
         </div>
 
-        {/* Barra de Búsqueda Integrada en el Header con Botón de Vista, Modo Oscuro y Menú a la Derecha */}
-        <div className="header-search-bar-wrap" ref={searchBoxRef}>
+        {/* Controles de Búsqueda y Acciones del Header */}
+        <div className="header-main-controls-row">
+          {/* Barra de Búsqueda Integrada en el Header */}
+          <div className="header-search-bar-wrap" ref={searchBoxRef}>
           <div className="header-search-box">
             <Search className="header-search-icon" size={17} />
             <input
@@ -319,9 +324,10 @@ export function Header({
               </div>
             </div>
           )}
+        </div>
 
-          {/* Botones a la derecha de la barra de búsqueda */}
-          <div className="header-search-actions">
+        {/* Botones a la derecha de la barra de búsqueda */}
+        <div className="header-search-actions">
             {/* Botón Circular de Cambio de Vista (Rojo) */}
             {onToggleViewMode && (
               <button
@@ -357,7 +363,27 @@ export function Header({
               <Menu size={21} />
             </button>
 
-            {/* Botón de Carrito Desktop: Al lado del botón hamburguesa, mismo tamaño, solo icono y badge (solo escritorio) */}
+            {/* Botón Mis Favoritos Desktop: Al lado del carrito del header */}
+            {onToggleFavorites && (
+              <button
+                type="button"
+                className={`header-ctrl-btn header-desktop-fav-btn ${showFavoritesOnly ? 'active' : ''} ${favoritesCount > 0 ? 'has-items' : ''}`}
+                onClick={onToggleFavorites}
+                aria-label="Ver mis favoritos"
+                title={favoritesCount > 0 ? `Mis Favoritos (${favoritesCount} guardados)` : 'Mis Favoritos'}
+              >
+                <Heart
+                  size={19}
+                  fill={showFavoritesOnly || favoritesCount > 0 ? 'var(--rojo)' : 'none'}
+                  color={showFavoritesOnly || favoritesCount > 0 ? 'var(--rojo)' : 'currentColor'}
+                />
+                {favoritesCount > 0 && (
+                  <span className="header-cart-badge header-fav-badge">{favoritesCount}</span>
+                )}
+              </button>
+            )}
+
+            {/* Botón de Carrito Desktop: Al lado del botón de favoritos, mismo tamaño, solo icono y badge (solo escritorio) */}
             <button
               type="button"
               className={`header-ctrl-btn header-desktop-cart-btn ${totalCount > 0 ? 'has-items' : ''}`}

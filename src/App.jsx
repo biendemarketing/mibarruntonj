@@ -446,6 +446,9 @@ export function App() {
           onUpdateFilter={handleUpdateFilter}
           onResetFilters={handleResetFilters}
           hasActiveFilters={hasActiveFilters}
+          favoritesCount={favorites.length}
+          showFavoritesOnly={showFavoritesOnly}
+          onToggleFavorites={handleToggleFavoritesFilter}
         />
       )}
 
