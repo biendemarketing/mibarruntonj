@@ -1687,53 +1687,38 @@ input, textarea, select {
   }
 }
 
-/* GRID DE PRODUCTOS DINÁMICO (Cero Espacios Vacíos) */
+/* ==========================================================================
+   GRID DE PRODUCTOS ADAPTABLE (3 VISTAS: NORMAL, CUADRÍCULA 4, COMPACTA)
+   Distribución equilibrada y automática sin espacios vacíos ni deformaciones
+   ========================================================================== */
 .products-grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: 1.15rem;
 }
 
-/* Si una categoría tiene solo 1 producto, ocupa todo el ancho */
-.products-grid:has(> .product-card:only-child),
-.products-grid:has(> .product-card-compact:only-child) {
-  grid-template-columns: 1fr !important;
+/* Si una categoría tiene solo 1 producto, se centra armónicamente sin estirarse en exceso */
+.products-grid:has(> .product-card:only-child) {
+  grid-template-columns: minmax(280px, 420px);
+  justify-content: center;
 }
 
-/* Si una categoría tiene exactamente 2 productos, se dividen 50/50 equilibradamente sin dejar huecos */
+.products-grid:has(> .product-card-compact:only-child) {
+  grid-template-columns: minmax(320px, 580px);
+  justify-content: center;
+}
+
+/* Si una categoría tiene exactamente 2 productos, se dividen equilibradamente centrados */
 .products-grid:has(> .product-card:nth-child(2):last-child),
 .products-grid:has(> .product-card-compact:nth-child(2):last-child) {
-  grid-template-columns: repeat(2, 1fr) !important;
+  grid-template-columns: repeat(2, minmax(280px, 480px));
+  justify-content: center;
 }
 
 @media (min-width: 640px) {
   .products-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 1.25rem;
-  }
-
-  /* Si la cantidad de tarjetas no es par (impar), la última tarjeta se expande a ancho completo para no dejar espacio vacío */
-  .products-grid > .product-card:last-child:nth-child(odd) {
-    grid-column: 1 / -1;
-    display: grid;
-    grid-template-columns: minmax(220px, 340px) 1fr;
-    min-height: 200px;
-  }
-
-  .products-grid > .product-card:last-child:nth-child(odd) .product-card-image-wrap {
-    height: 100%;
-    aspect-ratio: auto;
-  }
-
-  .products-grid > .product-card:last-child:nth-child(odd) .product-card-body {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 1.25rem 1.4rem;
-  }
-
-  .products-grid > .product-card-compact:last-child:nth-child(odd) {
-    grid-column: 1 / -1;
   }
 }
 
@@ -1743,30 +1728,15 @@ input, textarea, select {
     gap: 1.35rem;
   }
 
-  /* En cuadrícula de 3 columnas de escritorio:
-     Si la última tarjeta queda sola en la fila (ej. 4 tarjetas: fila 1 tiene 3, fila 2 tiene 1),
-     se expande a lo ancho para llenar el espacio vacío */
-  .products-grid > .product-card:last-child:nth-child(3n + 1) {
-    grid-column: 1 / -1;
-    display: grid;
-    grid-template-columns: minmax(240px, 380px) 1fr;
-    min-height: 220px;
+  /* Si una categoría tiene 2 productos en desktop, se reparten 50/50 centrados */
+  .products-grid:has(> .product-card:nth-child(2):last-child) {
+    grid-template-columns: repeat(2, minmax(300px, 480px));
+    justify-content: center;
   }
 
-  .products-grid > .product-card:last-child:nth-child(3n + 1) .product-card-image-wrap {
-    height: 100%;
-    aspect-ratio: auto;
-  }
-
-  .products-grid > .product-card:last-child:nth-child(3n + 1) .product-card-body {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 1.35rem 1.6rem;
-  }
-
-  .products-grid > .product-card-compact:last-child:nth-child(3n + 1) {
-    grid-column: 1 / -1;
+  /* Si una categoría tiene 3 productos en desktop, ocupan las 3 columnas exactamente */
+  .products-grid:has(> .product-card:nth-child(3):last-child) {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
@@ -1979,8 +1949,13 @@ input, textarea, select {
 
 @media (min-width: 768px) {
   .products-grid.compact-grid {
-    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 0.95rem;
+  }
+
+  .products-grid.compact-grid:has(> .product-card-compact:only-child) {
+    grid-template-columns: minmax(320px, 580px);
+    justify-content: center;
   }
 }
 
@@ -2003,6 +1978,21 @@ input, textarea, select {
   .products-grid.grid4-grid {
     grid-template-columns: repeat(4, 1fr);
     gap: 1.05rem;
+  }
+
+  .products-grid.grid4-grid:has(> .product-card:only-child) {
+    grid-template-columns: minmax(220px, 320px);
+    justify-content: center;
+  }
+
+  .products-grid.grid4-grid:has(> .product-card:nth-child(2):last-child) {
+    grid-template-columns: repeat(2, minmax(220px, 340px));
+    justify-content: center;
+  }
+
+  .products-grid.grid4-grid:has(> .product-card:nth-child(3):last-child) {
+    grid-template-columns: repeat(3, minmax(220px, 340px));
+    justify-content: center;
   }
 }
 
