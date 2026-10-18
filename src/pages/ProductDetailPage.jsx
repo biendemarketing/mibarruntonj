@@ -1,6 +1,9 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Plus, Minus, ShoppingCart, Share2, Check, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
+import { 
+  ArrowLeft, Plus, Minus, ShoppingBag, ShoppingCart, Share2, 
+  Check, ChevronLeft, ChevronRight, Sparkles, Utensils
+} from 'lucide-react';
 import { PlateIcon } from '../components/Icons';
 import { menuRepository } from '../services/MenuRepository';
 import { triggerHaptic } from '../utils/haptics';
@@ -44,37 +47,94 @@ export function ProductDetailPage({
   const [quantity, setQuantity] = useState(initialQty > 0 ? initialQty : 1);
   const [note, setNote] = useState(cartItem?.note || '');
   const [copiedShare, setCopiedShare] = useState(false);
-  const [addedToast, setAddedToast] = useState(false);
+  const [addedToast, setAddedToast] = useState('');
 
+  // Estado de acompañamientos seleccionados en la página: { [dishId]: quantity }
+  const [selectedAccompaniments, setSelectedAccompaniments] = useState({});
+
+  // Referencia al contenedor del carrusel para botones de desplazamiento suave
+  const carouselRef = useRef(null);
+
+  // Sincronización de Open Graph y Metadatos en el <head>
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    if (dish) {
-      document.title = `${dish.name} — Mi Barrunto`;
-      const currentInCart = cart ? cart.getItem(dish.id) : null;
-      setQuantity(currentInCart ? currentInCart.quantity : 1);
-      setNote(currentInCart?.note || '');
-      setCopiedShare(false);
-    }
-  }, [dish?.id]);
+    if (!dish) return;
 
-  // Platos de la misma categoría para la sección "Otros platos recomendados"
+    const priceText = dish.getFormattedPrice();
+    const ogTitle = `${dish.name} (${priceText}) — Mi Barrunto`;
+    const ogDesc = dish.nameEn 
+      ? `${dish.nameEn}. ¡Pruébalo en Mi Barrunto, auténtica comida criolla y marina en Paterson, NJ!`
+      : `${dish.name} preparado al momento con los mejores ingredientes en Mi Barrunto. ¡Pide en línea!`;
+    
+    // Obtener imagen absoluta
+    const imagePath = dish.getResolvedImage ? dish.getResolvedImage(photoMode) : dish.getImage(photoMode);
+    const ogImage = imagePath 
+      ? (imagePath.startsWith('http') ? imagePath : `${window.location.origin}${imagePath.startsWith('/') ? '' : '/'}${imagePath}`)
+      : `${window.location.origin}/logo/logo.png`;
+    
+    const pageUrl = window.location.href;
+
+    document.title = ogTitle;
+
+    const setMetaTag = (attr, key, content) => {
+      let meta = document.querySelector(`meta[${attr}="${key}"]`);
+      if (!meta) {
+        meta = document.createElement('meta');
+        meta.setAttribute(attr, key);
+        document.head.appendChild(meta);
+      }
+      meta.setAttribute('content', content);
+    };
+
+    setMetaTag('name', 'description', ogDesc);
+    setMetaTag('property', 'og:title', ogTitle);
+    setMetaTag('property', 'og:description', ogDesc);
+    setMetaTag('property', 'og:image', ogImage);
+    setMetaTag('property', 'og:image:secure_url', ogImage);
+    setMetaTag('property', 'og:url', pageUrl);
+    setMetaTag('property', 'og:type', 'restaurant.menu_item');
+    setMetaTag('property', 'product:price:amount', dish.price ? dish.price.toFixed(2) : '0.00');
+    setMetaTag('property', 'product:price:currency', 'USD');
+    setMetaTag('name', 'twitter:card', 'summary_large_image');
+    setMetaTag('name', 'twitter:title', ogTitle);
+    setMetaTag('name', 'twitter:description', ogDesc);
+    setMetaTag('name', 'twitter:image', ogImage);
+
+    // Resetear estados locales para el nuevo plato
+    const currentInCart = cart ? cart.getItem(dish.id) : null;
+    setQuantity(currentInCart ? currentInCart.quantity : 1);
+    setNote(currentInCart?.note || '');
+    setCopiedShare(false);
+    setSelectedAccompaniments({});
+  }, [dish?.id, photoMode]);
+
+  // Lista de Acompañamientos Recomendados (Bebidas + Postres Tradicionales Peruanos)
+  const accompaniments = useMemo(() => {
+    if (!dish) return [];
+    
+    // IDs de bebidas auténticas y postres caseros de alta demanda
+    let targetIds;
+    if (dish.category === 'bebidas') {
+      targetIds = [240, 241, 242, 243, 247, 248, 170, 71];
+    } else if (dish.category === 'postres') {
+      targetIds = [238, 235, 233, 234, 236, 237];
+    } else {
+      targetIds = [238, 235, 233, 234, 240, 241, 242, 243, 247, 248, 236, 237];
+    }
+
+    return targetIds
+      .filter((id) => id !== dish.id)
+      .map((id) => menuRepository.getDishById(id))
+      .filter(Boolean);
+  }, [dish]);
+
+  // Platos de la misma categoría para la sección "Más especialidades de..."
   const relatedDishes = useMemo(() => {
     if (!dish) return [];
     const list = (menuRepository.getDishesByCategory && menuRepository.getDishesByCategory(dish.category)) || [];
     return list
       .filter((d) => d.id !== dish.id)
-      .slice(0, 4);
-  }, [dish]);
-
-  // Bebidas recomendadas para maridar este plato
-  const recommendedBeverages = useMemo(() => {
-    if (!dish) return [];
-    if (dish.category === 'bebidas') {
-      const ceviches = (menuRepository.getDishesByCategory && menuRepository.getDishesByCategory('ceviches')) || [];
-      return ceviches.slice(0, 4);
-    }
-    const bevIds = [238, 235, 234, 236]; // Inca Kola 2L, Agua de Maracuyá, Agua de Manzana, Agua de Piña
-    return bevIds.map((bid) => menuRepository.getDishById(bid)).filter(Boolean);
+      .slice(0, 6);
   }, [dish]);
 
   // Navegación anterior / siguiente entre platos
@@ -88,14 +148,51 @@ export function ProductDetailPage({
     };
   }, [dish]);
 
+  // Manejador para agregar / quitar acompañamiento en el carrusel
+  const handleToggleAccompaniment = (accDish, delta) => {
+    triggerHaptic(12);
+    setSelectedAccompaniments((prev) => {
+      const current = prev[accDish.id] || 0;
+      const next = Math.max(0, current + delta);
+      const copy = { ...prev };
+      if (next === 0) {
+        delete copy[accDish.id];
+      } else {
+        copy[accDish.id] = next;
+      }
+      return copy;
+    });
+  };
+
+  // Cálculo en tiempo real de subtotales
+  const mainDishSubtotal = dish ? dish.price * quantity : 0;
+  
+  const accompanimentsSubtotal = useMemo(() => {
+    let sum = 0;
+    for (const [idStr, qty] of Object.entries(selectedAccompaniments)) {
+      if (qty > 0) {
+        const item = menuRepository.getDishById(idStr);
+        if (item) sum += item.price * qty;
+      }
+    }
+    return sum;
+  }, [selectedAccompaniments]);
+
+  const totalSelectedAccompanimentsCount = useMemo(() => {
+    return Object.values(selectedAccompaniments).reduce((a, b) => a + b, 0);
+  }, [selectedAccompaniments]);
+
+  const grandTotal = mainDishSubtotal + accompanimentsSubtotal;
+
   const handleShare = async () => {
     triggerHaptic(15);
     const shareUrl = window.location.href;
+    const shareText = `¡Mira este delicioso plato en Mi Barrunto! ${dish.name} (${dish.getFormattedPrice()}) - ${dish.nameEn || ''}`;
     if (navigator.share) {
       try {
         await navigator.share({
-          title: `${dish.name} — Mi Barrunto`,
-          text: `¡Mira este delicioso plato en Mi Barrunto! ${dish.name} (${dish.getFormattedPrice()})`,
+          title: `${dish.name} (${dish.getFormattedPrice()}) — Mi Barrunto`,
+          text: shareText,
           url: shareUrl
         });
         return;
@@ -104,7 +201,7 @@ export function ProductDetailPage({
       }
     }
     try {
-      await navigator.clipboard.writeText(shareUrl);
+      await navigator.clipboard.writeText(`${shareText}\n${shareUrl}`);
       setCopiedShare(true);
       setTimeout(() => setCopiedShare(false), 2400);
     } catch {
@@ -115,19 +212,47 @@ export function ProductDetailPage({
 
   const handleMainAddToCart = () => {
     triggerHaptic(20);
+    // 1. Agregar plato principal
     onAddToCart(dish, quantity, note);
-    setAddedToast(true);
-    setTimeout(() => setAddedToast(false), 2200);
+
+    // 2. Agregar cada acompañamiento seleccionado
+    for (const [idStr, qty] of Object.entries(selectedAccompaniments)) {
+      if (qty > 0) {
+        const accItem = menuRepository.getDishById(idStr);
+        if (accItem) {
+          onAddToCart(accItem, qty, '');
+        }
+      }
+    }
+
+    const toastText = totalSelectedAccompanimentsCount > 0
+      ? `¡${dish.name} y ${totalSelectedAccompanimentsCount} acompañamiento(s) agregados al pedido!`
+      : `¡${dish.name} agregado a tu pedido!`;
+
+    setAddedToast(toastText);
+    setTimeout(() => setAddedToast(''), 3000);
+
+    // Limpiar acompañamientos seleccionados para el siguiente plato
+    setSelectedAccompaniments({});
   };
 
-  const handleQuickAdd = (targetDish) => {
+  const handleQuickAddRelated = (targetDish) => {
     triggerHaptic(15);
     onAddToCart(targetDish, 1, '');
+    setAddedToast(`¡${targetDish.name} agregado a tu pedido!`);
+    setTimeout(() => setAddedToast(''), 2500);
   };
 
   const handleNavigateDish = (targetDish) => {
     triggerHaptic(12);
     navigate(`/plato/${targetDish.id}`);
+  };
+
+  const handleScrollCarousel = (direction) => {
+    triggerHaptic(10);
+    if (!carouselRef.current) return;
+    const scrollAmount = direction === 'left' ? -280 : 280;
+    carouselRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
   };
 
   const handleBackToCatalog = () => {
@@ -162,12 +287,12 @@ export function ProductDetailPage({
 
   const hasPhoto = dish.hasImage(photoMode);
   const currentImage = dish.getResolvedImage ? dish.getResolvedImage(photoMode) : dish.getImage(photoMode);
-  const subtotal = (dish.price * quantity).toFixed(2);
   const isDishInCart = cart && cart.getItem(dish.id);
+  const cartTotalCount = cart ? cart.getTotalCount() : 0;
 
   return (
     <div className="product-page-container">
-      {/* 1. Barra Superior de Navegación y Acciones */}
+      {/* 1. Barra Superior Autónoma y Minimalista */}
       <div className="product-page-top-bar">
         <button
           type="button"
@@ -180,6 +305,22 @@ export function ProductDetailPage({
         </button>
 
         <div className="product-page-top-actions">
+          {/* Botón Mi Pedido rápido con contador */}
+          <button
+            type="button"
+            className={`product-page-top-cart-btn ${cartTotalCount > 0 ? 'has-items' : ''}`}
+            onClick={onOpenCart}
+            aria-label="Abrir mi pedido"
+            title="Abrir mi pedido"
+          >
+            <ShoppingBag size={17} />
+            <span className="product-page-top-cart-text">Mi Pedido</span>
+            {cartTotalCount > 0 && (
+              <span className="product-page-top-cart-badge">{cartTotalCount}</span>
+            )}
+          </button>
+
+          {/* Botón Compartir con soporte Open Graph */}
           <button
             type="button"
             className={`product-page-share-btn ${copiedShare ? 'copied' : ''}`}
@@ -191,7 +332,7 @@ export function ProductDetailPage({
             <span>{copiedShare ? '¡Enlace Copiado!' : 'Compartir'}</span>
           </button>
 
-          {/* Flechas de navegación entre platos */}
+          {/* Navegación anterior / siguiente entre platos */}
           <div className="product-page-stepper-nav">
             {prevDish && (
               <button
@@ -219,15 +360,15 @@ export function ProductDetailPage({
         </div>
       </div>
 
-      {/* 2. Sección Principal del Plato (Hero Showcase) */}
+      {/* 2. Hero Showcase del Plato Principal */}
       <div className="product-page-hero-grid">
-        {/* Columna Izquierda: Imagen en Alta Calidad */}
+        {/* Imagen en Alta Resolución con Badge */}
         <div className="product-page-media">
           {hasPhoto && currentImage ? (
             <div className="product-page-image-box">
               <img
                 src={currentImage}
-                alt={`${dish.name} — Especialidad de Mi Barrunto en Paterson, NJ`}
+                alt={`${dish.name} — Mi Barrunto`}
                 className="product-page-img"
                 loading="eager"
               />
@@ -245,7 +386,7 @@ export function ProductDetailPage({
           )}
         </div>
 
-        {/* Columna Derecha: Información y Configuración del Pedido */}
+        {/* Detalles, Precio, Cantidad e Indicaciones */}
         <div className="product-page-details-card">
           <div className="product-page-header-group">
             <h1 className="product-page-title">{dish.name}</h1>
@@ -259,12 +400,12 @@ export function ProductDetailPage({
               <span className="product-page-price-amount">{dish.getFormattedPrice()}</span>
               {dish.price > 0 && quantity > 1 && (
                 <span className="product-page-subtotal-badge">
-                  Subtotal: ${subtotal}
+                  Subtotal: ${(dish.price * quantity).toFixed(2)}
                 </span>
               )}
             </div>
 
-            {/* Stepper de Cantidad */}
+            {/* Stepper de Cantidad para el Plato Principal */}
             <div className="product-page-qty-control">
               <button
                 type="button"
@@ -292,7 +433,7 @@ export function ProductDetailPage({
             </div>
           </div>
 
-          {/* Indicaciones especiales / Notas */}
+          {/* Indicaciones especiales para cocina */}
           <div className="product-page-notes-block">
             <label htmlFor="dish-note" className="product-page-notes-label">
               Indicaciones especiales para cocina (opcional):
@@ -300,93 +441,153 @@ export function ProductDetailPage({
             <textarea
               id="dish-note"
               className="product-page-textarea"
-              placeholder="Ejemplo: sin cebolla, salsa de ají aparte, bien cocido..."
+              placeholder="Ejemplo: sin cebolla, ají de huacatay aparte, término medio..."
               value={note}
               onChange={(e) => setNote(e.target.value)}
-              rows={3}
+              rows={2}
             />
           </div>
 
-          {/* Botón Principal de Agregar al Pedido */}
-          <button
-            type="button"
-            className="product-page-add-btn"
-            onClick={handleMainAddToCart}
-          >
-            <ShoppingCart size={20} />
-            <span>
-              {isDishInCart ? 'Actualizar en Mi Pedido' : 'Agregar a Mi Pedido'}
-            </span>
-            {dish.price > 0 && (
-              <span className="product-page-add-total">${subtotal}</span>
+          {/* Resumen de Inversión y Botón de Agregar Todo al Pedido */}
+          <div className="product-page-action-box">
+            {totalSelectedAccompanimentsCount > 0 && (
+              <div className="product-page-combined-breakdown">
+                <div className="breakdown-line">
+                  <span>{dish.name} (x{quantity})</span>
+                  <span>${mainDishSubtotal.toFixed(2)}</span>
+                </div>
+                <div className="breakdown-line">
+                  <span>{totalSelectedAccompanimentsCount} acompañamiento(s)</span>
+                  <span>+${accompanimentsSubtotal.toFixed(2)}</span>
+                </div>
+              </div>
             )}
-          </button>
+
+            <button
+              type="button"
+              className="product-page-add-btn"
+              onClick={handleMainAddToCart}
+            >
+              <ShoppingCart size={20} />
+              <span>
+                {totalSelectedAccompanimentsCount > 0
+                  ? `Agregar Todo a Mi Pedido (${1 + totalSelectedAccompanimentsCount})`
+                  : isDishInCart
+                    ? 'Actualizar en Mi Pedido'
+                    : 'Agregar a Mi Pedido'}
+              </span>
+              <span className="product-page-add-total">${grandTotal.toFixed(2)}</span>
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* 3. Sección: Bebidas Recomendadas para Acompañar (Maridaje) */}
-      {recommendedBeverages.length > 0 && (
+      {/* 3. Sección: Acompáñalo con (Carrusel Dinámico de Bebidas & Postres con Imagen Circular) */}
+      {accompaniments.length > 0 && (
         <section className="product-page-section">
           <div className="product-page-section-header">
             <div className="product-page-section-title-wrap">
               <Sparkles size={20} className="product-page-section-icon" />
-              <h2 className="product-page-section-title">
-                {dish.category === 'bebidas' ? 'Platos ideales para acompañar' : 'Bebidas peruanas para acompañar'}
-              </h2>
+              <h2 className="product-page-section-title">Acompáñalo con</h2>
             </div>
-            <span className="product-page-section-sub">
-              El complemento tradicional para disfrutar tu experiencia
-            </span>
+            <div className="product-page-section-sub-row">
+              <span className="product-page-section-sub">
+                Bebidas y postres peruanos para complementar tu plato. Selecciona varios y se sumarán a tu pedido.
+              </span>
+              <div className="product-page-carousel-controls">
+                <button
+                  type="button"
+                  className="carousel-arrow-btn"
+                  onClick={() => handleScrollCarousel('left')}
+                  aria-label="Desplazar a la izquierda"
+                >
+                  <ChevronLeft size={18} />
+                </button>
+                <button
+                  type="button"
+                  className="carousel-arrow-btn"
+                  onClick={() => handleScrollCarousel('right')}
+                  aria-label="Desplazar a la derecha"
+                >
+                  <ChevronRight size={18} />
+                </button>
+              </div>
+            </div>
           </div>
 
-          <div className="product-page-cards-grid">
-            {recommendedBeverages.map((bev) => {
-              const bevHasPhoto = bev.hasImage(photoMode);
-              const bevImage = bev.getResolvedImage ? bev.getResolvedImage(photoMode) : bev.getImage(photoMode);
-              const inCartCount = cart ? cart.getItemQuantity(bev.id) : 0;
+          {/* Track del Carrusel */}
+          <div className="product-page-accompaniments-carousel" ref={carouselRef}>
+            {accompaniments.map((accItem) => {
+              const accHasPhoto = accItem.hasImage(photoMode);
+              const accImage = accItem.getResolvedImage ? accItem.getResolvedImage(photoMode) : accItem.getImage(photoMode);
+              const selectedCount = selectedAccompaniments[accItem.id] || 0;
+              const isSelected = selectedCount > 0;
 
               return (
-                <div key={bev.id} className="product-page-recom-card">
-                  <div
-                    className="product-page-recom-img-box"
-                    onClick={() => handleNavigateDish(bev)}
-                    title={`Ver detalle de ${bev.name}`}
-                  >
-                    {bevHasPhoto && bevImage ? (
+                <div
+                  key={accItem.id}
+                  className={`accompaniment-circular-card ${isSelected ? 'is-selected' : ''}`}
+                >
+                  {/* Imagen Circular */}
+                  <div className="accompaniment-circle-avatar-wrap">
+                    {accHasPhoto && accImage ? (
                       <img
-                        src={bevImage}
-                        alt={bev.name}
-                        className="product-page-recom-img"
+                        src={accImage}
+                        alt={accItem.name}
+                        className="accompaniment-circle-avatar"
                         loading="lazy"
                       />
                     ) : (
-                      <div className="product-page-recom-placeholder">
-                        <PlateIcon size={32} />
+                      <div className="accompaniment-circle-placeholder">
+                        <PlateIcon size={34} />
                       </div>
                     )}
-                  </div>
-                  <div className="product-page-recom-info">
-                    <h3
-                      className="product-page-recom-name"
-                      onClick={() => handleNavigateDish(bev)}
-                    >
-                      {bev.name}
-                    </h3>
-                    {bev.nameEn && (
-                      <p className="product-page-recom-name-en">{bev.nameEn}</p>
+                    {isSelected && (
+                      <span className="accompaniment-circle-check">
+                        <Check size={13} strokeWidth={3} />
+                      </span>
                     )}
-                    <div className="product-page-recom-bottom">
-                      <span className="product-page-recom-price">{bev.getFormattedPrice()}</span>
+                  </div>
+
+                  {/* Nombre y Precio */}
+                  <div className="accompaniment-circle-meta">
+                    <h4 className="accompaniment-circle-name">{accItem.name}</h4>
+                    <span className="accompaniment-circle-price">{accItem.getFormattedPrice()}</span>
+                  </div>
+
+                  {/* Controles de Selección Directa (Poner / Quitar) */}
+                  <div className="accompaniment-circle-actions">
+                    {isSelected ? (
+                      <div className="accompaniment-stepper">
+                        <button
+                          type="button"
+                          className="acc-stepper-btn"
+                          onClick={() => handleToggleAccompaniment(accItem, -1)}
+                          aria-label={`Quitar ${accItem.name}`}
+                        >
+                          <Minus size={13} />
+                        </button>
+                        <span className="acc-stepper-count">{selectedCount}</span>
+                        <button
+                          type="button"
+                          className="acc-stepper-btn"
+                          onClick={() => handleToggleAccompaniment(accItem, 1)}
+                          aria-label={`Añadir otro ${accItem.name}`}
+                        >
+                          <Plus size={13} />
+                        </button>
+                      </div>
+                    ) : (
                       <button
                         type="button"
-                        className="product-page-recom-add-btn"
-                        onClick={() => handleQuickAdd(bev)}
-                        title={`Añadir ${bev.name} a mi pedido`}
+                        className="accompaniment-add-pill-btn"
+                        onClick={() => handleToggleAccompaniment(accItem, 1)}
+                        aria-label={`Añadir ${accItem.name}`}
                       >
                         <Plus size={14} />
-                        <span>{inCartCount > 0 ? `Añadir (+${inCartCount})` : 'Añadir'}</span>
+                        <span>Añadir</span>
                       </button>
-                    </div>
+                    )}
                   </div>
                 </div>
               );
@@ -395,68 +596,73 @@ export function ProductDetailPage({
         </section>
       )}
 
-      {/* 4. Sección: Otros Platos Recomendados de la misma Categoría */}
+      {/* 4. Sección: Más especialidades de la Categoría con Nuevo Diseño Editorial de Card */}
       {relatedDishes.length > 0 && (
         <section className="product-page-section">
           <div className="product-page-section-header">
             <div className="product-page-section-title-wrap">
+              <Utensils size={20} className="product-page-section-icon" />
               <h2 className="product-page-section-title">
                 Más especialidades de {dish.categoryName || dish.category}
               </h2>
             </div>
             <span className="product-page-section-sub">
-              Otras opciones deliciosas que te pueden encantar
+              Otras delicias preparadas con el auténtico sazón criollo y marino
             </span>
           </div>
 
-          <div className="product-page-cards-grid">
+          <div className="product-page-editorial-grid">
             {relatedDishes.map((relDish) => {
               const relHasPhoto = relDish.hasImage(photoMode);
               const relImage = relDish.getResolvedImage ? relDish.getResolvedImage(photoMode) : relDish.getImage(photoMode);
 
               return (
-                <div
+                <article
                   key={relDish.id}
-                  className="product-page-recom-card"
+                  className="product-page-editorial-card"
                   onClick={() => handleNavigateDish(relDish)}
                   title={`Ver detalle de ${relDish.name}`}
                 >
-                  <div className="product-page-recom-img-box">
+                  <div className="editorial-card-media">
                     {relHasPhoto && relImage ? (
                       <img
                         src={relImage}
                         alt={relDish.name}
-                        className="product-page-recom-img"
+                        className="editorial-card-img"
                         loading="lazy"
                       />
                     ) : (
-                      <div className="product-page-recom-placeholder">
-                        <PlateIcon size={32} />
+                      <div className="editorial-card-placeholder">
+                        <PlateIcon size={36} />
                       </div>
                     )}
+                    <span className="editorial-card-tag">
+                      {relDish.categoryName || relDish.category}
+                    </span>
                   </div>
-                  <div className="product-page-recom-info">
-                    <h3 className="product-page-recom-name">{relDish.name}</h3>
+
+                  <div className="editorial-card-content">
+                    <h3 className="editorial-card-title">{relDish.name}</h3>
                     {relDish.nameEn && (
-                      <p className="product-page-recom-name-en">{relDish.nameEn}</p>
+                      <p className="editorial-card-desc">{relDish.nameEn}</p>
                     )}
-                    <div className="product-page-recom-bottom">
-                      <span className="product-page-recom-price">{relDish.getFormattedPrice()}</span>
+                    <div className="editorial-card-footer">
+                      <span className="editorial-card-price">{relDish.getFormattedPrice()}</span>
                       <button
                         type="button"
-                        className="product-page-recom-add-btn"
+                        className="editorial-card-btn"
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleQuickAdd(relDish);
+                          handleQuickAddRelated(relDish);
                         }}
-                        title={`Añadir ${relDish.name} al pedido`}
+                        title={`Agregar ${relDish.name} al pedido`}
                       >
-                        <Plus size={14} />
+                        <Plus size={15} />
                         <span>Añadir</span>
                       </button>
                     </div>
                   </div>
-                </div>
+                </article>
               );
             })}
           </div>
@@ -467,7 +673,7 @@ export function ProductDetailPage({
       {addedToast && (
         <div className="product-page-floating-toast">
           <Check size={18} />
-          <span>¡Plato agregado a tu pedido con éxito!</span>
+          <span>{addedToast}</span>
         </div>
       )}
     </div>

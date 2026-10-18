@@ -373,22 +373,24 @@ export function App() {
 
   return (
     <div className="app-container">
-      {/* 1. Header con Logo Centrado en Móvil y Botones al lado del Buscador en Escritorio */}
-      <Header
-        cart={cart}
-        onOpenCart={handleOpenCart}
-        searchQuery={searchQuery}
-        onSearchChange={handleSearchChange}
-        isDarkMode={isDarkMode}
-        onToggleDarkMode={() => setIsDarkMode(!isDarkMode)}
-        onOpenMobileMenu={() => setIsMobileMenuOpen(true)}
-        viewMode={viewMode}
-        onToggleViewMode={handleToggleViewMode}
-        filters={filters}
-        onUpdateFilter={handleUpdateFilter}
-        onResetFilters={handleResetFilters}
-        hasActiveFilters={hasActiveFilters}
-      />
+      {/* 1. Header con Logo Centrado en Móvil y Botones al lado del Buscador en Escritorio (Oculto en vista detalle para máxima inmersión) */}
+      {!isDishDetailPage && (
+        <Header
+          cart={cart}
+          onOpenCart={handleOpenCart}
+          searchQuery={searchQuery}
+          onSearchChange={handleSearchChange}
+          isDarkMode={isDarkMode}
+          onToggleDarkMode={() => setIsDarkMode(!isDarkMode)}
+          onOpenMobileMenu={() => setIsMobileMenuOpen(true)}
+          viewMode={viewMode}
+          onToggleViewMode={handleToggleViewMode}
+          filters={filters}
+          onUpdateFilter={handleUpdateFilter}
+          onResetFilters={handleResetFilters}
+          hasActiveFilters={hasActiveFilters}
+        />
+      )}
 
       {/* 2. Menú Hamburguesa Móvil */}
       <MobileDrawer
@@ -570,22 +572,26 @@ export function App() {
         </div>
       )}
 
-      {/* 6. Footer con Redes Sociales Oficiales y Selector de Versión de Fotos */}
-      <Footer photoMode={photoMode} onTogglePhotoMode={handleTogglePhotoMode} />
+      {/* 6. Footer con Redes Sociales Oficiales y Selector de Versión de Fotos (Oculto en vista detalle) */}
+      {!isDishDetailPage && (
+        <Footer photoMode={photoMode} onTogglePhotoMode={handleTogglePhotoMode} />
+      )}
 
-      {/* 7. Barra Móvil Inferior (Menú, Búsqueda, Mi Pedido y WhatsApp) */}
-      <MobileNavBar
-        cart={cart}
-        onOpenCart={handleOpenCart}
-        onOpenMobileMenu={() => setIsMobileMenuOpen(true)}
-        onToggleSearch={() => {
-          const input = document.querySelector('.mobile-search-input') || document.querySelector('.header-search-input');
-          if (input) {
-            input.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            setTimeout(() => input.focus(), 250);
-          }
-        }}
-      />
+      {/* 7. Barra Móvil Inferior (Menú, Búsqueda, Mi Pedido y WhatsApp) (Oculto en vista detalle) */}
+      {!isDishDetailPage && (
+        <MobileNavBar
+          cart={cart}
+          onOpenCart={handleOpenCart}
+          onOpenMobileMenu={() => setIsMobileMenuOpen(true)}
+          onToggleSearch={() => {
+            const input = document.querySelector('.mobile-search-input') || document.querySelector('.header-search-input');
+            if (input) {
+              input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              setTimeout(() => input.focus(), 250);
+            }
+          }}
+        />
+      )}
 
       {/* 8. Carrito y Envío a WhatsApp */}
       <CartDrawer
@@ -599,20 +605,21 @@ export function App() {
         photoMode={photoMode}
       />
 
-      {/* 10. Botón Flotante de Carrito en Escritorio */}
+      {/* 10. Botón Flotante de Carrito en Escritorio (Mejorado con diseño volumétrico premium) */}
       {cart.getTotalCount() > 0 && !isAnyModalOpen && (
         <button
           type="button"
           className="desktop-floating-cart"
           onClick={handleOpenCart}
-          aria-label="Ver pedido"
+          aria-label="Ver mi pedido"
+          title="Ver mi pedido"
         >
           <div className="desktop-floating-cart-icon">
-            <ShoppingBag size={20} />
+            <ShoppingBag size={21} />
             <span className="desktop-floating-cart-badge">{cart.getTotalCount()}</span>
           </div>
           <div className="desktop-floating-cart-info">
-            <span className="desktop-floating-cart-label">Ver Pedido</span>
+            <span className="desktop-floating-cart-label">Mi Pedido</span>
             <span className="desktop-floating-cart-price">{cart.getFormattedTotal()}</span>
           </div>
         </button>

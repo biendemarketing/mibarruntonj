@@ -317,23 +317,26 @@ export function Header({
 
         {/* Acciones de Escritorio (Carrito) */}
         <div className="header-actions">
-          {/* Botón de Carrito / Lista en Escritorio */}
+          {/* Botón de Carrito / Lista en Escritorio con Diseño Rediseñado Premium */}
           <button
             type="button"
-            className="desktop-cart-btn"
+            className={`desktop-cart-btn ${totalCount > 0 ? 'has-items' : ''}`}
             onClick={onOpenCart}
             aria-label="Ver mi pedido"
+            title="Ver mi pedido"
           >
-            <ShoppingCart size={18} />
-            <span>Mi Pedido</span>
-            {totalCount > 0 && (
-              <>
+            <div className="desktop-cart-btn-icon-wrap">
+              <ShoppingCart size={19} />
+              {totalCount > 0 && (
                 <span className="cart-counter-badge">{totalCount}</span>
-                <span style={{ fontWeight: 800 }}>
-                  {formattedTotal}
-                </span>
-              </>
-            )}
+              )}
+            </div>
+            <div className="desktop-cart-btn-labels">
+              <span className="desktop-cart-btn-title">Mi Pedido</span>
+              {totalCount > 0 && (
+                <span className="desktop-cart-btn-total-pill">{formattedTotal}</span>
+              )}
+            </div>
           </button>
         </div>
       </div>
