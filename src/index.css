@@ -4514,33 +4514,34 @@ input, textarea, select {
   position: absolute;
   bottom: 2px;
   right: 2px;
-  width: 25px;
-  height: 25px;
-  border-radius: 50%;
+  width: 28px;
+  height: 28px;
   display: grid;
   place-items: center;
   border: none !important;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.32);
-  transition: all 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+  background: transparent !important;
+  box-shadow: none !important;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 3;
 }
 
 .accompaniment-circle-badge.is-plus {
-  background-color: var(--rojo);
-  color: #ffffff;
+  background: transparent !important;
+  color: var(--rojo);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.75));
 }
 
 .accompaniment-circle-avatar-wrap.clickable-avatar:hover .accompaniment-circle-badge.is-plus {
-  transform: scale(1.18);
-  background-color: var(--rojo-hover);
-  box-shadow: 0 4px 14px rgba(227, 6, 19, 0.45);
+  transform: scale(1.25);
+  color: #ff3b30;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.9));
 }
 
 .accompaniment-circle-badge.is-in-cart {
-  background-color: #10b981;
-  color: #ffffff;
-  transform: scale(1.08);
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.45);
+  background: transparent !important;
+  color: #10b981;
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.8));
+  transform: scale(1.15);
   animation: badgePop 0.28s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -4552,8 +4553,23 @@ input, textarea, select {
     transform: scale(1.25);
   }
   100% {
-    transform: scale(1.08);
+    transform: scale(1.15);
   }
+}
+
+.breakdown-line-accompaniment {
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+}
+
+.breakdown-line-accompaniment .breakdown-item-name {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.breakdown-line-accompaniment .breakdown-item-price {
+  color: var(--rojo);
+  font-weight: 700;
 }
 
 .accompaniment-circle-meta {

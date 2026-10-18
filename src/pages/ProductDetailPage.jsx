@@ -163,23 +163,27 @@ export function ProductDetailPage({
     });
   };
 
+  // Lista de acompañamientos seleccionados con sus datos completos y subtotales
+  const selectedAccompanimentsList = useMemo(() => {
+    return Object.entries(selectedAccompaniments)
+      .filter(([_, qty]) => qty > 0)
+      .map(([idStr, qty]) => {
+        const item = menuRepository.getDishById(idStr);
+        return item ? { ...item, qty, itemSubtotal: item.price * qty } : null;
+      })
+      .filter(Boolean);
+  }, [selectedAccompaniments]);
+
   // Cálculo en tiempo real de subtotales
   const mainDishSubtotal = dish ? dish.price * quantity : 0;
   
   const accompanimentsSubtotal = useMemo(() => {
-    let sum = 0;
-    for (const [idStr, qty] of Object.entries(selectedAccompaniments)) {
-      if (qty > 0) {
-        const item = menuRepository.getDishById(idStr);
-        if (item) sum += item.price * qty;
-      }
-    }
-    return sum;
-  }, [selectedAccompaniments]);
+    return selectedAccompanimentsList.reduce((sum, item) => sum + item.itemSubtotal, 0);
+  }, [selectedAccompanimentsList]);
 
   const totalSelectedAccompanimentsCount = useMemo(() => {
-    return Object.values(selectedAccompaniments).reduce((a, b) => a + b, 0);
-  }, [selectedAccompaniments]);
+    return selectedAccompanimentsList.reduce((sum, item) => sum + item.qty, 0);
+  }, [selectedAccompanimentsList]);
 
   const grandTotal = mainDishSubtotal + accompanimentsSubtotal;
 
@@ -215,17 +219,16 @@ export function ProductDetailPage({
     onAddToCart(dish, quantity, note);
 
     // 2. Agregar cada acompañamiento seleccionado
-    for (const [idStr, qty] of Object.entries(selectedAccompaniments)) {
-      if (qty > 0) {
-        const accItem = menuRepository.getDishById(idStr);
-        if (accItem) {
-          onAddToCart(accItem, qty, '');
-        }
-      }
+    for (const item of selectedAccompanimentsList) {
+      onAddToCart(item, item.qty, '');
     }
 
-    const toastText = totalSelectedAccompanimentsCount > 0
-      ? `¡${dish.name} y ${totalSelectedAccompanimentsCount} acompañamiento(s) agregados al pedido!`
+    const addedItemsSummary = selectedAccompanimentsList
+      .map((item) => `${item.name}${item.qty > 1 ? ` (x${item.qty})` : ''}`)
+      .join(', ');
+
+    const toastText = addedItemsSummary
+      ? `¡${dish.name} + ${addedItemsSummary} agregados a tu pedido!`
       : `¡${dish.name} agregado a tu pedido!`;
 
     setAddedToast(toastText);
@@ -444,16 +447,18 @@ export function ProductDetailPage({
 
           {/* Resumen de Inversión y Botón de Ordenar */}
           <div className="product-page-action-box">
-            {totalSelectedAccompanimentsCount > 0 && (
+            {selectedAccompanimentsList.length > 0 && (
               <div className="product-page-combined-breakdown">
                 <div className="breakdown-line">
                   <span>{dish.name} (x{quantity})</span>
                   <span>${mainDishSubtotal.toFixed(2)}</span>
                 </div>
-                <div className="breakdown-line">
-                  <span>{totalSelectedAccompanimentsCount} acompañamiento(s)</span>
-                  <span>+${accompanimentsSubtotal.toFixed(2)}</span>
-                </div>
+                {selectedAccompanimentsList.map((item) => (
+                  <div key={item.id} className="breakdown-line breakdown-line-accompaniment">
+                    <span className="breakdown-item-name">{item.name} (x{item.qty})</span>
+                    <span className="breakdown-item-price">+${item.itemSubtotal.toFixed(2)}</span>
+                  </div>
+                ))}
               </div>
             )}
 
@@ -542,15 +547,15 @@ export function ProductDetailPage({
                         <PlateIcon size={34} />
                       </div>
                     )}
-                    {/* Indicador sobre la foto: signo de más (+) que cambia a carrito cuando se le hace clic */}
+                    {/* Indicador sobre la foto: signo de más (+) sin fondo que cambia a carrito cuando se le hace clic */}
                     <span 
                       className={`accompaniment-circle-badge ${isSelected ? 'is-in-cart' : 'is-plus'}`}
-                      aria-label={isSelected ? 'En el pedido' : 'Añadir'}
+                      aria-label={isSelected ? `${accItem.name} en el pedido` : `Añadir ${accItem.name}`}
                     >
                       {isSelected ? (
-                        <ShoppingCart size={13} strokeWidth={2.4} />
+                        <ShoppingCart size={17} strokeWidth={2.5} />
                       ) : (
-                        <Plus size={14} strokeWidth={2.8} />
+                        <Plus size={19} strokeWidth={3} />
                       )}
                     </span>
                   </div>
