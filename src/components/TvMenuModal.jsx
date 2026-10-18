@@ -1,56 +1,36 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Play, Pause, ChevronLeft, ChevronRight, Maximize, Minimize, X, Tv } from 'lucide-react';
-import { WhatsAppIcon, PlateIcon } from './Icons';
+import { Play, Pause, Maximize, Minimize, X, Tv } from 'lucide-react';
+import { PlateIcon } from './Icons';
 
 export function TvMenuModal({ isOpen, onClose, dishes = [], photoMode = 'curated' }) {
   // Filtrar platos que tengan imagen en alta calidad para la TV
   const tvDishes = React.useMemo(() => {
     const list = dishes.filter((d) => d.hasImage && d.hasImage(photoMode));
-    return list.length > 0 ? list : dishes.slice(0, 20);
+    return list.length > 0 ? list : dishes.slice(0, 30);
   }, [dishes, photoMode]);
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [currentTime, setCurrentTime] = useState('');
-  const [progress, setProgress] = useState(0);
   const modalRef = useRef(null);
 
-  // Reloj digital en vivo para la pantalla de la TV
-  useEffect(() => {
-    if (!isOpen) return;
-    const updateTime = () => {
-      const now = new Date();
-      setCurrentTime(
-        now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-      );
-    };
-    updateTime();
-    const interval = setInterval(updateTime, 1000);
-    return () => clearInterval(interval);
-  }, [isOpen]);
+  // Navegación siguiente y anterior
+  const handleNext = React.useCallback(() => {
+    setCurrentIndex((prev) => (prev + 1) % tvDishes.length);
+  }, [tvDishes.length]);
 
-  // Rotación automática cada 6 segundos con barra de progreso
+  const handlePrev = React.useCallback(() => {
+    setCurrentIndex((prev) => (prev - 1 + tvDishes.length) % tvDishes.length);
+  }, [tvDishes.length]);
+
+  // Rotación automática invisible cada 6.5 segundos
   useEffect(() => {
     if (!isOpen || !isPlaying || tvDishes.length === 0) return;
-
-    setProgress(0);
-    const duration = 6000;
-    const tickRate = 50;
-    const step = (tickRate / duration) * 100;
-
     const timer = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          setCurrentIndex((idx) => (idx + 1) % tvDishes.length);
-          return 0;
-        }
-        return prev + step;
-      });
-    }, tickRate);
-
+      handleNext();
+    }, 6500);
     return () => clearInterval(timer);
-  }, [isOpen, isPlaying, currentIndex, tvDishes.length]);
+  }, [isOpen, isPlaying, handleNext, tvDishes.length]);
 
   // Manejo de teclas: Esc para cerrar, Espacio para pausar, Flechas para navegar
   useEffect(() => {
@@ -69,17 +49,7 @@ export function TvMenuModal({ isOpen, onClose, dishes = [], photoMode = 'curated
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, tvDishes.length]);
-
-  const handleNext = () => {
-    setProgress(0);
-    setCurrentIndex((prev) => (prev + 1) % tvDishes.length);
-  };
-
-  const handlePrev = () => {
-    setProgress(0);
-    setCurrentIndex((prev) => (prev - 1 + tvDishes.length) % tvDishes.length);
-  };
+  }, [isOpen, handleNext, handlePrev, onClose]);
 
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
@@ -110,7 +80,10 @@ export function TvMenuModal({ isOpen, onClose, dishes = [], photoMode = 'curated
       aria-modal="true"
       aria-label="Modo Menú TV - Mi Barrunto"
     >
-      {/* Barra Superior de la TV: Marca, Reloj en Vivo y Controles */}
+      {/* Luz ambiental de fondo basada en el plato */}
+      <div className="tv-ambient-glow" />
+
+      {/* Barra Superior Minimalista: Marca a la izquierda y Controles a la derecha */}
       <header className="tv-menu-header">
         <div className="tv-header-brand">
           <img
@@ -126,10 +99,10 @@ export function TvMenuModal({ isOpen, onClose, dishes = [], photoMode = 'curated
 
         <div className="tv-header-center">
           <div className="tv-live-badge">
-            <Tv size={14} color="var(--rojo)" />
+            <span className="tv-live-dot" />
+            <Tv size={14} color="#ffffff" />
             <span>MODO MENÚ TV</span>
           </div>
-          {currentTime && <span className="tv-live-clock">{currentTime}</span>}
         </div>
 
         <div className="tv-header-actions">
@@ -163,10 +136,10 @@ export function TvMenuModal({ isOpen, onClose, dishes = [], photoMode = 'curated
         </div>
       </header>
 
-      {/* Contenido Principal: Plato Destacado con Imagen Gigante y Ficha Gastronómica */}
+      {/* Contenido Principal: Plato Destacado con Imagen Gigante y Tipografía Gourmet */}
       <main className="tv-menu-body">
         <div className="tv-dish-showcase" key={currentDish.id}>
-          {/* Zona de Imagen HD con Efecto Sutil */}
+          {/* Zona de Imagen HD Cinematográfica */}
           <div className="tv-image-container">
             {image ? (
               <img
@@ -182,10 +155,17 @@ export function TvMenuModal({ isOpen, onClose, dishes = [], photoMode = 'curated
             <div className="tv-image-gradient-overlay" />
           </div>
 
-          {/* Ficha Descriptiva del Plato */}
+          {/* Ficha Descriptiva de Lujo */}
           <div className="tv-dish-details">
-            <div className="tv-category-tag">
-              <span>{currentDish.categoryName || 'Especialidad de la Casa'}</span>
+            <div className="tv-tags-row">
+              <span className="tv-category-tag">
+                {currentDish.categoryName || 'Especialidad'}
+              </span>
+              {currentDish.subcategory && (
+                <span className="tv-subcategory-tag">
+                  {currentDish.subcategory}
+                </span>
+              )}
             </div>
 
             <h2 className="tv-dish-name">{currentDish.name}</h2>
@@ -194,59 +174,40 @@ export function TvMenuModal({ isOpen, onClose, dishes = [], photoMode = 'curated
               <p className="tv-dish-name-en">{currentDish.nameEn}</p>
             )}
 
+            {currentDish.glosa && currentDish.glosa !== currentDish.nameEn && (
+              <p className="tv-dish-glosa">{currentDish.glosa}</p>
+            )}
+
             <div className="tv-price-box">
               <span className="tv-price-currency">$</span>
               <span className="tv-price-value">{currentDish.price.toFixed(2)}</span>
             </div>
-
-            {/* Banner de Pedido Rápido para comensales en la mesa */}
-            <div className="tv-order-prompt-box">
-              <div className="tv-prompt-icon-wrap">
-                <WhatsAppIcon size={24} color="#ffffff" />
-              </div>
-              <div className="tv-prompt-content">
-                <span className="tv-prompt-title">¡Pide directo a tu mesa o para llevar!</span>
-                <span className="tv-prompt-phone">WhatsApp: (973) 653-3749</span>
-              </div>
-            </div>
           </div>
         </div>
 
-        {/* Flechas de Navegación Manual */}
-        <button
-          type="button"
-          className="tv-nav-arrow tv-nav-prev"
+        {/* Zonas de Clic Invisibles para navegar Anterior / Siguiente sin ensuciar la pantalla */}
+        <div
+          className="tv-nav-invisible-zone tv-nav-invisible-prev"
           onClick={handlePrev}
-          title="Plato anterior (Flecha izquierda)"
+          title="Plato anterior"
           aria-label="Anterior"
-        >
-          <ChevronLeft size={32} />
-        </button>
-        <button
-          type="button"
-          className="tv-nav-arrow tv-nav-next"
+        />
+        <div
+          className="tv-nav-invisible-zone tv-nav-invisible-next"
           onClick={handleNext}
-          title="Plato siguiente (Flecha derecha)"
+          title="Plato siguiente"
           aria-label="Siguiente"
-        >
-          <ChevronRight size={32} />
-        </button>
+        />
       </main>
 
-      {/* Barra de Progreso Inferior y Miniaturas */}
+      {/* Footer Minimalista: Solo Contador Elegante y Limpio */}
       <footer className="tv-menu-footer">
-        <div className="tv-progress-track">
-          <div
-            className="tv-progress-bar"
-            style={{ width: `${progress}%` }}
-          />
-        </div>
         <div className="tv-footer-status">
           <span className="tv-dish-counter">
-            {currentIndex + 1} de {tvDishes.length} especialidades
+            {String(currentIndex + 1).padStart(2, '0')} / {String(tvDishes.length).padStart(2, '0')} Especialidades
           </span>
           <span className="tv-footer-instructions">
-            Usa las flechas del teclado o presiona Espacio para pausar · Esc para salir
+            {isPlaying ? 'Rotación automática activa' : 'Pausado'} · Espacio para alternar · Flechas para navegar · Esc para salir
           </span>
         </div>
       </footer>
