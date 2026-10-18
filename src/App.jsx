@@ -24,8 +24,10 @@ import { Search, ShoppingCart, LayoutGrid, Rows3, ChevronUp, ChevronLeft, Rotate
 import { TvMenuModal } from './components/TvMenuModal';
 import { triggerHaptic } from './utils/haptics';
 import { triggerFlyToCart } from './utils/flyToCart';
+import { useAlertConfirm } from './context/AlertConfirmContext';
 
 export function App() {
+  const { showAlert, showConfirm } = useAlertConfirm();
   const location = useLocation();
   const navigate = useNavigate();
   const isDishDetailPage = location.pathname.startsWith('/plato/');
@@ -115,12 +117,19 @@ export function App() {
     setSelectedFavIds((prev) => prev.filter((id) => favorites.includes(id)));
   }, [favorites]);
 
-  const handleClearAllFavorites = () => {
+  const handleClearAllFavorites = async () => {
     if (favorites.length === 0) return;
     triggerHaptic(20);
-    if (typeof window !== 'undefined' && !window.confirm('¿Deseas vaciar todos tus platos favoritos?')) {
-      return;
-    }
+    const confirmed = await showConfirm({
+      title: '¿Vaciar todos tus favoritos?',
+      message: 'Esta acción quitará todos los platos que tienes guardados en tu lista de favoritos.',
+      confirmText: 'Sí, vaciar',
+      cancelText: 'Cancelar',
+      type: 'danger',
+      confirmButtonDanger: true,
+    });
+    if (!confirmed) return;
+
     setFavorites([]);
     setSelectedFavIds([]);
     setToastMessage('Se vació tu lista de favoritos');
@@ -157,13 +166,24 @@ export function App() {
     setTimeout(() => setToastMessage(''), 3200);
   };
 
-  const handleRemoveSelectedFavs = () => {
+  const handleRemoveSelectedFavs = async () => {
     if (selectedFavIds.length === 0) return;
-    triggerHaptic(15);
     const count = selectedFavIds.length;
+    if (count > 1) {
+      const confirmed = await showConfirm({
+        title: `¿Quitar ${count} platos de favoritos?`,
+        message: 'Los platos seleccionados dejarán de figurar en tu lista de favoritos.',
+        confirmText: 'Sí, quitar',
+        cancelText: 'Cancelar',
+        type: 'danger',
+        confirmButtonDanger: true,
+      });
+      if (!confirmed) return;
+    }
+    triggerHaptic(15);
     setFavorites((prev) => prev.filter((id) => !selectedFavIds.includes(id)));
     setSelectedFavIds([]);
-    setToastMessage(`Se quitaron ${count} platos de tus favoritos`);
+    setToastMessage(`Se quitaron ${count} ${count === 1 ? 'plato' : 'platos'} de tus favoritos`);
     setTimeout(() => setToastMessage(''), 3000);
   };
 
@@ -454,9 +474,21 @@ export function App() {
     setCart((prevCart) => prevCart.updateCustomerField(field, value));
   };
 
-  const handleClearCart = () => {
+  const handleClearCart = async () => {
+    if (cart.isEmpty()) return;
+    const confirmed = await showConfirm({
+      title: '¿Vaciar tu pedido?',
+      message: 'Se eliminarán todos los platos agregados a tu carrito actual.',
+      confirmText: 'Sí, vaciar pedido',
+      cancelText: 'Conservar',
+      type: 'danger',
+      confirmButtonDanger: true,
+    });
+    if (!confirmed) return;
     triggerHaptic(15);
     setCart((prevCart) => prevCart.clear());
+    setToastMessage('Se vació tu pedido');
+    setTimeout(() => setToastMessage(''), 2500);
   };
 
   const handleReorderLast = () => {

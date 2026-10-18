@@ -13,3 +13,7 @@
 - **NUNCA** utilizar emojis en la interfaz ni en documentos impresos (como 🖨️, ⏰, 📞, 📍, 📘, 📸, 🎵, ☎️, 💬, 🌐, 💡, ★, etc.).
 - Todo pictograma o símbolo debe implementarse obligatoriamente mediante **iconos vectoriales SVG profesionales** (Lucide icons o SVG inline limpios), garantizando elegancia, nitidez en imprenta (300+ DPI) y consistencia visual entre dispositivos.
 
+## REGLA ESTRICTA: PROHIBICIÓN TOTAL DE ALERT() Y CONFIRM() NATIVOS DEL NAVEGADOR
+- **NUNCA** utilizar los diálogos por defecto del navegador (`window.alert()`, `window.confirm()`, ni `window.prompt()`). Son intrusivos, bloqueantes y arruinan la experiencia premium de usuario.
+- Toda confirmación, advertencia o mensaje de alerta debe realizarse obligatoriamente mediante el **sistema de alertas y confirmaciones propio de la aplicación** (`CustomModalDialog` / `useAlertConfirm`), con difuminado de vidrio (`backdrop-filter`), animaciones fluidas, iconos vectoriales SVG, respuesta táctil háptica y la regla estricta de CERO bordes/trazos.
+
