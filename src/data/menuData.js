@@ -77,6 +77,12 @@ export const CATEGORIES_DATA = [
     "name": "Bebidas",
     "nameEn": "Chicha morada, jugos y sodas",
     "icon": "Coffee"
+  },
+  {
+    "id": "postres",
+    "name": "Postres Caseros",
+    "nameEn": "Postres caseros tradicionales peruanos",
+    "icon": "cake"
   }
 ];
 
@@ -2927,15 +2933,16 @@ export const DISHES_DATA = [
   },
   {
     "id": 238,
-    "name": "Jugo de naranja",
-    "nameEn": "Orange juice",
-    "glosa": "Orange juice",
-    "price": 3.99,
-    "priceDisplay": "$3.99",
+    "name": "Inca Kola 2 Litros",
+    "nameEn": "Peruvian golden kola 2-liter bottle",
+    "glosa": "Inca Kola 2 Litros",
+    "price": 6.99,
+    "priceDisplay": "$6.99",
     "category": "bebidas",
     "subcategory": "",
-    "image": "fotos/238-jugo-de-naranja.jpg",
-    "hasPhoto": true
+    "image": null,
+    "hasPhoto": false,
+    "platosImage": "platos/inca_kola_2l.webp"
   },
   {
     "id": 239,
@@ -2947,6 +2954,123 @@ export const DISHES_DATA = [
     "category": "bebidas",
     "subcategory": "",
     "image": null,
+    "hasPhoto": false
+  },
+  {
+    "id": 240,
+    "name": "Crema Volteada",
+    "nameEn": "Traditional Peruvian caramel egg custard",
+    "glosa": "Traditional Peruvian caramel egg custard",
+    "price": 7.99,
+    "priceDisplay": "$7.99",
+    "category": "postres",
+    "subcategory": "",
+    "image": null,
+    "platosImage": "platos/crema_volteada.webp",
+    "hasPhoto": false
+  },
+  {
+    "id": 241,
+    "name": "Tres Leches",
+    "nameEn": "Rich sponge cake soaked in three milks",
+    "glosa": "Rich sponge cake soaked in three milks",
+    "price": 7.99,
+    "priceDisplay": "$7.99",
+    "category": "postres",
+    "subcategory": "",
+    "image": null,
+    "platosImage": "platos/tres_leches.webp",
+    "hasPhoto": false
+  },
+  {
+    "id": 242,
+    "name": "Torta de chocolate",
+    "nameEn": "Classic Peruvian chocolate cake with fudge",
+    "glosa": "Classic Peruvian chocolate cake with fudge",
+    "price": 7.99,
+    "priceDisplay": "$7.99",
+    "category": "postres",
+    "subcategory": "",
+    "image": null,
+    "platosImage": "platos/torta_chocolate.webp",
+    "hasPhoto": false
+  },
+  {
+    "id": 243,
+    "name": "Picarones",
+    "nameEn": "Crispy sweet potato & squash rings with chancaca spiced syrup",
+    "glosa": "Crispy sweet potato & squash rings with chancaca spiced syrup",
+    "price": 8.99,
+    "priceDisplay": "$8.99",
+    "category": "postres",
+    "subcategory": "",
+    "image": null,
+    "platosImage": "platos/picarones.webp",
+    "hasPhoto": false
+  },
+  {
+    "id": 244,
+    "name": "Tiramisú",
+    "nameEn": "Coffee-flavoured Italian-Peruvian dessert",
+    "glosa": "Coffee-flavoured Italian-Peruvian dessert",
+    "price": 7.99,
+    "priceDisplay": "$7.99",
+    "category": "postres",
+    "subcategory": "",
+    "image": null,
+    "platosImage": "platos/tiramisu.webp",
+    "hasPhoto": false
+  },
+  {
+    "id": 245,
+    "name": "Gelatina sola",
+    "nameEn": "Fruit gelatin dessert",
+    "glosa": "Fruit gelatin dessert",
+    "price": 4.99,
+    "priceDisplay": "$4.99",
+    "category": "postres",
+    "subcategory": "",
+    "image": null,
+    "platosImage": "platos/gelatina_sola.webp",
+    "hasPhoto": false
+  },
+  {
+    "id": 246,
+    "name": "Gelatina con flan",
+    "nameEn": "Layered gelatin and vanilla flan",
+    "glosa": "Layered gelatin and vanilla flan",
+    "price": 4.99,
+    "priceDisplay": "$4.99",
+    "category": "postres",
+    "subcategory": "",
+    "image": null,
+    "platosImage": "platos/gelatina_con_flan.webp",
+    "hasPhoto": false
+  },
+  {
+    "id": 247,
+    "name": "Mazamorra morada",
+    "nameEn": "Traditional purple corn pudding with dried fruit",
+    "glosa": "Traditional purple corn pudding with dried fruit",
+    "price": 4.99,
+    "priceDisplay": "$4.99",
+    "category": "postres",
+    "subcategory": "",
+    "image": null,
+    "platosImage": "platos/mazamorra_morada.webp",
+    "hasPhoto": false
+  },
+  {
+    "id": 248,
+    "name": "Arroz con leche",
+    "nameEn": "Creamy Peruvian rice pudding with cinnamon",
+    "glosa": "Creamy Peruvian rice pudding with cinnamon",
+    "price": 4.99,
+    "priceDisplay": "$4.99",
+    "category": "postres",
+    "subcategory": "",
+    "image": null,
+    "platosImage": "platos/arroz_con_leche.webp",
     "hasPhoto": false
   }
 ];

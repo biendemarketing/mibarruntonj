@@ -690,18 +690,12 @@ function renderPage8() {
 // --------------------------------------------------------------------------
 // PAGE 9: GUARNICIONES, BEBIDAS TRADICIONALES & POSTRES CASEROS
 // --------------------------------------------------------------------------
+// PAGE 9: GUARNICIONES, BEBIDAS TRADICIONALES & POSTRES CASEROS
+// --------------------------------------------------------------------------
 function renderPage9() {
   const sides = dishesByCat['sides'] || [];
   const bebidas = dishesByCat['bebidas'] || [];
-
-  const postres = [
-    { name: "Crema Volteada Casera", nameEn: "Traditional Peruvian caramel egg custard", priceDisplay: "$6.99" },
-    { name: "Alfajores de Maicena (2 un.)", nameEn: "Cornstarch cookies filled with sweet dulce de leche", priceDisplay: "$5.99" },
-    { name: "Torta de Tres Leches", nameEn: "Rich sponge cake soaked in three milks", priceDisplay: "$7.50" },
-    { name: "Picarones Tradicionales", nameEn: "Crispy sweet potato & squash rings with chancaca spiced syrup", priceDisplay: "$8.99" },
-    { name: "Suspiro a la Limeña", nameEn: "Classic dulce de leche topped with port wine meringue", priceDisplay: "$7.50" },
-    { name: "Helado de Lúcuma", nameEn: "Exotic Peruvian lucuma fruit artisanal ice cream", priceDisplay: "$6.50" }
-  ];
+  const postres = dishesByCat['postres'] || [];
 
   return `
   <section class="menu-page page-content-3col" id="page-9">
@@ -716,47 +710,15 @@ function renderPage9() {
         </div>
       </div>
 
-      <!-- Columna 2: Bebidas Tradicionales (11 items) -->
+      <!-- Columna 2: Bebidas Tradicionales (7 items) -->
       <div class="menu-col">
         ${renderCategoryHeader('BEBIDAS TÍPICAS', 'line', 'coffee')}
         <div class="dishes-list">
           ${bebidas.map(renderDish).join('')}
-          <div class="menu-dish-item">
-            <div class="dish-main-row">
-              <span class="dish-name">Inca Kola 2 Litros</span>
-              <span class="dish-dots"></span>
-              <span class="dish-price-pill">$6.00</span>
-            </div>
-            <div class="dish-desc">Peruvian golden soda bottle</div>
-          </div>
-          <div class="menu-dish-item">
-            <div class="dish-main-row">
-              <span class="dish-name">Inca Kola Lata</span>
-              <span class="dish-dots"></span>
-              <span class="dish-price-pill">$2.50</span>
-            </div>
-            <div class="dish-desc">Peruvian golden soda 12 oz can</div>
-          </div>
-          <div class="menu-dish-item">
-            <div class="dish-main-row">
-              <span class="dish-name">Cerveza Cusqueña</span>
-              <span class="dish-dots"></span>
-              <span class="dish-price-pill">$6.50</span>
-            </div>
-            <div class="dish-desc">Imported Peruvian premium lager beer</div>
-          </div>
-          <div class="menu-dish-item">
-            <div class="dish-main-row">
-              <span class="dish-name">Cerveza Cristal</span>
-              <span class="dish-dots"></span>
-              <span class="dish-price-pill">$6.50</span>
-            </div>
-            <div class="dish-desc">Imported classic Peruvian lager beer</div>
-          </div>
         </div>
       </div>
 
-      <!-- Columna 3: Postres Caseros (6 items) -->
+      <!-- Columna 3: Postres Caseros (9 items del cuaderno) -->
       <div class="menu-col">
         ${renderCategoryHeader('POSTRES CASEROS', 'badge', 'cake')}
         <div class="dishes-list">
