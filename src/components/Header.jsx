@@ -312,32 +312,21 @@ export function Header({
             >
               <Menu size={21} />
             </button>
-          </div>
-        </div>
 
-        {/* Acciones de Escritorio (Carrito) */}
-        <div className="header-actions">
-          {/* Botón de Carrito / Lista en Escritorio con Diseño Rediseñado Premium */}
-          <button
-            type="button"
-            className={`desktop-cart-btn ${totalCount > 0 ? 'has-items' : ''}`}
-            onClick={onOpenCart}
-            aria-label="Ver mi pedido"
-            title="Ver mi pedido"
-          >
-            <div className="desktop-cart-btn-icon-wrap">
+            {/* Botón de Carrito Desktop: Al lado del botón hamburguesa, mismo tamaño, solo icono y badge (solo escritorio) */}
+            <button
+              type="button"
+              className={`header-ctrl-btn header-desktop-cart-btn ${totalCount > 0 ? 'has-items' : ''}`}
+              onClick={onOpenCart}
+              aria-label="Ver mi pedido"
+              title={totalCount > 0 ? `Ver mi pedido (${totalCount} platos — ${formattedTotal})` : 'Ver mi pedido'}
+            >
               <ShoppingCart size={19} />
               {totalCount > 0 && (
-                <span className="cart-counter-badge">{totalCount}</span>
+                <span className="header-cart-badge">{totalCount}</span>
               )}
-            </div>
-            <div className="desktop-cart-btn-labels">
-              <span className="desktop-cart-btn-title">Mi Pedido</span>
-              {totalCount > 0 && (
-                <span className="desktop-cart-btn-total-pill">{formattedTotal}</span>
-              )}
-            </div>
-          </button>
+            </button>
+          </div>
         </div>
       </div>
     </header>

@@ -778,6 +778,50 @@ input, textarea, select {
   transform: scale(0.94);
 }
 
+/* Botón de Carrito en Header Desktop: Al lado de la hamburguesa, mismo tamaño, solo icono y solo en escritorio */
+.header-desktop-cart-btn {
+  display: none !important;
+}
+
+@media (min-width: 769px) {
+  .header-desktop-cart-btn {
+    display: grid !important;
+    position: relative;
+  }
+
+  .header-desktop-cart-btn.has-items {
+    background: var(--rojo) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 16px rgba(227, 6, 19, 0.45);
+  }
+
+  .header-desktop-cart-btn:hover {
+    background: var(--rojo-hover) !important;
+    color: #ffffff !important;
+    transform: scale(1.06);
+  }
+}
+
+.header-cart-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background-color: #ffffff;
+  color: var(--rojo);
+  font-family: var(--font-primary);
+  font-size: 0.68rem;
+  font-weight: 800;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 9999px;
+  display: grid;
+  place-items: center;
+  padding: 0 4px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.28);
+  border: none !important;
+  animation: cartBadgePulse 1.8s infinite;
+}
+
 @media (max-width: 480px) {
   .header-view-toggle-btn,
   .header-ctrl-btn {
@@ -2925,79 +2969,54 @@ input, textarea, select {
 
 @media (min-width: 769px) {
   .desktop-floating-cart {
-    display: inline-flex;
+    display: flex;
     align-items: center;
-    gap: 1rem;
+    justify-content: center;
     position: fixed;
     bottom: 2.25rem;
     right: 2.25rem;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
     z-index: 60;
-    background: linear-gradient(135deg, #e30613 0%, #a8030f 100%);
+    background: linear-gradient(135deg, #e30613 0%, #b80410 100%);
     color: #ffffff;
-    padding: 0.85rem 1.6rem;
-    border-radius: 9999px;
+    padding: 0;
     border: none !important;
     outline: none !important;
     cursor: pointer;
-    box-shadow: 0 16px 42px rgba(227, 6, 19, 0.45);
+    box-shadow: 0 12px 34px rgba(227, 6, 19, 0.46);
     transition: all 0.24s cubic-bezier(0.16, 1, 0.3, 1);
     animation: floatingCartEnter 0.28s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .desktop-floating-cart:hover {
-    transform: translateY(-4px) scale(1.02);
-    box-shadow: 0 20px 48px rgba(227, 6, 19, 0.58);
+    transform: translateY(-4px) scale(1.08);
+    box-shadow: 0 18px 42px rgba(227, 6, 19, 0.6);
   }
 
   .desktop-floating-cart:active {
-    transform: translateY(-1px) scale(0.99);
-  }
-
-  .desktop-floating-cart-icon {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    transform: translateY(-1px) scale(0.96);
   }
 
   .desktop-floating-cart-badge {
     position: absolute;
-    top: -8px;
-    right: -10px;
+    top: -4px;
+    right: -4px;
     background-color: #ffffff;
     color: var(--rojo);
     font-family: var(--font-primary);
-    font-weight: 700;
-    font-size: 0.72rem;
-    min-width: 19px;
-    height: 19px;
+    font-weight: 800;
+    font-size: 0.74rem;
+    min-width: 20px;
+    height: 20px;
     border-radius: 10px;
     display: grid;
     place-items: center;
     padding: 0 4px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-    animation: cartBadgePulse 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  }
-
-  .desktop-floating-cart-info {
-    display: flex;
-    flex-direction: column;
-    text-align: left;
-    line-height: 1.15;
-  }
-
-  .desktop-floating-cart-label {
-    font-family: var(--font-primary);
-    font-weight: 700;
-    font-size: 0.95rem;
-    letter-spacing: 0.01em;
-  }
-
-  .desktop-floating-cart-price {
-    font-family: var(--font-primary);
-    font-weight: 700;
-    font-size: 0.84rem;
-    opacity: 0.92;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.22);
+    border: none !important;
+    animation: cartBadgePulse 1.8s infinite;
   }
 }
 
@@ -3689,9 +3708,15 @@ input, textarea, select {
 @media (min-width: 769px) {
   .scroll-to-top-btn {
     bottom: 2.25rem;
-    right: 2rem;
-    width: 48px;
-    height: 48px;
+    right: 2.25rem;
+    width: 50px;
+    height: 50px;
+    transition: bottom 0.28s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  /* Si el botón flotante de carrito está en pantalla en escritorio, el botón de subir se eleva limpiamente para no colisionar jamás */
+  body:has(.desktop-floating-cart) .scroll-to-top-btn {
+    bottom: 6.6rem;
   }
 }
 
@@ -4890,6 +4915,84 @@ input, textarea, select {
   animation: bannerFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   max-width: 90vw;
   text-align: center;
+}
+
+/* ==========================================================================
+   SISTEMA DE ANIMACIONES DE TRANSICIÓN DE PÁGINAS, PLATOS Y MODALES (AMBOS MODOS)
+   ========================================================================== */
+.view-transition-page {
+  animation: pageEnterTransition 0.32s cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: opacity, transform;
+}
+
+@keyframes pageEnterTransition {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.product-page-container {
+  animation: pageEnterTransition 0.34s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.product-page-hero-grid {
+  animation: heroMediaEnter 0.36s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes heroMediaEnter {
+  0% {
+    opacity: 0.35;
+    transform: scale(0.982) translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.product-page-details-card {
+  animation: detailsCardEnter 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes detailsCardEnter {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.menu-desktop-layout {
+  animation: pageEnterTransition 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.products-grid {
+  animation: pageEnterTransition 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Transiciones globales suaves para modo claro y modo oscuro */
+html.dark, html:not(.dark), body {
+  transition: background-color 0.28s ease, color 0.28s ease;
+}
+
+.brand-header,
+.product-page-top-bar,
+.product-page-details-card,
+.product-page-action-box,
+.product-page-editorial-card-2col,
+.product-card,
+.category-pill,
+.mobile-nav-bar,
+.cart-drawer-panel {
+  transition: background-color 0.26s ease, color 0.26s ease, box-shadow 0.26s ease;
 }
 
 

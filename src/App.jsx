@@ -12,7 +12,7 @@ import { menuRepository } from './services/MenuRepository';
 import { Cart } from './models/Cart';
 import { CartItem } from './models/CartItem';
 import { Customer } from './models/Customer';
-import { Search, ShoppingBag, LayoutGrid, Rows3, ChevronUp, RotateCcw, X, Sparkles } from 'lucide-react';
+import { Search, ShoppingCart, LayoutGrid, Rows3, ChevronUp, RotateCcw, X, Sparkles } from 'lucide-react';
 import { triggerHaptic } from './utils/haptics';
 
 export function App() {
@@ -403,23 +403,25 @@ export function App() {
 
       {/* 3. Layout Principal: Detalle de Plato dedicado o Catálogo con Sidebar */}
       {isDishDetailPage ? (
-        <ProductDetailPage
-          dish={selectedDishForDetail}
-          photoMode={photoMode}
-          cart={cart}
-          onAddToCart={handleAddToCart}
-          onUpdateQuantity={handleUpdateQuantity}
-          onOpenCart={handleOpenCart}
-          onBack={() => {
-            if (window.history.length > 1) {
-              navigate(-1);
-            } else {
-              navigate(selectedCategory === 'todos' ? '/' : `/categoria/${selectedCategory}`);
-            }
-          }}
-        />
+        <div key={selectedDishForDetail?.id || location.pathname} className="view-transition-page">
+          <ProductDetailPage
+            dish={selectedDishForDetail}
+            photoMode={photoMode}
+            cart={cart}
+            onAddToCart={handleAddToCart}
+            onUpdateQuantity={handleUpdateQuantity}
+            onOpenCart={handleOpenCart}
+            onBack={() => {
+              if (window.history.length > 1) {
+                navigate(-1);
+              } else {
+                navigate(selectedCategory === 'todos' ? '/' : `/categoria/${selectedCategory}`);
+              }
+            }}
+          />
+        </div>
       ) : (
-        <div className="menu-desktop-layout">
+        <div key={`catalog-${selectedCategory}`} className="menu-desktop-layout view-transition-page">
           <CategoryPills
             categories={categories}
             selectedCategory={searchQuery.trim() ? 'todos' : selectedCategory}
@@ -614,23 +616,17 @@ export function App() {
         photoMode={photoMode}
       />
 
-      {/* 10. Botón Flotante de Carrito en Escritorio (Mejorado con diseño volumétrico premium) */}
+      {/* 10. Botón Flotante de Carrito en Escritorio (Solo Icono de Carrito sin texto y Badge) */}
       {cart.getTotalCount() > 0 && !isAnyModalOpen && (
         <button
           type="button"
           className="desktop-floating-cart"
           onClick={handleOpenCart}
           aria-label="Ver mi pedido"
-          title="Ver mi pedido"
+          title={`Ver mi pedido (${cart.getTotalCount()} platos — ${cart.getFormattedTotal()})`}
         >
-          <div className="desktop-floating-cart-icon">
-            <ShoppingBag size={21} />
-            <span className="desktop-floating-cart-badge">{cart.getTotalCount()}</span>
-          </div>
-          <div className="desktop-floating-cart-info">
-            <span className="desktop-floating-cart-label">Mi Pedido</span>
-            <span className="desktop-floating-cart-price">{cart.getFormattedTotal()}</span>
-          </div>
+          <ShoppingCart size={24} />
+          <span className="desktop-floating-cart-badge">{cart.getTotalCount()}</span>
         </button>
       )}
 
