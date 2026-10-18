@@ -19,7 +19,6 @@ export function ProductDetailModal({
   const [note, setNote] = useState(initialNote);
   const [isClosing, setIsClosing] = useState(false);
   const [copiedShare, setCopiedShare] = useState(false);
-  const [touchStartY, setTouchStartY] = useState(null);
 
   useEffect(() => {
     setQuantity(initialQuantity > 0 ? initialQuantity : 1);
@@ -72,21 +71,6 @@ export function ProductDetailModal({
     }
   };
 
-  // Gesto táctil Swipe-Down para cerrar en móviles
-  const handleTouchStart = (e) => {
-    setTouchStartY(e.touches[0].clientY);
-  };
-
-  const handleTouchEnd = (e) => {
-    if (touchStartY === null) return;
-    const diffY = e.changedTouches[0].clientY - touchStartY;
-    if (diffY > 80) {
-      triggerHaptic(12);
-      handleClose();
-    }
-    setTouchStartY(null);
-  };
-
   // Bloquear scroll de fondo al abrir el modal y navegación con flechas de teclado
   useEffect(() => {
     const originalOverflow = document.body.style.overflow;
@@ -108,7 +92,7 @@ export function ProductDetailModal({
   if (!dish) return null;
 
   const hasPhoto = dish.hasImage(photoMode);
-  const currentImage = dish.getImage(photoMode);
+  const currentImage = dish.getResolvedImage ? dish.getResolvedImage(photoMode) : dish.getImage(photoMode);
   const subtotal = (dish.price * quantity).toFixed(2);
 
   const handleSubmit = (e) => {
@@ -129,8 +113,6 @@ export function ProductDetailModal({
         {/* Contenedor del modal */}
         <div
           className={`modal-card-wrapper ${isClosing ? 'modal-content-closing' : 'modal-content-opening'}`}
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEnd}
         >
           {/* Botón cerrar flotante: fijo en esquina superior derecha sin desplazarse por el scroll */}
           <button
@@ -148,15 +130,10 @@ export function ProductDetailModal({
           {hasPhoto && currentImage ? (
             <div className="modal-image-wrap">
               <img
-                src={currentImage.startsWith('http') ? currentImage : `./${currentImage.replace(/^\//, '')}`}
+                src={currentImage}
                 alt={`${dish.name} — Especialidad tradicional de Mi Barrunto`}
                 className="modal-image"
-                onError={(e) => {
-                  if (!e.target.dataset.retried) {
-                    e.target.dataset.retried = '1';
-                    e.target.src = `${import.meta.env.BASE_URL}${currentImage.replace(/^\//, '')}`;
-                  }
-                }}
+                loading="eager"
               />
             </div>
           ) : (

@@ -13,7 +13,7 @@ export function ProductCard({
   index = 0
 }) {
   const hasPhoto = dish.hasImage(photoMode);
-  const currentImage = dish.getImage(photoMode);
+  const currentImage = dish.getResolvedImage ? dish.getResolvedImage(photoMode) : dish.getImage(photoMode);
   const isCompact = viewMode === 'compact';
   const [isRevealed, setIsRevealed] = useState(false);
   const cardRef = useRef(null);
@@ -66,17 +66,11 @@ export function ProductCard({
         <div className="compact-image-wrap">
           {hasPhoto && currentImage ? (
             <img
-              src={currentImage.startsWith('http') ? currentImage : `./${currentImage.replace(/^\//, '')}`}
+              src={currentImage}
               alt={`${dish.name} — Plato peruano en Mi Barrunto`}
               className="compact-img"
               loading="lazy"
               decoding="async"
-              onError={(e) => {
-                if (!e.target.dataset.retried) {
-                  e.target.dataset.retried = '1';
-                  e.target.src = `${import.meta.env.BASE_URL}${currentImage.replace(/^\//, '')}`;
-                }
-              }}
             />
           ) : (
             <div className="compact-placeholder">
@@ -156,17 +150,11 @@ export function ProductCard({
           title="Ver detalle del plato"
         >
           <img
-            src={currentImage.startsWith('http') ? currentImage : `./${currentImage.replace(/^\//, '')}`}
+            src={currentImage}
             alt={`${dish.name} — Comida criolla peruana en Mi Barrunto`}
             className="product-card-img"
             loading="lazy"
             decoding="async"
-            onError={(e) => {
-              if (!e.target.dataset.retried) {
-                e.target.dataset.retried = '1';
-                e.target.src = `${import.meta.env.BASE_URL}${currentImage.replace(/^\//, '')}`;
-              }
-            }}
           />
         </div>
       ) : (

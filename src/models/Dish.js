@@ -57,6 +57,22 @@ export class Dish {
   }
 
   /**
+   * Obtiene la ruta absoluta de la fotografía para que nunca falle en subrutas (/plato/:id) en Vercel
+   * @param {'curated'|'complete'} photoMode
+   * @returns {string|null}
+   */
+  getResolvedImage(photoMode = 'curated') {
+    const raw = this.getImage(photoMode);
+    if (!raw) return null;
+    if (raw.startsWith('http://') || raw.startsWith('https://')) {
+      return raw;
+    }
+    const clean = raw.replace(/^(\.\/|\/)+/, '');
+    const base = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.BASE_URL) || '/';
+    return `${base.endsWith('/') ? base : base + '/'}${clean}`;
+  }
+
+  /**
    * Retorna el precio formateado en dólares
    * @returns {string}
    */
