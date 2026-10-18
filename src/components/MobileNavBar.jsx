@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Home, Menu, Search, ShoppingCart, Heart } from 'lucide-react';
+import { Home, Menu, Search, ShoppingCart, Heart, Tv } from 'lucide-react';
 import { triggerHaptic } from '../utils/haptics';
 
 export function MobileNavBar({
@@ -10,7 +10,8 @@ export function MobileNavBar({
   onToggleSearch,
   favoritesCount = 0,
   showFavoritesOnly = false,
-  onToggleFavorites
+  onToggleFavorites,
+  onOpenTvMode
 }) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -52,6 +53,9 @@ export function MobileNavBar({
 
   const handleHomeClick = () => {
     triggerHaptic(12);
+    if (showFavoritesOnly && onToggleFavorites) {
+      onToggleFavorites();
+    }
     navigate('/');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -68,7 +72,7 @@ export function MobileNavBar({
       className={`mobile-nav-bar ${isCompact ? 'mobile-nav-bar-compact' : ''}`}
       aria-label="Navegación móvil"
     >
-      {/* 0. Home / Inicio al final de la izquierda */}
+      {/* 0. Home / Inicio al inicio de la barra */}
       <button
         type="button"
         className={`mobile-nav-btn ${isHome && !showFavoritesOnly ? 'active' : ''}`}
@@ -83,7 +87,13 @@ export function MobileNavBar({
       <button
         type="button"
         className="mobile-nav-btn"
-        onClick={onOpenMobileMenu}
+        onClick={() => {
+          triggerHaptic(12);
+          if (showFavoritesOnly && onToggleFavorites) {
+            onToggleFavorites();
+          }
+          if (onOpenMobileMenu) onOpenMobileMenu();
+        }}
         aria-label="Abrir categorías"
         title="Categorías"
       >
@@ -94,17 +104,39 @@ export function MobileNavBar({
       <button
         type="button"
         className="mobile-nav-btn"
-        onClick={onToggleSearch}
+        onClick={() => {
+          triggerHaptic(12);
+          if (showFavoritesOnly && onToggleFavorites) {
+            onToggleFavorites();
+          }
+          if (onToggleSearch) onToggleSearch();
+        }}
         aria-label="Buscar en la carta"
         title="Buscar"
       >
         <Search size={22} />
       </button>
 
-      {/* 3. Favoritos (Corazón) */}
+      {/* 3. Modo Menú TV */}
+      {onOpenTvMode && (
+        <button
+          type="button"
+          className="mobile-nav-btn mobile-tv-nav-btn"
+          onClick={() => {
+            triggerHaptic(14);
+            onOpenTvMode();
+          }}
+          aria-label="Modo Pantalla Completa TV"
+          title="Modo TV"
+        >
+          <Tv size={22} />
+        </button>
+      )}
+
+      {/* 4. Favoritos (Corazón) */}
       <button
         type="button"
-        className={`mobile-nav-btn mobile-fav-nav-btn ${showFavoritesOnly ? 'active' : ''}`}
+        className={`mobile-nav-btn mobile-fav-nav-btn ${showFavoritesOnly ? 'active is-favorites-page' : ''}`}
         onClick={handleFavoritesClick}
         aria-label="Ver mis platos favoritos"
         title="Mis Favoritos"
@@ -119,7 +151,7 @@ export function MobileNavBar({
         )}
       </button>
 
-      {/* 4. Mi Pedido (Carrito de compras al final) */}
+      {/* 5. Mi Pedido (Carrito de compras al final) */}
       <button
         type="button"
         className="mobile-nav-btn"
@@ -135,3 +167,5 @@ export function MobileNavBar({
     </nav>
   );
 }
+
+export default MobileNavBar;

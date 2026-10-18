@@ -20,7 +20,7 @@ import { menuRepository } from './services/MenuRepository';
 import { Cart } from './models/Cart';
 import { CartItem } from './models/CartItem';
 import { Customer } from './models/Customer';
-import { Search, ShoppingCart, LayoutGrid, Rows3, ChevronUp, RotateCcw, X, Heart, Trash2, CheckSquare, Square, CheckCircle2, Plus } from 'lucide-react';
+import { Search, ShoppingCart, LayoutGrid, Rows3, ChevronUp, ChevronLeft, RotateCcw, X, Heart, Trash2, CheckSquare, Square, CheckCircle2, Plus } from 'lucide-react';
 import { TvMenuModal } from './components/TvMenuModal';
 import { triggerHaptic } from './utils/haptics';
 import { triggerFlyToCart } from './utils/flyToCart';
@@ -528,8 +528,8 @@ export function App() {
 
   return (
     <div className="app-container">
-      {/* 1. Header con Logo Centrado en Móvil y Botones al lado del Buscador en Escritorio (Oculto en vista detalle para máxima inmersión) */}
-      {!isDishDetailPage && (
+      {/* 1. Header con Logo Centrado en Móvil y Botones al lado del Buscador en Escritorio (Oculto en vista detalle y en favoritos) */}
+      {!isDishDetailPage && !showFavoritesOnly && (
         <Header
           cart={cart}
           onOpenCart={handleOpenCart}
@@ -551,6 +551,70 @@ export function App() {
           onOpenDetail={handleOpenDishDetail}
           photoMode={photoMode}
         />
+      )}
+
+      {/* 1.1 Header Dedicado y Limpio para la Página de Favoritos (Sin video, sin banner masivo) */}
+      {showFavoritesOnly && !isDishDetailPage && (
+        <header className="favorites-standalone-header">
+          <div className="favorites-standalone-inner">
+            <button
+              type="button"
+              className="favorites-standalone-back-btn"
+              onClick={() => {
+                triggerHaptic(12);
+                setShowFavoritesOnly(false);
+              }}
+              aria-label="Volver a toda la carta"
+              title="Volver a la carta"
+            >
+              <ChevronLeft size={22} />
+              <span className="favorites-back-text">Volver a la carta</span>
+            </button>
+
+            <div className="favorites-standalone-title-wrap">
+              <Heart size={22} fill="var(--rojo)" color="var(--rojo)" />
+              <h1 className="favorites-standalone-title">
+                Mis Favoritos
+                <span className="favorites-standalone-badge">({favorites.length})</span>
+              </h1>
+            </div>
+
+            <div className="favorites-standalone-actions">
+              {favorites.length > 0 && (
+                <>
+                  <button
+                    type="button"
+                    className="favorites-standalone-action-btn"
+                    onClick={handleToggleSelectAllFavs}
+                    title={selectedFavIds.length === favorites.length ? 'Deseleccionar todos' : 'Seleccionar todos'}
+                  >
+                    {selectedFavIds.length === favorites.length ? (
+                      <>
+                        <CheckSquare size={16} />
+                        <span className="standalone-btn-text">Deseleccionar</span>
+                      </>
+                    ) : (
+                      <>
+                        <Square size={16} />
+                        <span className="standalone-btn-text">Seleccionar todos</span>
+                      </>
+                    )}
+                  </button>
+
+                  <button
+                    type="button"
+                    className="favorites-standalone-action-btn favorites-clear-danger"
+                    onClick={handleClearAllFavorites}
+                    title="Vaciar todos los favoritos"
+                  >
+                    <Trash2 size={16} />
+                    <span className="standalone-btn-text">Limpiar</span>
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+        </header>
       )}
 
       {/* 2. Menú Hamburguesa Móvil (Carga diferida) */}
@@ -594,22 +658,24 @@ export function App() {
           </Suspense>
         </div>
       ) : (
-        <div key={`catalog-${selectedCategory}`} className="menu-desktop-layout view-transition-page">
-          <CategoryPills
-            categories={categories}
-            selectedCategory={searchQuery.trim() ? 'todos' : selectedCategory}
-            activeScrollCategory={activeScrollCategory}
-            onSelectCategory={handleSelectCategory}
-            favoritesCount={favorites.length}
-            showFavoritesOnly={showFavoritesOnly}
-            onToggleFavorites={handleToggleFavoritesFilter}
-            viewMode={viewMode}
-            onToggleViewMode={handleToggleViewMode}
-            onSetViewMode={handleSetViewMode}
-          />
+        <div key={`catalog-${selectedCategory}`} className={`menu-desktop-layout view-transition-page ${showFavoritesOnly ? 'favorites-active-layout' : ''}`}>
+          {!showFavoritesOnly && (
+            <CategoryPills
+              categories={categories}
+              selectedCategory={searchQuery.trim() ? 'todos' : selectedCategory}
+              activeScrollCategory={activeScrollCategory}
+              onSelectCategory={handleSelectCategory}
+              favoritesCount={favorites.length}
+              showFavoritesOnly={showFavoritesOnly}
+              onToggleFavorites={handleToggleFavoritesFilter}
+              viewMode={viewMode}
+              onToggleViewMode={handleToggleViewMode}
+              onSetViewMode={handleSetViewMode}
+            />
+          )}
 
           {/* 4. Catálogo de Platos */}
-          <main className="menu-main-layout">
+          <main className={`menu-main-layout ${showFavoritesOnly ? 'favorites-main-layout' : ''}`}>
         {/* Banner de Repetir Último Pedido (One-Tap Reorder) */}
         {lastOrder && cart.isEmpty() && !dismissedLastOrder && (
           <div className="reorder-banner">
@@ -686,100 +752,37 @@ export function App() {
           </div>
         )}
 
-        {/* Panel de Gestión de Favoritos (Acciones en Lote y Limpiar Favoritos) */}
-        {showFavoritesOnly && favorites.length > 0 && (
-          <div className="favorites-management-panel">
-            <div className="favorites-panel-header">
-              <div className="favorites-panel-title-wrap">
-                <Heart size={18} fill="var(--rojo)" color="var(--rojo)" />
-                <span className="favorites-panel-title">
-                  Mis Favoritos <strong>({favorites.length})</strong>
-                </span>
-                {selectedFavIds.length > 0 && (
-                  <span className="favorites-selected-badge">
-                    {selectedFavIds.length} seleccionados
-                  </span>
-                )}
-              </div>
-
-              <div className="favorites-panel-quick-actions">
-                {/* Botón Seleccionar / Deseleccionar Todos */}
-                <button
-                  type="button"
-                  className="favorites-panel-btn favorites-select-all-btn"
-                  onClick={handleToggleSelectAllFavs}
-                  title={selectedFavIds.length === favorites.length ? 'Deseleccionar todos' : 'Seleccionar todos'}
-                >
-                  {selectedFavIds.length === favorites.length ? (
-                    <>
-                      <CheckSquare size={15} />
-                      <span>Deseleccionar todos</span>
-                    </>
-                  ) : (
-                    <>
-                      <Square size={15} />
-                      <span>Seleccionar todos</span>
-                    </>
-                  )}
-                </button>
-
-                {/* Botón Limpiar Todos los Favoritos */}
-                <button
-                  type="button"
-                  className="favorites-panel-btn favorites-clear-all-btn"
-                  onClick={handleClearAllFavorites}
-                  title="Vaciar todos los favoritos"
-                >
-                  <Trash2 size={15} />
-                  <span>Limpiar favoritos</span>
-                </button>
-
-                {/* Botón Salir / Ver Toda la Carta */}
-                <button
-                  type="button"
-                  className="favorites-panel-btn favorites-exit-btn"
-                  onClick={() => setShowFavoritesOnly(false)}
-                  title="Volver a toda la carta"
-                >
-                  <X size={15} />
-                  <span>Ver toda la carta</span>
-                </button>
-              </div>
+        {/* Barra Flotante de Acciones en Lote cuando hay platos seleccionados en Favoritos */}
+        {showFavoritesOnly && selectedFavIds.length > 0 && (
+          <div className="favorites-batch-actions-bar">
+            <div className="batch-actions-info">
+              <CheckCircle2 size={16} color="#ffffff" />
+              <span>
+                <strong>{selectedFavIds.length}</strong> {selectedFavIds.length === 1 ? 'plato seleccionado' : 'platos seleccionados'}
+              </span>
             </div>
 
-            {/* Barra Flotante de Acciones en Lote cuando hay platos seleccionados */}
-            {selectedFavIds.length > 0 && (
-              <div className="favorites-batch-actions-bar">
-                <div className="batch-actions-info">
-                  <CheckCircle2 size={16} color="#ffffff" />
-                  <span>
-                    <strong>{selectedFavIds.length}</strong> {selectedFavIds.length === 1 ? 'plato seleccionado' : 'platos seleccionados'}
-                  </span>
-                </div>
+            <div className="batch-actions-btns">
+              {/* Botón Añadir Seleccionados al Pedido */}
+              <button
+                type="button"
+                className="batch-action-btn batch-add-cart-btn"
+                onClick={handleAddSelectedFavsToCart}
+              >
+                <Plus size={16} />
+                <span>Añadir al pedido ({selectedFavIds.length})</span>
+              </button>
 
-                <div className="batch-actions-btns">
-                  {/* Botón Añadir Seleccionados al Pedido */}
-                  <button
-                    type="button"
-                    className="batch-action-btn batch-add-cart-btn"
-                    onClick={handleAddSelectedFavsToCart}
-                  >
-                    <Plus size={16} />
-                    <span>Añadir al pedido ({selectedFavIds.length})</span>
-                  </button>
-
-                  {/* Botón Quitar Seleccionados de Favoritos */}
-                  <button
-                    type="button"
-                    className="batch-action-btn batch-remove-fav-btn"
-                    onClick={handleRemoveSelectedFavs}
-                  >
-                    <Trash2 size={15} />
-                    <span>Quitar seleccionados</span>
-                  </button>
-                </div>
-              </div>
-            )}
+              {/* Botón Quitar Seleccionados de Favoritos */}
+              <button
+                type="button"
+                className="batch-action-btn batch-remove-fav-btn"
+                onClick={handleRemoveSelectedFavs}
+              >
+                <Trash2 size={15} />
+                <span>Quitar seleccionados</span>
+              </button>
+            </div>
           </div>
         )}
 
@@ -884,7 +887,7 @@ export function App() {
         />
       )}
 
-      {/* 7. Barra Móvil Inferior (Home, Menú, Búsqueda, Favoritos y Mi Pedido) */}
+      {/* 7. Barra Móvil Inferior (Home, Menú, Búsqueda, TV, Favoritos y Mi Pedido) */}
       <MobileNavBar
         cart={cart}
         onOpenCart={handleOpenCart}
@@ -892,6 +895,7 @@ export function App() {
         favoritesCount={favorites.length}
         showFavoritesOnly={showFavoritesOnly}
         onToggleFavorites={handleToggleFavoritesFilter}
+        onOpenTvMode={() => setIsTvModeOpen(true)}
         onToggleSearch={() => {
           if (isDishDetailPage) {
             navigate('/');

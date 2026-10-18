@@ -5531,6 +5531,183 @@ html.dark .search-result-thumb-wrap {
 }
 
 /* ==========================================================================
+   HEADER DEDICADO Y ELEGANTE PARA PÁGINA DE FAVORITOS (CERO BORDES)
+   ========================================================================== */
+.favorites-standalone-header {
+  position: sticky;
+  top: 0;
+  z-index: 80;
+  background-color: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  border: none !important;
+  outline: none !important;
+  margin-bottom: 1.5rem;
+  transition: background-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+html.dark .favorites-standalone-header {
+  background-color: rgba(18, 18, 20, 0.92);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
+}
+
+.favorites-standalone-inner {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0.9rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.favorites-standalone-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background-color: var(--secondary-bg);
+  color: var(--text-main);
+  padding: 0.55rem 0.95rem;
+  border-radius: 9999px;
+  font-family: var(--font-primary);
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: none !important;
+  outline: none !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.favorites-standalone-back-btn:hover {
+  background-color: rgba(0, 0, 0, 0.08);
+  transform: translateX(-2px);
+}
+
+html.dark .favorites-standalone-back-btn:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+.favorites-standalone-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.favorites-standalone-title {
+  margin: 0;
+  font-family: var(--font-primary);
+  font-size: 1.22rem;
+  font-weight: 800;
+  color: var(--text-main);
+  letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.favorites-standalone-badge {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--rojo);
+}
+
+.favorites-standalone-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.favorites-standalone-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.52rem 0.85rem;
+  border-radius: 9999px;
+  font-family: var(--font-secondary);
+  font-size: 0.84rem;
+  font-weight: 600;
+  background-color: var(--secondary-bg);
+  color: var(--text-main);
+  border: none !important;
+  outline: none !important;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease;
+}
+
+.favorites-standalone-action-btn:hover {
+  background-color: rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
+}
+
+html.dark .favorites-standalone-action-btn:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+.favorites-standalone-action-btn.favorites-clear-danger {
+  color: var(--rojo);
+}
+
+.favorites-standalone-action-btn.favorites-clear-danger:hover {
+  background-color: rgba(238, 0, 0, 0.12);
+  color: var(--rojo-hover);
+}
+
+@media (max-width: 640px) {
+  .favorites-back-text {
+    display: none;
+  }
+  .favorites-standalone-back-btn {
+    padding: 0.55rem;
+    border-radius: 50%;
+  }
+  .standalone-btn-text {
+    display: none;
+  }
+  .favorites-standalone-action-btn {
+    padding: 0.55rem;
+    border-radius: 50%;
+  }
+  .favorites-standalone-title {
+    font-size: 1.05rem;
+  }
+}
+
+.favorites-active-layout {
+  display: block !important;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.favorites-main-layout {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 auto !important;
+}
+
+.mobile-nav-btn.active {
+  color: var(--rojo) !important;
+  background: rgba(238, 0, 0, 0.09) !important;
+  opacity: 1 !important;
+}
+
+html.dark .mobile-nav-btn.active {
+  color: #ff4d4d !important;
+  background: rgba(238, 0, 0, 0.2) !important;
+}
+
+.mobile-nav-btn.active svg {
+  transform: scale(1.08);
+}
+
+.mobile-nav-btn.mobile-tv-nav-btn:hover {
+  color: var(--rojo);
+}
+
+/* ==========================================================================
    PANEL DE GESTIÓN Y ACCIONES EN LOTE PARA FAVORITOS
    ========================================================================== */
 .favorites-management-panel {
