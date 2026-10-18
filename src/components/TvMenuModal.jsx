@@ -25,7 +25,7 @@ export function TvMenuModal({ isOpen, onClose, dishes = [], photoMode = 'curated
     setCurrentIndex((prev) => (prev - 1 + tvDishes.length) % tvDishes.length);
   }, [tvDishes.length]);
 
-  // Rotación automática invisible cada 6.5 segundos
+  // Rotación automática cada 6.5 segundos
   useEffect(() => {
     if (!isOpen || !isPlaying || tvDishes.length === 0) return;
     const timer = setInterval(() => {
@@ -34,7 +34,7 @@ export function TvMenuModal({ isOpen, onClose, dishes = [], photoMode = 'curated
     return () => clearInterval(timer);
   }, [isOpen, isPlaying, handleNext, tvDishes.length]);
 
-  // Ocultar controles automáticamente tras 2.5s de inactividad del mouse
+  // Ocultar controles superiores automáticamente tras 2.5s de inactividad
   const handleUserActivity = useCallback(() => {
     setShowControls(true);
     if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current);
@@ -98,9 +98,10 @@ export function TvMenuModal({ isOpen, onClose, dishes = [], photoMode = 'curated
   if (!isOpen || tvDishes.length === 0) return null;
 
   const currentDish = tvDishes[currentIndex];
+  // Obtener la mejor resolución posible de la fotografía
   const image = currentDish.getResolvedImage
-    ? currentDish.getResolvedImage(photoMode)
-    : currentDish.getImage(photoMode);
+    ? (currentDish.getResolvedImage(photoMode) || currentDish.getResolvedImage('complete') || currentDish.getResolvedImage('curated'))
+    : (currentDish.getImage(photoMode) || currentDish.getImage('complete') || currentDish.getImage('curated'));
 
   return (
     <div
@@ -111,8 +112,8 @@ export function TvMenuModal({ isOpen, onClose, dishes = [], photoMode = 'curated
       aria-label="Modo Pantalla Completa TV - Mi Barrunto"
       onMouseMove={handleUserActivity}
     >
-      {/* 1. Imagen a Pantalla Completa (100vw x 100vh) */}
-      <div className="tv-fullscreen-media" key={currentDish.id}>
+      {/* 1. Fotografía de Máxima Calidad en Pantalla Completa */}
+      <div className="tv-fullscreen-media" key={`media-${currentDish.id}`}>
         {image ? (
           <img
             src={image}
@@ -126,7 +127,34 @@ export function TvMenuModal({ isOpen, onClose, dishes = [], photoMode = 'curated
         )}
       </div>
 
-      {/* 2. Barra Superior Autocultable: solo aparece al mover el mouse */}
+      {/* 2. Overlay Negro Gradual en la Foto para Contraste y Legibilidad */}
+      <div className="tv-overlay-gradient" />
+
+      {/* 3. Ficha con Título, Descripción y Precio en la Parte Derecha */}
+      <aside className="tv-dish-sidebar" key={`info-${currentDish.id}`}>
+        {currentDish.categoryName && (
+          <div className="tv-sidebar-badge">
+            <span>{currentDish.categoryName}</span>
+          </div>
+        )}
+
+        <h2 className="tv-sidebar-title">{currentDish.name}</h2>
+
+        {currentDish.nameEn && (
+          <p className="tv-sidebar-name-en">{currentDish.nameEn}</p>
+        )}
+
+        {currentDish.glosa && currentDish.glosa !== currentDish.nameEn && (
+          <p className="tv-sidebar-desc">{currentDish.glosa}</p>
+        )}
+
+        <div className="tv-sidebar-price-row">
+          <span className="tv-sidebar-currency">$</span>
+          <span className="tv-sidebar-price">{currentDish.price.toFixed(2)}</span>
+        </div>
+      </aside>
+
+      {/* 4. Barra Superior Autocultable: solo aparece al mover el mouse */}
       <header className={`tv-menu-header ${showControls ? 'is-visible' : 'is-hidden'}`}>
         <div className="tv-header-brand">
           <img
@@ -182,7 +210,7 @@ export function TvMenuModal({ isOpen, onClose, dishes = [], photoMode = 'curated
         </div>
       </header>
 
-      {/* 3. Zonas de Clic Invisibles a los costados para navegar sin botones visuales */}
+      {/* 5. Zonas de Clic Invisibles para navegar Anterior / Siguiente */}
       <div
         className="tv-nav-invisible-zone tv-nav-invisible-prev"
         onClick={() => {
