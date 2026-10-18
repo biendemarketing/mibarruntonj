@@ -547,17 +547,17 @@ export function ProductDetailPage({
                         <PlateIcon size={34} />
                       </div>
                     )}
-                    {/* Indicador sobre la foto: signo de más (+) sin fondo que cambia a carrito cuando se le hace clic */}
-                    <span 
-                      className={`accompaniment-circle-badge ${isSelected ? 'is-in-cart' : 'is-plus'}`}
+                    {/* Overlay centrado: Signo + centrado por defecto; Overlay rojo con carrito blanco al seleccionarse */}
+                    <div 
+                      className={`accompaniment-circle-overlay ${isSelected ? 'is-in-cart' : 'is-plus'}`}
                       aria-label={isSelected ? `${accItem.name} en el pedido` : `Añadir ${accItem.name}`}
                     >
                       {isSelected ? (
-                        <ShoppingCart size={17} strokeWidth={2.5} />
+                        <ShoppingCart size={32} strokeWidth={2.4} className="overlay-cart-icon" />
                       ) : (
-                        <Plus size={19} strokeWidth={3} />
+                        <Plus size={34} strokeWidth={3} className="overlay-plus-icon" />
                       )}
-                    </span>
+                    </div>
                   </div>
 
                   {/* Nombre y Precio */}

@@ -4487,7 +4487,7 @@ input, textarea, select {
 }
 
 .accompaniment-circular-card-clean.is-selected .accompaniment-circle-avatar-wrap {
-  box-shadow: 0 0 0 3px var(--rojo), 0 8px 24px rgba(227, 6, 19, 0.4);
+  box-shadow: 0 10px 28px rgba(227, 6, 19, 0.45);
 }
 
 .accompaniment-circle-avatar {
@@ -4510,50 +4510,70 @@ input, textarea, select {
   color: var(--text-light);
 }
 
-.accompaniment-circle-badge {
+.accompaniment-circle-overlay {
   position: absolute;
-  bottom: 2px;
-  right: 2px;
-  width: 28px;
-  height: 28px;
-  display: grid;
-  place-items: center;
+  inset: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border: none !important;
-  background: transparent !important;
-  box-shadow: none !important;
-  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 3;
 }
 
-.accompaniment-circle-badge.is-plus {
+/* Estado antes de clicar: Solo signo + centrado prominentemente en la imagen circular */
+.accompaniment-circle-overlay.is-plus {
   background: transparent !important;
-  color: var(--rojo);
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.75));
+  color: #ffffff;
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 12px rgba(0, 0, 0, 0.65));
 }
 
-.accompaniment-circle-avatar-wrap.clickable-avatar:hover .accompaniment-circle-badge.is-plus {
-  transform: scale(1.25);
-  color: #ff3b30;
-  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.9));
+.accompaniment-circle-overlay.is-plus .overlay-plus-icon {
+  transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.accompaniment-circle-badge.is-in-cart {
-  background: transparent !important;
-  color: #10b981;
-  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.8));
-  transform: scale(1.15);
-  animation: badgePop 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+.accompaniment-circle-avatar-wrap.clickable-avatar:hover .accompaniment-circle-overlay.is-plus .overlay-plus-icon {
+  transform: scale(1.18);
+  filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 1)) drop-shadow(0 0 14px rgba(227, 6, 19, 0.9));
+}
+
+/* Estado cuando se añade: Overlay rojo con carrito blanco centrado */
+.accompaniment-circle-overlay.is-in-cart {
+  background: rgba(227, 6, 19, 0.82) !important;
+  backdrop-filter: blur(2px);
+  color: #ffffff;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.15);
+  animation: overlayFadeIn 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.accompaniment-circle-overlay.is-in-cart .overlay-cart-icon {
+  color: #ffffff;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
+  animation: badgePop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes overlayFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 @keyframes badgePop {
   0% {
-    transform: scale(0.65);
+    transform: scale(0.6);
   }
   60% {
-    transform: scale(1.25);
+    transform: scale(1.22);
   }
   100% {
-    transform: scale(1.15);
+    transform: scale(1);
   }
 }
 
