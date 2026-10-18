@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { Plus, Minus, Heart, Check } from 'lucide-react';
 import { PlateIcon } from './Icons';
 
@@ -20,55 +20,7 @@ export function ProductCard({
   const hasPhoto = dish.hasImage(photoMode);
   const currentImage = dish.getResolvedImage ? dish.getResolvedImage(photoMode) : dish.getImage(photoMode);
   const isCompact = viewMode === 'compact';
-  const [isRevealed, setIsRevealed] = useState(false);
-  const [shouldLoadImage, setShouldLoadImage] = useState(false);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
-  const cardRef = useRef(null);
-
-  // Efecto cascada escalonado por columna/fila al ir bajando por la página
-  const staggerDelay = isRevealed ? `${(index % 6) * 65}ms` : '0ms';
-
-  useEffect(() => {
-    const el = cardRef.current;
-    if (!el) return;
-
-    if (typeof IntersectionObserver === 'undefined') {
-      setIsRevealed(true);
-      setShouldLoadImage(true);
-      return;
-    }
-
-    // Observer 1: Revelado progresivo con micro-escala
-    const revealObserver = new IntersectionObserver(
-      ([entry]) => {
-        setIsRevealed(entry.isIntersecting);
-      },
-      {
-        threshold: 0.15,
-        rootMargin: '0px 0px -40px 0px'
-      }
-    );
-    revealObserver.observe(el);
-
-    // Observer 2: Carga diferida (Lazy Loading) de imágenes con margen de anticipación de 300px
-    const imageObserver = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setShouldLoadImage(true);
-          imageObserver.disconnect();
-        }
-      },
-      {
-        rootMargin: '300px 0px 300px 0px'
-      }
-    );
-    imageObserver.observe(el);
-
-    return () => {
-      revealObserver.disconnect();
-      imageObserver.disconnect();
-    };
-  }, [dish.id, viewMode]);
 
   // =========================================================================
   // VISTA 2: COMPACTA / HORIZONTAL (Inspirada en el diseño enviado por el usuario)
@@ -77,12 +29,10 @@ export function ProductCard({
   if (isCompact) {
     return (
       <article
-        ref={cardRef}
-        className={`product-card product-card-compact ${hasPhoto ? 'has-photo' : 'no-photo'} ${isRevealed ? 'card-revealed' : 'card-hidden'} ${isSelected ? 'card-batch-selected' : ''}`}
+        className={`product-card product-card-compact ${hasPhoto ? 'has-photo' : 'no-photo'} ${isSelected ? 'card-batch-selected' : ''}`}
         data-dish-id={dish.id}
         onClick={() => onOpenDetail(dish)}
         title="Clic para ver detalles"
-        style={{ transitionDelay: staggerDelay }}
       >
         {/* Selector Checkbox de selección múltiple (en vista de favoritos) */}
         {isSelectionMode && onToggleSelect && (
@@ -99,21 +49,17 @@ export function ProductCard({
             {isSelected ? <Check size={13} strokeWidth={3} /> : null}
           </button>
         )}
-        {/* Imagen o Placeholder a la izquierda con Carga Diferida (Lazy Loading) */}
+        {/* Imagen o Placeholder a la izquierda con Carga Diferida Nativa */}
         <div className="compact-image-wrap">
           {hasPhoto && currentImage ? (
-            shouldLoadImage ? (
-              <img
-                src={currentImage}
-                alt={`${dish.name} — Plato peruano en Mi Barrunto`}
-                className={`compact-img ${isImageLoaded ? 'img-loaded' : 'img-loading'}`}
-                loading="lazy"
-                decoding="async"
-                onLoad={() => setIsImageLoaded(true)}
-              />
-            ) : (
-              <div className="compact-img-skeleton" aria-hidden="true" />
-            )
+            <img
+              src={currentImage}
+              alt={`${dish.name} — Plato peruano en Mi Barrunto`}
+              className={`compact-img ${isImageLoaded ? 'img-loaded' : 'img-loading'}`}
+              loading="lazy"
+              decoding="async"
+              onLoad={() => setIsImageLoaded(true)}
+            />
           ) : (
             <div className="compact-placeholder">
               <PlateIcon size={34} className="compact-placeholder-icon" />
@@ -201,10 +147,8 @@ export function ProductCard({
   // =========================================================================
   return (
     <article
-      ref={cardRef}
-      className={`product-card ${hasPhoto ? 'has-photo' : 'no-photo'} ${isRevealed ? 'card-revealed' : 'card-hidden'} ${isSelected ? 'card-batch-selected' : ''}`}
+      className={`product-card ${hasPhoto ? 'has-photo' : 'no-photo'} ${isSelected ? 'card-batch-selected' : ''}`}
       data-dish-id={dish.id}
-      style={{ transitionDelay: staggerDelay }}
     >
       {/* Selector Checkbox de selección múltiple (en vista de favoritos) */}
       {isSelectionMode && onToggleSelect && (
@@ -221,25 +165,21 @@ export function ProductCard({
           {isSelected ? <Check size={14} strokeWidth={3} /> : null}
         </button>
       )}
-      {/* Zona Superior: Imagen en alta calidad con Carga Diferida (Lazy Loading) */}
+      {/* Zona Superior: Imagen en alta calidad con Carga Diferida Nativa */}
       <div
         className={`product-card-image-wrap ${!hasPhoto || !currentImage ? 'product-card-placeholder' : ''}`}
         onClick={() => onOpenDetail(dish)}
         title="Ver detalle del plato"
       >
         {hasPhoto && currentImage ? (
-          shouldLoadImage ? (
-            <img
-              src={currentImage}
-              alt={`${dish.name} — Comida criolla peruana en Mi Barrunto`}
-              className={`product-card-img ${isImageLoaded ? 'img-loaded' : 'img-loading'}`}
-              loading="lazy"
-              decoding="async"
-              onLoad={() => setIsImageLoaded(true)}
-            />
-          ) : (
-            <div className="product-card-img-skeleton" aria-hidden="true" />
-          )
+          <img
+            src={currentImage}
+            alt={`${dish.name} — Comida criolla peruana en Mi Barrunto`}
+            className={`product-card-img ${isImageLoaded ? 'img-loaded' : 'img-loading'}`}
+            loading="lazy"
+            decoding="async"
+            onLoad={() => setIsImageLoaded(true)}
+          />
         ) : (
           <div className="product-placeholder-icon-wrap">
             <PlateIcon size={44} className="product-placeholder-icon" />

@@ -1756,39 +1756,24 @@ input, textarea, select {
   }
 }
 
-/* Tarjeta de Producto con BACKDROP-FILTER y CERO TRAZOS */
+/* Tarjeta de Producto optimizada con CERO TRAZOS y alto rendimiento */
 .product-card {
   background-color: var(--card-bg);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
   border: none !important;
+  outline: none !important;
   border-radius: 8px;
   overflow: hidden;
   box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
-  transform-origin: center bottom;
-  transition: transform 0.42s cubic-bezier(0.16, 1, 0.3, 1),
+  content-visibility: auto;
+  contain-intrinsic-size: auto 340px;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
               box-shadow 0.25s ease,
-              background-color 0.25s ease,
-              opacity 0.38s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: transform, opacity;
+              background-color 0.25s ease;
 }
 
-/* Efecto Apple Notifications: compactas en la zona inferior y escala al 100% al subir */
-.product-card.card-hidden {
-  opacity: 0.55;
-  transform: translateY(22px) scale(0.88);
-  pointer-events: auto;
-}
-
-.product-card.card-revealed {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-  pointer-events: auto;
-}
-
-.product-card.card-revealed:hover {
+.product-card:hover {
   transform: translateY(-4px) scale(1.015);
   box-shadow: var(--shadow-md);
   background-color: var(--card-hover);
@@ -2065,32 +2050,18 @@ input, textarea, select {
   border-radius: 8px;
   overflow: hidden;
   background-color: var(--card-bg);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
   cursor: pointer;
   border: none !important;
+  outline: none !important;
   position: relative;
-  transform-origin: center bottom;
-  transition: transform 0.42s cubic-bezier(0.16, 1, 0.3, 1),
+  content-visibility: auto;
+  contain-intrinsic-size: auto 120px;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
               box-shadow 0.25s ease,
-              background-color 0.25s ease,
-              opacity 0.38s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: transform, opacity;
+              background-color 0.25s ease;
 }
 
-.product-card-compact.card-hidden {
-  opacity: 0.55;
-  transform: translateY(22px) scale(0.88);
-  pointer-events: auto;
-}
-
-.product-card-compact.card-revealed {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-  pointer-events: auto;
-}
-
-.product-card-compact.card-revealed:hover {
+.product-card-compact:hover {
   transform: translateY(-3px) scale(1.01);
   box-shadow: var(--shadow-md);
   background-color: var(--card-hover);
@@ -4130,37 +4101,7 @@ input, textarea, select {
   color: #94a3b8;
 }
 
-/* ==========================================================================
-   SCROLL-DRIVEN ANIMATION: EFECTO APPLE NOTIFICATIONS AL HACER SCROLL
-   Las tarjetas inferiores se ven compactas y escalan fluidamente al 100% al subir
-   ========================================================================== */
-@keyframes appleNotificationScale {
-  0% {
-    transform: translateY(22px) scale(0.88);
-    opacity: 0.55;
-  }
-  100% {
-    transform: translateY(0) scale(1);
-    opacity: 1;
-  }
-}
 
-@supports (animation-timeline: view()) {
-  .product-card,
-  .product-card-compact {
-    animation-name: appleNotificationScale;
-    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-    animation-fill-mode: both;
-    animation-timeline: view();
-    animation-range: entry 0% cover 28%;
-    transform-origin: center bottom;
-  }
-
-  .product-card:hover,
-  .product-card-compact:hover {
-    transform: translateY(-4px) scale(1.02);
-  }
-}
 
 /* ==========================================================================
    PÁGINA DEDICADA DE DETALLE DE PLATO (PRODUCT DETAIL PAGE)
