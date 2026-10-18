@@ -695,6 +695,7 @@ function renderPage8() {
 function renderPage9() {
   const sides = dishesByCat['sides'] || [];
   const bebidas = dishesByCat['bebidas'] || [];
+  const batidos = dishesByCat['batidos'] || [];
   const postres = dishesByCat['postres'] || [];
 
   return `
@@ -710,12 +711,20 @@ function renderPage9() {
         </div>
       </div>
 
-      <!-- Columna 2: Bebidas Tradicionales (7 items) -->
+      <!-- Columna 2: Bebidas Tradicionales & Batidos -->
       <div class="menu-col">
         ${renderCategoryHeader('BEBIDAS TÍPICAS', 'line', 'coffee')}
         <div class="dishes-list">
           ${bebidas.map(renderDish).join('')}
         </div>
+        ${batidos.length > 0 ? `
+          <div style="margin-top: 8px;">
+            ${renderCategoryHeader('BATIDOS & JUGOS', 'line', 'coffee')}
+            <div class="dishes-list">
+              ${batidos.map(renderDish).join('')}
+            </div>
+          </div>
+        ` : ''}
       </div>
 
       <!-- Columna 3: Postres Caseros (9 items del cuaderno) -->

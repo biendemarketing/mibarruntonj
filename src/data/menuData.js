@@ -83,6 +83,12 @@ export const CATEGORIES_DATA = [
     "name": "Postres Caseros",
     "nameEn": "Postres caseros tradicionales peruanos",
     "icon": "cake"
+  },
+  {
+    "id": "batidos",
+    "name": "Batidos & Jugos",
+    "nameEn": "Batidos y jugos naturales preparados al momento",
+    "icon": "Coffee"
   }
 ];
 
@@ -3072,5 +3078,18 @@ export const DISHES_DATA = [
     "image": null,
     "platosImage": "platos/arroz_con_leche.webp",
     "hasPhoto": false
+  },
+  {
+    "id": 249,
+    "name": "Jugo de naranja natural",
+    "nameEn": "Freshly squeezed natural orange juice",
+    "glosa": "Freshly squeezed natural orange juice",
+    "price": 7.99,
+    "priceDisplay": "$7.99",
+    "category": "batidos",
+    "subcategory": "Batidos y Jugos",
+    "image": "fotos/238-jugo-de-naranja.jpg",
+    "platosImage": "platos/jugo_de_naranja.webp",
+    "hasPhoto": true
   }
 ];
