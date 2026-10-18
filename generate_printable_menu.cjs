@@ -195,8 +195,9 @@ function renderPage1() {
       <div class="cover-badge-divider">
         <span class="cover-line"></span>
         <span class="cover-badge-center">
-          ${SVG_ICONS.mapPin}
-          <span>PATERSON · NEW JERSEY</span>
+          ${SVG_ICONS.star}
+          <span>TRADICIÓN & SAZÓN PERUANA</span>
+          ${SVG_ICONS.star}
         </span>
         <span class="cover-line"></span>
       </div>
