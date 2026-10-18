@@ -770,27 +770,27 @@ input, textarea, select {
   box-shadow: 0 4px 16px rgba(170, 0, 0, 0.55);
 }
 
-/* Botones de Control en el Header (Modo Oscuro y Hamburguesa junto al Buscador) */
+/* Botones de Control en el Header (Fondo Rojo e Iconos Blancos) */
 .header-ctrl-btn {
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: rgba(0, 0, 0, 0.48);
+  background: var(--rojo) !important;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  color: #ffffff;
+  color: #ffffff !important;
   display: grid;
   place-items: center;
   border: none !important;
   cursor: pointer;
   transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
   flex-shrink: 0;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 14px rgba(238, 0, 0, 0.38);
 }
 
 .header-ctrl-btn:hover {
-  background: rgba(0, 0, 0, 0.75);
-  color: var(--naranja);
+  background: var(--rojo-hover) !important;
+  color: #ffffff !important;
   transform: scale(1.06);
 }
 
@@ -809,7 +809,7 @@ input, textarea, select {
   }
 }
 
-/* Botón de Favoritos en Header Desktop: Al lado del carrito, solo en escritorio */
+/* Botón de Favoritos en Header Desktop: Al lado del carrito, fondo rojo e icono blanco */
 .header-desktop-fav-btn {
   display: none !important;
 }
@@ -818,13 +818,9 @@ input, textarea, select {
   .header-desktop-fav-btn {
     display: grid !important;
     position: relative;
-  }
-
-  .header-desktop-fav-btn.active,
-  .header-desktop-fav-btn.has-items {
-    background: rgba(227, 24, 55, 0.95) !important;
+    background: var(--rojo) !important;
     color: #ffffff !important;
-    box-shadow: 0 4px 16px rgba(227, 24, 55, 0.45);
+    box-shadow: 0 4px 14px rgba(238, 0, 0, 0.38);
   }
 
   .header-desktop-fav-btn:hover {
@@ -834,7 +830,7 @@ input, textarea, select {
   }
 }
 
-/* Botón de Carrito en Header Desktop: Al lado del botón de favoritos, mismo tamaño, solo icono y solo en escritorio */
+/* Botón de Carrito en Header Desktop: Al lado del botón de favoritos, fondo rojo e icono blanco */
 .header-desktop-cart-btn {
   display: none !important;
 }
@@ -843,12 +839,9 @@ input, textarea, select {
   .header-desktop-cart-btn {
     display: grid !important;
     position: relative;
-  }
-
-  .header-desktop-cart-btn.has-items {
     background: var(--rojo) !important;
     color: #ffffff !important;
-    box-shadow: 0 4px 16px rgba(227, 6, 19, 0.45);
+    box-shadow: 0 4px 14px rgba(238, 0, 0, 0.38);
   }
 
   .header-desktop-cart-btn:hover {
@@ -879,8 +872,9 @@ input, textarea, select {
 }
 
 .header-fav-badge {
-  background-color: var(--naranja) !important;
-  color: #ffffff !important;
+  background-color: #ffffff !important;
+  color: var(--rojo) !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
 }
 
 @media (max-width: 480px) {

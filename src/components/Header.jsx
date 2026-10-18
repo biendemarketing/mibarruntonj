@@ -467,8 +467,8 @@ export function Header({
               >
                 <Heart
                   size={19}
-                  fill={showFavoritesOnly || favoritesCount > 0 ? 'var(--rojo)' : 'none'}
-                  color={showFavoritesOnly || favoritesCount > 0 ? 'var(--rojo)' : 'currentColor'}
+                  fill={showFavoritesOnly || favoritesCount > 0 ? '#ffffff' : 'none'}
+                  color="#ffffff"
                 />
                 {favoritesCount > 0 && (
                   <span className="header-cart-badge header-fav-badge">{favoritesCount}</span>
