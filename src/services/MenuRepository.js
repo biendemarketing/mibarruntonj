@@ -1,6 +1,7 @@
 import { Dish } from '../models/Dish';
 import { Category } from '../models/Category';
 import { CATEGORIES_DATA, DISHES_DATA } from '../data/menuData';
+import platosMap from '../data/platosMap.json';
 import { WhatsAppService } from './WhatsAppService';
 
 /**
@@ -26,11 +27,12 @@ export class MenuRepository {
       this.categoriesMap.set(cat.id, cat);
     });
 
-    // Instanciar platos con metadatos de categoría para búsqueda integral
+    // Instanciar platos con metadatos de categoría y fotos completas de la carpeta platos
     this.dishes = DISHES_DATA.map(d => {
       const cat = this.categoriesMap.get(d.category);
       return new Dish({
         ...d,
+        platosImage: platosMap[d.id] || null,
         categoryName: cat ? cat.name : '',
         categoryNameEn: cat ? cat.nameEn : ''
       });
@@ -92,6 +94,7 @@ export class MenuRepository {
     categoryId = 'todos',
     query = '',
     onlyWithPhoto = false,
+    photoMode = 'curated',
     priceSort = 'none',
     priceRange = 'all'
   } = {}) {
@@ -99,7 +102,7 @@ export class MenuRepository {
       if (categoryId && categoryId !== 'todos' && dish.category !== categoryId) {
         return false;
       }
-      if (onlyWithPhoto && !dish.hasImage()) {
+      if (onlyWithPhoto && !dish.hasImage(photoMode)) {
         return false;
       }
       if (query && !dish.matchesQuery(query)) {

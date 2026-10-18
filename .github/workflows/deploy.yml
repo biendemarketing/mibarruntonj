@@ -35,6 +35,11 @@ jobs:
       - name: Instalar dependencias
         run: npm ci
 
+      - name: Vincular fotos de platos en public/
+        run: |
+          mkdir -p public/platos
+          cp -r platos/* public/platos/
+
       - name: Generar Cartas Menú Imprimibles
         run: node generate_printable_menu.cjs
 

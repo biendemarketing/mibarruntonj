@@ -64,6 +64,33 @@ export function App() {
     } catch {}
   }, [isDarkMode]);
 
+  // Modo de Fotos: 'curated' (fotos seleccionadas actuales) vs 'complete' (fotos de la carpeta platos para todos los platos)
+  const [photoMode, setPhotoMode] = useState(() => {
+    try {
+      return localStorage.getItem('mb-photo-mode') || 'curated';
+    } catch {
+      return 'curated';
+    }
+  });
+
+  const [toastMessage, setToastMessage] = useState('');
+
+  const handleTogglePhotoMode = () => {
+    setPhotoMode((prev) => {
+      const next = prev === 'curated' ? 'complete' : 'curated';
+      try {
+        localStorage.setItem('mb-photo-mode', next);
+      } catch {}
+      setToastMessage(
+        next === 'complete'
+          ? '📸 Galería Completa: Mostrando fotos de la carpeta Platos'
+          : '✨ Mostrando versión de fotos seleccionadas'
+      );
+      setTimeout(() => setToastMessage(''), 3200);
+      return next;
+    });
+  };
+
   // Modelos de categoría desde el repositorio OOP
   const categories = useMemo(() => menuRepository.getAllCategories(), []);
 
@@ -73,10 +100,11 @@ export function App() {
       categoryId: searchQuery.trim() ? 'todos' : selectedCategory,
       query: searchQuery,
       onlyWithPhoto: filters.onlyWithPhoto,
+      photoMode,
       priceSort: filters.priceSort,
       priceRange: filters.priceRange
     });
-  }, [selectedCategory, searchQuery, filters]);
+  }, [selectedCategory, searchQuery, filters, photoMode]);
 
   // Handlers del Carrito (OOP)
   const handleAddToCart = (dish, quantity = 1, note = '') => {
@@ -261,6 +289,7 @@ export function App() {
                     <ProductCard
                       key={dish.id}
                       dish={dish}
+                      photoMode={photoMode}
                       quantity={qty}
                       viewMode={viewMode}
                       onAddToCart={(d) => handleAddToCart(d, 1)}
@@ -276,8 +305,8 @@ export function App() {
       </main>
       </div>
 
-      {/* 6. Footer con Redes Sociales Oficiales */}
-      <Footer />
+      {/* 6. Footer con Redes Sociales Oficiales y Selector de Versión de Fotos */}
+      <Footer photoMode={photoMode} onTogglePhotoMode={handleTogglePhotoMode} />
 
       {/* 7. Barra Móvil Inferior (Menú, Búsqueda, Mi Pedido y WhatsApp) */}
       <MobileNavBar
@@ -297,6 +326,7 @@ export function App() {
       {selectedDishForDetail && (
         <ProductDetailModal
           dish={selectedDishForDetail}
+          photoMode={photoMode}
           initialQuantity={cart.getItemQuantity(selectedDishForDetail.id) || 1}
           initialNote={cart.getItem(selectedDishForDetail.id)?.note || ''}
           onClose={() => setSelectedDishForDetail(null)}
@@ -341,6 +371,32 @@ export function App() {
             <span className="desktop-floating-cart-price">{cart.getFormattedTotal()}</span>
           </div>
         </button>
+      )}
+
+      {/* Toast Flotante de Notificación al cambiar versión de fotos */}
+      {toastMessage && (
+        <div style={{
+          position: 'fixed',
+          bottom: '85px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          backgroundColor: '#111215',
+          color: '#ffffff',
+          padding: '0.65rem 1.25rem',
+          borderRadius: '9999px',
+          boxShadow: '0 8px 30px rgba(0,0,0,0.45)',
+          fontFamily: 'var(--font-primary)',
+          fontWeight: 700,
+          fontSize: '0.88rem',
+          zIndex: 9999,
+          pointerEvents: 'none',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.5rem',
+          border: 'none !important'
+        }}>
+          {toastMessage}
+        </div>
       )}
     </div>
   );

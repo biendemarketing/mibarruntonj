@@ -4,6 +4,7 @@ import { PlateIcon } from './Icons';
 
 export function ProductDetailModal({
   dish,
+  photoMode = 'curated',
   initialQuantity = 1,
   initialNote = '',
   onClose,
@@ -39,7 +40,8 @@ export function ProductDetailModal({
 
   if (!dish) return null;
 
-  const hasPhoto = dish.hasImage();
+  const hasPhoto = dish.hasImage(photoMode);
+  const currentImage = dish.getImage(photoMode);
   const subtotal = (dish.price * quantity).toFixed(2);
 
   const handleSubmit = (e) => {
@@ -73,16 +75,16 @@ export function ProductDetailModal({
         <div className="modal-content">
 
         {/* Imagen o Placeholder con icono de plato */}
-        {hasPhoto ? (
+        {hasPhoto && currentImage ? (
           <div className="modal-image-wrap">
             <img
-              src={dish.image.startsWith('http') ? dish.image : `./${dish.image.replace(/^\//, '')}`}
+              src={currentImage.startsWith('http') ? currentImage : `./${currentImage.replace(/^\//, '')}`}
               alt={dish.name}
               className="modal-image"
               onError={(e) => {
                 if (!e.target.dataset.retried) {
                   e.target.dataset.retried = '1';
-                  e.target.src = `${import.meta.env.BASE_URL}${dish.image.replace(/^\//, '')}`;
+                  e.target.src = `${import.meta.env.BASE_URL}${currentImage.replace(/^\//, '')}`;
                 }
               }}
             />

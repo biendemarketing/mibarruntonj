@@ -2057,6 +2057,14 @@ function generateCompleteHtml(options = {}) {
           const btnText = document.getElementById('themeBtnText');
           if (btnText) btnText.textContent = 'Cambiar a Fondo Pergamino Claro';
         }
+
+        if (urlParams.has('print') || urlParams.get('action') === 'print') {
+          window.addEventListener('load', () => {
+            setTimeout(() => {
+              window.print();
+            }, 400);
+          });
+        }
       } catch (e) {}
     })();
   </script>

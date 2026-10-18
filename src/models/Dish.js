@@ -16,7 +16,7 @@ export class Dish {
    * @param {string|null} data.image
    * @param {boolean} data.hasPhoto
    */
-  constructor({ id, name, nameEn, price, priceDisplay, category, subcategory, glosa, image = null, hasPhoto = false, categoryName = '', categoryNameEn = '' }) {
+  constructor({ id, name, nameEn, price, priceDisplay, category, subcategory, glosa, image = null, platosImage = null, hasPhoto = false, categoryName = '', categoryNameEn = '' }) {
     this.id = id;
     this.name = name;
     this.nameEn = nameEn || glosa || '';
@@ -26,17 +26,34 @@ export class Dish {
     this.subcategory = subcategory || '';
     this.glosa = glosa || '';
     this.image = image;
+    this.platosImage = platosImage || null;
     this.hasPhoto = Boolean(image) || hasPhoto;
     this.categoryName = categoryName || '';
     this.categoryNameEn = categoryNameEn || '';
   }
 
   /**
-   * Indica si el plato tiene fotografía real de la cocina
+   * Indica si el plato tiene fotografía según el modo activo ('curated' o 'complete')
+   * @param {'curated'|'complete'} photoMode
    * @returns {boolean}
    */
-  hasImage() {
+  hasImage(photoMode = 'curated') {
+    if (photoMode === 'complete') {
+      return Boolean(this.platosImage || this.image);
+    }
     return Boolean(this.image);
+  }
+
+  /**
+   * Obtiene la ruta de la fotografía según el modo activo ('curated' o 'complete')
+   * @param {'curated'|'complete'} photoMode
+   * @returns {string|null}
+   */
+  getImage(photoMode = 'curated') {
+    if (photoMode === 'complete') {
+      return this.platosImage || this.image;
+    }
+    return this.image;
   }
 
   /**

@@ -4,13 +4,15 @@ import { PlateIcon } from './Icons';
 
 export function ProductCard({
   dish,
+  photoMode = 'curated',
   quantity = 0,
   onAddToCart,
   onUpdateQuantity,
   onOpenDetail,
   viewMode = 'grid'
 }) {
-  const hasPhoto = dish.hasImage();
+  const hasPhoto = dish.hasImage(photoMode);
+  const currentImage = dish.getImage(photoMode);
   const isCompact = viewMode === 'compact';
   const [isRevealed, setIsRevealed] = useState(false);
   const cardRef = useRef(null);
@@ -59,9 +61,9 @@ export function ProductCard({
       >
         {/* Imagen o Placeholder a la izquierda */}
         <div className="compact-image-wrap">
-          {hasPhoto ? (
+          {hasPhoto && currentImage ? (
             <img
-              src={dish.image.startsWith('http') ? dish.image : `./${dish.image.replace(/^\//, '')}`}
+              src={currentImage.startsWith('http') ? currentImage : `./${currentImage.replace(/^\//, '')}`}
               alt={dish.name}
               className="compact-img"
               loading="lazy"
@@ -69,7 +71,7 @@ export function ProductCard({
               onError={(e) => {
                 if (!e.target.dataset.retried) {
                   e.target.dataset.retried = '1';
-                  e.target.src = `${import.meta.env.BASE_URL}${dish.image.replace(/^\//, '')}`;
+                  e.target.src = `${import.meta.env.BASE_URL}${currentImage.replace(/^\//, '')}`;
                 }
               }}
             />
@@ -143,14 +145,14 @@ export function ProductCard({
       data-dish-id={dish.id}
     >
       {/* Zona Superior: Imagen en alta calidad o placeholder gris con icono de plato */}
-      {hasPhoto ? (
+      {hasPhoto && currentImage ? (
         <div
           className="product-card-image-wrap"
           onClick={() => onOpenDetail(dish)}
           title="Ver detalle del plato"
         >
           <img
-            src={dish.image.startsWith('http') ? dish.image : `./${dish.image.replace(/^\//, '')}`}
+            src={currentImage.startsWith('http') ? currentImage : `./${currentImage.replace(/^\//, '')}`}
             alt={dish.name}
             className="product-card-img"
             loading="lazy"
@@ -158,7 +160,7 @@ export function ProductCard({
             onError={(e) => {
               if (!e.target.dataset.retried) {
                 e.target.dataset.retried = '1';
-                e.target.src = `${import.meta.env.BASE_URL}${dish.image.replace(/^\//, '')}`;
+                e.target.src = `${import.meta.env.BASE_URL}${currentImage.replace(/^\//, '')}`;
               }
             }}
           />
