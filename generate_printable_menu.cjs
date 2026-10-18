@@ -942,7 +942,7 @@ function generateCompleteHtml(options = {}) {
       color: #ffffff;
       padding: 10px 22px;
       border-radius: 9999px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      box-shadow: none !important;
       display: flex;
       align-items: center;
       gap: 14px;
@@ -962,14 +962,14 @@ function generateCompleteHtml(options = {}) {
       align-items: center;
       gap: 8px;
       transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-      box-shadow: 0 4px 12px rgba(227, 6, 19, 0.4);
+      box-shadow: none !important;
       text-decoration: none;
     }
 
     .print-btn:hover {
       background: #c20410;
       transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(227, 6, 19, 0.5);
+      box-shadow: none !important;
     }
 
     .theme-toggle-btn {
@@ -985,7 +985,7 @@ function generateCompleteHtml(options = {}) {
       align-items: center;
       gap: 7px;
       transition: all 0.2s ease;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+      box-shadow: none !important;
     }
 
     .theme-toggle-btn:hover {
@@ -1021,7 +1021,7 @@ function generateCompleteHtml(options = {}) {
       position: relative;
       overflow: hidden;
       margin-bottom: 30px;
-      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.35);
+      box-shadow: none !important;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -1114,7 +1114,7 @@ function generateCompleteHtml(options = {}) {
       border-radius: 6px;
       white-space: nowrap;
       flex-shrink: 0;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+      box-shadow: none !important;
       transition: all 0.25s ease;
     }
 
@@ -1185,7 +1185,7 @@ function generateCompleteHtml(options = {}) {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      box-shadow: 0 2px 6px rgba(212, 89, 21, 0.3);
+      box-shadow: none !important;
       transition: background 0.25s ease;
     }
 
@@ -1205,7 +1205,7 @@ function generateCompleteHtml(options = {}) {
       justify-content: center;
       gap: 8px;
       z-index: 10;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+      box-shadow: none !important;
       white-space: nowrap;
     }
 
@@ -1293,7 +1293,7 @@ function generateCompleteHtml(options = {}) {
       background: var(--bg-card);
       padding: 16px 22px;
       border-radius: 16px;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+      box-shadow: none !important;
       transition: all 0.25s ease;
     }
 
@@ -1354,7 +1354,7 @@ function generateCompleteHtml(options = {}) {
       background: #ffffff;
       padding: 2px 9px;
       border-radius: 9999px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+      box-shadow: none !important;
       transition: all 0.25s ease;
     }
 
@@ -1368,7 +1368,7 @@ function generateCompleteHtml(options = {}) {
       background: var(--bg-card);
       padding: 14px 16px;
       border-radius: 14px;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+      box-shadow: none !important;
       text-align: center;
       transition: all 0.25s ease;
     }
@@ -1431,7 +1431,7 @@ function generateCompleteHtml(options = {}) {
       width: 220px;
       height: 220px;
       object-fit: contain;
-      filter: drop-shadow(0 8px 24px rgba(0,0,0,0.25));
+      filter: none !important;
     }
 
     .cover-brand-title {
@@ -1442,7 +1442,7 @@ function generateCompleteHtml(options = {}) {
       letter-spacing: 0.02em;
       line-height: 1;
       margin-bottom: 4px;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.14);
+      text-shadow: none !important;
       transition: all 0.25s ease;
     }
 
@@ -1659,7 +1659,7 @@ function generateCompleteHtml(options = {}) {
       width: 175px;
       height: 175px;
       object-fit: contain;
-      filter: drop-shadow(0 6px 18px rgba(0,0,0,0.2));
+      filter: none !important;
     }
 
     .backcover-title {
@@ -1788,7 +1788,7 @@ function generateCompleteHtml(options = {}) {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      box-shadow: 0 3px 10px rgba(227, 6, 19, 0.35);
+      box-shadow: none !important;
     }
 
     .seal-star {
@@ -1807,7 +1807,7 @@ function generateCompleteHtml(options = {}) {
 
     body.dark-theme .menu-page {
       background-color: #0c0d11 !important;
-      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.8) !important;
+      box-shadow: none !important;
     }
 
     body.dark-theme .page-cover {
@@ -1820,7 +1820,7 @@ function generateCompleteHtml(options = {}) {
 
     body.dark-theme .cover-brand-title {
       color: #ff3342 !important;
-      text-shadow: 0 4px 18px rgba(255, 51, 66, 0.4) !important;
+      text-shadow: none !important;
     }
 
     body.dark-theme .cover-slogan-main {
@@ -1871,7 +1871,7 @@ function generateCompleteHtml(options = {}) {
     body.dark-theme .dish-price-pill {
       background: #e30613 !important;
       color: #ffffff !important;
-      box-shadow: 0 2px 8px rgba(227, 6, 19, 0.45) !important;
+      box-shadow: none !important;
     }
 
     body.dark-theme .cat-title-text {
@@ -1893,12 +1893,12 @@ function generateCompleteHtml(options = {}) {
 
     body.dark-theme .toc-card-main {
       background: #15171e !important;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
+      box-shadow: none !important;
     }
 
     body.dark-theme .toc-side-card {
       background: #15171e !important;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
+      box-shadow: none !important;
     }
 
     body.dark-theme .toc-row-title {
@@ -1957,7 +1957,7 @@ function generateCompleteHtml(options = {}) {
     body.dark-theme .footer-gratitude-pill {
       background: #d45915 !important;
       color: #ffffff !important;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.7) !important;
+      box-shadow: none !important;
     }
 
     /* ==========================================================================

@@ -24,3 +24,6 @@ dist-ssr
 *.sw?
 /public/platos
 scratch_*
+*.txt
+__pycache__/
+*.py
