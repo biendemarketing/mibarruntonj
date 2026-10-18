@@ -83,14 +83,12 @@ export function CartDrawer({
             <div className="cart-drawer-header-left" />
             <div className="cart-drawer-title-group">
               <div className="cart-drawer-icon-wrap">
-                <ShoppingCart size={20} />
+                <ShoppingCart size={19} />
               </div>
-              <div className="cart-drawer-title-text-wrap">
-                <h2 className="cart-drawer-heading">Mi Pedido</h2>
-                <span className="cart-drawer-count-badge">
-                  {totalCount} {totalCount === 1 ? 'plato' : 'platos'}
-                </span>
-              </div>
+              <h2 className="cart-drawer-heading">Mi Pedido</h2>
+              <span className="cart-drawer-count-badge">
+                {totalCount} {totalCount === 1 ? 'plato' : 'platos'}
+              </span>
             </div>
             <button
               type="button"

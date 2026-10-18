@@ -1597,41 +1597,79 @@ input, textarea, select {
 }
 
 .category-section-header {
-  margin: 2.2rem 0 1rem;
-  padding-bottom: 0.4rem;
+  margin: 2.8rem 0 1.25rem;
+  padding: 0;
   display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  width: 100%;
+}
+
+.category-header-line {
+  flex: 1;
+  height: 2.5px;
+  border-radius: 9999px;
+  border: none !important;
+  outline: none !important;
+}
+
+.category-header-line-left {
+  background: linear-gradient(90deg, transparent 0%, #ff7a00 35%, #ee0000 100%);
+}
+
+.category-header-line-right {
+  background: linear-gradient(90deg, #ee0000 0%, #ff7a00 65%, transparent 100%);
+}
+
+.category-header-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 0.25rem;
+  flex-shrink: 0;
+  max-width: 80%;
 }
 
 .category-title {
   font-family: var(--font-primary);
-  font-size: 1.65rem;
-  font-weight: 700;
+  font-size: 1.7rem;
+  font-weight: 800;
   color: var(--rojo);
-  letter-spacing: 0.02em;
+  letter-spacing: 0.03em;
   text-transform: uppercase;
-  line-height: 1.05;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.5rem;
-}
-
-.category-title > span:first-child {
-  line-height: 1.05;
-  display: inline;
+  line-height: 1.1;
+  margin: 0;
+  text-align: center;
 }
 
 .category-title-en {
   font-family: var(--font-secondary);
-  font-size: 0.86rem;
-  font-weight: 400;
+  font-size: 0.95rem;
+  font-weight: 500;
   color: var(--text-light);
   text-transform: none;
-  line-height: 1.2;
+  line-height: 1.25;
+  text-align: center;
+}
+
+@media (max-width: 640px) {
+  .category-section-header {
+    gap: 0.65rem;
+    margin: 2rem 0 1rem;
+  }
+  .category-title {
+    font-size: 1.28rem;
+  }
+  .category-title-en {
+    font-size: 0.82rem;
+  }
+  .category-header-line {
+    height: 2px;
+    min-width: 14px;
+  }
 }
 
 /* GRID DE PRODUCTOS */
@@ -2607,42 +2645,47 @@ input, textarea, select {
   align-items: center;
   justify-content: center;
   gap: 0.65rem;
-  text-align: center;
-}
-
-.cart-drawer-title-text-wrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
 }
 
 .cart-drawer-icon-wrap {
-  width: 38px;
-  height: 38px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   background-color: rgba(255, 255, 255, 0.2);
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: #ffffff;
   border: none !important;
   outline: none !important;
+  flex-shrink: 0;
 }
 
 .cart-drawer-heading {
   font-family: var(--font-primary);
-  font-weight: 700;
-  font-size: 1.15rem;
+  font-weight: 800;
+  font-size: 1.22rem;
   letter-spacing: 0.02em;
   color: #ffffff;
   margin: 0;
-  line-height: 1.15;
+  line-height: 1;
+  display: flex;
+  align-items: center;
 }
 
 .cart-drawer-count-badge {
   font-family: var(--font-secondary);
-  font-size: 0.74rem;
-  color: rgba(255, 255, 255, 0.88);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.22);
+  padding: 0.22rem 0.65rem;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+  border: none !important;
+  outline: none !important;
 }
 
 .cart-drawer-close-btn {

@@ -868,14 +868,18 @@ export function App() {
               id={category.id}
               style={{ marginBottom: '2.5rem' }}
             >
-              {/* Encabezado de la Categoría */}
+              {/* Encabezado de la Categoría con Título Centrado y Líneas Horizontal Roja y Naranja */}
               <div className="category-section-header">
-                <h2 className="category-title">
-                  <span>{category.name}</span>
+                <div className="category-header-line category-header-line-left" />
+                <div className="category-header-center">
+                  <h2 className="category-title">
+                    <span>{category.name}</span>
+                  </h2>
                   {category.nameEn && (
                     <span className="category-title-en">{category.nameEn}</span>
                   )}
-                </h2>
+                </div>
+                <div className="category-header-line category-header-line-right" />
               </div>
 
               {/* Grid de Productos (Soporta vista normal 3 cols, cuadrícula 4 cols y compacta horizontal) */}
