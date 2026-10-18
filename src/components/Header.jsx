@@ -120,7 +120,7 @@ export function Header({
         <div className="brand-logo-container">
           <img
             src="./logo/logo.png"
-            alt="Logo Mi Barrunto"
+            alt="Mi Barrunto - Restaurante Peruano en Paterson NJ"
             className="brand-logo-img"
           />
           <div className="brand-titles">

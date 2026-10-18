@@ -37,7 +37,7 @@ export function MobileDrawer({
             <div className="mobile-drawer-brand">
               <img
                 src="./logo/logo.png"
-                alt="Logo Mi Barrunto"
+                alt="Mi Barrunto - Comida Criolla y Marina Paterson NJ"
                 className="mobile-drawer-logo"
               />
               <div className="mobile-drawer-brand-text">

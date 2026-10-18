@@ -64,7 +64,7 @@ export function ProductCard({
           {hasPhoto && currentImage ? (
             <img
               src={currentImage.startsWith('http') ? currentImage : `./${currentImage.replace(/^\//, '')}`}
-              alt={dish.name}
+              alt={`${dish.name} — Plato peruano en Mi Barrunto`}
               className="compact-img"
               loading="lazy"
               decoding="async"
@@ -153,7 +153,7 @@ export function ProductCard({
         >
           <img
             src={currentImage.startsWith('http') ? currentImage : `./${currentImage.replace(/^\//, '')}`}
-            alt={dish.name}
+            alt={`${dish.name} — Comida criolla peruana en Mi Barrunto`}
             className="product-card-img"
             loading="lazy"
             decoding="async"

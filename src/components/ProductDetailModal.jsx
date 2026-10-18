@@ -79,7 +79,7 @@ export function ProductDetailModal({
           <div className="modal-image-wrap">
             <img
               src={currentImage.startsWith('http') ? currentImage : `./${currentImage.replace(/^\//, '')}`}
-              alt={dish.name}
+              alt={`${dish.name} — Especialidad tradicional de Mi Barrunto`}
               className="modal-image"
               onError={(e) => {
                 if (!e.target.dataset.retried) {

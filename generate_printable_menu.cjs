@@ -842,11 +842,74 @@ function generateCompleteHtml(options = {}) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mi Barrunto — Carta Menú Imprimible 11x8.5 (Carta Criolla &amp; Marina)</title>
-  
+  <meta name="description" content="Carta oficial completa e imprimible de Mi Barrunto (11x8.5 Horizontal). Más de 240 platos criollos y marinos: ceviches, lomo saltado, anticuchos, pollo broaster y postres caseros en Paterson, NJ." />
+  <meta name="keywords" content="carta menu imprimible Mi Barrunto, menu pdf comida peruana, restaurante peruano Paterson NJ, ceviche, lomo saltado, anticuchos" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <link rel="canonical" href="https://biendemarketing.github.io/mibarruntonj/${isDefaultDark ? 'menu_imprimible_dark.html' : 'menu_imprimible.html'}" />
+
+  <!-- Geoposicionamiento y SEO Local -->
+  <meta name="geo.region" content="US-NJ" />
+  <meta name="geo.placename" content="Paterson" />
+  <meta name="geo.position" content="40.9168;-74.1718" />
+  <meta name="ICBM" content="40.9168, -74.1718" />
+
+  <!-- Open Graph / Redes Sociales -->
+  <meta property="og:type" content="restaurant.menu" />
+  <meta property="og:site_name" content="Mi Barrunto" />
+  <meta property="og:title" content="Mi Barrunto — Carta Menú Imprimible 11x8.5 (Carta Criolla &amp; Marina)" />
+  <meta property="og:description" content="Carta oficial completa e imprimible de Mi Barrunto. Más de 240 especialidades peruanas listas para ver e imprimir en alta resolución." />
+  <meta property="og:url" content="https://biendemarketing.github.io/mibarruntonj/${isDefaultDark ? 'menu_imprimible_dark.html' : 'menu_imprimible.html'}" />
+  <meta property="og:image" content="https://biendemarketing.github.io/mibarruntonj/bg-restaurant.jpg" />
+  <meta property="og:image:secure_url" content="https://biendemarketing.github.io/mibarruntonj/bg-restaurant.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Carta Menú Imprimible Mi Barrunto Paterson NJ" />
+  <meta property="og:locale" content="es_US" />
+
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Mi Barrunto — Carta Menú Imprimible (11x8.5)" />
+  <meta name="twitter:description" content="Carta completa oficial de Mi Barrunto en Paterson, NJ. Imprime o guarda en PDF." />
+  <meta name="twitter:image" content="https://biendemarketing.github.io/mibarruntonj/bg-restaurant.jpg" />
+
+  <!-- Favicon y PWA -->
+  <link rel="icon" type="image/png" href="./logo/logo.png" />
+  <link rel="apple-touch-icon" href="./logo/logo.png" />
+  <meta name="theme-color" content="${isDefaultDark ? '#060708' : '#fbf7ee'}" />
+
   <!-- Tipografías EXACTAS de la web: Grandstander y Alegreya Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Grandstander:wght@600;700;800;900&family=Alegreya+Sans:ital,wght@0,400;0,500;0,700;0,800;1,400&display=swap" rel="stylesheet">
+
+  <!-- Datos Estructurados JSON-LD Schema.org Menu -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Menu",
+    "name": "Carta Menú Imprimible Mi Barrunto",
+    "url": "https://biendemarketing.github.io/mibarruntonj/${isDefaultDark ? 'menu_imprimible_dark.html' : 'menu_imprimible.html'}",
+    "mainEntityOfPage": "https://biendemarketing.github.io/mibarruntonj/",
+    "inLanguage": "es",
+    "hasMenuItem": [
+      {
+        "@type": "MenuItem",
+        "name": "Ceviche Clásico",
+        "description": "Pescado fresco marinado en limón norteño con choclo y camote"
+      },
+      {
+        "@type": "MenuItem",
+        "name": "Lomo Saltado",
+        "description": "Lomo de res salteado al wok flameado con cebolla, tomate y papas fritas"
+      },
+      {
+        "@type": "MenuItem",
+        "name": "Anticuchos de Corazón",
+        "description": "Brochetas de corazón de res marinadas en ají panca y especias al carbón"
+      }
+    ]
+  }
+  </script>
 
   <style>
     /* ==========================================================================
