@@ -714,7 +714,7 @@ export function ProductDetailPage({
                           title={`Agregar ${relDish.name} al pedido`}
                         >
                           <Plus size={14} />
-                          <span>Añadir</span>
+                          <span>Ordenar</span>
                         </button>
                       )}
                     </div>

@@ -248,7 +248,7 @@ export function ProductDetailModal({
               >
                 <ShoppingCart size={18} />
                 <span>
-                  {initialQuantity > 0 ? 'Actualizar' : 'Agregar al Pedido'}
+                  {initialQuantity > 0 ? 'Actualizar' : 'Ordenar'}
                 </span>
                 {dish.price > 0 && (
                   <span className="modal-submit-price">${subtotal}</span>

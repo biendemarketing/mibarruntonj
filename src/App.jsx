@@ -803,7 +803,7 @@ export function App() {
                 onClick={handleAddSelectedFavsToCart}
               >
                 <Plus size={16} />
-                <span>Añadir al pedido ({selectedFavIds.length})</span>
+                <span>Ordenar ({selectedFavIds.length})</span>
               </button>
 
               {/* Botón Quitar Seleccionados de Favoritos */}
