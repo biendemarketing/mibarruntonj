@@ -824,6 +824,21 @@ input, textarea, select {
   transform: translateY(-1px);
 }
 
+@keyframes cartBadgePulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(238, 0, 0, 0.7);
+  }
+  50% {
+    transform: scale(1.18);
+    box-shadow: 0 0 0 6px rgba(238, 0, 0, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(238, 0, 0, 0);
+  }
+}
+
 .cart-counter-badge {
   background-color: var(--rojo);
   color: #ffffff;
@@ -831,6 +846,7 @@ input, textarea, select {
   font-weight: 700;
   padding: 0.1rem 0.45rem;
   border-radius: 4px;
+  animation: cartBadgePulse 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 /* ==========================================================================
@@ -1319,6 +1335,7 @@ input, textarea, select {
   place-items: center;
   padding: 0 4px;
   box-shadow: 0 2px 6px rgba(238, 0, 0, 0.45);
+  animation: cartBadgePulse 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 /* ==========================================================================
@@ -1409,17 +1426,17 @@ input, textarea, select {
   box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
               box-shadow 0.25s ease,
               background-color 0.25s ease,
-              opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+              opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform, opacity;
 }
 
-/* Animación progresiva al ir bajando por la carta */
+/* Animación progresiva en cascada al ir bajando por la carta */
 .product-card.card-hidden {
   opacity: 0;
-  transform: translateY(28px) scale(0.96);
+  transform: translateY(30px) scale(0.95);
   pointer-events: none;
 }
 
@@ -1638,16 +1655,16 @@ input, textarea, select {
   cursor: pointer;
   border: none !important;
   position: relative;
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
               box-shadow 0.25s ease,
               background-color 0.25s ease,
-              opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+              opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform, opacity;
 }
 
 .product-card-compact.card-hidden {
   opacity: 0;
-  transform: translateY(24px) scale(0.97);
+  transform: translateY(26px) scale(0.96);
   pointer-events: none;
 }
 
@@ -2751,6 +2768,7 @@ input, textarea, select {
     place-items: center;
     padding: 0 4px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    animation: cartBadgePulse 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
 
   .desktop-floating-cart-info {
@@ -3319,80 +3337,70 @@ input, textarea, select {
 }
 
 /* ==========================================================================
-   FLECHAS DE NAVEGACIÓN EN EL MODAL (EN EL ESPACIO EXTERIOR DEL BACKDROP)
+   NAVEGACIÓN DE PLATOS EN LA PARTE INFERIOR DEL MODAL (CERO INTERFERENCIA MÓVIL)
    ========================================================================== */
-.modal-nav-arrow {
-  position: fixed;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  background-color: rgba(24, 25, 29, 0.88);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  color: #ffffff;
+.modal-container-vertical {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 440px;
+  width: 100%;
+  margin: auto;
+  gap: 0.85rem;
+  z-index: 1001;
+  pointer-events: auto;
+}
+
+.modal-bottom-nav {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 440px;
+  padding: 0 0.25rem;
+}
+
+.modal-nav-bottom-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
   justify-content: center;
-  cursor: pointer;
-  z-index: 105;
+  gap: 0.5rem;
+  padding: 0.7rem 1.15rem;
+  background-color: rgba(20, 22, 28, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: #ffffff;
+  font-family: var(--font-primary);
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 9999px;
   border: none !important;
   outline: none !important;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.38);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.modal-nav-prev {
-  left: 1.5rem;
-}
-
-.modal-nav-next {
-  right: 1.5rem;
-}
-
-.modal-nav-arrow:hover {
+.modal-nav-bottom-btn:hover {
   background-color: var(--rojo);
   color: #ffffff;
-  transform: translateY(-50%) scale(1.12);
-  box-shadow: 0 10px 32px rgba(227, 6, 19, 0.55);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(227, 6, 19, 0.45);
 }
 
-.modal-nav-arrow:active {
-  transform: translateY(-50%) scale(0.96);
+.modal-nav-bottom-btn:active {
+  transform: translateY(0) scale(0.97);
 }
 
-@media (min-width: 769px) {
-  .modal-nav-prev {
-    left: calc(50% - 220px - 72px);
-  }
-  .modal-nav-next {
-    right: calc(50% - 220px - 72px);
-  }
+.dark .modal-nav-bottom-btn {
+  background-color: rgba(28, 30, 36, 0.94);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.65);
 }
 
-@media (max-width: 768px) {
-  .modal-nav-arrow {
-    width: 44px;
-    height: 44px;
-    background-color: rgba(18, 19, 23, 0.92);
-  }
-  .modal-nav-prev {
-    left: 0.5rem;
-  }
-  .modal-nav-next {
-    right: 0.5rem;
-  }
-}
-
-.dark .modal-nav-arrow {
-  background-color: rgba(30, 32, 38, 0.92);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.7);
-}
-
-.dark .modal-nav-arrow:hover {
+.dark .modal-nav-bottom-btn:hover {
   background-color: var(--rojo);
-  box-shadow: 0 10px 34px rgba(227, 6, 19, 0.6);
 }
 
 /* ==========================================================================

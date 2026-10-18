@@ -144,8 +144,8 @@ export function App() {
       } catch {}
       setToastMessage(
         next === 'complete'
-          ? '📸 Galería Completa: Mostrando fotos de la carpeta Platos'
-          : '✨ Mostrando versión de fotos seleccionadas'
+          ? 'Galería Completa: Mostrando fotos de la carpeta Platos'
+          : 'Mostrando versión de fotos seleccionadas'
       );
       setTimeout(() => setToastMessage(''), 3200);
       return next;
@@ -370,7 +370,7 @@ export function App() {
 
               {/* Grid de Productos (Soporta vista normal y compacta horizontal) */}
               <div className={`products-grid ${viewMode === 'compact' ? 'compact-grid' : ''}`}>
-                {dishes.map((dish) => {
+                {dishes.map((dish, dishIdx) => {
                   const itemInCart = cart.getItem(dish.id);
                   const qty = itemInCart ? itemInCart.quantity : 0;
 
@@ -378,6 +378,7 @@ export function App() {
                     <ProductCard
                       key={dish.id}
                       dish={dish}
+                      index={dishIdx}
                       photoMode={photoMode}
                       quantity={qty}
                       viewMode={viewMode}
@@ -443,6 +444,7 @@ export function App() {
         onRemoveItem={handleRemoveItem}
         onUpdateCustomerField={handleUpdateCustomerField}
         onClearCart={handleClearCart}
+        photoMode={photoMode}
       />
 
       {/* 10. Botón Flotante de Carrito en Escritorio */}

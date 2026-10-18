@@ -21,7 +21,8 @@ export function CartDrawer({
   onUpdateQuantity,
   onRemoveItem,
   onUpdateCustomerField,
-  onClearCart
+  onClearCart,
+  photoMode = 'curated'
 }) {
   const [showPreview, setShowPreview] = useState(false);
   const [phoneInput, setPhoneInput] = useState('19736533749'); // WhatsApp oficial: (973) 653-3749
@@ -138,40 +139,44 @@ export function CartDrawer({
 
               {/* Lista de productos en el carrito */}
               <div className="cart-items-list">
-                {cart.items.map((item) => (
-                  <div key={item.dish.id} className="cart-item-card">
-                    <div className="cart-item-main">
-                      {item.dish.hasImage() ? (
-                        <img
-                          src={item.dish.getImage()}
-                          alt={item.dish.name}
-                          className="cart-item-img"
-                          loading="lazy"
-                          onError={(e) => {
-                            if (!e.target.dataset.retried) {
-                              e.target.dataset.retried = '1';
-                              e.target.src = `${import.meta.env.BASE_URL}${item.dish.getImage().replace(/^\//, '')}`;
-                            }
-                          }}
-                        />
-                      ) : (
-                        <div className="cart-item-img-placeholder">
-                          <PlateIcon size={20} />
-                        </div>
-                      )}
-                      <div className="cart-item-details">
-                        <h4 className="cart-item-name">{item.dish.name}</h4>
-                        {item.dish.nameEn && (
-                          <span className="cart-item-sub">{item.dish.nameEn}</span>
+                {cart.items.map((item) => {
+                  const dishImg = item.dish.getImage(photoMode) || item.dish.getImage('complete') || item.dish.getImage('curated');
+                  const hasImg = Boolean(dishImg);
+
+                  return (
+                    <div key={item.dish.id} className="cart-item-card">
+                      <div className="cart-item-main">
+                        {hasImg ? (
+                          <img
+                            src={dishImg.startsWith('http') ? dishImg : `./${dishImg.replace(/^\//, '')}`}
+                            alt={item.dish.name}
+                            className="cart-item-img"
+                            loading="lazy"
+                            onError={(e) => {
+                              if (!e.target.dataset.retried) {
+                                e.target.dataset.retried = '1';
+                                e.target.src = `${import.meta.env.BASE_URL}${dishImg.replace(/^\//, '')}`;
+                              }
+                            }}
+                          />
+                        ) : (
+                          <div className="cart-item-img-placeholder">
+                            <PlateIcon size={20} />
+                          </div>
                         )}
-                        <span className="cart-item-unit-price">
-                          {item.dish.getFormattedPrice()} c/u
+                        <div className="cart-item-details">
+                          <h4 className="cart-item-name">{item.dish.name}</h4>
+                          {item.dish.nameEn && (
+                            <span className="cart-item-sub">{item.dish.nameEn}</span>
+                          )}
+                          <span className="cart-item-unit-price">
+                            {item.dish.getFormattedPrice()} c/u
+                          </span>
+                        </div>
+                        <span className="cart-item-subtotal">
+                          {item.getFormattedSubtotal()}
                         </span>
                       </div>
-                      <span className="cart-item-subtotal">
-                        {item.getFormattedSubtotal()}
-                      </span>
-                    </div>
 
                     {/* Nota del plato si existe */}
                     {item.note && (
@@ -214,7 +219,8 @@ export function CartDrawer({
                       </button>
                     </div>
                   </div>
-                ))}
+                );
+              })}
               </div>
 
               {/* Datos de Entrega y Pedido */}

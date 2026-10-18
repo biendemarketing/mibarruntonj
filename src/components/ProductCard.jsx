@@ -9,13 +9,17 @@ export function ProductCard({
   onAddToCart,
   onUpdateQuantity,
   onOpenDetail,
-  viewMode = 'grid'
+  viewMode = 'grid',
+  index = 0
 }) {
   const hasPhoto = dish.hasImage(photoMode);
   const currentImage = dish.getImage(photoMode);
   const isCompact = viewMode === 'compact';
   const [isRevealed, setIsRevealed] = useState(false);
   const cardRef = useRef(null);
+
+  // Efecto cascada escalonado por columna/fila al ir bajando por la página
+  const staggerDelay = isRevealed ? `${(index % 6) * 65}ms` : '0ms';
 
   useEffect(() => {
     const el = cardRef.current;
@@ -58,6 +62,7 @@ export function ProductCard({
         data-dish-id={dish.id}
         onClick={() => onOpenDetail(dish)}
         title="Clic para ver detalles"
+        style={{ transitionDelay: staggerDelay }}
       >
         {/* Imagen o Placeholder a la izquierda */}
         <div className="compact-image-wrap">
@@ -143,6 +148,7 @@ export function ProductCard({
       ref={cardRef}
       className={`product-card ${hasPhoto ? 'has-photo' : 'no-photo'} ${isRevealed ? 'card-revealed' : 'card-hidden'}`}
       data-dish-id={dish.id}
+      style={{ transitionDelay: staggerDelay }}
     >
       {/* Zona Superior: Imagen en alta calidad o placeholder gris con icono de plato */}
       {hasPhoto && currentImage ? (
