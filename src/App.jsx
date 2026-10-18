@@ -248,6 +248,8 @@ export function App() {
     });
   };
 
+  const isAnyModalOpen = Boolean(selectedDishForDetail || isCartOpen || isMobileMenuOpen);
+
   return (
     <div className="app-container">
       {/* 1. Header con Logo Centrado en Móvil y Botones al lado del Buscador en Escritorio */}
@@ -448,7 +450,7 @@ export function App() {
       />
 
       {/* 10. Botón Flotante de Carrito en Escritorio */}
-      {cart.getTotalCount() > 0 && (
+      {cart.getTotalCount() > 0 && !isAnyModalOpen && (
         <button
           type="button"
           className="desktop-floating-cart"
@@ -466,8 +468,8 @@ export function App() {
         </button>
       )}
 
-      {/* 11. Botón Volver Arriba Flotante (Oculto cuando el pedido/checkout está abierto para no tapar el total) */}
-      {showScrollTop && !isCartOpen && (
+      {/* 11. Botón Volver Arriba Flotante (Oculto cuando cualquier modal o drawer está abierto) */}
+      {showScrollTop && !isAnyModalOpen && (
         <button
           type="button"
           className="scroll-to-top-btn"

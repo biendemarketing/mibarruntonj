@@ -858,7 +858,7 @@ input, textarea, select {
   background-color: rgba(0, 0, 0, 0.75);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  z-index: 100;
+  z-index: 1000;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1830,7 +1830,7 @@ input, textarea, select {
   display: grid;
   place-items: center;
   padding: 1rem;
-  z-index: 100;
+  z-index: 1000;
   border: none !important;
 }
 
@@ -2107,7 +2107,7 @@ input, textarea, select {
   background-color: rgba(0, 0, 0, 0.75);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  z-index: 110;
+  z-index: 1050;
   display: flex;
   justify-content: center;
   align-items: stretch;
@@ -3290,7 +3290,7 @@ input, textarea, select {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  z-index: 850;
+  z-index: 90;
   border: none !important;
   outline: none !important;
   box-shadow: 0 6px 20px rgba(227, 6, 19, 0.4);
