@@ -138,6 +138,13 @@ export function Footer({ photoMode = 'curated', onTogglePhotoMode }) {
           </div>
         </div>
 
+        {/* Aviso de Agradecimiento 18% en mesas con 2 o más personas */}
+        <div className="footer-gratitude-notice">
+          <span>Agradecimiento del 18% en las mesas con 2 ó más personas</span>
+          <span className="footer-gratitude-dot">·</span>
+          <span>Gratitude of 18% on table 2 or more people</span>
+        </div>
+
         {/* Copyright */}
         <div className="footer-compact-bottom">
           <p>Mi Barrunto © Todos los derechos reservados · Paterson, NJ</p>

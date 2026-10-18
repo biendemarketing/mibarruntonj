@@ -2138,6 +2138,119 @@ input, textarea, select {
   opacity: 0.95;
 }
 
+/* Venta Cruzada Inteligente (Maridaje Sugerido en Modal) */
+.modal-pairing-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  background: var(--secondary-bg, rgba(0, 0, 0, 0.04));
+  padding: 0.75rem 0.95rem;
+  border-radius: 14px;
+  border: none !important;
+  margin: 0.25rem 0;
+}
+
+.dark .modal-pairing-box {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.modal-pairing-header {
+  font-family: var(--font-primary);
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-light);
+}
+
+.modal-pairing-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.modal-pairing-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--card-bg, #ffffff);
+  color: var(--text-main);
+  padding: 0.45rem 0.85rem;
+  border-radius: 9999px;
+  font-family: var(--font-primary);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dark .modal-pairing-btn {
+  background: #1e2025;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+}
+
+.modal-pairing-btn:hover {
+  background: var(--rojo);
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(227, 6, 19, 0.35);
+}
+
+.modal-pairing-price {
+  color: var(--naranja);
+  font-weight: 700;
+  margin-left: 0.15rem;
+}
+
+.modal-pairing-btn:hover .modal-pairing-price {
+  color: #ffffff;
+}
+
+/* Fila de Acciones en Modal: Compartir + Botón Agregar */
+.modal-actions-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  width: 100%;
+  margin-top: 0.35rem;
+}
+
+.modal-share-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  background: var(--secondary-bg, rgba(0, 0, 0, 0.06));
+  color: var(--text-main);
+  font-family: var(--font-primary);
+  font-size: 0.86rem;
+  font-weight: 600;
+  padding: 0.95rem 1.15rem;
+  border-radius: 9999px;
+  border: none !important;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  white-space: nowrap;
+}
+
+.dark .modal-share-btn {
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.modal-share-btn:hover {
+  background: var(--card-hover, rgba(0, 0, 0, 0.1));
+  transform: translateY(-2px);
+}
+
+.modal-share-btn.copied {
+  background: #10b981;
+  color: #ffffff;
+}
+
 
 /* ==========================================================================
    DRAWER DE PEDIDOS (CARRITO) EN PANTALLA COMPLETA
@@ -2868,6 +2981,140 @@ input, textarea, select {
   }
 }
 
+/* Banner de Repetir Último Pedido (One-Tap Reorder) */
+.reorder-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  background: linear-gradient(135deg, rgba(227, 6, 19, 0.08) 0%, rgba(245, 130, 32, 0.08) 100%);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  padding: 0.95rem 1.35rem;
+  border-radius: 16px;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 6px 24px rgba(227, 6, 19, 0.08), var(--shadow-sm);
+  border: none !important;
+  animation: bannerFadeIn 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dark .reorder-banner {
+  background: linear-gradient(135deg, rgba(227, 6, 19, 0.16) 0%, rgba(245, 130, 32, 0.12) 100%);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+}
+
+.reorder-banner-left {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  flex: 1;
+}
+
+.reorder-icon-wrap {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background-color: var(--rojo);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(227, 6, 19, 0.35);
+  animation: rotateGlow 3s ease-in-out infinite;
+}
+
+@keyframes rotateGlow {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-25deg); }
+}
+
+.reorder-text-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.reorder-title {
+  font-family: var(--font-primary);
+  font-size: 0.96rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.reorder-desc {
+  font-family: var(--font-secondary);
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.reorder-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-shrink: 0;
+}
+
+.reorder-action-btn {
+  background-color: var(--rojo);
+  color: #ffffff;
+  font-family: var(--font-primary);
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 0.6rem 1.15rem;
+  border-radius: 9999px;
+  border: none !important;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(227, 6, 19, 0.32);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reorder-action-btn:hover {
+  background-color: var(--rojo-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(227, 6, 19, 0.45);
+}
+
+.reorder-close-btn {
+  background: transparent;
+  color: var(--text-light);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: none !important;
+  transition: all 0.18s ease;
+}
+
+.reorder-close-btn:hover {
+  background: rgba(0, 0, 0, 0.08);
+  color: var(--text-main);
+}
+
+.dark .reorder-close-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+@media (max-width: 600px) {
+  .reorder-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.85rem;
+    padding: 0.9rem 1.1rem;
+  }
+  .reorder-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .reorder-action-btn {
+    flex: 1;
+    text-align: center;
+  }
+}
+
 .search-results-clear {
   background-color: var(--rojo);
   color: #ffffff;
@@ -3095,6 +3342,34 @@ input, textarea, select {
   border: none !important;
   color: var(--naranja);
   transform: translateY(-2px);
+}
+
+/* Aviso de Agradecimiento del 18% en Mesas (Cero Trazos) */
+.footer-gratitude-notice {
+  text-align: center;
+  font-family: var(--font-primary);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #e5e7eb;
+  line-height: 1.5;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem 0.65rem;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.65rem 1.15rem;
+  border-radius: 9999px;
+  max-width: 680px;
+  margin: 0.5rem auto 0.85rem auto;
+  border: none !important;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
+}
+
+.footer-gratitude-dot {
+  color: var(--naranja);
+  font-weight: 700;
 }
 
 /* Pie de Página Copyright */

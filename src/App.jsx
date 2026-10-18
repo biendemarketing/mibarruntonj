@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Header } from './components/Header';
 import { CategoryPills } from './components/CategoryPills';
 import { ProductCard } from './components/ProductCard';
@@ -11,9 +12,23 @@ import { menuRepository } from './services/MenuRepository';
 import { Cart } from './models/Cart';
 import { CartItem } from './models/CartItem';
 import { Customer } from './models/Customer';
-import { Search, ShoppingBag, LayoutGrid, Rows3, ChevronUp } from 'lucide-react';
+import { Search, ShoppingBag, LayoutGrid, Rows3, ChevronUp, RotateCcw, X, Sparkles } from 'lucide-react';
+import { triggerHaptic } from './utils/haptics';
 
 export function App() {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // Historial de último pedido (One-Tap Reorder)
+  const [lastOrder, setLastOrder] = useState(() => {
+    try {
+      const saved = localStorage.getItem('mb-last-order');
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return null;
+  });
+  const [dismissedLastOrder, setDismissedLastOrder] = useState(false);
+
   // Estado Orientado a Objetos: Carrito de Compras con persistencia en localStorage
   const [cart, setCart] = useState(() => {
     try {
@@ -79,6 +94,43 @@ export function App() {
       return false;
     }
   });
+
+  // Sincronización de rutas del navegador (Browser Routing con URLs reales)
+  useEffect(() => {
+    const path = location.pathname;
+
+    // 1. Ruta /plato/:id
+    if (path.startsWith('/plato/')) {
+      const dishId = path.replace('/plato/', '').trim();
+      const foundDish = menuRepository.getDishById(dishId);
+      if (foundDish) {
+        setSelectedDishForDetail(foundDish);
+        setIsCartOpen(false);
+      }
+    } else {
+      setSelectedDishForDetail(null);
+    }
+
+    // 2. Ruta /pedido o /carrito
+    if (path === '/pedido' || path === '/carrito') {
+      setIsCartOpen(true);
+      setSelectedDishForDetail(null);
+    } else if (!path.startsWith('/plato/')) {
+      setIsCartOpen(false);
+    }
+
+    // 3. Ruta /categoria/:slug
+    if (path.startsWith('/categoria/')) {
+      const catSlug = path.replace('/categoria/', '').trim();
+      if (catSlug) {
+        setSelectedCategory(catSlug);
+      }
+    } else if (path === '/' && !searchQuery.trim()) {
+      if (selectedCategory !== 'todos') {
+        setSelectedCategory('todos');
+      }
+    }
+  }, [location.pathname]);
 
   const handleUpdateFilter = (key, value) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
@@ -172,36 +224,75 @@ export function App() {
     return groupedCatalog.flatMap((g) => g.dishes);
   }, [groupedCatalog]);
 
+  const handleOpenDishDetail = (dish) => {
+    triggerHaptic(12);
+    setSelectedDishForDetail(dish);
+    navigate(`/plato/${dish.id}`);
+  };
+
+  const handleCloseDishDetail = () => {
+    setSelectedDishForDetail(null);
+    if (location.pathname.startsWith('/plato/')) {
+      if (window.history.length > 1) {
+        navigate(-1);
+      } else {
+        navigate(selectedCategory === 'todos' ? '/' : `/categoria/${selectedCategory}`);
+      }
+    }
+  };
+
+  const handleOpenCart = () => {
+    triggerHaptic(14);
+    setIsCartOpen(true);
+    navigate('/pedido');
+  };
+
+  const handleCloseCart = () => {
+    setIsCartOpen(false);
+    if (location.pathname === '/pedido' || location.pathname === '/carrito') {
+      if (window.history.length > 1) {
+        navigate(-1);
+      } else {
+        navigate(selectedCategory === 'todos' ? '/' : `/categoria/${selectedCategory}`);
+      }
+    }
+  };
+
   const handlePrevDish = () => {
     if (!selectedDishForDetail || currentCatalogDishes.length === 0) return;
+    triggerHaptic(10);
     const currentIndex = currentCatalogDishes.findIndex((d) => d.id === selectedDishForDetail.id);
-    if (currentIndex <= 0) {
-      setSelectedDishForDetail(currentCatalogDishes[currentCatalogDishes.length - 1]);
-    } else {
-      setSelectedDishForDetail(currentCatalogDishes[currentIndex - 1]);
-    }
+    const prev = currentIndex <= 0
+      ? currentCatalogDishes[currentCatalogDishes.length - 1]
+      : currentCatalogDishes[currentIndex - 1];
+    setSelectedDishForDetail(prev);
+    navigate(`/plato/${prev.id}`, { replace: true });
   };
 
   const handleNextDish = () => {
     if (!selectedDishForDetail || currentCatalogDishes.length === 0) return;
+    triggerHaptic(10);
     const currentIndex = currentCatalogDishes.findIndex((d) => d.id === selectedDishForDetail.id);
-    if (currentIndex === -1 || currentIndex >= currentCatalogDishes.length - 1) {
-      setSelectedDishForDetail(currentCatalogDishes[0]);
-    } else {
-      setSelectedDishForDetail(currentCatalogDishes[currentIndex + 1]);
-    }
+    const next = (currentIndex === -1 || currentIndex >= currentCatalogDishes.length - 1)
+      ? currentCatalogDishes[0]
+      : currentCatalogDishes[currentIndex + 1];
+    setSelectedDishForDetail(next);
+    navigate(`/plato/${next.id}`, { replace: true });
   };
 
   // Handlers del Carrito (OOP)
   const handleAddToCart = (dish, quantity = 1, note = '') => {
+    triggerHaptic(15);
     setCart((prevCart) => prevCart.addItem(dish, quantity, note));
   };
 
   const handleUpdateQuantity = (dishId, quantity) => {
+    triggerHaptic(10);
     setCart((prevCart) => prevCart.updateQuantity(dishId, quantity));
   };
 
   const handleRemoveItem = (dishId) => {
+    triggerHaptic(12);
     setCart((prevCart) => prevCart.removeItem(dishId));
   };
 
@@ -210,7 +301,24 @@ export function App() {
   };
 
   const handleClearCart = () => {
+    triggerHaptic(15);
     setCart((prevCart) => prevCart.clear());
+  };
+
+  const handleReorderLast = () => {
+    if (!lastOrder || !lastOrder.items) return;
+    triggerHaptic(20);
+    const newItems = lastOrder.items
+      .map((i) => {
+        const dish = menuRepository.getDishById(i.dishId);
+        if (!dish) return null;
+        return new CartItem(dish, i.quantity, i.note || '');
+      })
+      .filter(Boolean);
+
+    const newCustomer = new Customer(lastOrder.customer || {});
+    setCart(new Cart(newItems, newCustomer));
+    handleOpenCart();
   };
 
   const handleSearchChange = (query) => {
@@ -221,9 +329,15 @@ export function App() {
   };
 
   const handleSelectCategory = (catId) => {
+    triggerHaptic(10);
     setSelectedCategory(catId);
     setSearchQuery('');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (catId === 'todos') {
+      navigate('/');
+    } else {
+      navigate(`/categoria/${catId}`);
+    }
   };
 
   // Modo de vista: 'compact' (compacta/horizontal con cards más pequeñas) o 'grid' (cuadrícula normal)
@@ -255,7 +369,7 @@ export function App() {
       {/* 1. Header con Logo Centrado en Móvil y Botones al lado del Buscador en Escritorio */}
       <Header
         cart={cart}
-        onOpenCart={() => setIsCartOpen(true)}
+        onOpenCart={handleOpenCart}
         searchQuery={searchQuery}
         onSearchChange={handleSearchChange}
         isDarkMode={isDarkMode}
@@ -288,6 +402,40 @@ export function App() {
 
         {/* 4. Catálogo de Platos */}
         <main className="menu-main-layout">
+        {/* Banner de Repetir Último Pedido (One-Tap Reorder) */}
+        {lastOrder && cart.isEmpty() && !dismissedLastOrder && (
+          <div className="reorder-banner">
+            <div className="reorder-banner-left">
+              <div className="reorder-icon-wrap">
+                <RotateCcw size={18} />
+              </div>
+              <div className="reorder-text-wrap">
+                <strong className="reorder-title">¿Deseas repetir tu último pedido?</strong>
+                <span className="reorder-desc">
+                  {lastOrder.items?.length || 0} {(lastOrder.items?.length || 0) === 1 ? 'plato guardado' : 'platos guardados'} de tu visita anterior
+                </span>
+              </div>
+            </div>
+            <div className="reorder-actions">
+              <button
+                type="button"
+                className="reorder-action-btn"
+                onClick={handleReorderLast}
+              >
+                Pedir de nuevo
+              </button>
+              <button
+                type="button"
+                className="reorder-close-btn"
+                onClick={() => setDismissedLastOrder(true)}
+                aria-label="Cerrar sugerencia"
+              >
+                <X size={16} />
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Banner de búsqueda activa en vivo con botón para limpiar */}
         {searchQuery.trim() && (
           <div className="search-results-banner">
@@ -386,7 +534,7 @@ export function App() {
                       viewMode={viewMode}
                       onAddToCart={(d) => handleAddToCart(d, 1)}
                       onUpdateQuantity={(id, q) => handleUpdateQuantity(id, q)}
-                      onOpenDetail={(d) => setSelectedDishForDetail(d)}
+                      onOpenDetail={(d) => handleOpenDishDetail(d)}
                     />
                   );
                 })}
@@ -403,7 +551,7 @@ export function App() {
       {/* 7. Barra Móvil Inferior (Menú, Búsqueda, Mi Pedido y WhatsApp) */}
       <MobileNavBar
         cart={cart}
-        onOpenCart={() => setIsCartOpen(true)}
+        onOpenCart={handleOpenCart}
         onOpenMobileMenu={() => setIsMobileMenuOpen(true)}
         onToggleSearch={() => {
           const input = document.querySelector('.mobile-search-input') || document.querySelector('.header-search-input');
@@ -421,7 +569,7 @@ export function App() {
           photoMode={photoMode}
           initialQuantity={cart.getItemQuantity(selectedDishForDetail.id) || 1}
           initialNote={cart.getItem(selectedDishForDetail.id)?.note || ''}
-          onClose={() => setSelectedDishForDetail(null)}
+          onClose={handleCloseDishDetail}
           onSaveToCart={(dish, qty, note) => {
             if (cart.getItem(dish.id)) {
               handleUpdateQuantity(dish.id, qty);
@@ -434,13 +582,18 @@ export function App() {
           }}
           onPrevDish={handlePrevDish}
           onNextDish={handleNextDish}
+          onQuickAddPairing={(pDish) => {
+            handleAddToCart(pDish, 1);
+            setToastMessage(`Añadido al pedido: ${pDish.name}`);
+            setTimeout(() => setToastMessage(''), 2400);
+          }}
         />
       )}
 
       {/* 9. Carrito y Envío a WhatsApp */}
       <CartDrawer
         isOpen={isCartOpen}
-        onClose={() => setIsCartOpen(false)}
+        onClose={handleCloseCart}
         cart={cart}
         onUpdateQuantity={handleUpdateQuantity}
         onRemoveItem={handleRemoveItem}
@@ -454,7 +607,7 @@ export function App() {
         <button
           type="button"
           className="desktop-floating-cart"
-          onClick={() => setIsCartOpen(true)}
+          onClick={handleOpenCart}
           aria-label="Ver pedido"
         >
           <div className="desktop-floating-cart-icon">

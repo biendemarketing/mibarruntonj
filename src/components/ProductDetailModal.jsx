@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { X, Plus, Minus, ShoppingCart, ChevronLeft, ChevronRight } from 'lucide-react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { X, Plus, Minus, ShoppingCart, ChevronLeft, ChevronRight, Share2, Check } from 'lucide-react';
 import { PlateIcon } from './Icons';
+import { menuRepository } from '../services/MenuRepository';
+import { triggerHaptic } from '../utils/haptics';
 
 export function ProductDetailModal({
   dish,
@@ -10,15 +12,19 @@ export function ProductDetailModal({
   onClose,
   onSaveToCart,
   onPrevDish,
-  onNextDish
+  onNextDish,
+  onQuickAddPairing
 }) {
   const [quantity, setQuantity] = useState(initialQuantity > 0 ? initialQuantity : 1);
   const [note, setNote] = useState(initialNote);
   const [isClosing, setIsClosing] = useState(false);
+  const [copiedShare, setCopiedShare] = useState(false);
+  const [touchStartY, setTouchStartY] = useState(null);
 
   useEffect(() => {
     setQuantity(initialQuantity > 0 ? initialQuantity : 1);
     setNote(initialNote || '');
+    setCopiedShare(false);
   }, [dish?.id]);
 
   const handleClose = () => {
@@ -27,6 +33,58 @@ export function ProductDetailModal({
     setTimeout(() => {
       onClose();
     }, 220);
+  };
+
+  // Sugerencias de Maridaje inteligente (Bebidas típicas peruanas si no es categoría bebidas)
+  const pairingDishes = useMemo(() => {
+    if (!dish || dish.category === 'bebidas') return [];
+    const p1 = menuRepository.getDishById(233); // Chicha Morada
+    const p2 = menuRepository.getDishById(235); // Agua de Maracuyá
+    return [p1, p2].filter(Boolean);
+  }, [dish]);
+
+  // Compartir plato mediante Web Share API o copiar URL directa
+  const handleShare = async () => {
+    triggerHaptic(15);
+    const shareUrl = `${window.location.origin}/plato/${dish.id}`;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `${dish.name} — Mi Barrunto`,
+          text: `¡Mira este delicioso plato en Mi Barrunto! ${dish.name} (${dish.getFormattedPrice()})`,
+          url: shareUrl
+        });
+        return;
+      } catch (err) {
+        if (err.name !== 'AbortError') {
+          // Fallback a portapapeles
+        }
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      setCopiedShare(true);
+      setTimeout(() => setCopiedShare(false), 2400);
+    } catch {
+      // Fallback si clipboard falla
+      setCopiedShare(true);
+      setTimeout(() => setCopiedShare(false), 2400);
+    }
+  };
+
+  // Gesto táctil Swipe-Down para cerrar en móviles
+  const handleTouchStart = (e) => {
+    setTouchStartY(e.touches[0].clientY);
+  };
+
+  const handleTouchEnd = (e) => {
+    if (touchStartY === null) return;
+    const diffY = e.changedTouches[0].clientY - touchStartY;
+    if (diffY > 80) {
+      triggerHaptic(12);
+      handleClose();
+    }
+    setTouchStartY(null);
   };
 
   // Bloquear scroll de fondo al abrir el modal y navegación con flechas de teclado
@@ -55,6 +113,7 @@ export function ProductDetailModal({
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    triggerHaptic(18);
     onSaveToCart(dish, quantity, note);
     handleClose();
   };
@@ -70,6 +129,8 @@ export function ProductDetailModal({
         {/* Contenedor del modal */}
         <div
           className={`modal-card-wrapper ${isClosing ? 'modal-content-closing' : 'modal-content-opening'}`}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
         >
           {/* Botón cerrar flotante: fijo en esquina superior derecha sin desplazarse por el scroll */}
           <button
@@ -121,7 +182,10 @@ export function ProductDetailModal({
                 <button
                   type="button"
                   className="qty-btn"
-                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                  onClick={() => {
+                    triggerHaptic(10);
+                    setQuantity(Math.max(1, quantity - 1));
+                  }}
                   aria-label="Disminuir"
                 >
                   <Minus size={15} />
@@ -130,7 +194,10 @@ export function ProductDetailModal({
                 <button
                   type="button"
                   className="qty-btn"
-                  onClick={() => setQuantity(quantity + 1)}
+                  onClick={() => {
+                    triggerHaptic(10);
+                    setQuantity(quantity + 1);
+                  }}
                   aria-label="Aumentar"
                 >
                   <Plus size={15} />
@@ -146,6 +213,35 @@ export function ProductDetailModal({
               </div>
             )}
 
+            {/* Venta cruzada inteligente: Maridaje sugerido */}
+            {pairingDishes.length > 0 && (
+              <div className="modal-pairing-box">
+                <span className="modal-pairing-header">Acompáñalo con:</span>
+                <div className="modal-pairing-chips">
+                  {pairingDishes.map((pDish) => (
+                    <button
+                      key={pDish.id}
+                      type="button"
+                      className="modal-pairing-btn"
+                      onClick={() => {
+                        triggerHaptic(15);
+                        if (onQuickAddPairing) {
+                          onQuickAddPairing(pDish);
+                        } else {
+                          onSaveToCart(pDish, 1, '');
+                        }
+                      }}
+                      title={`Añadir ${pDish.name} al pedido`}
+                    >
+                      <Plus size={12} strokeWidth={2.5} />
+                      <span className="modal-pairing-name">{pDish.name}</span>
+                      <span className="modal-pairing-price">{pDish.getFormattedPrice()}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Notas */}
             <textarea
               className="modal-note-redesign"
@@ -155,20 +251,33 @@ export function ProductDetailModal({
               rows={2}
             />
 
-            {/* Botón agregar / actualizar con icono de carrito */}
-            <button
-              type="button"
-              className="modal-submit-btn"
-              onClick={handleSubmit}
-            >
-              <ShoppingCart size={18} />
-              <span>
-                {initialQuantity > 0 ? 'Actualizar Pedido' : 'Agregar al Pedido'}
-              </span>
-              {dish.price > 0 && (
-                <span className="modal-submit-price">${subtotal}</span>
-              )}
-            </button>
+            {/* Fila de acciones: Compartir y Agregar al Pedido */}
+            <div className="modal-actions-row">
+              <button
+                type="button"
+                className={`modal-share-btn ${copiedShare ? 'copied' : ''}`}
+                onClick={handleShare}
+                title="Compartir este plato"
+                aria-label="Compartir este plato"
+              >
+                {copiedShare ? <Check size={16} /> : <Share2 size={16} />}
+                <span>{copiedShare ? '¡Copiado!' : 'Compartir'}</span>
+              </button>
+
+              <button
+                type="button"
+                className="modal-submit-btn"
+                onClick={handleSubmit}
+              >
+                <ShoppingCart size={18} />
+                <span>
+                  {initialQuantity > 0 ? 'Actualizar' : 'Agregar al Pedido'}
+                </span>
+                {dish.price > 0 && (
+                  <span className="modal-submit-price">${subtotal}</span>
+                )}
+              </button>
+            </div>
           </div>
         </div>
       </div>

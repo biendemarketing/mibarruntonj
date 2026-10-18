@@ -73,6 +73,32 @@ export class WhatsAppService {
   }
 
   sendOrder(cart) {
+    try {
+      if (typeof window !== 'undefined' && 'vibrate' in navigator) {
+        navigator.vibrate(25);
+      }
+      const serializable = {
+        date: new Date().toISOString(),
+        items: cart.items.map((i) => ({
+          dishId: i.dish.id,
+          quantity: i.quantity,
+          note: i.note || ''
+        })),
+        customer: {
+          name: cart.customer.name,
+          orderType: cart.customer.orderType,
+          table: cart.customer.table,
+          address: cart.customer.address,
+          phone: cart.customer.phone,
+          paymentMethod: cart.customer.paymentMethod,
+          generalNotes: cart.customer.generalNotes
+        }
+      };
+      localStorage.setItem('mb-last-order', JSON.stringify(serializable));
+    } catch (e) {
+      console.warn('Error al guardar last-order:', e);
+    }
+
     const url = this.getWhatsAppUrl(cart);
     if (typeof window !== 'undefined') {
       window.open(url, '_blank', 'noopener,noreferrer');
