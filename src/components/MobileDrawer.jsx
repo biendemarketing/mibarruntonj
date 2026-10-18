@@ -36,7 +36,7 @@ export function MobileDrawer({
           <div className="mobile-drawer-header-inner">
             <div className="mobile-drawer-brand">
               <img
-                src="/logo/logo.png"
+                src="./logo/logo.png"
                 alt="Logo Mi Barrunto"
                 className="mobile-drawer-logo"
               />
@@ -99,7 +99,7 @@ export function MobileDrawer({
         {/* Enlace directo a Carta Imprimible 11x8.5 */}
         <div style={{ padding: '0.75rem 1.25rem 0' }}>
           <a
-            href="/menu_imprimible.html"
+            href="./menu_imprimible.html"
             target="_blank"
             rel="noopener noreferrer"
             className="mobile-drawer-item"

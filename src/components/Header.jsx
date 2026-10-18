@@ -55,7 +55,7 @@ export function Header({
           playsInline
           preload="auto"
         >
-          <source src="/header-bg.mp4" type="video/mp4" />
+          <source src="./header-bg.mp4" type="video/mp4" />
         </video>
       </div>
 
@@ -119,7 +119,7 @@ export function Header({
         {/* Logo y Marca (Centrado en Móvil con Logo Grande, Izquierda en Escritorio) */}
         <div className="brand-logo-container">
           <img
-            src="/logo/logo.png"
+            src="./logo/logo.png"
             alt="Logo Mi Barrunto"
             className="brand-logo-img"
           />

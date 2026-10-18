@@ -183,7 +183,7 @@ function renderPage1() {
 
     <div class="cover-content">
       <div class="cover-logo-wrap">
-        <img src="/logo/logo.png" alt="Mi Barrunto Logo" class="cover-logo-img" />
+        <img src="./logo/logo.png" alt="Mi Barrunto Logo" class="cover-logo-img" />
       </div>
 
       <h1 class="cover-brand-title">MI BARRUNTO</h1>
@@ -793,7 +793,7 @@ function renderPage10() {
 
     <div class="backcover-content">
       <div class="backcover-logo-wrap">
-        <img src="/logo/logo.png" alt="Mi Barrunto Logo" class="backcover-logo-img" />
+        <img src="./logo/logo.png" alt="Mi Barrunto Logo" class="backcover-logo-img" />
       </div>
 
       <h2 class="backcover-title">¡GRACIAS POR SU PREFERENCIA!</h2>

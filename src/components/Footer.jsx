@@ -45,7 +45,7 @@ export function Footer() {
           <div className="footer-delivery-pills">
             {/* Botón Imprimir (Solo Icono, Sin Fondo) */}
             <a
-              href="/menu_imprimible.html"
+              href="./menu_imprimible.html"
               target="_blank"
               rel="noopener noreferrer"
               className="footer-icon-only-btn"
@@ -57,7 +57,7 @@ export function Footer() {
 
             {/* Botón Descargar (Solo Icono, Sin Fondo) */}
             <a
-              href="/menu_imprimible.html"
+              href="./menu_imprimible.html"
               download="Carta_Mi_Barrunto_11x8.5.html"
               target="_blank"
               rel="noopener noreferrer"
