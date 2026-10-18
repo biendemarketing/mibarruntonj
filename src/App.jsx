@@ -589,19 +589,20 @@ export function App() {
       {showFavoritesOnly && !isDishDetailPage && (
         <header className="favorites-standalone-header">
           <div className="favorites-standalone-inner">
-            <button
-              type="button"
-              className="favorites-standalone-back-btn"
-              onClick={() => {
-                triggerHaptic(12);
-                setShowFavoritesOnly(false);
-              }}
-              aria-label="Volver a toda la carta"
-              title="Volver a la carta"
-            >
-              <ChevronLeft size={22} />
-              <span className="favorites-back-text">Volver a la carta</span>
-            </button>
+            <div className="favorites-standalone-left">
+              <button
+                type="button"
+                className="favorites-standalone-back-btn"
+                onClick={() => {
+                  triggerHaptic(12);
+                  setShowFavoritesOnly(false);
+                }}
+                aria-label="Volver a toda la carta"
+                title="Volver a la carta"
+              >
+                <ChevronLeft size={22} />
+              </button>
+            </div>
 
             <div className="favorites-standalone-title-wrap">
               <Heart size={22} fill="var(--rojo)" color="var(--rojo)" />
