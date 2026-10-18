@@ -245,6 +245,13 @@ export function ProductDetailPage({
     setTimeout(() => setAddedToast(''), 2500);
   };
 
+  const handleUpdateRelatedQuantity = (targetDish, newQty) => {
+    triggerHaptic(12);
+    if (onUpdateQuantity) {
+      onUpdateQuantity(targetDish.id, newQty);
+    }
+  };
+
   const handleNavigateDish = (targetDish) => {
     triggerHaptic(12);
     navigate(`/plato/${targetDish.id}`);
@@ -621,6 +628,8 @@ export function ProductDetailPage({
             {relatedDishes.map((relDish) => {
               const relHasPhoto = relDish.hasImage(photoMode);
               const relImage = relDish.getResolvedImage ? relDish.getResolvedImage(photoMode) : relDish.getImage(photoMode);
+              const relItemInCart = cart ? cart.getItem(relDish.id) : null;
+              const relQty = relItemInCart ? relItemInCart.quantity : 0;
 
               return (
                 <article
@@ -652,20 +661,41 @@ export function ProductDetailPage({
                     {relDish.nameEn && (
                       <p className="editorial-card-desc-2col">{relDish.nameEn}</p>
                     )}
-                    <div className="editorial-card-footer-2col">
+                    <div className="editorial-card-footer-2col" onClick={(e) => e.stopPropagation()}>
                       <span className="editorial-card-price-2col">{relDish.getFormattedPrice()}</span>
-                      <button
-                        type="button"
-                        className="editorial-card-btn-2col"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleQuickAddRelated(relDish);
-                        }}
-                        title={`Agregar ${relDish.name} al pedido`}
-                      >
-                        <Plus size={14} />
-                        <span>Añadir</span>
-                      </button>
+                      {relQty > 0 ? (
+                        <div className="editorial-card-stepper-2col">
+                          <button
+                            type="button"
+                            className="editorial-stepper-btn"
+                            onClick={() => handleUpdateRelatedQuantity(relDish, relQty - 1)}
+                            title={`Disminuir cantidad de ${relDish.name}`}
+                            aria-label={`Disminuir ${relDish.name}`}
+                          >
+                            <Minus size={13} />
+                          </button>
+                          <span className="editorial-stepper-count">{relQty}</span>
+                          <button
+                            type="button"
+                            className="editorial-stepper-btn"
+                            onClick={() => handleUpdateRelatedQuantity(relDish, relQty + 1)}
+                            title={`Aumentar cantidad de ${relDish.name}`}
+                            aria-label={`Aumentar ${relDish.name}`}
+                          >
+                            <Plus size={13} />
+                          </button>
+                        </div>
+                      ) : (
+                        <button
+                          type="button"
+                          className="editorial-card-btn-2col"
+                          onClick={() => handleQuickAddRelated(relDish)}
+                          title={`Agregar ${relDish.name} al pedido`}
+                        >
+                          <Plus size={14} />
+                          <span>Añadir</span>
+                        </button>
+                      )}
                     </div>
                   </div>
                 </article>

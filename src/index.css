@@ -4827,6 +4827,45 @@ input, textarea, select {
   transform: scale(1.04);
 }
 
+.editorial-card-stepper-2col {
+  display: inline-flex;
+  align-items: center;
+  background-color: var(--secondary-bg);
+  border-radius: 9999px;
+  padding: 0.16rem;
+  border: none !important;
+  box-shadow: var(--shadow-sm);
+  gap: 0.2rem;
+}
+
+.editorial-stepper-btn {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--card-bg);
+  color: var(--text-main);
+  border: none !important;
+  cursor: pointer;
+  transition: all 0.16s ease;
+}
+
+.editorial-stepper-btn:hover {
+  background-color: var(--rojo);
+  color: #ffffff;
+}
+
+.editorial-stepper-count {
+  font-family: var(--font-primary);
+  font-size: 0.85rem;
+  font-weight: 800;
+  min-width: 20px;
+  text-align: center;
+  color: var(--text-main);
+}
+
 /* ==========================================================================
    TOAST FLOTANTE DE CONFIRMACIÓN
    ========================================================================== */
