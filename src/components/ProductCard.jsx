@@ -61,11 +61,17 @@ export function ProductCard({
         <div className="compact-image-wrap">
           {hasPhoto ? (
             <img
-              src={`/${dish.image}`}
+              src={dish.image.startsWith('http') ? dish.image : `./${dish.image.replace(/^\//, '')}`}
               alt={dish.name}
               className="compact-img"
               loading="lazy"
               decoding="async"
+              onError={(e) => {
+                if (!e.target.dataset.retried) {
+                  e.target.dataset.retried = '1';
+                  e.target.src = `${import.meta.env.BASE_URL}${dish.image.replace(/^\//, '')}`;
+                }
+              }}
             />
           ) : (
             <div className="compact-placeholder">
@@ -144,11 +150,17 @@ export function ProductCard({
           title="Ver detalle del plato"
         >
           <img
-            src={`/${dish.image}`}
+            src={dish.image.startsWith('http') ? dish.image : `./${dish.image.replace(/^\//, '')}`}
             alt={dish.name}
             className="product-card-img"
             loading="lazy"
             decoding="async"
+            onError={(e) => {
+              if (!e.target.dataset.retried) {
+                e.target.dataset.retried = '1';
+                e.target.src = `${import.meta.env.BASE_URL}${dish.image.replace(/^\//, '')}`;
+              }
+            }}
           />
         </div>
       ) : (

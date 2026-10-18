@@ -76,9 +76,15 @@ export function ProductDetailModal({
         {hasPhoto ? (
           <div className="modal-image-wrap">
             <img
-              src={`/${dish.image}`}
+              src={dish.image.startsWith('http') ? dish.image : `./${dish.image.replace(/^\//, '')}`}
               alt={dish.name}
               className="modal-image"
+              onError={(e) => {
+                if (!e.target.dataset.retried) {
+                  e.target.dataset.retried = '1';
+                  e.target.src = `${import.meta.env.BASE_URL}${dish.image.replace(/^\//, '')}`;
+                }
+              }}
             />
           </div>
         ) : (
