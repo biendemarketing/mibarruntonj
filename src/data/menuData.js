@@ -1295,11 +1295,11 @@ export const DISHES_DATA = [
   },
   {
     "id": 102,
-    "name": "Tallarín Verde con chorrasco a la parrilla",
+    "name": "Tallarín Verde con churrasco a la parrilla",
     "nameEn": "Pesto spaghetti with grilled bone-in steak",
     "glosa": "Pesto spaghetti with grilled bone-in steak",
-    "price": 23.99,
-    "priceDisplay": "$23.99",
+    "price": 29.99,
+    "priceDisplay": "$29.99",
     "category": "criolla",
     "subcategory": "",
     "image": null,
@@ -1391,7 +1391,7 @@ export const DISHES_DATA = [
   },
   {
     "id": 110,
-    "name": "Tallarín a la Huancaína con chorrasco",
+    "name": "Tallarín a la Huancaína con churrasco",
     "nameEn": "Spaghetti in huancaína sauce with bone-in steak",
     "glosa": "Spaghetti in huancaína sauce with bone-in steak",
     "price": 29.99,
