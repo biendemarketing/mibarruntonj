@@ -1256,7 +1256,7 @@ input, textarea, select {
 }
 
 /* ==========================================================================
-   BARRA MÓVIL FLOTANTE LIQUID GLASS (APPLE STYLE)
+   BARRA DE NAVEGACIÓN INFERIOR FLOTANTE MÓVIL (TIPO APPLE DINÁMICO)
    ========================================================================== */
 .mobile-nav-bar {
   position: fixed;
@@ -1278,12 +1278,32 @@ input, textarea, select {
   justify-content: space-around;
   padding: 0 8px;
   z-index: 95;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: height 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+              max-width 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+              bottom 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+              padding 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+              border-radius 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: height, max-width, bottom;
+}
+
+.mobile-nav-bar.mobile-nav-bar-compact {
+  height: 44px;
+  max-width: 290px;
+  bottom: 12px;
+  border-radius: 26px;
+  padding: 0 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22),
+              0 2px 8px rgba(0, 0, 0, 0.12);
 }
 
 .dark .mobile-nav-bar {
   background: rgba(255, 255, 255, 0.95);
   box-shadow: 0 10px 35px rgba(0, 0, 0, 0.5);
+}
+
+.dark .mobile-nav-bar.mobile-nav-bar-compact {
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.65);
 }
 
 @media (min-width: 900px) {
@@ -1302,10 +1322,20 @@ input, textarea, select {
   border-radius: 50%;
   position: relative;
   background: transparent;
-  border: none;
+  border: none !important;
   cursor: pointer;
   opacity: 0.95;
-  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.26s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mobile-nav-bar-compact .mobile-nav-btn {
+  width: 36px;
+  height: 36px;
+}
+
+.mobile-nav-bar-compact .mobile-nav-btn svg {
+  transform: scale(0.85);
+  transition: transform 0.26s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .mobile-nav-btn:hover {
@@ -1334,8 +1364,19 @@ input, textarea, select {
   display: grid;
   place-items: center;
   padding: 0 4px;
+  border: none !important;
   box-shadow: 0 2px 6px rgba(238, 0, 0, 0.45);
   animation: cartBadgePulse 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  transition: all 0.26s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mobile-nav-bar-compact .mobile-cart-badge {
+  top: 0px;
+  right: 0px;
+  min-width: 15px;
+  height: 15px;
+  font-size: 0.62rem;
+  padding: 0 3px;
 }
 
 /* ==========================================================================

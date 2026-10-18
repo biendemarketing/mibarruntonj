@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Menu, Search, ShoppingCart } from 'lucide-react';
 import { WhatsAppIcon } from './Icons';
 
@@ -8,7 +8,40 @@ export function MobileNavBar({
   onOpenMobileMenu,
   onToggleSearch
 }) {
+  const [isCompact, setIsCompact] = useState(false);
   const totalCount = cart.getTotalCount();
+
+  // Detección de scroll estilo Apple (Safari iOS): compacto al bajar, normal al subir
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
+    let ticking = false;
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const currentScrollY = window.scrollY;
+
+          // Cerca de la cima de la página siempre tamaño normal
+          if (currentScrollY <= 40) {
+            setIsCompact(false);
+          } else if (currentScrollY > lastScrollY + 8) {
+            // Scroll hacia abajo -> modo compacto
+            setIsCompact(true);
+          } else if (currentScrollY < lastScrollY - 8) {
+            // Scroll hacia arriba -> tamaño normal
+            setIsCompact(false);
+          }
+
+          lastScrollY = Math.max(0, currentScrollY);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleWhatsAppClick = () => {
     window.open(
@@ -19,7 +52,10 @@ export function MobileNavBar({
   };
 
   return (
-    <nav className="mobile-nav-bar" aria-label="Navegación móvil">
+    <nav
+      className={`mobile-nav-bar ${isCompact ? 'mobile-nav-bar-compact' : ''}`}
+      aria-label="Navegación móvil"
+    >
       {/* 1. Menú / Categorías */}
       <button
         type="button"
