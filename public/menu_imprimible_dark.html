@@ -86,6 +86,7 @@
       --ocre: #c58652;
       --bg-cream: #fcf9f2;
       --bg-card: #f4ecdf;
+      --page-scale: 1;
     }
 
     @page {
@@ -176,6 +177,31 @@
       transform: translateY(-2px);
     }
 
+    .zoom-toggle-btn {
+      background: #2a2e39;
+      color: #ffffff;
+      padding: 9px 18px;
+      border-radius: 9999px;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      transition: all 0.2s ease;
+      box-shadow: none !important;
+    }
+
+    .zoom-toggle-btn:hover {
+      background: #393e4d;
+      transform: translateY(-2px);
+    }
+
+    .zoom-toggle-btn.is-zoomed {
+      background: var(--naranja);
+    }
+
     .nav-page-select {
       background: #252830;
       color: #ffffff;
@@ -197,20 +223,74 @@
     /* ==========================================================================
        ESTRUCTURA DE CADA PÁGINA (11in x 8.5in Letter Landscape)
        ========================================================================== */
+    .menu-pages-viewport {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .menu-page-wrapper {
+      width: 11in;
+      height: 8.5in;
+      margin-bottom: 30px;
+      position: relative;
+      flex-shrink: 0;
+      transition: width 0.2s cubic-bezier(0.16, 1, 0.3, 1), height 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
     .menu-page {
       width: 11in;
       height: 8.5in;
       background-color: var(--bg-cream);
       position: relative;
       overflow: hidden;
-      margin-bottom: 30px;
+      margin: 0;
       box-shadow: none !important;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       page-break-after: always;
       page-break-inside: avoid;
-      transition: background-color 0.25s ease;
+      transition: background-color 0.25s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      transform-origin: top left;
+    }
+
+    @media screen and (max-width: 1080px) {
+      body {
+        padding: 10px 0 40px;
+        overflow-x: hidden;
+      }
+
+      body.zoom-mode-active {
+        overflow-x: auto;
+      }
+
+      .print-controls-bar {
+        position: sticky;
+        top: 10px;
+        padding: 8px 14px;
+        gap: 8px;
+        margin-bottom: 16px;
+        max-width: 96vw;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .print-tip {
+        display: none !important;
+      }
+
+      .menu-page-wrapper {
+        width: calc(11in * var(--page-scale, 1));
+        height: calc(8.5in * var(--page-scale, 1));
+        margin-bottom: 16px;
+      }
+
+      .menu-page {
+        transform: scale(var(--page-scale, 1));
+        transform-origin: top left;
+      }
     }
 
     /* Banners Textiles Incas Superior e Inferior - 20px de alto */
@@ -1162,10 +1242,25 @@
         background: transparent !important;
         padding: 0 !important;
         margin: 0 !important;
+        overflow: visible !important;
       }
 
       .print-controls-bar {
         display: none !important;
+      }
+
+      .menu-pages-viewport {
+        display: block !important;
+        width: 11in !important;
+      }
+
+      .menu-page-wrapper {
+        width: 11in !important;
+        height: 8.5in !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        page-break-after: always !important;
+        break-after: page !important;
       }
 
       .menu-page {
@@ -1175,6 +1270,7 @@
         break-after: page !important;
         height: 8.5in !important;
         width: 11in !important;
+        transform: none !important;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
       }
@@ -1193,6 +1289,11 @@
     <button type="button" class="theme-toggle-btn" onclick="toggleTheme();" id="themeToggleBtn">
       <span id="themeIcon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg></span>
       <span id="themeBtnText">Modo Claro</span>
+    </button>
+
+    <button type="button" class="zoom-toggle-btn" onclick="toggleZoom();" id="zoomToggleBtn" title="Alternar Zoom">
+      <span id="zoomIcon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg></span>
+      <span id="zoomBtnText">Zoom</span>
     </button>
 
     <label for="pageJump" style="font-size: 0.84rem; font-weight: 600;">Ir a página:</label>
@@ -1216,7 +1317,8 @@
   </header>
 
   <!-- PÁGINAS DEL MENÚ IMPRIMIBLE (11 x 8.5 in) -->
-  
+  <main class="menu-pages-viewport" id="menuPagesViewport">
+    <div class="menu-page-wrapper">
   <section class="menu-page page-cover" id="page-1">
     
   <div class="textile-banner-wrap">
@@ -1378,8 +1480,8 @@
   </div>
   
   </section>
-  
-  
+  </div>
+    <div class="menu-page-wrapper">
   <section class="menu-page page-dedicated-toc" id="page-2">
     
   <div class="textile-banner-wrap">
@@ -1595,8 +1697,8 @@
   </div>
   
   </section>
-  
-  
+  </div>
+    <div class="menu-page-wrapper">
   <section class="menu-page page-content-3col" id="page-3">
     
   <div class="textile-banner-wrap">
@@ -2069,8 +2171,8 @@
   </div>
   
   </section>
-  
-  
+  </div>
+    <div class="menu-page-wrapper">
   <section class="menu-page page-content-3col" id="page-4">
     
   <div class="textile-banner-wrap">
@@ -2479,8 +2581,8 @@
   </div>
   
   </section>
-  
-  
+  </div>
+    <div class="menu-page-wrapper">
   <section class="menu-page page-content-3col" id="page-5">
     
   <div class="textile-banner-wrap">
@@ -2917,8 +3019,8 @@
   </div>
   
   </section>
-  
-  
+  </div>
+    <div class="menu-page-wrapper">
   <section class="menu-page page-content-3col" id="page-6">
     
   <div class="textile-banner-wrap">
@@ -3454,8 +3556,8 @@
   </div>
   
   </section>
-  
-  
+  </div>
+    <div class="menu-page-wrapper">
   <section class="menu-page page-content-3col" id="page-7">
     
   <div class="textile-banner-wrap">
@@ -3793,8 +3895,8 @@
   </div>
   
   </section>
-  
-  
+  </div>
+    <div class="menu-page-wrapper">
   <section class="menu-page page-content-3col" id="page-8">
     
   <div class="textile-banner-wrap">
@@ -4339,8 +4441,8 @@
   </div>
   
   </section>
-  
-  
+  </div>
+    <div class="menu-page-wrapper">
   <section class="menu-page page-content-3col" id="page-9">
     
   <div class="textile-banner-wrap">
@@ -4773,8 +4875,8 @@
   </div>
   
   </section>
-  
-  
+  </div>
+    <div class="menu-page-wrapper">
   <section class="menu-page page-backcover" id="page-10">
     
   <div class="textile-banner-wrap">
@@ -4929,9 +5031,58 @@
   </div>
   
   </section>
-  
+  </div>
+  </main>
 
   <script>
+    let isZoomed = false;
+
+    function calcScale() {
+      if (window.innerWidth > 1080) {
+        return 1;
+      }
+      if (isZoomed) {
+        return 1;
+      }
+      const availableWidth = Math.max(280, window.innerWidth - 16);
+      return Math.min(1, availableWidth / 1056);
+    }
+
+    function applyScale() {
+      const scale = calcScale();
+      document.documentElement.style.setProperty('--page-scale', scale);
+      if (isZoomed && window.innerWidth <= 1080) {
+        document.body.classList.add('zoom-mode-active');
+      } else {
+        document.body.classList.remove('zoom-mode-active');
+      }
+    }
+
+    function toggleZoom() {
+      isZoomed = !isZoomed;
+      const zoomBtn = document.getElementById('zoomToggleBtn');
+      const zoomText = document.getElementById('zoomBtnText');
+      const zoomIcon = document.getElementById('zoomIcon');
+
+      if (isZoomed) {
+        if (zoomBtn) zoomBtn.classList.add('is-zoomed');
+        if (zoomText) zoomText.textContent = 'Ajustar';
+        if (zoomIcon) zoomIcon.innerHTML = "<svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" style=\"flex-shrink:0;\"><circle cx=\"11\" cy=\"11\" r=\"8\"></circle><line x1=\"21\" y1=\"21\" x2=\"16.65\" y2=\"16.65\"></line><line x1=\"8\" y1=\"11\" x2=\"14\" y2=\"11\"></line></svg>";
+      } else {
+        if (zoomBtn) zoomBtn.classList.remove('is-zoomed');
+        if (zoomText) zoomText.textContent = 'Zoom';
+        if (zoomIcon) zoomIcon.innerHTML = "<svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" style=\"flex-shrink:0;\"><circle cx=\"11\" cy=\"11\" r=\"8\"></circle><line x1=\"21\" y1=\"21\" x2=\"16.65\" y2=\"16.65\"></line><line x1=\"11\" y1=\"8\" x2=\"11\" y2=\"14\"></line><line x1=\"8\" y1=\"11\" x2=\"14\" y2=\"11\"></line></svg>";
+      }
+      applyScale();
+    }
+
+    window.addEventListener('resize', applyScale);
+    window.addEventListener('orientationchange', () => {
+      setTimeout(applyScale, 150);
+    });
+    document.addEventListener('DOMContentLoaded', applyScale);
+    applyScale();
+
     function toggleTheme() {
       document.body.classList.toggle('dark-theme');
       const isDark = document.body.classList.contains('dark-theme');

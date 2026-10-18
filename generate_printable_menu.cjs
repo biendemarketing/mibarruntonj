@@ -49,6 +49,8 @@ function escapeHtml(str) {
 // --------------------------------------------------------------------------
 const SVG_ICONS = {
   printer: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>`,
+  zoomIn: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>`,
+  zoomOut: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>`,
   moon: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`,
   sun: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`,
   info: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>`,
@@ -924,6 +926,7 @@ function generateCompleteHtml(options = {}) {
       --ocre: #c58652;
       --bg-cream: #fcf9f2;
       --bg-card: #f4ecdf;
+      --page-scale: 1;
     }
 
     @page {
@@ -1014,6 +1017,31 @@ function generateCompleteHtml(options = {}) {
       transform: translateY(-2px);
     }
 
+    .zoom-toggle-btn {
+      background: #2a2e39;
+      color: #ffffff;
+      padding: 9px 18px;
+      border-radius: 9999px;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      transition: all 0.2s ease;
+      box-shadow: none !important;
+    }
+
+    .zoom-toggle-btn:hover {
+      background: #393e4d;
+      transform: translateY(-2px);
+    }
+
+    .zoom-toggle-btn.is-zoomed {
+      background: var(--naranja);
+    }
+
     .nav-page-select {
       background: #252830;
       color: #ffffff;
@@ -1035,20 +1063,74 @@ function generateCompleteHtml(options = {}) {
     /* ==========================================================================
        ESTRUCTURA DE CADA PÁGINA (11in x 8.5in Letter Landscape)
        ========================================================================== */
+    .menu-pages-viewport {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .menu-page-wrapper {
+      width: 11in;
+      height: 8.5in;
+      margin-bottom: 30px;
+      position: relative;
+      flex-shrink: 0;
+      transition: width 0.2s cubic-bezier(0.16, 1, 0.3, 1), height 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
     .menu-page {
       width: 11in;
       height: 8.5in;
       background-color: var(--bg-cream);
       position: relative;
       overflow: hidden;
-      margin-bottom: 30px;
+      margin: 0;
       box-shadow: none !important;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       page-break-after: always;
       page-break-inside: avoid;
-      transition: background-color 0.25s ease;
+      transition: background-color 0.25s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      transform-origin: top left;
+    }
+
+    @media screen and (max-width: 1080px) {
+      body {
+        padding: 10px 0 40px;
+        overflow-x: hidden;
+      }
+
+      body.zoom-mode-active {
+        overflow-x: auto;
+      }
+
+      .print-controls-bar {
+        position: sticky;
+        top: 10px;
+        padding: 8px 14px;
+        gap: 8px;
+        margin-bottom: 16px;
+        max-width: 96vw;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .print-tip {
+        display: none !important;
+      }
+
+      .menu-page-wrapper {
+        width: calc(11in * var(--page-scale, 1));
+        height: calc(8.5in * var(--page-scale, 1));
+        margin-bottom: 16px;
+      }
+
+      .menu-page {
+        transform: scale(var(--page-scale, 1));
+        transform-origin: top left;
+      }
     }
 
     /* Banners Textiles Incas Superior e Inferior - 20px de alto */
@@ -2000,10 +2082,25 @@ function generateCompleteHtml(options = {}) {
         background: transparent !important;
         padding: 0 !important;
         margin: 0 !important;
+        overflow: visible !important;
       }
 
       .print-controls-bar {
         display: none !important;
+      }
+
+      .menu-pages-viewport {
+        display: block !important;
+        width: 11in !important;
+      }
+
+      .menu-page-wrapper {
+        width: 11in !important;
+        height: 8.5in !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        page-break-after: always !important;
+        break-after: page !important;
       }
 
       .menu-page {
@@ -2013,6 +2110,7 @@ function generateCompleteHtml(options = {}) {
         break-after: page !important;
         height: 8.5in !important;
         width: 11in !important;
+        transform: none !important;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
       }
@@ -2031,6 +2129,11 @@ function generateCompleteHtml(options = {}) {
     <button type="button" class="theme-toggle-btn" onclick="toggleTheme();" id="themeToggleBtn">
       <span id="themeIcon">${isDefaultDark ? SVG_ICONS.sun : SVG_ICONS.moon}</span>
       <span id="themeBtnText">${isDefaultDark ? 'Modo Claro' : 'Modo Oscuro'}</span>
+    </button>
+
+    <button type="button" class="zoom-toggle-btn" onclick="toggleZoom();" id="zoomToggleBtn" title="Alternar Zoom">
+      <span id="zoomIcon">${SVG_ICONS.zoomIn}</span>
+      <span id="zoomBtnText">Zoom</span>
     </button>
 
     <label for="pageJump" style="font-size: 0.84rem; font-weight: 600;">Ir a página:</label>
@@ -2054,18 +2157,68 @@ function generateCompleteHtml(options = {}) {
   </header>
 
   <!-- PÁGINAS DEL MENÚ IMPRIMIBLE (11 x 8.5 in) -->
-  ${renderPage1()}
-  ${renderPage2()}
-  ${renderPage3()}
-  ${renderPage4()}
-  ${renderPage5()}
-  ${renderPage6()}
-  ${renderPage7()}
-  ${renderPage8()}
-  ${renderPage9()}
-  ${renderPage10()}
+  <main class="menu-pages-viewport" id="menuPagesViewport">
+    <div class="menu-page-wrapper">${renderPage1()}</div>
+    <div class="menu-page-wrapper">${renderPage2()}</div>
+    <div class="menu-page-wrapper">${renderPage3()}</div>
+    <div class="menu-page-wrapper">${renderPage4()}</div>
+    <div class="menu-page-wrapper">${renderPage5()}</div>
+    <div class="menu-page-wrapper">${renderPage6()}</div>
+    <div class="menu-page-wrapper">${renderPage7()}</div>
+    <div class="menu-page-wrapper">${renderPage8()}</div>
+    <div class="menu-page-wrapper">${renderPage9()}</div>
+    <div class="menu-page-wrapper">${renderPage10()}</div>
+  </main>
 
   <script>
+    let isZoomed = false;
+
+    function calcScale() {
+      if (window.innerWidth > 1080) {
+        return 1;
+      }
+      if (isZoomed) {
+        return 1;
+      }
+      const availableWidth = Math.max(280, window.innerWidth - 16);
+      return Math.min(1, availableWidth / 1056);
+    }
+
+    function applyScale() {
+      const scale = calcScale();
+      document.documentElement.style.setProperty('--page-scale', scale);
+      if (isZoomed && window.innerWidth <= 1080) {
+        document.body.classList.add('zoom-mode-active');
+      } else {
+        document.body.classList.remove('zoom-mode-active');
+      }
+    }
+
+    function toggleZoom() {
+      isZoomed = !isZoomed;
+      const zoomBtn = document.getElementById('zoomToggleBtn');
+      const zoomText = document.getElementById('zoomBtnText');
+      const zoomIcon = document.getElementById('zoomIcon');
+
+      if (isZoomed) {
+        if (zoomBtn) zoomBtn.classList.add('is-zoomed');
+        if (zoomText) zoomText.textContent = 'Ajustar';
+        if (zoomIcon) zoomIcon.innerHTML = ${JSON.stringify(SVG_ICONS.zoomOut)};
+      } else {
+        if (zoomBtn) zoomBtn.classList.remove('is-zoomed');
+        if (zoomText) zoomText.textContent = 'Zoom';
+        if (zoomIcon) zoomIcon.innerHTML = ${JSON.stringify(SVG_ICONS.zoomIn)};
+      }
+      applyScale();
+    }
+
+    window.addEventListener('resize', applyScale);
+    window.addEventListener('orientationchange', () => {
+      setTimeout(applyScale, 150);
+    });
+    document.addEventListener('DOMContentLoaded', applyScale);
+    applyScale();
+
     function toggleTheme() {
       document.body.classList.toggle('dark-theme');
       const isDark = document.body.classList.contains('dark-theme');
