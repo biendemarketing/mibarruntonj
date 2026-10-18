@@ -81,6 +81,19 @@ export class MenuRepository {
   }
 
   /**
+   * Obtiene todos los platos pertenecientes a una categoría
+   * @param {string} categoryId 
+   * @returns {Dish[]}
+   */
+  getDishesByCategory(categoryId) {
+    const cat = this.categoriesMap.get(categoryId);
+    if (cat && cat.dishes && cat.dishes.length > 0) {
+      return cat.dishes;
+    }
+    return this.dishes.filter(d => d.category === categoryId);
+  }
+
+  /**
    * Filtra platos por criterios de búsqueda y filtros
    * @param {Object} filters
    * @param {string} [filters.categoryId]

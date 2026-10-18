@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Header } from './components/Header';
 import { CategoryPills } from './components/CategoryPills';
 import { ProductCard } from './components/ProductCard';
-import { ProductDetailModal } from './components/ProductDetailModal';
+import { ProductDetailPage } from './pages/ProductDetailPage';
 import { CartDrawer } from './components/CartDrawer';
 import { MobileNavBar } from './components/MobileNavBar';
 import { MobileDrawer } from './components/MobileDrawer';
@@ -84,7 +84,13 @@ export function App() {
     priceSort: 'none',
     priceRange: 'all'
   });
-  const [selectedDishForDetail, setSelectedDishForDetail] = useState(null);
+  const [selectedDishForDetail, setSelectedDishForDetail] = useState(() => {
+    if (typeof window !== 'undefined' && window.location.pathname.startsWith('/plato/')) {
+      const dishId = window.location.pathname.replace('/plato/', '').split('/')[0].split('?')[0].trim();
+      return menuRepository.getDishById(dishId) || null;
+    }
+    return null;
+  });
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(() => {
@@ -362,7 +368,8 @@ export function App() {
     });
   };
 
-  const isAnyModalOpen = Boolean(selectedDishForDetail || isCartOpen || isMobileMenuOpen);
+  const isDishDetailPage = location.pathname.startsWith('/plato/');
+  const isAnyModalOpen = Boolean(isCartOpen || isMobileMenuOpen);
 
   return (
     <div className="app-container">
@@ -392,16 +399,33 @@ export function App() {
         onSelectCategory={handleSelectCategory}
       />
 
-      {/* 3. Layout Principal: Menú de Categorías (Sidebar en Escritorio) + Catálogo */}
-      <div className="menu-desktop-layout">
-        <CategoryPills
-          categories={categories}
-          selectedCategory={searchQuery.trim() ? 'todos' : selectedCategory}
-          onSelectCategory={handleSelectCategory}
+      {/* 3. Layout Principal: Detalle de Plato dedicado o Catálogo con Sidebar */}
+      {isDishDetailPage ? (
+        <ProductDetailPage
+          dish={selectedDishForDetail}
+          photoMode={photoMode}
+          cart={cart}
+          onAddToCart={handleAddToCart}
+          onUpdateQuantity={handleUpdateQuantity}
+          onOpenCart={handleOpenCart}
+          onBack={() => {
+            if (window.history.length > 1) {
+              navigate(-1);
+            } else {
+              navigate(selectedCategory === 'todos' ? '/' : `/categoria/${selectedCategory}`);
+            }
+          }}
         />
+      ) : (
+        <div className="menu-desktop-layout">
+          <CategoryPills
+            categories={categories}
+            selectedCategory={searchQuery.trim() ? 'todos' : selectedCategory}
+            onSelectCategory={handleSelectCategory}
+          />
 
-        {/* 4. Catálogo de Platos */}
-        <main className="menu-main-layout">
+          {/* 4. Catálogo de Platos */}
+          <main className="menu-main-layout">
         {/* Banner de Repetir Último Pedido (One-Tap Reorder) */}
         {lastOrder && cart.isEmpty() && !dismissedLastOrder && (
           <div className="reorder-banner">
@@ -542,8 +566,9 @@ export function App() {
             </section>
           ))
         )}
-      </main>
-      </div>
+        </main>
+        </div>
+      )}
 
       {/* 6. Footer con Redes Sociales Oficiales y Selector de Versión de Fotos */}
       <Footer photoMode={photoMode} onTogglePhotoMode={handleTogglePhotoMode} />
@@ -562,35 +587,7 @@ export function App() {
         }}
       />
 
-      {/* 8. Modal de Detalle de Producto al Clic con Flechas para Navegar */}
-      {selectedDishForDetail && (
-        <ProductDetailModal
-          dish={selectedDishForDetail}
-          photoMode={photoMode}
-          initialQuantity={cart.getItemQuantity(selectedDishForDetail.id) || 1}
-          initialNote={cart.getItem(selectedDishForDetail.id)?.note || ''}
-          onClose={handleCloseDishDetail}
-          onSaveToCart={(dish, qty, note) => {
-            if (cart.getItem(dish.id)) {
-              handleUpdateQuantity(dish.id, qty);
-              if (note) {
-                setCart((prev) => prev.updateItemNote(dish.id, note));
-              }
-            } else {
-              handleAddToCart(dish, qty, note);
-            }
-          }}
-          onPrevDish={handlePrevDish}
-          onNextDish={handleNextDish}
-          onQuickAddPairing={(pDish) => {
-            handleAddToCart(pDish, 1);
-            setToastMessage(`Añadido al pedido: ${pDish.name}`);
-            setTimeout(() => setToastMessage(''), 2400);
-          }}
-        />
-      )}
-
-      {/* 9. Carrito y Envío a WhatsApp */}
+      {/* 8. Carrito y Envío a WhatsApp */}
       <CartDrawer
         isOpen={isCartOpen}
         onClose={handleCloseCart}
