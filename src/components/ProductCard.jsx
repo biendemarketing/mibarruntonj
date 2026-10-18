@@ -18,6 +18,8 @@ export function ProductCard({
   const currentImage = dish.getResolvedImage ? dish.getResolvedImage(photoMode) : dish.getImage(photoMode);
   const isCompact = viewMode === 'compact';
   const [isRevealed, setIsRevealed] = useState(false);
+  const [shouldLoadImage, setShouldLoadImage] = useState(false);
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
   const cardRef = useRef(null);
 
   // Efecto cascada escalonado por columna/fila al ir bajando por la página
@@ -29,12 +31,13 @@ export function ProductCard({
 
     if (typeof IntersectionObserver === 'undefined') {
       setIsRevealed(true);
+      setShouldLoadImage(true);
       return;
     }
 
-    const observer = new IntersectionObserver(
+    // Observer 1: Revelado progresivo con micro-escala
+    const revealObserver = new IntersectionObserver(
       ([entry]) => {
-        // Estilo Apple Notifications: las de abajo se ven compactas y escalan al tamaño normal al hacer scroll
         setIsRevealed(entry.isIntersecting);
       },
       {
@@ -42,11 +45,25 @@ export function ProductCard({
         rootMargin: '0px 0px -40px 0px'
       }
     );
+    revealObserver.observe(el);
 
-    observer.observe(el);
+    // Observer 2: Carga diferida (Lazy Loading) de imágenes con margen de anticipación de 300px
+    const imageObserver = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShouldLoadImage(true);
+          imageObserver.disconnect();
+        }
+      },
+      {
+        rootMargin: '300px 0px 300px 0px'
+      }
+    );
+    imageObserver.observe(el);
 
     return () => {
-      if (el) observer.unobserve(el);
+      revealObserver.disconnect();
+      imageObserver.disconnect();
     };
   }, [dish.id, viewMode]);
 
@@ -64,16 +81,21 @@ export function ProductCard({
         title="Clic para ver detalles"
         style={{ transitionDelay: staggerDelay }}
       >
-        {/* Imagen o Placeholder a la izquierda */}
+        {/* Imagen o Placeholder a la izquierda con Carga Diferida (Lazy Loading) */}
         <div className="compact-image-wrap">
           {hasPhoto && currentImage ? (
-            <img
-              src={currentImage}
-              alt={`${dish.name} — Plato peruano en Mi Barrunto`}
-              className="compact-img"
-              loading="lazy"
-              decoding="async"
-            />
+            shouldLoadImage ? (
+              <img
+                src={currentImage}
+                alt={`${dish.name} — Plato peruano en Mi Barrunto`}
+                className={`compact-img ${isImageLoaded ? 'img-loaded' : 'img-loading'}`}
+                loading="lazy"
+                decoding="async"
+                onLoad={() => setIsImageLoaded(true)}
+              />
+            ) : (
+              <div className="compact-img-skeleton" aria-hidden="true" />
+            )
           ) : (
             <div className="compact-placeholder">
               <PlateIcon size={34} className="compact-placeholder-icon" />
@@ -84,23 +106,7 @@ export function ProductCard({
         {/* Contenido a la derecha */}
         <div className="compact-content">
           <div className="compact-header">
-            <div className="compact-title-row">
-              <h3 className="compact-title">{dish.name}</h3>
-              {onToggleFavorite && (
-                <button
-                  type="button"
-                  className={`card-fav-btn ${isFavorite ? 'is-fav' : ''}`}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onToggleFavorite(dish.id);
-                  }}
-                  aria-label={isFavorite ? `Quitar ${dish.name} de favoritos` : `Guardar ${dish.name} en favoritos`}
-                  title={isFavorite ? 'En tus favoritos' : 'Guardar en favoritos'}
-                >
-                  <Heart size={16} fill={isFavorite ? 'var(--rojo)' : 'none'} color={isFavorite ? 'var(--rojo)' : 'currentColor'} />
-                </button>
-              )}
-            </div>
+            <h3 className="compact-title">{dish.name}</h3>
             {dish.nameEn && (
               <p className="compact-en">{dish.nameEn}</p>
             )}
@@ -111,39 +117,61 @@ export function ProductCard({
               {dish.getFormattedPrice()}
             </span>
 
-            {quantity > 0 ? (
-              <div className="qty-stepper compact-stepper">
+            <div className="compact-footer-actions">
+              {/* Botón de favoritos al lado del botón de añadir */}
+              {onToggleFavorite && (
                 <button
                   type="button"
-                  className="qty-btn"
-                  onClick={() => onUpdateQuantity(dish.id, quantity - 1)}
-                  title="Disminuir"
-                  aria-label={`Disminuir cantidad de ${dish.name}`}
+                  className={`card-fav-btn compact-fav-footer-btn ${isFavorite ? 'is-fav' : ''}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onToggleFavorite(dish.id);
+                  }}
+                  aria-label={isFavorite ? `Quitar ${dish.name} de favoritos` : `Guardar ${dish.name} en favoritos`}
+                  title={isFavorite ? 'En tus favoritos' : 'Guardar en favoritos'}
                 >
-                  <Minus size={13} />
+                  <Heart
+                    size={16}
+                    fill={isFavorite ? 'var(--rojo)' : 'none'}
+                    color={isFavorite ? 'var(--rojo)' : 'currentColor'}
+                  />
                 </button>
-                <span className="qty-count">{quantity}</span>
+              )}
+
+              {quantity > 0 ? (
+                <div className="qty-stepper compact-stepper">
+                  <button
+                    type="button"
+                    className="qty-btn"
+                    onClick={() => onUpdateQuantity(dish.id, quantity - 1)}
+                    title="Disminuir"
+                    aria-label={`Disminuir cantidad de ${dish.name}`}
+                  >
+                    <Minus size={13} />
+                  </button>
+                  <span className="qty-count">{quantity}</span>
+                  <button
+                    type="button"
+                    className="qty-btn"
+                    onClick={() => onUpdateQuantity(dish.id, quantity + 1)}
+                    title="Aumentar"
+                    aria-label={`Aumentar cantidad de ${dish.name}`}
+                  >
+                    <Plus size={13} />
+                  </button>
+                </div>
+              ) : (
                 <button
                   type="button"
-                  className="qty-btn"
-                  onClick={() => onUpdateQuantity(dish.id, quantity + 1)}
-                  title="Aumentar"
-                  aria-label={`Aumentar cantidad de ${dish.name}`}
+                  className="compact-add-btn"
+                  onClick={(e) => onAddToCart(dish, e)}
+                  title="Agregar a mi pedido"
+                  aria-label={`Agregar ${dish.name}`}
                 >
-                  <Plus size={13} />
+                  <Plus size={16} />
                 </button>
-              </div>
-            ) : (
-              <button
-                type="button"
-                className="compact-add-btn"
-                onClick={(e) => onAddToCart(dish, e)}
-                title="Agregar a mi pedido"
-                aria-label={`Agregar ${dish.name}`}
-              >
-                <Plus size={16} />
-              </button>
-            )}
+              )}
+            </div>
           </div>
         </div>
       </article>
@@ -160,40 +188,29 @@ export function ProductCard({
       data-dish-id={dish.id}
       style={{ transitionDelay: staggerDelay }}
     >
-      {/* Zona Superior: Imagen en alta calidad o placeholder gris con icono de plato */}
+      {/* Zona Superior: Imagen en alta calidad con Carga Diferida (Lazy Loading) */}
       <div
         className={`product-card-image-wrap ${!hasPhoto || !currentImage ? 'product-card-placeholder' : ''}`}
         onClick={() => onOpenDetail(dish)}
         title="Ver detalle del plato"
       >
         {hasPhoto && currentImage ? (
-          <img
-            src={currentImage}
-            alt={`${dish.name} — Comida criolla peruana en Mi Barrunto`}
-            className="product-card-img"
-            loading="lazy"
-            decoding="async"
-          />
+          shouldLoadImage ? (
+            <img
+              src={currentImage}
+              alt={`${dish.name} — Comida criolla peruana en Mi Barrunto`}
+              className={`product-card-img ${isImageLoaded ? 'img-loaded' : 'img-loading'}`}
+              loading="lazy"
+              decoding="async"
+              onLoad={() => setIsImageLoaded(true)}
+            />
+          ) : (
+            <div className="product-card-img-skeleton" aria-hidden="true" />
+          )
         ) : (
           <div className="product-placeholder-icon-wrap">
             <PlateIcon size={44} className="product-placeholder-icon" />
           </div>
-        )}
-
-        {/* Botón flotante de favoritos en la foto de la card */}
-        {onToggleFavorite && (
-          <button
-            type="button"
-            className={`card-fav-btn card-fav-btn-grid ${isFavorite ? 'is-fav' : ''}`}
-            onClick={(e) => {
-              e.stopPropagation();
-              onToggleFavorite(dish.id);
-            }}
-            aria-label={isFavorite ? `Quitar ${dish.name} de favoritos` : `Guardar ${dish.name} en favoritos`}
-            title={isFavorite ? 'En tus favoritos' : 'Guardar en favoritos'}
-          >
-            <Heart size={18} fill={isFavorite ? 'var(--rojo)' : 'none'} color={isFavorite ? 'var(--rojo)' : '#ffffff'} />
-          </button>
         )}
       </div>
 
@@ -209,50 +226,72 @@ export function ProductCard({
         )}
       </div>
 
-      {/* Pie de tarjeta: Precio y Selección de Lista */}
+      {/* Pie de tarjeta: Precio y Botones de Acción (Favorito + Carrito juntos) */}
       <div className="product-card-footer">
         <span className="product-price-tag">
           {dish.getFormattedPrice()}
         </span>
 
-        {/* Controles de Lista / Carrito */}
-        {quantity > 0 ? (
-          <div className="qty-stepper" onClick={(e) => e.stopPropagation()}>
+        <div className="product-card-footer-actions">
+          {/* Botón de favoritos al lado del botón de añadir */}
+          {onToggleFavorite && (
             <button
               type="button"
-              className="qty-btn"
-              onClick={() => onUpdateQuantity(dish.id, quantity - 1)}
-              title="Disminuir"
-              aria-label={`Disminuir cantidad de ${dish.name}`}
+              className={`card-fav-btn card-fav-footer-btn ${isFavorite ? 'is-fav' : ''}`}
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleFavorite(dish.id);
+              }}
+              aria-label={isFavorite ? `Quitar ${dish.name} de favoritos` : `Guardar ${dish.name} en favoritos`}
+              title={isFavorite ? 'En tus favoritos' : 'Guardar en favoritos'}
             >
-              <Minus size={14} />
+              <Heart
+                size={18}
+                fill={isFavorite ? 'var(--rojo)' : 'none'}
+                color={isFavorite ? 'var(--rojo)' : 'currentColor'}
+              />
             </button>
-            <span className="qty-count">{quantity}</span>
+          )}
+
+          {/* Controles de Lista / Carrito */}
+          {quantity > 0 ? (
+            <div className="qty-stepper" onClick={(e) => e.stopPropagation()}>
+              <button
+                type="button"
+                className="qty-btn"
+                onClick={() => onUpdateQuantity(dish.id, quantity - 1)}
+                title="Disminuir"
+                aria-label={`Disminuir cantidad de ${dish.name}`}
+              >
+                <Minus size={14} />
+              </button>
+              <span className="qty-count">{quantity}</span>
+              <button
+                type="button"
+                className="qty-btn"
+                onClick={() => onUpdateQuantity(dish.id, quantity + 1)}
+                title="Aumentar"
+                aria-label={`Aumentar cantidad de ${dish.name}`}
+              >
+                <Plus size={14} />
+              </button>
+            </div>
+          ) : (
             <button
               type="button"
-              className="qty-btn"
-              onClick={() => onUpdateQuantity(dish.id, quantity + 1)}
-              title="Aumentar"
-              aria-label={`Aumentar cantidad de ${dish.name}`}
+              className="btn-add-cart"
+              onClick={(e) => {
+                e.stopPropagation();
+                onAddToCart(dish, e);
+              }}
+              title="Agregar a mi pedido"
+              aria-label={`Agregar ${dish.name}`}
             >
-              <Plus size={14} />
+              <Plus size={15} />
+              <span>Elegir</span>
             </button>
-          </div>
-        ) : (
-          <button
-            type="button"
-            className="btn-add-cart"
-            onClick={(e) => {
-              e.stopPropagation();
-              onAddToCart(dish, e);
-            }}
-            title="Agregar a mi pedido"
-            aria-label={`Agregar ${dish.name}`}
-          >
-            <Plus size={15} />
-            <span>Elegir</span>
-          </button>
-        )}
+          )}
+        </div>
       </div>
     </article>
   );

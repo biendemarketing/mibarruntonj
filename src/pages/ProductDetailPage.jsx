@@ -567,6 +567,7 @@ export function ProductDetailPage({
                         alt={accItem.name}
                         className="accompaniment-circle-avatar"
                         loading="lazy"
+                        decoding="async"
                       />
                     ) : (
                       <div className="accompaniment-circle-placeholder">
@@ -664,6 +665,7 @@ export function ProductDetailPage({
                         alt={relDish.name}
                         className="editorial-card-img"
                         loading="lazy"
+                        decoding="async"
                       />
                     ) : (
                       <div className="editorial-card-placeholder">

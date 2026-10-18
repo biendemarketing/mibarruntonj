@@ -1,13 +1,21 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, lazy, Suspense } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Header } from './components/Header';
 import { CategoryPills } from './components/CategoryPills';
 import { ProductCard } from './components/ProductCard';
-import { ProductDetailPage } from './pages/ProductDetailPage';
-import { CartDrawer } from './components/CartDrawer';
 import { MobileNavBar } from './components/MobileNavBar';
-import { MobileDrawer } from './components/MobileDrawer';
 import { Footer } from './components/Footer';
+
+// Carga diferida (Lazy Loading y Code-Splitting) para vistas y modales pesados
+const ProductDetailPage = lazy(() =>
+  import('./pages/ProductDetailPage').then((m) => ({ default: m.ProductDetailPage }))
+);
+const CartDrawer = lazy(() =>
+  import('./components/CartDrawer').then((m) => ({ default: m.CartDrawer }))
+);
+const MobileDrawer = lazy(() =>
+  import('./components/MobileDrawer').then((m) => ({ default: m.MobileDrawer }))
+);
 import { menuRepository } from './services/MenuRepository';
 import { Cart } from './models/Cart';
 import { CartItem } from './models/CartItem';
@@ -441,35 +449,45 @@ export function App() {
         />
       )}
 
-      {/* 2. Menú Hamburguesa Móvil */}
-      <MobileDrawer
-        isOpen={isMobileMenuOpen}
-        onClose={() => setIsMobileMenuOpen(false)}
-        categories={categories}
-        selectedCategory={searchQuery.trim() ? 'todos' : selectedCategory}
-        onSelectCategory={handleSelectCategory}
-      />
+      {/* 2. Menú Hamburguesa Móvil (Carga diferida) */}
+      <Suspense fallback={null}>
+        <MobileDrawer
+          isOpen={isMobileMenuOpen}
+          onClose={() => setIsMobileMenuOpen(false)}
+          categories={categories}
+          selectedCategory={searchQuery.trim() ? 'todos' : selectedCategory}
+          onSelectCategory={handleSelectCategory}
+        />
+      </Suspense>
 
       {/* 3. Layout Principal: Detalle de Plato dedicado o Catálogo con Sidebar */}
       {isDishDetailPage ? (
         <div key={selectedDishForDetail?.id || location.pathname} className="view-transition-page">
-          <ProductDetailPage
-            dish={selectedDishForDetail}
-            photoMode={photoMode}
-            cart={cart}
-            onAddToCart={handleAddToCart}
-            onUpdateQuantity={handleUpdateQuantity}
-            onOpenCart={handleOpenCart}
-            isFavorite={selectedDishForDetail ? favorites.includes(selectedDishForDetail.id) : false}
-            onToggleFavorite={handleToggleFavorite}
-            onBack={() => {
-              if (window.history.length > 1) {
-                navigate(-1);
-              } else {
-                navigate(selectedCategory === 'todos' ? '/' : `/categoria/${selectedCategory}`);
-              }
-            }}
-          />
+          <Suspense fallback={
+            <div style={{ minHeight: '60vh', display: 'grid', placeItems: 'center', color: 'var(--text-light)' }}>
+              <div style={{ textAlign: 'center' }}>
+                <p style={{ fontFamily: 'var(--font-primary)', fontWeight: 700, fontSize: '0.95rem' }}>Cargando plato...</p>
+              </div>
+            </div>
+          }>
+            <ProductDetailPage
+              dish={selectedDishForDetail}
+              photoMode={photoMode}
+              cart={cart}
+              onAddToCart={handleAddToCart}
+              onUpdateQuantity={handleUpdateQuantity}
+              onOpenCart={handleOpenCart}
+              isFavorite={selectedDishForDetail ? favorites.includes(selectedDishForDetail.id) : false}
+              onToggleFavorite={handleToggleFavorite}
+              onBack={() => {
+                if (window.history.length > 1) {
+                  navigate(-1);
+                } else {
+                  navigate(selectedCategory === 'todos' ? '/' : `/categoria/${selectedCategory}`);
+                }
+              }}
+            />
+          </Suspense>
         </div>
       ) : (
         <div key={`catalog-${selectedCategory}`} className="menu-desktop-layout view-transition-page">
@@ -701,17 +719,19 @@ export function App() {
         }}
       />
 
-      {/* 8. Carrito y Envío a WhatsApp */}
-      <CartDrawer
-        isOpen={isCartOpen}
-        onClose={handleCloseCart}
-        cart={cart}
-        onUpdateQuantity={handleUpdateQuantity}
-        onRemoveItem={handleRemoveItem}
-        onUpdateCustomerField={handleUpdateCustomerField}
-        onClearCart={handleClearCart}
-        photoMode={photoMode}
-      />
+      {/* 8. Carrito y Envío a WhatsApp (Carga diferida) */}
+      <Suspense fallback={null}>
+        <CartDrawer
+          isOpen={isCartOpen}
+          onClose={handleCloseCart}
+          cart={cart}
+          onUpdateQuantity={handleUpdateQuantity}
+          onRemoveItem={handleRemoveItem}
+          onUpdateCustomerField={handleUpdateCustomerField}
+          onClearCart={handleClearCart}
+          photoMode={photoMode}
+        />
+      </Suspense>
 
       {/* 10. Botón Flotante de Carrito en Escritorio (Solo Icono de Carrito sin texto y Badge) */}
       {cart.getTotalCount() > 0 && !isAnyModalOpen && (

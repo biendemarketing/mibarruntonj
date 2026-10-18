@@ -5304,5 +5304,113 @@ html.dark .popular-search-chip {
   }
 }
 
+/* ==========================================================================
+   BOTONES DE FAVORITO AL LADO DEL BOTÓN DE AÑADIR AL CARRITO EN LAS CARDS
+   ========================================================================== */
+.product-card-footer-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.compact-footer-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.card-fav-footer-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: var(--secondary-bg);
+  color: var(--text-light);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  border: none !important;
+  outline: none !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: all 0.18s ease;
+  flex-shrink: 0;
+}
+
+.card-fav-footer-btn:hover {
+  color: var(--rojo);
+  background-color: rgba(227, 24, 55, 0.12);
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(227, 24, 55, 0.18);
+}
+
+.card-fav-footer-btn.is-fav {
+  color: var(--rojo);
+  background-color: rgba(227, 24, 55, 0.14);
+}
+
+.compact-fav-footer-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: var(--secondary-bg);
+  color: var(--text-light);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  border: none !important;
+  outline: none !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  transition: all 0.18s ease;
+  flex-shrink: 0;
+}
+
+.compact-fav-footer-btn:hover {
+  color: var(--rojo);
+  background-color: rgba(227, 24, 55, 0.12);
+  transform: scale(1.1);
+}
+
+.compact-fav-footer-btn.is-fav {
+  color: var(--rojo);
+  background-color: rgba(227, 24, 55, 0.14);
+}
+
+/* ==========================================================================
+   CARGA DIFERIDA (LAZY LOADING) DE IMÁGENES: SHIMMER SKELETON Y FADE-IN
+   ========================================================================== */
+.compact-img-skeleton,
+.product-card-img-skeleton {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    var(--secondary-bg) 0%,
+    rgba(255, 255, 255, 0.08) 50%,
+    var(--secondary-bg) 100%
+  );
+  background-size: 200% 100%;
+  animation: lazyImageSkeletonShimmer 1.4s ease-in-out infinite;
+  border: none !important;
+  outline: none !important;
+}
+
+@keyframes lazyImageSkeletonShimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.img-loading {
+  opacity: 0;
+}
+
+.img-loaded {
+  opacity: 1;
+  transition: opacity 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+
 
 
