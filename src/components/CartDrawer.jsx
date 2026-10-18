@@ -12,7 +12,7 @@ import {
   MessageSquare
 } from 'lucide-react';
 import { whatsAppService } from '../services/MenuRepository';
-import { WhatsAppIcon } from './Icons';
+import { WhatsAppIcon, PlateIcon } from './Icons';
 
 export function CartDrawer({
   isOpen,
@@ -141,6 +141,24 @@ export function CartDrawer({
                 {cart.items.map((item) => (
                   <div key={item.dish.id} className="cart-item-card">
                     <div className="cart-item-main">
+                      {item.dish.hasImage() ? (
+                        <img
+                          src={item.dish.getImage()}
+                          alt={item.dish.name}
+                          className="cart-item-img"
+                          loading="lazy"
+                          onError={(e) => {
+                            if (!e.target.dataset.retried) {
+                              e.target.dataset.retried = '1';
+                              e.target.src = `${import.meta.env.BASE_URL}${item.dish.getImage().replace(/^\//, '')}`;
+                            }
+                          }}
+                        />
+                      ) : (
+                        <div className="cart-item-img-placeholder">
+                          <PlateIcon size={20} />
+                        </div>
+                      )}
                       <div className="cart-item-details">
                         <h4 className="cart-item-name">{item.dish.name}</h4>
                         {item.dish.nameEn && (

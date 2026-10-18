@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Plus, Minus, ShoppingCart } from 'lucide-react';
+import { X, Plus, Minus, ShoppingCart, ChevronLeft, ChevronRight } from 'lucide-react';
 import { PlateIcon } from './Icons';
 
 export function ProductDetailModal({
@@ -8,11 +8,18 @@ export function ProductDetailModal({
   initialQuantity = 1,
   initialNote = '',
   onClose,
-  onSaveToCart
+  onSaveToCart,
+  onPrevDish,
+  onNextDish
 }) {
   const [quantity, setQuantity] = useState(initialQuantity > 0 ? initialQuantity : 1);
   const [note, setNote] = useState(initialNote);
   const [isClosing, setIsClosing] = useState(false);
+
+  useEffect(() => {
+    setQuantity(initialQuantity > 0 ? initialQuantity : 1);
+    setNote(initialNote || '');
+  }, [dish?.id]);
 
   const handleClose = () => {
     if (isClosing) return;
@@ -22,13 +29,15 @@ export function ProductDetailModal({
     }, 220);
   };
 
-  // Bloquear scroll de fondo al abrir el modal
+  // Bloquear scroll de fondo al abrir el modal y navegación con flechas de teclado
   useEffect(() => {
     const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
 
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') handleClose();
+      if (e.key === 'ArrowLeft' && onPrevDish) onPrevDish();
+      if (e.key === 'ArrowRight' && onNextDish) onNextDish();
     };
     window.addEventListener('keydown', handleKeyDown);
 
@@ -36,7 +45,7 @@ export function ProductDetailModal({
       document.body.style.overflow = originalOverflow;
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isClosing]);
+  }, [isClosing, onPrevDish, onNextDish]);
 
   if (!dish) return null;
 
@@ -57,7 +66,23 @@ export function ProductDetailModal({
       role="dialog"
       aria-modal="true"
     >
-      {/* Contenedor del modal: el botón cerrar está fijado aquí y NUNCA desaparece al hacer scroll */}
+      {/* Flecha Anterior Flotante en el Backdrop Fuera del Modal */}
+      {onPrevDish && (
+        <button
+          type="button"
+          className="modal-nav-arrow modal-nav-prev"
+          onClick={(e) => {
+            e.stopPropagation();
+            onPrevDish();
+          }}
+          aria-label="Plato anterior"
+          title="Plato anterior (Flecha izquierda)"
+        >
+          <ChevronLeft size={28} strokeWidth={2.5} />
+        </button>
+      )}
+
+      {/* Contenedor del modal */}
       <div
         className={`modal-card-wrapper ${isClosing ? 'modal-content-closing' : 'modal-content-opening'}`}
         onClick={(e) => e.stopPropagation()}
@@ -163,6 +188,22 @@ export function ProductDetailModal({
         </div>
       </div>
     </div>
-  </div>
-);
+
+      {/* Flecha Siguiente Flotante en el Backdrop Fuera del Modal */}
+      {onNextDish && (
+        <button
+          type="button"
+          className="modal-nav-arrow modal-nav-next"
+          onClick={(e) => {
+            e.stopPropagation();
+            onNextDish();
+          }}
+          aria-label="Siguiente plato"
+          title="Siguiente plato (Flecha derecha)"
+        >
+          <ChevronRight size={28} strokeWidth={2.5} />
+        </button>
+      )}
+    </div>
+  );
 }

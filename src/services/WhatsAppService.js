@@ -25,14 +25,13 @@ export class WhatsAppService {
   buildMessage(cart) {
     if (cart.isEmpty()) return '';
 
-    const customer = cart.customer;
     const now = new Date();
-    const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    const dateStr = now.toLocaleDateString();
+    const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+    const dateStr = now.toLocaleDateString('es-US', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
     let msg = `PEDIDO - CEVICHERIA MI BARRUNTO\n`;
     msg += `----------------------------------------\n`;
-    msg += `Fecha: ${dateStr} - Hora: ${timeStr}\n`;
+    msg += `Hora del pedido: ${timeStr} | Fecha: ${dateStr}\n`;
     
     if (customer.name && customer.name.trim()) {
       msg += `Cliente: ${customer.name.trim()}\n`;

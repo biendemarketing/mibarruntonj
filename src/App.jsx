@@ -9,11 +9,57 @@ import { MobileDrawer } from './components/MobileDrawer';
 import { Footer } from './components/Footer';
 import { menuRepository } from './services/MenuRepository';
 import { Cart } from './models/Cart';
+import { CartItem } from './models/CartItem';
+import { Customer } from './models/Customer';
 import { Search, ShoppingBag, LayoutGrid, Rows3, ChevronUp } from 'lucide-react';
 
 export function App() {
-  // Estado Orientado a Objetos: Carrito de Compras
-  const [cart, setCart] = useState(() => new Cart());
+  // Estado Orientado a Objetos: Carrito de Compras con persistencia en localStorage
+  const [cart, setCart] = useState(() => {
+    try {
+      const saved = localStorage.getItem('mb-cart-state');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        const items = (parsed.items || [])
+          .map((i) => {
+            const dish = menuRepository.getDishById(i.dishId);
+            if (!dish) return null;
+            return new CartItem(dish, i.quantity, i.note || '');
+          })
+          .filter(Boolean);
+        const customer = new Customer(parsed.customer || {});
+        return new Cart(items, customer);
+      }
+    } catch (e) {
+      console.error('Error al restaurar carrito de localStorage:', e);
+    }
+    return new Cart();
+  });
+
+  // Guardar carrito en localStorage ante cualquier modificación
+  useEffect(() => {
+    try {
+      const serializable = {
+        items: cart.items.map((i) => ({
+          dishId: i.dish.id,
+          quantity: i.quantity,
+          note: i.note
+        })),
+        customer: {
+          name: cart.customer.name,
+          orderType: cart.customer.orderType,
+          table: cart.customer.table,
+          address: cart.customer.address,
+          phone: cart.customer.phone,
+          paymentMethod: cart.customer.paymentMethod,
+          generalNotes: cart.customer.generalNotes
+        }
+      };
+      localStorage.setItem('mb-cart-state', JSON.stringify(serializable));
+    } catch (e) {
+      console.error('Error al guardar carrito en localStorage:', e);
+    }
+  }, [cart]);
 
   // Estados de navegación y filtros
   const [selectedCategory, setSelectedCategory] = useState('todos');
@@ -120,6 +166,31 @@ export function App() {
       priceRange: filters.priceRange
     });
   }, [selectedCategory, searchQuery, filters, photoMode]);
+
+  // Lista plana de platos visibles actualmente para la navegación del modal (flechas anterior / siguiente)
+  const currentCatalogDishes = useMemo(() => {
+    return groupedCatalog.flatMap((g) => g.dishes);
+  }, [groupedCatalog]);
+
+  const handlePrevDish = () => {
+    if (!selectedDishForDetail || currentCatalogDishes.length === 0) return;
+    const currentIndex = currentCatalogDishes.findIndex((d) => d.id === selectedDishForDetail.id);
+    if (currentIndex <= 0) {
+      setSelectedDishForDetail(currentCatalogDishes[currentCatalogDishes.length - 1]);
+    } else {
+      setSelectedDishForDetail(currentCatalogDishes[currentIndex - 1]);
+    }
+  };
+
+  const handleNextDish = () => {
+    if (!selectedDishForDetail || currentCatalogDishes.length === 0) return;
+    const currentIndex = currentCatalogDishes.findIndex((d) => d.id === selectedDishForDetail.id);
+    if (currentIndex === -1 || currentIndex >= currentCatalogDishes.length - 1) {
+      setSelectedDishForDetail(currentCatalogDishes[0]);
+    } else {
+      setSelectedDishForDetail(currentCatalogDishes[currentIndex + 1]);
+    }
+  };
 
   // Handlers del Carrito (OOP)
   const handleAddToCart = (dish, quantity = 1, note = '') => {
@@ -340,7 +411,7 @@ export function App() {
         }}
       />
 
-      {/* 8. Modal de Detalle de Producto al Clic */}
+      {/* 8. Modal de Detalle de Producto al Clic con Flechas para Navegar */}
       {selectedDishForDetail && (
         <ProductDetailModal
           dish={selectedDishForDetail}
@@ -358,6 +429,8 @@ export function App() {
               handleAddToCart(dish, qty, note);
             }
           }}
+          onPrevDish={handlePrevDish}
+          onNextDish={handleNextDish}
         />
       )}
 
@@ -391,8 +464,8 @@ export function App() {
         </button>
       )}
 
-      {/* 11. Botón Volver Arriba Flotante */}
-      {showScrollTop && (
+      {/* 11. Botón Volver Arriba Flotante (Oculto cuando el pedido/checkout está abierto para no tapar el total) */}
+      {showScrollTop && !isCartOpen && (
         <button
           type="button"
           className="scroll-to-top-btn"
