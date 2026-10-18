@@ -5970,6 +5970,424 @@ html.dark .product-card-compact.card-batch-selected {
   transition: opacity 0.32s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* ==========================================================================
+   MODO MENÚ TV (DIGITAL SIGNAGE PARA MESAS Y PANTALLAS EN RESTAURANTE)
+   ========================================================================== */
+.tv-menu-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background-color: #0b0c0e;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: none !important;
+  outline: none !important;
+  user-select: none;
+}
 
+.tv-menu-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2.2rem;
+  background-color: rgba(17, 18, 22, 0.96);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.65);
+  border: none !important;
+  outline: none !important;
+  z-index: 10;
+}
 
+.tv-header-brand {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
 
+.tv-header-logo {
+  height: 44px;
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5));
+}
+
+.tv-header-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.tv-header-title {
+  font-family: var(--font-primary);
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+.tv-header-sub {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.62);
+  letter-spacing: 0.02em;
+}
+
+.tv-header-center {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.tv-live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: rgba(227, 24, 55, 0.16);
+  color: #ffffff;
+  padding: 0.4rem 0.95rem;
+  border-radius: 9999px;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  box-shadow: 0 2px 10px rgba(227, 24, 55, 0.22);
+  border: none !important;
+  outline: none !important;
+}
+
+.tv-live-clock {
+  font-family: monospace, var(--font-primary);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--amarillo);
+  letter-spacing: 0.06em;
+  text-shadow: 0 2px 10px rgba(245, 166, 35, 0.35);
+}
+
+.tv-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.tv-ctrl-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  border: none !important;
+  outline: none !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tv-ctrl-btn:hover {
+  background-color: rgba(255, 255, 255, 0.22);
+  transform: scale(1.08);
+}
+
+.tv-ctrl-btn.tv-close-btn {
+  background-color: rgba(227, 24, 55, 0.25);
+  color: #ffffff;
+}
+
+.tv-ctrl-btn.tv-close-btn:hover {
+  background-color: var(--rojo);
+}
+
+.tv-menu-body {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem 4rem;
+  overflow: hidden;
+}
+
+.tv-dish-showcase {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: 4rem;
+  max-width: 1360px;
+  width: 100%;
+  align-items: center;
+  animation: tvDishFadeIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes tvDishFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.97) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.tv-image-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  max-height: 64vh;
+  border-radius: 28px;
+  overflow: hidden;
+  background-color: #15161b;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7);
+  border: none !important;
+  outline: none !important;
+}
+
+.tv-dish-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.tv-image-placeholder {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  color: rgba(255, 255, 255, 0.2);
+}
+
+.tv-image-gradient-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 65%, rgba(11, 12, 14, 0.75) 100%);
+  pointer-events: none;
+}
+
+.tv-dish-details {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  justify-content: center;
+}
+
+.tv-category-tag {
+  align-self: flex-start;
+  background-color: rgba(227, 24, 55, 0.18);
+  color: var(--rojo);
+  padding: 0.45rem 1.15rem;
+  border-radius: 9999px;
+  font-size: 0.88rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: none !important;
+  outline: none !important;
+  box-shadow: 0 2px 10px rgba(227, 24, 55, 0.15);
+}
+
+.tv-dish-name {
+  font-family: var(--font-primary);
+  font-size: clamp(2.2rem, 3.8vw, 3.6rem);
+  font-weight: 900;
+  color: #ffffff;
+  line-height: 1.12;
+  margin: 0;
+  letter-spacing: -0.015em;
+  text-shadow: 0 4px 18px rgba(0, 0, 0, 0.5);
+}
+
+.tv-dish-name-en {
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.65);
+  font-style: italic;
+  margin: 0;
+  font-weight: 400;
+}
+
+.tv-price-box {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  color: var(--amarillo);
+  font-family: var(--font-primary);
+  margin-top: 0.4rem;
+  text-shadow: 0 4px 20px rgba(245, 166, 35, 0.25);
+}
+
+.tv-price-currency {
+  font-size: 1.85rem;
+  font-weight: 800;
+}
+
+.tv-price-value {
+  font-size: clamp(3rem, 4.6vw, 4.4rem);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.tv-order-prompt-box {
+  margin-top: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1.15rem;
+  padding: 1rem 1.4rem;
+  background-color: rgba(37, 211, 102, 0.14);
+  border-radius: 20px;
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.14);
+  border: none !important;
+  outline: none !important;
+  max-width: 460px;
+}
+
+.tv-prompt-icon-wrap {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background-color: #25D366;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 14px rgba(37, 211, 102, 0.45);
+}
+
+.tv-prompt-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.tv-prompt-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.tv-prompt-phone {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.tv-nav-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  border: none !important;
+  outline: none !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 10;
+}
+
+.tv-nav-arrow:hover {
+  background-color: rgba(255, 255, 255, 0.26);
+  transform: translateY(-50%) scale(1.12);
+}
+
+.tv-nav-prev {
+  left: 2rem;
+}
+
+.tv-nav-next {
+  right: 2rem;
+}
+
+.tv-menu-footer {
+  padding: 0.85rem 2.5rem 1.4rem 2.5rem;
+  background-color: rgba(17, 18, 22, 0.96);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  border: none !important;
+  outline: none !important;
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.6);
+  z-index: 10;
+}
+
+.tv-progress-track {
+  width: 100%;
+  height: 6px;
+  background-color: rgba(255, 255, 255, 0.12);
+  border-radius: 9999px;
+  overflow: hidden;
+  border: none !important;
+  outline: none !important;
+}
+
+.tv-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--rojo) 0%, var(--naranja) 100%);
+  transition: width 0.05s linear;
+  border-radius: 9999px;
+  border: none !important;
+  outline: none !important;
+}
+
+.tv-footer-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.86rem;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.tv-dish-counter {
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.tv-footer-instructions {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+@media (max-width: 992px) {
+  .tv-menu-body {
+    padding: 1.5rem 2rem;
+  }
+  .tv-dish-showcase {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    text-align: center;
+  }
+  .tv-image-container {
+    max-height: 42vh;
+  }
+  .tv-category-tag {
+    align-self: center;
+  }
+  .tv-dish-details {
+    align-items: center;
+  }
+  .tv-order-prompt-box {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .tv-nav-arrow {
+    width: 44px;
+    height: 44px;
+  }
+  .tv-nav-prev {
+    left: 0.75rem;
+  }
+  .tv-nav-next {
+    right: 0.75rem;
+  }
+  .tv-footer-instructions {
+    display: none;
+  }
+}

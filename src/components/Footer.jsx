@@ -1,8 +1,8 @@
 import React from 'react';
 import { InstagramIcon, FacebookIcon, WhatsAppIcon, DoorDashIcon, UberEatsIcon } from './Icons';
-import { Phone, MapPin, Printer, Download, Images } from 'lucide-react';
+import { Phone, MapPin, Printer, Download, Images, Tv } from 'lucide-react';
 
-export function Footer({ photoMode = 'curated', onTogglePhotoMode }) {
+export function Footer({ photoMode = 'curated', onTogglePhotoMode, onOpenTvMode }) {
   return (
     <footer className="footer-compact-black">
       <div className="footer-compact-inner">
@@ -58,6 +58,20 @@ export function Footer({ photoMode = 'curated', onTogglePhotoMode }) {
             >
               <Images size={18} />
             </button>
+
+            {/* Botón Modo Menú TV (Presentación Pantalla Completa para Mesas y Televisores) */}
+            {onOpenTvMode && (
+              <button
+                type="button"
+                onClick={onOpenTvMode}
+                className="footer-icon-only-btn"
+                title="Modo Menú TV (Presentación en Pantalla Completa para Mesas y Televisores)"
+                aria-label="Abrir Modo Menú TV"
+                style={{ color: '#ffffff' }}
+              >
+                <Tv size={18} />
+              </button>
+            )}
 
             {/* Botón Imprimir (Solo Icono, Sin Fondo) */}
             <a

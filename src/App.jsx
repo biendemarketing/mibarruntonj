@@ -21,12 +21,17 @@ import { Cart } from './models/Cart';
 import { CartItem } from './models/CartItem';
 import { Customer } from './models/Customer';
 import { Search, ShoppingCart, LayoutGrid, Rows3, ChevronUp, RotateCcw, X, Heart, Trash2, CheckSquare, Square, CheckCircle2, Plus } from 'lucide-react';
+import { TvMenuModal } from './components/TvMenuModal';
 import { triggerHaptic } from './utils/haptics';
 import { triggerFlyToCart } from './utils/flyToCart';
 
 export function App() {
   const location = useLocation();
   const navigate = useNavigate();
+  const isDishDetailPage = location.pathname.startsWith('/plato/');
+  const categories = useMemo(() => menuRepository.getAllCategories(), []);
+  const allDishes = useMemo(() => menuRepository.getAllDishes(), []);
+  const [isTvModeOpen, setIsTvModeOpen] = useState(false);
 
   // Historial de último pedido (One-Tap Reorder)
   const [lastOrder, setLastOrder] = useState(() => {
@@ -342,10 +347,6 @@ export function App() {
     });
   };
 
-  // Modelos de categoría y todos los platos desde el repositorio OOP
-  const categories = useMemo(() => menuRepository.getAllCategories(), []);
-  const allDishes = useMemo(() => menuRepository.getAllDishes(), []);
-
   // Catálogo agrupado según categoría o búsqueda automática y filtros (soporta filtro Mis Favoritos)
   const groupedCatalog = useMemo(() => {
     const rawCatalog = menuRepository.getCatalogGrouped({
@@ -523,8 +524,7 @@ export function App() {
     } catch {}
   };
 
-  const isDishDetailPage = location.pathname.startsWith('/plato/');
-  const isAnyModalOpen = Boolean(isCartOpen || isMobileMenuOpen);
+  const isAnyModalOpen = Boolean(isCartOpen || isMobileMenuOpen || isTvModeOpen);
 
   return (
     <div className="app-container">
@@ -877,7 +877,11 @@ export function App() {
 
       {/* 6. Footer con Redes Sociales Oficiales y Selector de Versión de Fotos (Oculto en vista detalle) */}
       {!isDishDetailPage && (
-        <Footer photoMode={photoMode} onTogglePhotoMode={handleTogglePhotoMode} />
+        <Footer
+          photoMode={photoMode}
+          onTogglePhotoMode={handleTogglePhotoMode}
+          onOpenTvMode={() => setIsTvModeOpen(true)}
+        />
       )}
 
       {/* 7. Barra Móvil Inferior (Home, Menú, Búsqueda, Favoritos y Mi Pedido) */}
@@ -974,6 +978,13 @@ export function App() {
           {toastMessage}
         </div>
       )}
+      {/* Modal Pantalla Completa: Modo Menú TV */}
+      <TvMenuModal
+        isOpen={isTvModeOpen}
+        onClose={() => setIsTvModeOpen(false)}
+        dishes={allDishes}
+        photoMode={photoMode}
+      />
     </div>
   );
 }
