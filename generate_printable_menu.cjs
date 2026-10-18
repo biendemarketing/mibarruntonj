@@ -1066,29 +1066,36 @@ function generateCompleteHtml(options = {}) {
 
     .dish-main-row {
       display: flex;
-      align-items: baseline;
+      align-items: flex-end;
       justify-content: space-between;
+      gap: 3px;
     }
 
     .dish-name {
       font-family: var(--font-body);
       font-weight: 700;
-      font-size: 0.83rem;
+      font-size: 0.81rem;
       color: #1a1614;
       text-transform: uppercase;
       letter-spacing: 0.01em;
-      white-space: nowrap;
+      white-space: normal;
+      word-wrap: break-word;
+      line-height: 1.15;
+      flex: 1 1 auto;
+      max-width: calc(100% - 62px);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
       overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 68%;
       transition: color 0.25s ease;
     }
 
     .dish-dots {
       flex: 1;
       border-bottom: 1.5px dotted #c4ad98 !important;
-      margin: 0 5px;
-      min-width: 10px;
+      margin: 0 4px;
+      min-width: 8px;
+      margin-bottom: 3px;
     }
 
     .dish-price-pill {
@@ -1103,6 +1110,7 @@ function generateCompleteHtml(options = {}) {
       flex-shrink: 0;
       box-shadow: none !important;
       transition: all 0.25s ease;
+      align-self: flex-end;
     }
 
     .dish-desc {
@@ -1111,10 +1119,13 @@ function generateCompleteHtml(options = {}) {
       color: #5c4c42;
       font-style: italic;
       line-height: 1.1;
-      white-space: nowrap;
+      white-space: normal;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
       overflow: hidden;
-      text-overflow: ellipsis;
       padding-left: 2px;
+      margin-top: 1px;
       transition: color 0.25s ease;
     }
 
