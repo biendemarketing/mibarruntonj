@@ -20,7 +20,7 @@ import { menuRepository } from './services/MenuRepository';
 import { Cart } from './models/Cart';
 import { CartItem } from './models/CartItem';
 import { Customer } from './models/Customer';
-import { Search, ShoppingCart, LayoutGrid, Rows3, ChevronUp, RotateCcw, X, Sparkles, Heart } from 'lucide-react';
+import { Search, ShoppingCart, LayoutGrid, Rows3, ChevronUp, RotateCcw, X, Heart } from 'lucide-react';
 import { triggerHaptic } from './utils/haptics';
 import { triggerFlyToCart } from './utils/flyToCart';
 

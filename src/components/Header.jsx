@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { Search, ShoppingCart, Moon, Sun, Menu, LayoutGrid, Grid2X2, Rows3, MapPin, Phone, SlidersHorizontal, Sparkles, Heart } from 'lucide-react';
+import { Search, ShoppingCart, Moon, Sun, Menu, LayoutGrid, Grid2X2, Rows3, MapPin, Phone, SlidersHorizontal, Heart } from 'lucide-react';
 import { FacebookIcon, InstagramIcon, WhatsAppIcon, PlateIcon } from './Icons';
 
 const POPULAR_SEARCHES = [
@@ -214,7 +214,6 @@ export function Header({
           {isSearchFocused && !searchQuery.trim() && (
             <div className="header-popular-searches-popover">
               <div className="popular-searches-header">
-                <Sparkles size={14} color="var(--naranja)" />
                 <span>Búsquedas populares</span>
               </div>
               <div className="popular-searches-chips">
