@@ -32,14 +32,12 @@ export function ProductCard({
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsRevealed(true);
-          observer.unobserve(entry.target);
-        }
+        // Estilo Apple Notifications: las de abajo se ven compactas y escalan al tamaño normal al hacer scroll
+        setIsRevealed(entry.isIntersecting);
       },
       {
-        threshold: 0.05,
-        rootMargin: '60px 0px -20px 0px'
+        threshold: 0.15,
+        rootMargin: '0px 0px -40px 0px'
       }
     );
 
