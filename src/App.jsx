@@ -1,0 +1,349 @@
+import React, { useState, useEffect, useMemo } from 'react';
+import { Header } from './components/Header';
+import { CategoryPills } from './components/CategoryPills';
+import { ProductCard } from './components/ProductCard';
+import { ProductDetailModal } from './components/ProductDetailModal';
+import { CartDrawer } from './components/CartDrawer';
+import { MobileNavBar } from './components/MobileNavBar';
+import { MobileDrawer } from './components/MobileDrawer';
+import { Footer } from './components/Footer';
+import { menuRepository } from './services/MenuRepository';
+import { Cart } from './models/Cart';
+import { Search, ShoppingBag, LayoutGrid, Rows3 } from 'lucide-react';
+
+export function App() {
+  // Estado Orientado a Objetos: Carrito de Compras
+  const [cart, setCart] = useState(() => new Cart());
+
+  // Estados de navegación y filtros
+  const [selectedCategory, setSelectedCategory] = useState('todos');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filters, setFilters] = useState({
+    onlyWithPhoto: false,
+    priceSort: 'none',
+    priceRange: 'all'
+  });
+  const [selectedDishForDetail, setSelectedDishForDetail] = useState(null);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    try {
+      return localStorage.getItem('mb-noche') === '1';
+    } catch {
+      return false;
+    }
+  });
+
+  const handleUpdateFilter = (key, value) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const handleResetFilters = () => {
+    setFilters({
+      onlyWithPhoto: false,
+      priceSort: 'none',
+      priceRange: 'all'
+    });
+  };
+
+  const hasActiveFilters = Boolean(
+    filters.onlyWithPhoto ||
+    filters.priceSort !== 'none' ||
+    filters.priceRange !== 'all'
+  );
+
+  // Tema oscuro de alto contraste
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    try {
+      localStorage.setItem('mb-noche', isDarkMode ? '1' : '0');
+    } catch {}
+  }, [isDarkMode]);
+
+  // Modelos de categoría desde el repositorio OOP
+  const categories = useMemo(() => menuRepository.getAllCategories(), []);
+
+  // Catálogo agrupado según categoría o búsqueda automática y filtros
+  const groupedCatalog = useMemo(() => {
+    return menuRepository.getCatalogGrouped({
+      categoryId: searchQuery.trim() ? 'todos' : selectedCategory,
+      query: searchQuery,
+      onlyWithPhoto: filters.onlyWithPhoto,
+      priceSort: filters.priceSort,
+      priceRange: filters.priceRange
+    });
+  }, [selectedCategory, searchQuery, filters]);
+
+  // Handlers del Carrito (OOP)
+  const handleAddToCart = (dish, quantity = 1, note = '') => {
+    setCart((prevCart) => prevCart.addItem(dish, quantity, note));
+  };
+
+  const handleUpdateQuantity = (dishId, quantity) => {
+    setCart((prevCart) => prevCart.updateQuantity(dishId, quantity));
+  };
+
+  const handleRemoveItem = (dishId) => {
+    setCart((prevCart) => prevCart.removeItem(dishId));
+  };
+
+  const handleUpdateCustomerField = (field, value) => {
+    setCart((prevCart) => prevCart.updateCustomerField(field, value));
+  };
+
+  const handleClearCart = () => {
+    setCart((prevCart) => prevCart.clear());
+  };
+
+  const handleSearchChange = (query) => {
+    setSearchQuery(query);
+    if (query.trim() && window.scrollY > 350) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  const handleSelectCategory = (catId) => {
+    setSelectedCategory(catId);
+    setSearchQuery('');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Modo de vista: 'grid' (cuadrícula normal) o 'compact' (compacta/horizontal)
+  const [viewMode, setViewMode] = useState(() => {
+    try {
+      return localStorage.getItem('mb-vista') || 'grid';
+    } catch {
+      return 'grid';
+    }
+  });
+
+  const handleToggleViewMode = () => {
+    setViewMode((prev) => {
+      const next = prev === 'grid' ? 'compact' : 'grid';
+      try {
+        localStorage.setItem('mb-vista', next);
+      } catch {}
+      return next;
+    });
+  };
+
+  return (
+    <div className="app-container">
+      {/* 1. Header con Logo Centrado en Móvil y Botones al lado del Buscador en Escritorio */}
+      <Header
+        cart={cart}
+        onOpenCart={() => setIsCartOpen(true)}
+        searchQuery={searchQuery}
+        onSearchChange={handleSearchChange}
+        isDarkMode={isDarkMode}
+        onToggleDarkMode={() => setIsDarkMode(!isDarkMode)}
+        onOpenMobileMenu={() => setIsMobileMenuOpen(true)}
+        viewMode={viewMode}
+        onToggleViewMode={handleToggleViewMode}
+        filters={filters}
+        onUpdateFilter={handleUpdateFilter}
+        onResetFilters={handleResetFilters}
+        hasActiveFilters={hasActiveFilters}
+      />
+
+      {/* 2. Menú Hamburguesa Móvil */}
+      <MobileDrawer
+        isOpen={isMobileMenuOpen}
+        onClose={() => setIsMobileMenuOpen(false)}
+        categories={categories}
+        selectedCategory={searchQuery.trim() ? 'todos' : selectedCategory}
+        onSelectCategory={handleSelectCategory}
+      />
+
+      {/* 3. Layout Principal: Menú de Categorías (Sidebar en Escritorio) + Catálogo */}
+      <div className="menu-desktop-layout">
+        <CategoryPills
+          categories={categories}
+          selectedCategory={searchQuery.trim() ? 'todos' : selectedCategory}
+          onSelectCategory={handleSelectCategory}
+        />
+
+        {/* 4. Catálogo de Platos */}
+        <main className="menu-main-layout">
+        {/* Banner de búsqueda activa en vivo con botón para limpiar */}
+        {searchQuery.trim() && (
+          <div className="search-results-banner">
+            <span>
+              Buscando: <strong style={{ color: 'var(--naranja)' }}>"{searchQuery}"</strong> ({groupedCatalog.reduce((acc, g) => acc + g.dishes.length, 0)} platos encontrados)
+            </span>
+            <button
+              type="button"
+              className="search-results-clear"
+              onClick={() => handleSearchChange('')}
+            >
+              Ver toda la carta ✕
+            </button>
+          </div>
+        )}
+
+        {/* Banner de filtros activos cuando no hay búsqueda por texto */}
+        {!searchQuery.trim() && hasActiveFilters && (
+          <div className="search-results-banner active-filter-notice">
+            <span>
+              Filtros activos: {filters.onlyWithPhoto && <strong>[Con foto] </strong>}
+              {filters.priceRange !== 'all' && (
+                <strong>
+                  [Precio: {filters.priceRange === 'under10' ? '< $10' : filters.priceRange === '10to20' ? '$10 - $20' : '> $20'}]
+                </strong>
+              )}{' '}
+              {filters.priceSort !== 'none' && (
+                <strong>
+                  [Orden: {filters.priceSort === 'asc' ? 'Menor a mayor' : 'Mayor a menor'}]
+                </strong>
+              )} ({groupedCatalog.reduce((acc, g) => acc + g.dishes.length, 0)} platos)
+            </span>
+            <button
+              type="button"
+              className="search-results-clear"
+              onClick={handleResetFilters}
+            >
+              Quitar filtros ✕
+            </button>
+          </div>
+        )}
+
+        {groupedCatalog.length === 0 ? (
+          <div style={{
+            textAlign: 'center',
+            padding: '3.5rem 1rem',
+            color: 'var(--text-light)'
+          }}>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-main)' }}>
+              No se encontraron platos para "{searchQuery}"
+            </h2>
+            <p style={{ marginTop: '0.35rem', fontSize: '0.88rem' }}>
+              Intenta con otro término de búsqueda o selecciona otra sección.
+            </p>
+            {searchQuery && (
+              <button
+                type="button"
+                className="search-results-clear"
+                onClick={() => handleSearchChange('')}
+                style={{ marginTop: '1rem' }}
+              >
+                Limpiar búsqueda y ver carta completa
+              </button>
+            )}
+          </div>
+        ) : (
+          groupedCatalog.map(({ category, dishes }) => (
+            <section
+              key={category.id}
+              id={category.id}
+              style={{ marginBottom: '2.5rem' }}
+            >
+              {/* Encabezado de la Categoría */}
+              <div className="category-section-header">
+                <h2 className="category-title">
+                  <span>{category.name}</span>
+                  {category.nameEn && (
+                    <span className="category-title-en">{category.nameEn}</span>
+                  )}
+                </h2>
+              </div>
+
+              {/* Grid de Productos (Soporta vista normal y compacta horizontal) */}
+              <div className={`products-grid ${viewMode === 'compact' ? 'compact-grid' : ''}`}>
+                {dishes.map((dish) => {
+                  const itemInCart = cart.getItem(dish.id);
+                  const qty = itemInCart ? itemInCart.quantity : 0;
+
+                  return (
+                    <ProductCard
+                      key={dish.id}
+                      dish={dish}
+                      quantity={qty}
+                      viewMode={viewMode}
+                      onAddToCart={(d) => handleAddToCart(d, 1)}
+                      onUpdateQuantity={(id, q) => handleUpdateQuantity(id, q)}
+                      onOpenDetail={(d) => setSelectedDishForDetail(d)}
+                    />
+                  );
+                })}
+              </div>
+            </section>
+          ))
+        )}
+      </main>
+      </div>
+
+      {/* 6. Footer con Redes Sociales Oficiales */}
+      <Footer />
+
+      {/* 7. Barra Móvil Inferior (Menú, Búsqueda, Mi Pedido y WhatsApp) */}
+      <MobileNavBar
+        cart={cart}
+        onOpenCart={() => setIsCartOpen(true)}
+        onOpenMobileMenu={() => setIsMobileMenuOpen(true)}
+        onToggleSearch={() => {
+          const input = document.querySelector('.mobile-search-input') || document.querySelector('.header-search-input');
+          if (input) {
+            input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            setTimeout(() => input.focus(), 250);
+          }
+        }}
+      />
+
+      {/* 8. Modal de Detalle de Producto al Clic */}
+      {selectedDishForDetail && (
+        <ProductDetailModal
+          dish={selectedDishForDetail}
+          initialQuantity={cart.getItemQuantity(selectedDishForDetail.id) || 1}
+          initialNote={cart.getItem(selectedDishForDetail.id)?.note || ''}
+          onClose={() => setSelectedDishForDetail(null)}
+          onSaveToCart={(dish, qty, note) => {
+            if (cart.getItem(dish.id)) {
+              handleUpdateQuantity(dish.id, qty);
+              if (note) {
+                setCart((prev) => prev.updateItemNote(dish.id, note));
+              }
+            } else {
+              handleAddToCart(dish, qty, note);
+            }
+          }}
+        />
+      )}
+
+      {/* 9. Carrito y Envío a WhatsApp */}
+      <CartDrawer
+        isOpen={isCartOpen}
+        onClose={() => setIsCartOpen(false)}
+        cart={cart}
+        onUpdateQuantity={handleUpdateQuantity}
+        onRemoveItem={handleRemoveItem}
+        onUpdateCustomerField={handleUpdateCustomerField}
+        onClearCart={handleClearCart}
+      />
+
+      {/* 10. Botón Flotante de Carrito en Escritorio */}
+      {cart.getTotalCount() > 0 && (
+        <button
+          type="button"
+          className="desktop-floating-cart"
+          onClick={() => setIsCartOpen(true)}
+          aria-label="Ver pedido"
+        >
+          <div className="desktop-floating-cart-icon">
+            <ShoppingBag size={20} />
+            <span className="desktop-floating-cart-badge">{cart.getTotalCount()}</span>
+          </div>
+          <div className="desktop-floating-cart-info">
+            <span className="desktop-floating-cart-label">Ver Pedido</span>
+            <span className="desktop-floating-cart-price">{cart.getFormattedTotal()}</span>
+          </div>
+        </button>
+      )}
+    </div>
+  );
+}
+
+export default App;

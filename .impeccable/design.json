@@ -1,0 +1,150 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-17T12:23:39-04:00",
+  "title": "Design System: Mi Barrunto — Carta",
+  "extensions": {
+    "colorMeta": {
+      "retablo-red": { "role": "primary", "displayName": "Retablo Red", "canonical": "#d6280f", "tonalRamp": ["#470D05", "#7E1809", "#B4220D", "#EB2C10", "#F25A44", "#F68A7A", "#FABAB1", "#FDEAE7"] },
+      "field-red": { "role": "primary", "displayName": "Field Red", "canonical": "#8e1d0b", "tonalRamp": ["#470E05", "#7D1A0A", "#B3250E", "#E93012", "#F15D45", "#F58C7B", "#F9BBB1", "#FDEAE7"] },
+      "deep-red": { "role": "primary", "displayName": "Deep Red", "canonical": "#a9210f", "tonalRamp": ["#460E06", "#7C180B", "#B12310", "#E72D14", "#EF5B47", "#F38A7D", "#F8BAB2", "#FDEAE8"] },
+      "painted-wood": { "role": "secondary", "displayName": "Painted Wood", "canonical": "#6b4426", "tonalRamp": ["#382414", "#633F23", "#8E5B33", "#B97642", "#CA956B", "#DAB496", "#E9D3C1", "#F8F1EC"] },
+      "light-wood": { "role": "secondary", "displayName": "Light Wood", "canonical": "#8a5a33", "tonalRamp": ["#382415", "#624024", "#8D5C34", "#B87844", "#C9966D", "#D9B597", "#E8D3C2", "#F8F2EC"] },
+      "gold-leaf": { "role": "tertiary", "displayName": "Gold Leaf", "canonical": "#c89532", "tonalRamp": ["#3D2E0F", "#6C501B", "#9A7327", "#C99632", "#D7AE5F", "#E3C68D", "#EEDDBC", "#FAF5EB"] },
+      "lit-gold": { "role": "tertiary", "displayName": "Lit Gold", "canonical": "#e6c168", "tonalRamp": ["#42320B", "#745713", "#A67D1B", "#D8A324", "#E3B853", "#EBCD85", "#F3E1B7", "#FBF6E9"] },
+      "lime-plaster": { "role": "neutral", "displayName": "Lime Plaster", "canonical": "#f6ecd9", "tonalRamp": ["#3E3627", "#665C48", "#8E8470", "#B6AB96", "#CEC3AC", "#DED4BE", "#EBE2D0", "#F9F2E3"] },
+      "plaster-shadow": { "role": "neutral", "displayName": "Plaster Shadow", "canonical": "#ece0c6", "tonalRamp": ["#3A3325", "#625A4A", "#8A8270", "#B2AA96", "#CAC2AC", "#DAD2BE", "#E8E0CE", "#F5EDDE"] },
+      "andean-green": { "role": "neutral", "displayName": "Andean Green", "canonical": "#2f4a3a", "tonalRamp": ["#1E2F25", "#345241", "#4B765D", "#629A78", "#84B197", "#A8C8B5", "#CCDED3", "#EFF5F2"] },
+      "ink": { "role": "neutral", "displayName": "Ink", "canonical": "#3a2414", "tonalRamp": ["#392314", "#5C3A26", "#7F5538", "#A2724E", "#B58D6C", "#C8AB8F", "#DBCEB9", "#EEE9E1"] },
+      "gloss-ink": { "role": "neutral", "displayName": "Gloss Ink", "canonical": "#6b4a38", "tonalRamp": ["#32231A", "#583D2E", "#7F5842", "#A57256", "#BA927B", "#CEB1A2", "#E2D1C8", "#F6F1EE"] },
+      "night-field": { "role": "neutral", "displayName": "Night Field", "canonical": "#1d0d09", "tonalRamp": ["#3A1A12", "#672E20", "#93422E", "#C0563C", "#D07B66", "#DDA293", "#EBC8BF", "#F9EEEC"] },
+      "night-plaster": { "role": "neutral", "displayName": "Night Plaster", "canonical": "#e6d5b0", "tonalRamp": ["#3A3126", "#625549", "#8A7C6E", "#B2A392", "#CABBA8", "#DAD0B8", "#E8DFC9", "#F5EEDC"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "The restaurant name only; shout-size, one per page." },
+      "headline": { "displayName": "Headline", "purpose": "Section names in uppercase with inline English gloss." },
+      "title": { "displayName": "Title", "purpose": "Dish names; mixed case, never tracked." },
+      "body": { "displayName": "Body", "purpose": "English glosses and prose, italic carries the second language." },
+      "label": { "displayName": "Label", "purpose": "Index chips, price pills, the night toggle." }
+    },
+    "shadows": [
+      { "name": "box-lift", "value": "0 12px 30px rgba(0,0,0,.45)", "purpose": "The whole retablo against the field red." },
+      { "name": "plate-rest", "value": "0 4px 10px rgba(0,0,0,.22)", "purpose": "Each niche and the index spine." },
+      { "name": "pill-hover", "value": "0 3px 6px rgba(0,0,0,.25)", "purpose": "Price pill lift on hover, with translateY(-1px)." },
+      { "name": "medallion", "value": "inset 0 -9px 0 rgba(0,0,0,.14), 0 4px 10px rgba(0,0,0,.25)", "purpose": "The closing sun medallion." }
+    ],
+    "motion": [
+      { "name": "door-open", "value": ".9s cubic-bezier(.22,1,.36,1)", "purpose": "The one authored motion moment: plank doors swing once at load." },
+      { "name": "door-stagger", "value": "160ms", "purpose": "Second door's delay; the two-beat reveal." },
+      { "name": "chip-flash", "value": "1.5s ease-in-out infinite", "purpose": "Amber pulse on the next unvisited section chip." },
+      { "name": "state-transition", "value": ".15s ease-out", "purpose": "Hover lifts and control state changes." }
+    ],
+    "breakpoints": [
+      { "name": "spine", "value": "900px", "purpose": "Corridor gains the sticky left index spine; chips become left-aligned rows." }
+    ]
+  },
+  "components": [
+    {
+      "name": "Price Pill",
+      "kind": "custom",
+      "refersTo": "price-pill",
+      "description": "The only pill allowed to carry a price; gold ring, tabular numerals.",
+      "html": "<span class=\"ds-price-pill\">$18.99</span>",
+      "css": ".ds-price-pill{display:inline-block;font-family:var(--display,'Grandstander',system-ui,sans-serif);font-weight:800;font-size:.86rem;font-variant-numeric:tabular-nums;white-space:nowrap;color:#fff;background:var(--rojo,#a8321e);border:2px solid var(--oro,#c89532);border-radius:999px;padding:.16rem .65rem;transition:transform .15s ease-out,box-shadow .15s ease-out;}.ds-price-pill:hover{transform:translateY(-1px);box-shadow:0 3px 6px rgba(0,0,0,.25);}"
+    },
+    {
+      "name": "Index Chip",
+      "kind": "chip",
+      "refersTo": "chip-index",
+      "description": "Navigation chip for the hamburger panel/spine; active is a lit-gold pill, the next unvisited section pulses.",
+      "html": "<a class=\"ds-chip-index ds-chip-index-active\" href=\"#criolla\">Criolla</a>",
+      "css": ".ds-chip-index{display:inline-block;font-family:var(--display,'Grandstander',system-ui,sans-serif);font-weight:600;font-size:.78rem;letter-spacing:.04em;color:var(--cal,#f6ecd9);text-decoration:none;padding:.4rem .8rem;border-radius:999px;border:2px solid transparent;transition:border-color .15s ease-out,color .15s ease-out;}.ds-chip-index:hover{border-color:var(--oro,#c89532);color:var(--oro-claro,#e6c168);}.ds-chip-index-active{background:var(--oro-claro,#e6c168);color:var(--tinta,#3a2414);border-color:var(--madera,#6b4426);}.ds-chip-index-next{animation:ds-chip-flash 1.5s ease-in-out infinite;}@keyframes ds-chip-flash{0%,100%{background:transparent;color:var(--cal,#f6ecd9);}50%{background:rgba(200,149,50,.38);color:var(--oro-claro,#e6c168);}}@media (prefers-reduced-motion:reduce){.ds-chip-index-next{animation:none;}}"
+    },
+    {
+      "name": "Hamburger Toggle",
+      "kind": "button",
+      "description": "Mobile-only section menu toggle; three bars morph to an X; its panel opens below the sticky bar and closes on selection or Escape.",
+      "html": "<button class=\"ds-menu-btn\" type=\"button\" aria-expanded=\"false\"><span class=\"ds-barras\" aria-hidden=\"true\"></span><span>Secciones / sections</span></button>",
+      "css": ".ds-menu-btn{display:flex;align-items:center;gap:10px;width:100%;cursor:pointer;text-align:left;font-family:var(--display,'Grandstander',system-ui,sans-serif);font-weight:700;font-size:.85rem;letter-spacing:.04em;color:var(--cal,#f6ecd9);background:transparent;border:2px solid var(--oro,#c89532);border-radius:999px;padding:.45rem .9rem;}.ds-barras{position:relative;width:18px;height:12px;flex:none;}.ds-barras::before,.ds-barras::after{content:'';position:absolute;left:0;right:0;height:2px;background:currentColor;border-radius:2px;transition:transform .2s ease-out,top .2s ease-out;}.ds-barras::before{top:0;box-shadow:0 5px 0 currentColor,0 10px 0 currentColor;}.ds-barras::after{top:5px;opacity:0;}.ds-menu-btn[aria-expanded='true'] .ds-barras::before{top:5px;transform:rotate(45deg);box-shadow:none;}.ds-menu-btn[aria-expanded='true'] .ds-barras::after{opacity:1;transform:rotate(-45deg);}@media (min-width:900px){.ds-menu-btn{display:none;}}"
+    },
+    {
+      "name": "Dish Row",
+      "kind": "custom",
+      "description": "The atomic menu unit: name, italic English gloss, dashed pencil rule, price pill.",
+      "html": "<div class=\"ds-dish-row\"><div class=\"ds-dish-text\"><span class=\"ds-dish-name\">Lomo Saltado</span><span class=\"ds-dish-gloss\">Saut\u00e9ed beef with onions and tomato, french fries and white rice</span></div><span class=\"ds-price-pill\">$18.99</span></div>",
+      "css": ".ds-dish-row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:.5rem 0;border-bottom:1px dashed rgba(107,68,38,.32);}.ds-dish-row:hover{background:var(--cal-sombra,#ece0c6);}.ds-dish-text{min-width:0;}.ds-dish-name{display:block;font-family:var(--display,'Grandstander',system-ui,sans-serif);font-weight:600;font-size:1rem;line-height:1.35;color:var(--tinta,#3a2414);}.ds-dish-gloss{display:block;font-style:italic;font-size:.82rem;line-height:1.35;color:var(--glosa,#6b4a38);margin-top:.1rem;max-width:62ch;}.ds-dish-row .ds-price-pill{flex:none;font-family:var(--display,'Grandstander',system-ui,sans-serif);font-weight:800;font-size:.86rem;font-variant-numeric:tabular-nums;white-space:nowrap;color:#fff;background:var(--rojo,#a8321e);border:2px solid var(--oro,#c89532);border-radius:999px;padding:.16rem .65rem;}"
+    },
+    {
+      "name": "Painted Door",
+      "kind": "custom",
+      "description": "Plank panels with gold diamond handles; open once in two staggered beats, legible at rest.",
+      "html": "<div class=\"ds-door\"></div>",
+      "css": ".ds-door{height:62px;border:3px solid var(--oro,#c89532);border-radius:12px;position:relative;transform-origin:top center;background:repeating-linear-gradient(90deg,var(--madera,#6b4426) 0 14px,var(--madera-clara,#8a5a33) 14px 28px);animation:ds-door-open .9s cubic-bezier(.22,1,.36,1) both;}.ds-door::after{content:'';position:absolute;inset:0;margin:auto;width:18px;height:18px;transform:rotate(45deg);background:var(--oro,#c89532);border:3px solid var(--rojo-prof,#7c2314);border-radius:3px;}@keyframes ds-door-open{from{transform:perspective(640px) rotateX(-74deg);filter:brightness(.72);}to{transform:perspective(640px) rotateX(0);filter:brightness(1);}}@media (prefers-reduced-motion:reduce){.ds-door{animation:none;}}"
+    },
+    {
+      "name": "Night Toggle",
+      "kind": "button",
+      "refersTo": "toggle-night",
+      "description": "Day/night register switch; pressed state flips to box red.",
+      "html": "<button class=\"ds-toggle-night\" type=\"button\" aria-pressed=\"false\">Luz de noche / night light</button>",
+      "css": ".ds-toggle-night{font-family:var(--display,'Grandstander',system-ui,sans-serif);font-weight:700;font-size:.8rem;letter-spacing:.02em;color:var(--tinta,#3a2414);background:var(--oro-claro,#e6c168);border:2px solid var(--madera,#6b4426);border-radius:999px;padding:.42rem .95rem;cursor:pointer;transition:background .15s ease-out,border-color .15s ease-out,color .15s ease-out;}.ds-toggle-night:hover{background:var(--oro,#c89532);}.ds-toggle-night[aria-pressed='true']{background:var(--rojo,#a8321e);border-color:var(--oro,#c89532);color:var(--cal,#f6ecd9);}.ds-toggle-night:focus-visible{outline:3px solid var(--oro-claro,#e6c168);outline-offset:2px;box-shadow:0 0 0 6px rgba(42,19,14,.85);}"
+    },
+    {
+      "name": "Origin Ticket",
+      "kind": "chip",
+      "refersTo": "ticket-origin",
+      "description": "Dashed green tag naming the notebook pages a section came from.",
+      "html": "<span class=\"ds-ticket-origin\">Cuaderno p. 27\u201329</span>",
+      "css": ".ds-ticket-origin{display:inline-block;font-size:.74rem;font-style:italic;color:var(--verde,#2f4a3a);border:1.5px dashed var(--verde,#2f4a3a);border-radius:6px;padding:.14rem .5rem;}"
+    },
+    {
+      "name": "Niche Plate",
+      "kind": "card",
+      "refersTo": "niche-plate",
+      "description": "A section shelf: plaster plate with wood border and inset gold fillet, tricolor rule under the title.",
+      "html": "<section class=\"ds-niche\"><h3 class=\"ds-niche-title\">Entradas <em>starters</em></h3><span class=\"ds-shelf-rule\"></span></section>",
+      "css": ".ds-niche{background:var(--cal,#f6ecd9);border:3px solid var(--madera-clara,#8a5a33);border-radius:16px;box-shadow:inset 0 0 0 2px var(--oro,#c89532),0 4px 10px rgba(0,0,0,.22);padding:14px 14px 10px;}.ds-niche-title{font-family:var(--display,'Grandstander',system-ui,sans-serif);font-weight:800;font-size:1.32rem;letter-spacing:.05em;text-transform:uppercase;color:var(--rojo-prof,#7c2314);}.ds-niche-title em{font-family:var(--texto,'Alegreya Sans',system-ui,sans-serif);font-weight:400;font-size:.85rem;letter-spacing:0;text-transform:none;color:var(--glosa,#6b4a38);}.ds-shelf-rule{display:block;height:6px;margin-top:8px;border-radius:3px;background:repeating-linear-gradient(45deg,var(--oro,#c89532) 0 6px,var(--madera-clara,#8a5a33) 6px 12px,var(--verde,#2f4a3a) 12px 18px);}"
+    },
+    {
+      "name": "Sun Medallion",
+      "kind": "custom",
+      "description": "Painted closing mark: gold circle, dashed inner ring, red core.",
+      "html": "<div class=\"ds-sun\"></div>",
+      "css": ".ds-sun{width:64px;height:64px;border-radius:50%;background:var(--oro,#c89532);position:relative;border:4px solid var(--rojo-prof,#7c2314);box-shadow:inset 0 -9px 0 rgba(0,0,0,.14),0 4px 10px rgba(0,0,0,.25);}.ds-sun::before{content:'';position:absolute;inset:7px;border:2px dashed var(--rojo-prof,#7c2314);border-radius:50%;}.ds-sun::after{content:'';position:absolute;inset:0;margin:auto;width:14px;height:14px;background:var(--rojo,#a8321e);border-radius:50%;}"
+    }
+  ],
+  "narrative": {
+    "northStar": "El Retablo Abierto",
+    "overview": "The page is an open Ayacucho retablo box: a painted wooden frame whose lid folds to two plank doors, gold fillets drawing every niche, and the whole criollo carta shelved inside as 13 painted niches. Nothing floats over the page or hovers above the frame \u2014 every element lives inside the box, the way a figurine lives in a niche. The material is paint: flat field colors, zigzag painted ribbon, gold leaf used as trim and rings, wooden planks rendered as stripes.\n\nThe system reads at two registers of light. Day is lime plaster inside a red frame; night is the same box by candle and oil lamp \u2014 the whole palette swaps through five variables, never per-element restyling. Type is carved, not typeset: Grandstander carries the lettering on the box; Alegreya Sans carries what the box explains, with English always as an italic gloss.\n\nDensity is that of a real menu held at arm's length: name, gloss, price on one line each, divided by dashed pencil rules, prices ringed in gold. The page adds no imagery \u2014 the box, the ribbon, the doors, the medallion carry the surface.",
+    "keyCharacteristics": [
+      "One painted box; sections are niches, never floating cards",
+      "Gold appears as fillet, ring and ribbon \u2014 never as a field above tint scale",
+      "Two light registers (day plaster / candlelit night) swapped by variables",
+      "Prices are the only pills; every price is a gold-ringed red pill",
+      "One authored motion moment (the two-beat door reveal); everything else yields",
+      "Bilingual by contrast: Spanish leads, English whispers in italic"
+    ],
+    "rules": [
+      { "name": "The Painted Register Rule", "body": "There are exactly two color registers, day and night, and they swap as a set through the palette variables. No element may be restyled for night on its own.", "section": "colors" },
+      { "name": "The Gold Is Trim Rule", "body": "Gold renders as fillet, 2\u20134px ring, ribbon stripe or medallion. A gold field larger than a chip is forbidden; lit gold belongs to state, not decoration.", "section": "colors" },
+      { "name": "The Italic Gloss Rule", "body": "English is always Alegreya Sans italic in gloss ink; it is never display, never uppercase, never the same tone as its Spanish name.", "section": "typography" },
+      { "name": "The Carved At Size Rule", "body": "Grandstander is uppercase and tracked only at label and headline sizes; dish titles run mixed case untracked, so the display face never becomes a texture.", "section": "typography" },
+      { "name": "The Painted Box Rule", "body": "Nested frames \u2014 niche inside corridor inside box \u2014 are the depth system. Flattening any level breaks the retablo and is a defect, not a simplification.", "section": "elevation" },
+      { "name": "The Neutral Shadow Rule", "body": "Every drop shadow is black-alpha, offset and blurred. A chromatic glow, a zero-offset halo, or a hard offset shadow is refused by the world.", "section": "elevation" },
+      { "name": "The Ribbon Rule", "body": "Painted stripes exist only as ribbon: the cinta, the shelf rules, the plank surface of the doors. Stripes used as a background fill for content areas are a violation of the material.", "section": "shapes" }
+    ],
+    "dos": [
+      "Do keep every price a retablo-red pill with a 2px gold ring and tabular numerals.",
+      "Do write English as Alegreya italic in gloss ink, following its Spanish name.",
+      "Do keep the nested frames intact (niche in corridor in box) and the 0.5rem dashed dish rhythm.",
+      "Do swap day/night only through the palette register, and honor prefers-reduced-motion by stilling the doors, the pulse and smooth scrolling.",
+      "Do name each section's notebook origin with a green ticket."
+    ],
+    "donts": [
+      "Don't add photography, illustration or texture images; the material is CSS paint only.",
+      "Don't add kickers or eyebrow labels above headings, gradient text, or glyph icons.",
+      "Don't use colored glows, zero-offset halos or hard offset shadows; shadows are neutral, offset and blurred.",
+      "Don't give gold a field larger than a chip, or let lit gold escape state duty.",
+      "Don't uppercase or track dish names; carving is for the box's labels, not the food's names."
+    ]
+  }
+}

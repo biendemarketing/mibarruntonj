@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Retablo de Mi Barrunto — sketch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Grandstander:wght@500;600;800&family=Alegreya+Sans:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{--rojo:#8f2b1f;--rojo2:#a63a24;--tera:#c96f4a;--crema:#f6ead4;--crema2:#efe1c5;
+        --oro:#d9a441;--oro2:#b8842c;--tinta:#2b1a13;--verde:#4a6b3a}
+  *{box-sizing:border-box;margin:0}
+  body{width:390px;margin:0 auto;background:var(--rojo);color:var(--tinta);
+       font-family:"Alegreya Sans",sans-serif;padding:12px}
+  .retablo{background:var(--crema);border:9px solid var(--rojo2);border-radius:16px;
+           box-shadow:inset 0 0 0 3px var(--oro),inset 0 0 0 6px var(--rojo2),0 8px 24px rgba(0,0,0,.45);
+           overflow:hidden}
+  .techo{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:12px 12px 0}
+  .puerta{height:58px;border:3px solid var(--oro2);border-radius:10px;background:
+          repeating-linear-gradient(90deg,var(--rojo2) 0 10px,var(--rojo) 10px 20px)}
+  .puerta::after{content:"";display:block;width:14px;height:14px;margin:19px auto;background:var(--oro);
+                 border-radius:50%;box-shadow:0 0 0 3px var(--rojo)}
+  .banner{text-align:center;padding:10px 14px 12px}
+  .banner h1{font-family:Grandstander;font-weight:800;font-size:34px;line-height:1;color:var(--rojo2);
+             text-shadow:2px 2px 0 var(--oro)}
+  .banner p{font-family:Grandstander;font-weight:600;font-size:11px;letter-spacing:3px;
+            text-transform:uppercase;color:var(--tinta);margin-top:6px}
+  .banner small{display:block;font-style:italic;font-size:11px;color:#6b4a38;margin-top:3px}
+  .cinta{height:10px;margin:0 0 8px;background:repeating-linear-gradient(45deg,var(--oro) 0 8px,
+         var(--tera) 8px 16px,var(--verde) 16px 24px,var(--rojo2) 24px 32px)}
+  .nicho{margin:10px 12px;background:var(--crema2);border:3px solid var(--oro2);
+         border-radius:14px 14px 9px 9px;padding:10px 12px 6px;position:relative}
+  .nicho h2{font-family:Grandstander;font-weight:800;font-size:14px;letter-spacing:1.5px;
+            text-transform:uppercase;color:var(--rojo2);display:flex;align-items:baseline;gap:8px}
+  .nicho h2 i{font-style:italic;font-weight:500;font-size:10.5px;letter-spacing:0;color:#7a5a44;text-transform:none}
+  .nicho h2::after{content:"";flex:1;height:5px;transform:translateY(-3px);
+                   background:repeating-linear-gradient(45deg,var(--oro) 0 5px,var(--tera) 5px 10px)}
+  .item{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;
+        padding:7px 0;border-bottom:1px dashed rgba(43,26,19,.28)}
+  .item:last-child{border-bottom:0}
+  .plato{font-family:Grandstander;font-weight:600;font-size:14.5px;line-height:1.15}
+  .plato i{display:block;font-family:"Alegreya Sans";font-style:italic;font-weight:400;
+           font-size:11.5px;color:#6b4a38;margin-top:2px}
+  .precio{font-family:Grandstander;font-weight:800;font-size:13px;color:#fff;background:var(--rojo2);
+          border:2px solid var(--oro);border-radius:999px;padding:2px 9px;white-space:nowrap}
+  .nota{margin:2px 12px 14px;text-align:center;font-size:11px;font-style:italic;color:#7a5a44}
+  .sol{width:56px;height:56px;border-radius:50%;background:var(--oro);margin:10px auto 0;
+       border:4px solid var(--rojo2);box-shadow:inset 0 -8px 0 rgba(0,0,0,.12);
+       position:relative}
+  .sol::after{content:"";position:absolute;inset:6px;border:2px dashed var(--rojo2);border-radius:50%}
+</style>
+</head>
+<body>
+<div class="retablo">
+  <div class="techo"><div class="puerta"></div><div class="puerta"></div></div>
+  <div class="banner">
+    <h1>Mi Barrunto</h1>
+    <p>Comida Criolla Peruana</p>
+    <small>La carta, pintada como un retablo · ES / EN</small>
+  </div>
+  <div class="cinta"></div>
+
+  <section class="nicho">
+    <h2>Entradas <i>starters</i></h2>
+    <div class="item"><span class="plato">Papa a la Huancaína<i>Potato in creamy Huancaína sauce</i></span><span class="precio">$11.99</span></div>
+    <div class="item"><span class="plato">Causa de camarón<i>Mashed potato terrine with shrimp</i></span><span class="precio">$16.99</span></div>
+    <div class="item"><span class="plato">Chicharrón chancho picado<i>Chopped fried pork with fried cassava</i></span><span class="precio">$19.99</span></div>
+  </section>
+
+  <section class="nicho">
+    <h2>Ceviches <i>del día</i></h2>
+    <div class="item"><span class="plato">Ceviche de pescado<i>Fish in lime juice</i></span><span class="precio">$18.99</span></div>
+    <div class="item"><span class="plato">Ceviche Mixto<i>Mixed seafood in lime juice</i></span><span class="precio">$24.99</span></div>
+    <div class="item"><span class="plato">Leche de tigre<i>Minced fish in lime juice, corn, cilantro</i></span><span class="precio">$15.99</span></div>
+  </section>
+
+  <section class="nicho">
+    <h2>Criollos <i>de siempre</i></h2>
+    <div class="item"><span class="plato">Lomo Saltado<i>Sautéed beef, onions and tomatoes, fries and rice</i></span><span class="precio">$18.99</span></div>
+    <div class="item"><span class="plato">Ají de gallina<i>Shredded chicken in mild aji sauce with rice</i></span><span class="precio">$18.35</span></div>
+    <div class="item"><span class="plato">Carapulcra de chancho<i>Pork stew with papa seca</i></span><span class="precio">$19.99</span></div>
+  </section>
+
+  <section class="nicho">
+    <h2>Parrilla <i>a las brasas</i></h2>
+    <div class="item"><span class="plato">Anticucho de corazón<i>Grilled beef-heart skewers, potato and corn</i></span><span class="precio">$14.99</span></div>
+    <div class="item"><span class="plato">Churrasco a la parrilla<i>Bone-in steak, potato, peruvian corn and salad</i></span><span class="precio">$27.99</span></div>
+  </section>
+
+  <section class="nicho">
+    <h2>Broaster <i>y bebidas</i></h2>
+    <div class="item"><span class="plato">Pollo broaster<i>With french fries and salad</i></span><span class="precio">$16.99</span></div>
+    <div class="item"><span class="plato">Chicha morada<i>Purple corn drink — vaso / jarra</i></span><span class="precio">$3.99</span></div>
+  </section>
+
+  <p class="nota">Los precios no incluyen taxes · Prices do not include taxes</p>
+  <div class="sol"></div>
+  <p class="nota" style="margin-top:6px">Retablo pintado a mano · cada plato, su nicho</p>
+</div>
+</body>
+</html>

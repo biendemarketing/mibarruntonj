@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tablero de Salidas — sketch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;800&family=Spline+Sans+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{--fondo:#101012;--tablero:#1c1c20;--teja:#28282e;--teja2:#1f1f24;--linea:#0a0a0c;
+        --ambar:#f2b23e;--blanco:#e9e7e2;--gris:#8b8b93;--rojo:#d9482b}
+  *{box-sizing:border-box;margin:0}
+  body{width:390px;margin:0 auto;background:var(--fondo);color:var(--blanco);
+       font-family:"Big Shoulders Display",sans-serif;padding:12px}
+  .tablero{background:var(--tablero);border:7px solid #0c0c0e;border-radius:12px;padding:14px;
+           box-shadow:inset 0 0 0 2px #2e2e34,0 10px 26px rgba(0,0,0,.6);position:relative}
+  .tornillo{position:absolute;width:6px;height:6px;border-radius:50%;background:#484850;
+            box-shadow:inset 0 -1px 1px rgba(0,0,0,.7)}
+  .tornillo.tl{top:5px;left:5px}.tornillo.tr{top:5px;right:5px}
+  .tornillo.bl{bottom:5px;left:5px}.tornillo.br{bottom:5px;right:5px}
+  .cab{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid #2e2e34;
+       padding-bottom:10px;margin-bottom:12px}
+  .cab h1{font-weight:800;font-size:42px;letter-spacing:2px;line-height:.9;color:var(--blanco)}
+  .cab h1 em{font-style:normal;color:var(--ambar)}
+  .cab .lado{text-align:right}
+  .cab .reloj{font-family:"Spline Sans Mono";font-size:15px;color:var(--ambar);font-weight:600}
+  .cab .fecha{font-family:"Spline Sans Mono";font-size:9.5px;color:var(--gris);letter-spacing:.08em;
+              text-transform:uppercase;margin-top:3px}
+  .fila{display:grid;grid-template-columns:46px 1fr 74px;gap:7px;margin-bottom:7px;align-items:stretch}
+  .teja{background:linear-gradient(180deg,var(--teja) 0 47%,var(--linea) 47% 50%,var(--teja2) 50% 100%);
+        border:1px solid #38383f;border-radius:5px;padding:8px 9px;position:relative;
+        box-shadow:0 2px 0 rgba(0,0,0,.5)}
+  .teja::after{content:"";position:absolute;top:47%;left:6px;right:6px;height:1px;background:rgba(255,255,255,.05)}
+  .cod{display:flex;align-items:center;justify-content:center;font-family:"Spline Sans Mono";
+       font-size:11px;font-weight:600;letter-spacing:.12em;color:var(--ambar);
+       background:linear-gradient(180deg,#232328 0 47%,var(--linea) 47% 50%,#1a1a1e 50% 100%);
+       border:1px solid #34343a;border-radius:5px}
+  .plato b{display:block;font-weight:700;font-size:20px;letter-spacing:.6px;text-transform:uppercase;
+           line-height:1.05;color:var(--blanco)}
+  .plato i{display:block;font-family:"Spline Sans Mono";font-style:normal;font-size:9.5px;
+           color:var(--gris);margin-top:3px;line-height:1.35}
+  .precio{display:flex;align-items:center;justify-content:center;font-weight:800;font-size:24px;
+          color:var(--ambar);letter-spacing:1px;
+          background:linear-gradient(180deg,#2b2622 0 47%,var(--linea) 47% 50%,#221e1a 50% 100%);
+          border:1px solid #3d352b;border-radius:5px}
+  .seccion{display:flex;align-items:center;gap:10px;margin:14px 2px 8px;
+           font-family:"Spline Sans Mono";font-size:10px;letter-spacing:.28em;text-transform:uppercase;
+           color:var(--gris)}
+  .seccion::before,.seccion::after{content:"";height:1px;background:#2e2e34;flex:1}
+  .aviso{margin-top:14px;border-top:1px dashed #2e2e34;padding-top:10px;text-align:center;
+         font-family:"Spline Sans Mono";font-size:9.5px;color:var(--gris);letter-spacing:.06em}
+  .aviso b{color:var(--rojo);font-weight:600}
+</style>
+</head>
+<body>
+<div class="tablero">
+  <span class="tornillo tl"></span><span class="tornillo tr"></span>
+  <span class="tornillo bl"></span><span class="tornillo br"></span>
+
+  <header class="cab">
+    <h1>MI<br>BARRUNTO<em>.</em></h1>
+    <div class="lado">
+      <div class="reloj">6:45 PM</div>
+      <div class="fecha">Tablero de salidas · carta de hoy</div>
+    </div>
+  </header>
+
+  <p class="seccion">Del mar · from the sea</p>
+  <div class="fila">
+    <span class="cod">CEV</span>
+    <div class="teja plato"><b>Ceviche Mixto</b><i>MIX SEAFOOD IN LIME JUICE</i></div>
+    <span class="precio">24.99</span>
+  </div>
+  <div class="fila">
+    <span class="cod">CEV</span>
+    <div class="teja plato"><b>Leche de Tigre</b><i>MINCED FISH, LIME, CORN, CILANTRO</i></div>
+    <span class="precio">15.99</span>
+  </div>
+  <div class="fila">
+    <span class="cod">JAL</span>
+    <div class="teja plato"><b>Jalea c/Yuca</b><i>FRIED SEAFOOD WITH YUCA</i></div>
+    <span class="precio">24.99</span>
+  </div>
+
+  <p class="seccion">Criollos</p>
+  <div class="fila">
+    <span class="cod">CRI</span>
+    <div class="teja plato"><b>Lomo Saltado</b><i>BEEF, ONIONS, TOMATO, FRIES, RICE</i></div>
+    <span class="precio">18.99</span>
+  </div>
+  <div class="fila">
+    <span class="cod">CRI</span>
+    <div class="teja plato"><b>Ají de Gallina</b><i>SHREDDED CHICKEN IN AJI SAUCE, RICE</i></div>
+    <span class="precio">18.35</span>
+  </div>
+  <div class="fila">
+    <span class="cod">CRI</span>
+    <div class="teja plato"><b>Tacu Tacu c/Bistec</b><i>RICE &amp; BEANS MASHUP WITH STEAK</i></div>
+    <span class="precio">19.99</span>
+  </div>
+
+  <p class="seccion">Parrilla · a las brasas</p>
+  <div class="fila">
+    <span class="cod">PAR</span>
+    <div class="teja plato"><b>Anticucho de Corazón</b><i>BEEF HEART SKEWERS, POTATO, CORN</i></div>
+    <span class="precio">14.99</span>
+  </div>
+  <div class="fila">
+    <span class="cod">PAR</span>
+    <div class="teja plato"><b>Churrasco</b><i>BONE-IN STEAK, POTATO, CORN, SALAD</i></div>
+    <span class="precio">27.99</span>
+  </div>
+
+  <p class="seccion">Broaster &amp; bebidas</p>
+  <div class="fila">
+    <span class="cod">BRS</span>
+    <div class="teja plato"><b>Pollo Broaster</b><i>WITH FRIES AND SALAD</i></div>
+    <span class="precio">16.99</span>
+  </div>
+  <div class="fila">
+    <span class="cod">BEB</span>
+    <div class="teja plato"><b>Chicha Morada</b><i>VASO 3.99 · JARRA 13.99</i></div>
+    <span class="precio">3.99</span>
+  </div>
+
+  <p class="aviso">LOS PRECIOS NO INCLUYEN TAXES · NEXT ORDER: <b>MI BARRUNTO DESAYUNO 29.99</b></p>
+</div>
+</body>
+</html>

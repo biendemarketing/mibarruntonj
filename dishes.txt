@@ -1,0 +1,239 @@
+﻿1	Pan c/chicharrón  ||  Fried pork, fried sweet potato and salsa criolla
+2	Pan c/relleno  ||  Fried black sausage, fried sweet potato and salsa criolla
+3	Pan c/pollo deshilachado  ||  Shredded chicken and potato sticks
+4	Pan c/pechuga  ||  Chicken breast, french fries, lettuce and tomato
+5	Pan c/bistec  ||  Steak, french fries, lettuce and tomato
+6	Pan c/milanesa de pollo  ||  Breaded chicken, french fries, lettuce and tomato
+7	Pan c/salchicha huachana  ||  Scrambled eggs and peruvian sausage
+8	Pan c/jamón del país c/butifarra  ||  Peruvian ham, butter sausage, lettuce and salsa criolla
+9	Pan c/pavo  ||  Turkey, lettuce and salsa criolla
+10	Pan c/lechón  ||  Oven-roasted pork, lettuce and salsa criolla
+11	Pan c/pollo a la brasa  ||  Rotisserie chicken and potato sticks
+12	Hamburguesa clásica  ||  Lettuce, tomato, cheese and french fries
+13	Hamburguesa Especial  ||  Fried egg, bacon, cheese, lettuce, tomato and french fries
+14	Hamburguesa Royal  ||  Chorizo, fried egg, bacon and cheese, with lettuce and french fries
+15	Hamburguesa Royal Especial  ||  Chorizo, fried egg, bacon, cheese and shredded chicken, with lettuce and fries
+16	Chorizo Especial  ||  Fried egg, bacon, cheese, lettuce, tomato and french fries
+17	Pan c/pollo deshilachado Royal  ||  Shredded chicken, chorizo, fried egg, bacon and cheese, with fries
+18	Pan c/chorizo c/lechuga y tomate  ||  Chorizo, lettuce, tomato and french fries
+19	Pan c/atún  ||  Tuna sandwich
+20	Pan c/camote  ||  Sweet potato sandwich
+21	Pan c/huevo + hot dog  ||  Fried egg and hot dog
+22	Pan c/huevo frito  ||  Fried egg
+23	Porción de chicharrón  ||  Fried pork with fried sweet potato and salsa criolla
+24	Porción de chicharrón y relleno  ||  Fried pork and black sausage, sweet potato and salsa criolla
+25	Porción de relleno  ||  Fried black sausage with fried sweet potato and salsa criolla
+26	Lomo al jugo  ||  Sautéed beef in tomato-onion sauce
+27	Chancho a la caja china  ||  With huayro potato, corn, mote, rocoto cream and salsa criolla
+28	Mi Barrunto Desayuno  ||  Chicharrón, relleno, tamal, mote, fried sweet potato and salsa criolla
+29	Escabeche de pescado  ||  Fried fish in onion sauce with boiled sweet potato and lettuce
+30	Escabeche de pollo  ||  Fried chicken in onion sauce with boiled sweet potato and lettuce
+31	Tamal de pollo  ||  Corn tamale with chicken and salsa criolla
+32	Tamal de chancho  ||  Corn tamale with pork and salsa criolla
+33	Papa a la Huancaína  ||  Potato in creamy huancaína sauce
+34	Yuca a la huancaína  ||  Cassava in huancaína sauce
+35	Papa huayro a la huancaína  ||  Huayro potato in huancaína sauce
+36	Choclo desgranado c/queso  ||  Corn kernels with cheese
+37	Causa de pollo  ||  Mashed potato terrine with chicken
+38	Causa de atún  ||  Mashed potato terrine with tuna
+39	Causa de camarón  ||  Mashed potato terrine with shrimp
+40	Causa de cangrejo  ||  Mashed potato terrine with crab
+41	Causa Acevichada  ||  Mashed potato terrine with ceviche
+42	Salchipapa c/papa natural  ||  Fresh-cut fries with hot dog
+43	Salchipapa c/pollo desmenuzado  ||  Fresh-cut fries with hot dog and shredded chicken
+44	Salchipapa Especial  ||  Fresh-cut fries, hot dog, shredded chicken, chorizo and cheese
+45	Salchipapa montada  ||  Fresh-cut fries, hot dog and fried egg
+46	Salchipapa a lo pobre  ||  Fresh-cut fries, hot dog, sweet plantain and fried egg
+47	Salchipapa c/chaufa  ||  Fresh-cut fries, hot dog and fried rice
+48	Tiritas de pollo  ||  Chicken strips with french fries and hot dog
+49	Chicharrón de chancho picado  ||  Chopped fried pork with fried cassava
+50	Caldo de gallina c/papa amarilla  ||  Hen stew with yellow potato, boiled egg and noodles
+51	Caldo de gallina Acevichado  ||  Hen stew with yellow potato, egg, noodles and acevichado
+52	Patasca  ||  Hearty peruvian soup with mote, mondongo and beef ribs
+53	Patasca c/caldo de gallina  ||  House patasca with hen and noodles
+54	Sopa a la minuta c/papa amarilla  ||  Beef soup with milk, egg and yellow potato
+55	Sancochado de res  ||  Beef ribs with rice, carrot, celery, corn, cilantro, cassava and cabbage
+56	Menestrón de res  ||  Beef ribs, vegetables, beans, pesto cream and canuto noodles
+57	Sopa de carne  ||  Beef ribs with vegetables and noodles
+58	Sustancia de pollo c/fideo y papas  ||  Chicken soup with noodles and potatoes
+59	Sustancia de carne c/fideo y papas  ||  Beef soup with noodles and potatoes
+60	Parihuela  ||  Mixed seafood soup: calamari, fish, shrimp, crab, octopus, clams and mussels
+61	Sopa de mariscos  ||  Mixed seafood soup with noodles and potato
+62	Aguadito de mariscos  ||  Mixed seafood soup with rice and cilantro
+63	Chupe de camarón  ||  Shrimp chowder with rice, egg, milk, peas, carrot, cheese and potato
+64	Chupe de pescado  ||  Fish chowder with rice, egg, milk, peas, carrot, cheese and potato
+65	Chupe de mariscos  ||  Shellfish chowder with milk, cheese and vegetables
+66	Levanta muerto — la Resaca  ||  Filling seafood soup with ceviche on top
+67	Sopa de pescado  ||  Fish soup with noodles, potato, peas and carrot
+68	Sopa de camarón  ||  Shrimp soup with noodles, potato, peas and carrot
+69	Sopa de choros  ||  Mussel soup with noodles, potato, peas and carrot
+70	Lomo Saltado  ||  Sautéed beef with onions and tomato, french fries and white rice
+71	Lomo Saltado c/Huancaína  ||  Sautéed beef with french fries and huancaína sauce
+72	Lomo saltado c/chaufa  ||  Sautéed beef with fried rice
+73	Lomo Saltado a lo pobre  ||  Sautéed beef with sweet plantain and fried egg
+74	Lomo Saltado c/chaufa a lo pobre  ||  Sautéed beef with fried rice, sweet plantain and fried egg
+75	Lomo Saltado Especial  ||  Sautéed beef with fried rice and huancaína sauce · chaufa y huancaína
+76	Lomo Saltado Royal c/Huancaína a lo pobre  ||  Sautéed beef with huancaína sauce, sweet plantain and fried egg
+77	Saltado de pollo  ||  Sautéed chicken with onions and tomato, french fries and white rice
+78	Bistec c/papas fritas y arroz  ||  Steak with french fries and rice
+79	Bistec Encebollado  ||  Sautéed steak with onions and tomato, with white rice
+80	Bistec a lo pobre  ||  Steak with french fries, sweet plantain, fried egg and white rice
+81	Bistec c/tostones y ensalada  ||  Sautéed steak with fried green plantain and salad
+82	Bistec Mi Barrunto  ||  Steak with rice, beans, fried egg and sweet plantain
+83	Bistec Empanizado a lo pobre  ||  Breaded steak with white rice, french fries, fried egg and sweet plantain
+84	Milanesa de pollo c/arroz y papas fritas  ||  Breaded chicken with white rice and french fries
+85	Chaufa de pollo  ||  Fried rice with egg, scallions and chicken
+86	Chaufa de carne  ||  Fried rice with egg, scallions and beef
+87	Chaufa Mixto carne–pollo  ||  Fried rice with egg, scallions, beef and chicken
+88	Chaufa de chancho  ||  Fried rice with egg, scallions and pork
+89	Chaufa de pescado  ||  Fried rice with egg, scallions and fish
+90	Chaufa Especial  ||  Fried rice with egg, scallions, beef, chicken and shrimp · carne, pollo y camarones
+91	Chaufa Especial Barrunto  ||  Fried rice with egg, scallions, beef, chicken, shrimp and pork
+92	Tallarín Saltado de carne  ||  Beef sautéed noodles with onions, tomato and peppers
+93	Tallarín Saltado de pollo  ||  Chicken sautéed noodles with onions, tomato and peppers
+94	Tallarín Saltado de chancho  ||  Pork sautéed noodles with onions, tomato and peppers
+95	Tallarín Saltado Mixto carne–pollo  ||  Beef and chicken sautéed noodles with onions, tomato and peppers
+96	Tallarín Verde de Bistec a lo pobre  ||  Pesto spaghetti with steak, sweet plantain and fried egg
+97	Tallarín Verde solo c/papa dorada  ||  Pesto spaghetti with parmesan cream and golden potato
+98	Tallarín Verde c/Bistec  ||  Pesto spaghetti with steak
+99	Tallarín Verde c/pechuga parrilla  ||  Pesto spaghetti with grilled chicken breast
+100	Tallarín Verde c/milanesa de pollo  ||  Pesto spaghetti with breaded chicken
+101	Tallarín Verde c/chuleta parrilla  ||  Pesto spaghetti with grilled pork chop
+102	Tallarín Verde c/chorrasco a la parrilla  ||  Pesto spaghetti with grilled bone-in steak
+103	Tallarín Verde c/Lomo Saltado  ||  Pesto spaghetti with sautéed beef, onions and tomato
+104	Tallarín a la Huancaína c/Bistec  ||  Spaghetti in huancaína sauce with steak
+105	Tallarín a la Huancaína de pechuga parrilla  ||  Spaghetti in huancaína sauce with grilled chicken breast
+106	Tallarín a la Huancaína c/milanesa pollo  ||  Spaghetti in huancaína sauce with breaded chicken
+107	Tallarín a la Huancaína c/chuleta parrilla  ||  Spaghetti in huancaína sauce with grilled pork chop
+108	Tallarín a la Huancaína c/lomo saltado  ||  Spaghetti in huancaína sauce with sautéed beef, onions and tomato
+109	Tallarín a la Huancaína c/Bistec a lo pobre  ||  Spaghetti in huancaína sauce with steak, sweet plantain and fried egg
+110	Tallarín a la Huancaína c/chorrasco  ||  Spaghetti in huancaína sauce with bone-in steak
+111	Tacu Tacu c/Bistec  ||  Rice and bean mash-up with steak
+112	Tacu Tacu c/Bistec a lo pobre  ||  Rice and bean mash-up with steak, sweet plantain and fried egg
+113	Tacu Tacu c/Bistec Encebollado  ||  Rice and bean mash-up with steak, onions and tomato
+114	Tacu Tacu c/lomo saltado  ||  Rice and bean mash-up with sautéed beef, onions and tomato
+115	Tacu Tacu c/pechuga a la parrilla  ||  Rice and bean mash-up with grilled chicken breast
+116	Tacu Tacu c/milanesa de pollo  ||  Rice and bean mash-up with breaded chicken
+117	Tacu Tacu c/chuleta a la parrilla  ||  Rice and bean mash-up with grilled pork chop
+118	Tacu Tacu c/cabrito a la Norteña  ||  Rice and bean mash-up with northern-style goat stew
+119	Tacu Tacu c/Seco de Costilla de Res  ||  Rice and bean mash-up with beef rib stew
+120	Tallarín Rojo de pollo c/Huancaína  ||  Spaghetti in tomato sauce with chicken and huancaína sauce
+121	Arroz c/pollo c/huancaína  ||  Cilantro rice with chicken and huancaína sauce
+122	Arroz Verde c/pollo frito  ||  Cilantro rice with fried chicken
+123	Arroz c/pato c/Sarsa Criolla  ||  Green rice with duck and salsa criolla
+124	Arroz c/pato c/huancaína  ||  Green rice with duck and huancaína sauce
+125	Pato a lo Norteño c/arroz y frejol  ||  Stewed duck with rice and beans
+126	Cau-Cau  ||  Stew of beef tripe with potato, turmeric and peas
+127	Ají de gallina  ||  Shredded chicken in mild ají cream with white rice
+128	Carapulcra de chancho  ||  Pork stew with papa seca (dried potato) and spices
+129	Pollada c/huancaína y ensalada  ||  Marinated fried chicken with huancaína sauce and salad
+130	Pollo frito c/arroz y papas fritas  ||  Fried chicken with white rice and french fries
+131	Anticucho de corazón c/papa dorada y choclo  ||  Grilled beef heart skewers with golden potato and corn
+132	Anticucho de pollo c/papa dorada y choclo  ||  Grilled chicken skewers with golden potato and corn
+133	Anticucho de bistec c/papa dorada y choclo  ||  Grilled steak skewers with golden potato and corn
+134	Anticucho de camarón c/papa dorada y choclo  ||  Grilled shrimp skewers with golden potato and corn
+135	Anticucho de pulpo c/papa dorada y choclo  ||  Grilled octopus skewers with golden potato and corn
+136	Anticucho c/rachi c/papa dorada y choclo  ||  Grilled beef tripe skewers with golden potato and corn
+137	Anticucho Combinado  ||  Anticucho, rachi and choncholí · anticucho, rachi, choncholí/mollejita
+138	Higadito c/carretillero c/yuca y ensalada  ||  Marinated fried liver with cassava and salad
+139	Mollejita a la parrilla c/papas fritas y ensalada  ||  Grilled chicken gizzards with french fries and salad
+140	Corazoncito de pollo a la parrilla c/papas fritas y ensalada  ||  Grilled chicken hearts with french fries and salad
+141	Choclo entero solo  ||  Whole boiled peruvian corn
+142	Bistec parrilla c/papa dorada, choclo y ensalada  ||  Grilled steak with golden potato, corn and salad
+143	Pechuga parrilla c/papa dorada, choclo y ensalada  ||  Grilled chicken breast with golden potato, corn and salad
+144	Chuleta parrilla c/papa dorada, choclo y ensalada  ||  Grilled pork chop with golden potato, corn and salad
+145	Churrasco a la parrilla c/papa dorada, choclo y ensalada  ||  Grilled bone-in steak with golden potato, corn and salad
+146	Bistec a la parrilla c/Huancaína y ensalada  ||  Grilled steak with huancaína sauce and salad
+147	Parrillero Mi Barrunto  ||  Churrasco, chicken breast, pork chop, anticucho, chorizo and crispy chicken with golden potato, corn and salad
+148	Pulpo a la Parrilla  ||  Grilled octopus
+149	Parrilla c/papa a la huancaína  ||  Grilled meat with potato in huancaína sauce
+150	Ceviche de pescado  ||  Fish cured in lime juice
+151	Ceviche Carretillero c/Huancaína  ||  Street-style ceviche with huancaína sauce
+152	Ceviche Mixto  ||  Mixed seafood cured in lime juice
+153	Ceviche Mixto + chorito a la chalaca  ||  Mixed ceviche with peruvian-style mussels
+154	Ceviche de camarones  ||  Shrimp cured in lime juice
+155	Ceviche de mariscos  ||  Seafood cured in lime juice
+156	Ceviche de pulpo  ||  Octopus cured in lime juice
+157	Ceviche de conchas negras  ||  Black clam cured in lime juice
+158	Choritos a la chalaca (12)  ||  Dozen mussels in chalaca salsa
+159	Choritos a la chalaca (6)  ||  Half-dozen mussels in chalaca salsa
+160	Leche de tigre  ||  Minced fish in lime juice with onion, corn and cilantro, topped with crisp plantain
+161	Leche de tigre Mi Barrunto  ||  Minced fish in lime juice with fried calamari
+162	Leche de tigre de pulpo  ||  Minced octopus in lime juice
+163	Leche de tigre de pulpo Mi Barrunto  ||  Minced octopus in lime juice with fried calamari
+164	Leche de tigre de camarones  ||  Minced shrimp in lime juice
+165	Leche de tigre de camarones Mi Barrunto  ||  Minced shrimp in lime juice with fried calamari
+166	Leche de tigre chalaca  ||  Minced mussels in lime juice
+167	Leche de tigre chalaca Mi Barrunto  ||  Minced mussels in lime juice with fried calamari
+168	Tiradito  ||  Fish in lime juice with yellow ají sauce
+169	Jalea c/yuca frita  ||  Fried mixed seafood with fried cassava, salsa criolla
+170	Chicharrón de calamar  ||  Fried calamari with fried cassava, salsa criolla
+171	Chicharrón de pescado  ||  Breaded fried fish with fried cassava, salsa criolla
+172	Lomo de pescado  ||  Sautéed fish with onions and tomato, with french fries
+173	Tacu Tacu a lo macho  ||  Rice and bean mash-up with fried fish in seafood cream · filete $29.99
+174	Churrasco en salsa de mariscos  ||  Bone-in steak with seafood sauce
+175	Picante de camarón  ||  Creamy shrimp stew with rice
+176	Picante de mariscos  ||  Creamy seafood stew with rice
+177	Camarón al ajillo  ||  Shrimp in garlic sauce
+178	Sudado de mariscos  ||  Steamed mixed seafood with onions and tomato
+179	Sudado de pescado (filete)  ||  Steamed fish fillet with onions, tomato and rice
+180	Pescado a lo macho (filete)  ||  Fried fish fillet with seafood cream and rice
+181	Pescado a la chorrillana  ||  Fried fish with onions and tomato, with rice
+182	Filete de pescado c/arroz, ensalada y yuca  ||  Fried fish fillet with rice, salad and fried cassava
+183	Salmón a la parrilla c/arroz y ensalada  ||  Grilled salmon with rice and salad
+184	Arroz c/camarones  ||  Yellow rice with shrimp
+185	Arroz c/pulpo  ||  Yellow rice with octopus
+186	Tallarín en salsa de mariscos  ||  Spaghetti with creamy seafood stew
+187	Pescado entero (Pargo) c/arroz, ensalada y yuca  ||  Whole red snapper with rice, salad and fried cassava
+188	Arroz c/mariscos  ||  Yellow seafood rice
+189	Chaufa de mariscos  ||  Seafood fried rice
+190	Chaufa de camarones  ||  Shrimp fried rice
+191	Jalea y ceviche  ||  Fried mixed seafood with fish cured in lime juice
+192	Arroz c/mariscos y ceviche  ||  Yellow seafood rice with fish cured in lime juice
+193	Chaufa de mariscos y ceviche  ||  Seafood fried rice with fish cured in lime juice
+194	Tripleta Marina  ||  Seafood rice, fried mixed seafood and ceviche · arroz c/mariscos, jalea y ceviche
+195	Ronda Marina  ||  Seafood rice, seafood chaufa, jalea, ceviche and choritos a la chalaca — to share
+196	Arroz c/pollo huancaína + ceviche  ||  Cilantro rice with chicken in huancaína sauce, plus ceviche
+197	Tallarín Rojo huancaína + ceviche  ||  Tomato spaghetti with huancaína sauce, plus ceviche
+198	Carapulcra Mixta c/huancaína + ceviche  ||  Mixed carapulcra with huancaína sauce, plus ceviche
+199	Cau-Cau c/huancaína + ceviche  ||  Beef tripe stew with huancaína sauce, plus ceviche
+200	Cabrito Norteño c/arroz y frejol + ceviche  ||  Northern-style goat stew with rice and beans, plus ceviche
+201	Seco de Costilla de Res c/arroz y frejol + ceviche  ||  Beef rib stew with rice and beans, plus ceviche
+202	Pato a la Norteña c/arroz y frejol + ceviche  ||  Northern-style duck with rice and beans, plus ceviche
+203	Pollo broaster c/papas fritas y ensalada  ||  Broasted chicken with french fries and salad
+204	Pollo broaster a lo pobre  ||  Broasted chicken with french fries, salad, sweet plantain and fried egg
+205	Pollo salchi-broaster  ||  Broasted chicken with french fries, salad and hot dog
+206	Pollo broaster Acevichado  ||  Broasted chicken with french fries, salad and acevichado sauce
+207	Pollo broaster BBQ  ||  Broasted chicken with french fries, salad and BBQ sauce
+208	Pollo chori-broaster  ||  Broasted chicken with french fries, salad and chorizo
+209	Alitas broaster  ||  Broasted wings with french fries and salad
+210	Alitas Acevichadas  ||  Broasted wings with french fries, salad and acevichado sauce
+211	Pollo broaster mostrito  ||  Broasted chicken with french fries and chaufa
+212	Pollo broaster mostrito a lo pobre  ||  With french fries, chaufa, sweet plantain and fried egg
+213	Pollo broaster salchimosrito  ||  With french fries, chaufa and hot dog
+214	Pollo broaster chori-mosrito  ||  With french fries, chaufa and chorizo
+215	Pollo broaster mostrito Acevichado  ||  With french fries and chaufa in acevichado sauce
+216	Pollo broaster mostrito Acevichado a lo pobre  ||  With french fries, chaufa, sweet plantain and fried egg in acevichado sauce
+217	Pollo broaster mostrito Especial  ||  Chaufa, french fries, sweet plantain, fried egg and hot dog
+218	Porción de arroz blanco  ||  White rice
+219	Porción de tostones  ||  Fried green plantain
+220	Porción de maduros  ||  Sweet fried plantain
+221	Porción de yuca  ||  Cassava, boiled or fried
+222	Porción papas fritas Regular  ||  Regular french fries
+223	Porción papas naturales  ||  Fresh-cut fries with skin
+224	Porción Salsa Criolla  ||  Peruvian onion and cilantro relish
+225	Porción Ensalada Verde de lechuga  ||  Green lettuce salad
+226	Porción de Cancha  ||  Roasted corn
+227	Crema de la huancaína 2 oz  ||  Huancaína cream
+228	Ají verde 2 oz  ||  Green ají sauce
+229	Mayonesa casera 2 oz  ||  House mayonnaise
+230	Aceituna casera 2 oz  ||  House olive sauce
+231	Salsa Rosada 2 oz  ||  Pink sauce
+232	Rocoto pamillero 2 oz  ||  Rocoto pepper cream
+233	Chicha morada  ||  Purple corn drink · vaso o jarra / glass or pitcher
+234	Agua de manzana  ||  Apple water · vaso o jarra / glass or pitcher
+235	Agua de maracuyá  ||  Passion fruit water · vaso o jarra / glass or pitcher
+236	Agua de piña  ||  Pineapple water · vaso o jarra / glass or pitcher
+237	Emoliente  ||  Peruvian herb beverage
+238	Jugo de naranja  ||  Orange juice
+239	Sodas en lata (12 oz)  ||  Canned soda
