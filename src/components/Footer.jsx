@@ -71,13 +71,12 @@ export function Footer({ photoMode = 'curated', onTogglePhotoMode }) {
               <Printer size={18} />
             </a>
 
-            {/* Botón Descargar PDF (Abre diálogo directo para Guardar como PDF 11x8.5, NO descarga html) */}
+            {/* Botón Descargar PDF Directo (Descarga el archivo PDF 11x8.5 real sin pasar por impresión) */}
             <a
-              href="./menu_imprimible.html?print=1"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="./menu_mi_barrunto.pdf"
+              download="Carta_Menu_Mi_Barrunto_11x8.5.pdf"
               className="footer-icon-only-btn"
-              title="Descargar / Guardar Carta en PDF (11x8.5)"
+              title="Descargar Carta Menú en PDF (11x8.5)"
               aria-label="Descargar Carta en PDF"
             >
               <Download size={18} />

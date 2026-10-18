@@ -9,7 +9,7 @@ import { MobileDrawer } from './components/MobileDrawer';
 import { Footer } from './components/Footer';
 import { menuRepository } from './services/MenuRepository';
 import { Cart } from './models/Cart';
-import { Search, ShoppingBag, LayoutGrid, Rows3 } from 'lucide-react';
+import { Search, ShoppingBag, LayoutGrid, Rows3, ChevronUp } from 'lucide-react';
 
 export function App() {
   // Estado Orientado a Objetos: Carrito de Compras
@@ -63,6 +63,21 @@ export function App() {
       localStorage.setItem('mb-noche', isDarkMode ? '1' : '0');
     } catch {}
   }, [isDarkMode]);
+
+  // Botón Volver Arriba
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 380);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const handleScrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   // Modo de Fotos: 'curated' (fotos seleccionadas actuales) vs 'complete' (fotos de la carpeta platos para todos los platos)
   const [photoMode, setPhotoMode] = useState(() => {
@@ -373,6 +388,19 @@ export function App() {
             <span className="desktop-floating-cart-label">Ver Pedido</span>
             <span className="desktop-floating-cart-price">{cart.getFormattedTotal()}</span>
           </div>
+        </button>
+      )}
+
+      {/* 11. Botón Volver Arriba Flotante */}
+      {showScrollTop && (
+        <button
+          type="button"
+          className="scroll-to-top-btn"
+          onClick={handleScrollToTop}
+          aria-label="Volver arriba"
+          title="Volver arriba"
+        >
+          <ChevronUp size={22} strokeWidth={2.5} />
         </button>
       )}
 
