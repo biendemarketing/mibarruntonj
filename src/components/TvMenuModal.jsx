@@ -112,13 +112,25 @@ export function TvMenuModal({ isOpen, onClose, dishes = [], photoMode = 'curated
       aria-label="Modo Pantalla Completa TV - Mi Barrunto"
       onMouseMove={handleUserActivity}
     >
-      {/* 1. Fotografía de Máxima Calidad en Pantalla Completa */}
-      <div className="tv-fullscreen-media" key={`media-${currentDish.id}`}>
+      {/* 1. Fondo Ambiental del Plato: llena toda la pantalla con la calidez del plato sin cortes */}
+      <div className="tv-ambient-backdrop" key={`bg-${currentDish.id}`}>
+        {image && (
+          <img
+            src={image}
+            alt=""
+            aria-hidden="true"
+            className="tv-ambient-bg-image"
+          />
+        )}
+      </div>
+
+      {/* 2. Escenario del Plato Principal: 100% visible, sin cortes y sin zoom excesivo */}
+      <div className="tv-dish-stage" key={`media-${currentDish.id}`}>
         {image ? (
           <img
             src={image}
             alt={currentDish.name}
-            className="tv-fullscreen-image"
+            className="tv-dish-hero-image"
           />
         ) : (
           <div className="tv-fullscreen-placeholder">
@@ -127,10 +139,10 @@ export function TvMenuModal({ isOpen, onClose, dishes = [], photoMode = 'curated
         )}
       </div>
 
-      {/* 2. Overlay Negro Gradual en la Foto para Contraste y Legibilidad */}
+      {/* 3. Overlay Negro Gradual en la Foto para Contraste y Legibilidad */}
       <div className="tv-overlay-gradient" />
 
-      {/* 3. Ficha con Título, Descripción y Precio en la Parte Derecha */}
+      {/* 4. Ficha con Título, Descripción y Precio en la Parte Derecha */}
       <aside className="tv-dish-sidebar" key={`info-${currentDish.id}`}>
         {currentDish.categoryName && (
           <div className="tv-sidebar-badge">
@@ -154,7 +166,7 @@ export function TvMenuModal({ isOpen, onClose, dishes = [], photoMode = 'curated
         </div>
       </aside>
 
-      {/* 4. Barra Superior Autocultable: solo aparece al mover el mouse */}
+      {/* 5. Barra Superior Autocultable: solo aparece al mover el mouse */}
       <header className={`tv-menu-header ${showControls ? 'is-visible' : 'is-hidden'}`}>
         <div className="tv-header-brand">
           <img
@@ -210,7 +222,7 @@ export function TvMenuModal({ isOpen, onClose, dishes = [], photoMode = 'curated
         </div>
       </header>
 
-      {/* 5. Zonas de Clic Invisibles para navegar Anterior / Siguiente */}
+      {/* 6. Zonas de Clic Invisibles para navegar Anterior / Siguiente */}
       <div
         className="tv-nav-invisible-zone tv-nav-invisible-prev"
         onClick={() => {
