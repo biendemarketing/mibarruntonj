@@ -542,11 +542,17 @@ export function ProductDetailPage({
                         <PlateIcon size={34} />
                       </div>
                     )}
-                    {isSelected && (
-                      <span className="accompaniment-circle-check">
-                        <Check size={13} strokeWidth={3} />
-                      </span>
-                    )}
+                    {/* Indicador sobre la foto: signo de más (+) que cambia a carrito cuando se le hace clic */}
+                    <span 
+                      className={`accompaniment-circle-badge ${isSelected ? 'is-in-cart' : 'is-plus'}`}
+                      aria-label={isSelected ? 'En el pedido' : 'Añadir'}
+                    >
+                      {isSelected ? (
+                        <ShoppingCart size={13} strokeWidth={2.4} />
+                      ) : (
+                        <Plus size={14} strokeWidth={2.8} />
+                      )}
+                    </span>
                   </div>
 
                   {/* Nombre y Precio */}

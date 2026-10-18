@@ -4510,19 +4510,50 @@ input, textarea, select {
   color: var(--text-light);
 }
 
-.accompaniment-circle-check {
+.accompaniment-circle-badge {
   position: absolute;
-  bottom: 1px;
-  right: 1px;
-  background-color: #10b981;
-  color: #ffffff;
-  width: 24px;
-  height: 24px;
+  bottom: 2px;
+  right: 2px;
+  width: 25px;
+  height: 25px;
   border-radius: 50%;
   display: grid;
   place-items: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
   border: none !important;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.32);
+  transition: all 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 3;
+}
+
+.accompaniment-circle-badge.is-plus {
+  background-color: var(--rojo);
+  color: #ffffff;
+}
+
+.accompaniment-circle-avatar-wrap.clickable-avatar:hover .accompaniment-circle-badge.is-plus {
+  transform: scale(1.18);
+  background-color: var(--rojo-hover);
+  box-shadow: 0 4px 14px rgba(227, 6, 19, 0.45);
+}
+
+.accompaniment-circle-badge.is-in-cart {
+  background-color: #10b981;
+  color: #ffffff;
+  transform: scale(1.08);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.45);
+  animation: badgePop 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes badgePop {
+  0% {
+    transform: scale(0.65);
+  }
+  60% {
+    transform: scale(1.25);
+  }
+  100% {
+    transform: scale(1.08);
+  }
 }
 
 .accompaniment-circle-meta {
