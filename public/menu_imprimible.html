@@ -1124,12 +1124,12 @@
   <header class="print-controls-bar">
     <button type="button" class="print-btn" onclick="window.print();">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
-      <span>Imprimir / Guardar PDF (11x8.5)</span>
+      <span>Imprimir</span>
     </button>
 
     <button type="button" class="theme-toggle-btn" onclick="toggleTheme();" id="themeToggleBtn">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-      <span id="themeBtnText">Cambiar a Fondo Negro Elegante</span>
+      <span id="themeIcon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></span>
+      <span id="themeBtnText">Modo Oscuro</span>
     </button>
 
     <label for="pageJump" style="font-size: 0.84rem; font-weight: 600;">Ir a página:</label>
@@ -4874,7 +4874,11 @@
       const isDark = document.body.classList.contains('dark-theme');
       const btnText = document.getElementById('themeBtnText');
       if (btnText) {
-        btnText.textContent = isDark ? 'Cambiar a Fondo Pergamino Claro' : 'Cambiar a Fondo Negro Elegante';
+        btnText.textContent = isDark ? 'Modo Claro' : 'Modo Oscuro';
+      }
+      const iconSpan = document.getElementById('themeIcon');
+      if (iconSpan) {
+        iconSpan.innerHTML = isDark ? "<svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" style=\"flex-shrink:0;\"><circle cx=\"12\" cy=\"12\" r=\"5\"></circle><line x1=\"12\" y1=\"1\" x2=\"12\" y2=\"3\"></line><line x1=\"12\" y1=\"21\" x2=\"12\" y2=\"23\"></line><line x1=\"4.22\" y1=\"4.22\" x2=\"5.64\" y2=\"5.64\"></line><line x1=\"18.36\" y1=\"18.36\" x2=\"19.78\" y2=\"19.78\"></line><line x1=\"1\" y1=\"12\" x2=\"3\" y2=\"12\"></line><line x1=\"21\" y1=\"12\" x2=\"23\" y2=\"12\"></line><line x1=\"4.22\" y1=\"19.78\" x2=\"5.64\" y2=\"18.36\"></line><line x1=\"18.36\" y1=\"5.64\" x2=\"19.78\" y2=\"4.22\"></line></svg>" : "<svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" style=\"flex-shrink:0;\"><path d=\"M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z\"></path></svg>";
       }
       try {
         localStorage.setItem('mb-print-theme', isDark ? 'dark' : 'light');
@@ -4890,7 +4894,9 @@
         if (hasDarkParam || savedTheme === 'dark') {
           document.body.classList.add('dark-theme');
           const btnText = document.getElementById('themeBtnText');
-          if (btnText) btnText.textContent = 'Cambiar a Fondo Pergamino Claro';
+          if (btnText) btnText.textContent = 'Modo Claro';
+          const iconSpan = document.getElementById('themeIcon');
+          if (iconSpan) iconSpan.innerHTML = "<svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" style=\"flex-shrink:0;\"><circle cx=\"12\" cy=\"12\" r=\"5\"></circle><line x1=\"12\" y1=\"1\" x2=\"12\" y2=\"3\"></line><line x1=\"12\" y1=\"21\" x2=\"12\" y2=\"23\"></line><line x1=\"4.22\" y1=\"4.22\" x2=\"5.64\" y2=\"5.64\"></line><line x1=\"18.36\" y1=\"18.36\" x2=\"19.78\" y2=\"19.78\"></line><line x1=\"1\" y1=\"12\" x2=\"3\" y2=\"12\"></line><line x1=\"21\" y1=\"12\" x2=\"23\" y2=\"12\"></line><line x1=\"4.22\" y1=\"19.78\" x2=\"5.64\" y2=\"18.36\"></line><line x1=\"18.36\" y1=\"5.64\" x2=\"19.78\" y2=\"4.22\"></line></svg>";
         }
 
         if (urlParams.has('print') || urlParams.get('action') === 'print') {

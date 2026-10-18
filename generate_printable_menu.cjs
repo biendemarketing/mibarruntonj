@@ -1962,12 +1962,12 @@ function generateCompleteHtml(options = {}) {
   <header class="print-controls-bar">
     <button type="button" class="print-btn" onclick="window.print();">
       ${SVG_ICONS.printer}
-      <span>Imprimir / Guardar PDF (11x8.5)</span>
+      <span>Imprimir</span>
     </button>
 
     <button type="button" class="theme-toggle-btn" onclick="toggleTheme();" id="themeToggleBtn">
-      ${SVG_ICONS.moon}
-      <span id="themeBtnText">${isDefaultDark ? 'Cambiar a Fondo Pergamino Claro' : 'Cambiar a Fondo Negro Elegante'}</span>
+      <span id="themeIcon">${isDefaultDark ? SVG_ICONS.sun : SVG_ICONS.moon}</span>
+      <span id="themeBtnText">${isDefaultDark ? 'Modo Claro' : 'Modo Oscuro'}</span>
     </button>
 
     <label for="pageJump" style="font-size: 0.84rem; font-weight: 600;">Ir a página:</label>
@@ -2008,7 +2008,11 @@ function generateCompleteHtml(options = {}) {
       const isDark = document.body.classList.contains('dark-theme');
       const btnText = document.getElementById('themeBtnText');
       if (btnText) {
-        btnText.textContent = isDark ? 'Cambiar a Fondo Pergamino Claro' : 'Cambiar a Fondo Negro Elegante';
+        btnText.textContent = isDark ? 'Modo Claro' : 'Modo Oscuro';
+      }
+      const iconSpan = document.getElementById('themeIcon');
+      if (iconSpan) {
+        iconSpan.innerHTML = isDark ? ${JSON.stringify(SVG_ICONS.sun)} : ${JSON.stringify(SVG_ICONS.moon)};
       }
       try {
         localStorage.setItem('mb-print-theme', isDark ? 'dark' : 'light');
@@ -2024,7 +2028,9 @@ function generateCompleteHtml(options = {}) {
         if (hasDarkParam || savedTheme === 'dark') {
           document.body.classList.add('dark-theme');
           const btnText = document.getElementById('themeBtnText');
-          if (btnText) btnText.textContent = 'Cambiar a Fondo Pergamino Claro';
+          if (btnText) btnText.textContent = 'Modo Claro';
+          const iconSpan = document.getElementById('themeIcon');
+          if (iconSpan) iconSpan.innerHTML = ${JSON.stringify(SVG_ICONS.sun)};
         }
 
         if (urlParams.has('print') || urlParams.get('action') === 'print') {

@@ -32,7 +32,7 @@ export class MenuRepository {
       const cat = this.categoriesMap.get(d.category);
       return new Dish({
         ...d,
-        platosImage: platosMap[d.id] || null,
+        platosImage: d.platosImage || platosMap[d.id] || null,
         categoryName: cat ? cat.name : '',
         categoryNameEn: cat ? cat.nameEn : ''
       });
