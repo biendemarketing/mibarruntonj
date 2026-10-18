@@ -1,6 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Search, ShoppingCart, Moon, Sun, Menu, LayoutGrid, Rows3, MapPin, Phone, SlidersHorizontal } from 'lucide-react';
+import { Search, ShoppingCart, Moon, Sun, Menu, LayoutGrid, Rows3, MapPin, Phone, SlidersHorizontal, Sparkles } from 'lucide-react';
 import { FacebookIcon, InstagramIcon, WhatsAppIcon } from './Icons';
+
+const POPULAR_SEARCHES = [
+  'Ceviche Mi Barrunto',
+  'Lomo Saltado',
+  'Pan con chicharrón',
+  'Anticuchos',
+  'Chicha Morada',
+  'Alfajores'
+];
 
 export function Header({
   cart,
@@ -20,9 +29,11 @@ export function Header({
   const totalCount = cart.getTotalCount();
   const formattedTotal = cart.getFormattedTotal();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
   const filterPopoverRef = useRef(null);
+  const searchBoxRef = useRef(null);
 
-  // Cerrar popover al hacer clic fuera (compatible con mouse y touch)
+  // Cerrar popovers al hacer clic fuera (compatible con mouse y touch)
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (
@@ -32,16 +43,20 @@ export function Header({
       ) {
         setIsFilterOpen(false);
       }
+      if (
+        searchBoxRef.current &&
+        !searchBoxRef.current.contains(e.target)
+      ) {
+        setIsSearchFocused(false);
+      }
     };
-    if (isFilterOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-      document.addEventListener('touchstart', handleClickOutside);
-    }
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
       document.removeEventListener('touchstart', handleClickOutside);
     };
-  }, [isFilterOpen]);
+  }, []);
 
   return (
     <header className="brand-header">
@@ -130,7 +145,7 @@ export function Header({
         </div>
 
         {/* Barra de Búsqueda Integrada en el Header con Botón de Vista, Modo Oscuro y Menú a la Derecha */}
-        <div className="header-search-bar-wrap">
+        <div className="header-search-bar-wrap" ref={searchBoxRef}>
           <div className="header-search-box">
             <Search className="header-search-icon" size={17} />
             <input
@@ -139,6 +154,7 @@ export function Header({
               placeholder="Buscar platos en la carta..."
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
+              onFocus={() => setIsSearchFocused(true)}
               aria-label="Buscar en la carta"
             />
             {searchQuery && (
@@ -160,6 +176,7 @@ export function Header({
                 onClick={(e) => {
                   e.stopPropagation();
                   setIsFilterOpen((prev) => !prev);
+                  setIsSearchFocused(false);
                 }}
                 title={hasActiveFilters ? 'Filtros activos (clic para ver)' : 'Filtrar platos'}
                 aria-label="Filtros de la carta"
@@ -169,6 +186,33 @@ export function Header({
               </button>
             )}
           </div>
+
+          {/* Sugerencias Rápidas: Búsquedas Populares al hacer clic con buscador vacío */}
+          {isSearchFocused && !searchQuery.trim() && (
+            <div className="header-popular-searches-popover">
+              <div className="popular-searches-header">
+                <Sparkles size={14} color="var(--naranja)" />
+                <span>Búsquedas populares</span>
+              </div>
+              <div className="popular-searches-chips">
+                {POPULAR_SEARCHES.map((term) => (
+                  <button
+                    key={term}
+                    type="button"
+                    className="popular-search-chip"
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      onSearchChange(term);
+                      setIsSearchFocused(false);
+                    }}
+                  >
+                    <Search size={12} />
+                    <span>{term}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Popover Flotante de Filtros de la Carta */}
           {isFilterOpen && onUpdateFilter && (

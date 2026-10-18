@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Home, Menu, Search, ShoppingCart } from 'lucide-react';
-import { WhatsAppIcon } from './Icons';
+import { Home, Menu, Search, ShoppingCart, Heart } from 'lucide-react';
 import { triggerHaptic } from '../utils/haptics';
 
 export function MobileNavBar({
   cart,
   onOpenCart,
   onOpenMobileMenu,
-  onToggleSearch
+  onToggleSearch,
+  favoritesCount = 0,
+  showFavoritesOnly = false,
+  onToggleFavorites
 }) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -48,18 +50,17 @@ export function MobileNavBar({
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleWhatsAppClick = () => {
-    window.open(
-      'https://wa.me/19736533749?text=Hola%20Mi%20Barrunto%2C%20quisiera%20consultar%20la%20carta',
-      '_blank',
-      'noopener,noreferrer'
-    );
-  };
-
   const handleHomeClick = () => {
     triggerHaptic(12);
     navigate('/');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleFavoritesClick = () => {
+    triggerHaptic(14);
+    if (onToggleFavorites) {
+      onToggleFavorites();
+    }
   };
 
   return (
@@ -70,13 +71,14 @@ export function MobileNavBar({
       {/* 0. Home / Inicio al final de la izquierda */}
       <button
         type="button"
-        className={`mobile-nav-btn ${isHome ? 'active' : ''}`}
+        className={`mobile-nav-btn ${isHome && !showFavoritesOnly ? 'active' : ''}`}
         onClick={handleHomeClick}
         aria-label="Ir al inicio de la carta"
         title="Inicio"
       >
         <Home size={22} />
       </button>
+
       {/* 1. Menú / Categorías */}
       <button
         type="button"
@@ -99,15 +101,22 @@ export function MobileNavBar({
         <Search size={22} />
       </button>
 
-      {/* 3. WhatsApp Oficial (Mismo color de los demás botones) */}
+      {/* 3. Favoritos (Corazón) */}
       <button
         type="button"
-        className="mobile-nav-btn mobile-whatsapp-btn"
-        onClick={handleWhatsAppClick}
-        aria-label="Contactar por WhatsApp"
-        title="WhatsApp"
+        className={`mobile-nav-btn mobile-fav-nav-btn ${showFavoritesOnly ? 'active' : ''}`}
+        onClick={handleFavoritesClick}
+        aria-label="Ver mis platos favoritos"
+        title="Mis Favoritos"
       >
-        <WhatsAppIcon size={22} color="currentColor" />
+        <Heart
+          size={22}
+          fill={showFavoritesOnly || favoritesCount > 0 ? 'var(--rojo)' : 'none'}
+          color={showFavoritesOnly || favoritesCount > 0 ? 'var(--rojo)' : 'currentColor'}
+        />
+        {favoritesCount > 0 && (
+          <span className="mobile-cart-badge mobile-fav-badge">{favoritesCount}</span>
+        )}
       </button>
 
       {/* 4. Mi Pedido (Carrito de compras al final) */}

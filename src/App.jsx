@@ -12,8 +12,9 @@ import { menuRepository } from './services/MenuRepository';
 import { Cart } from './models/Cart';
 import { CartItem } from './models/CartItem';
 import { Customer } from './models/Customer';
-import { Search, ShoppingCart, LayoutGrid, Rows3, ChevronUp, RotateCcw, X, Sparkles } from 'lucide-react';
+import { Search, ShoppingCart, LayoutGrid, Rows3, ChevronUp, RotateCcw, X, Sparkles, Heart } from 'lucide-react';
 import { triggerHaptic } from './utils/haptics';
+import { triggerFlyToCart } from './utils/flyToCart';
 
 export function App() {
   const location = useLocation();
@@ -84,6 +85,40 @@ export function App() {
     priceSort: 'none',
     priceRange: 'all'
   });
+
+  // Lista de Favoritos (Persistencia en localStorage)
+  const [favorites, setFavorites] = useState(() => {
+    try {
+      const saved = localStorage.getItem('mb-favoritos');
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return [];
+  });
+  const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('mb-favoritos', JSON.stringify(favorites));
+    } catch (e) {
+      console.error('Error guardando favoritos en localStorage:', e);
+    }
+  }, [favorites]);
+
+  const handleToggleFavorite = (dishId) => {
+    triggerHaptic(14);
+    setFavorites((prev) => {
+      const exists = prev.includes(dishId);
+      return exists ? prev.filter((id) => id !== dishId) : [...prev, dishId];
+    });
+  };
+
+  const handleToggleFavoritesFilter = () => {
+    triggerHaptic(14);
+    setShowFavoritesOnly((prev) => !prev);
+    if (searchQuery) setSearchQuery('');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const [selectedDishForDetail, setSelectedDishForDetail] = useState(() => {
     if (typeof window !== 'undefined' && window.location.pathname.startsWith('/plato/')) {
       const dishId = window.location.pathname.replace('/plato/', '').split('/')[0].split('?')[0].trim();
@@ -213,9 +248,9 @@ export function App() {
   // Modelos de categoría desde el repositorio OOP
   const categories = useMemo(() => menuRepository.getAllCategories(), []);
 
-  // Catálogo agrupado según categoría o búsqueda automática y filtros
+  // Catálogo agrupado según categoría o búsqueda automática y filtros (soporta filtro Mis Favoritos)
   const groupedCatalog = useMemo(() => {
-    return menuRepository.getCatalogGrouped({
+    const rawCatalog = menuRepository.getCatalogGrouped({
       categoryId: searchQuery.trim() ? 'todos' : selectedCategory,
       query: searchQuery,
       onlyWithPhoto: filters.onlyWithPhoto,
@@ -223,7 +258,18 @@ export function App() {
       priceSort: filters.priceSort,
       priceRange: filters.priceRange
     });
-  }, [selectedCategory, searchQuery, filters, photoMode]);
+
+    if (showFavoritesOnly && !searchQuery.trim()) {
+      return rawCatalog
+        .map((group) => ({
+          ...group,
+          dishes: group.dishes.filter((d) => favorites.includes(d.id))
+        }))
+        .filter((group) => group.dishes.length > 0);
+    }
+
+    return rawCatalog;
+  }, [selectedCategory, searchQuery, filters, photoMode, showFavoritesOnly, favorites]);
 
   // Lista plana de platos visibles actualmente para la navegación del modal (flechas anterior / siguiente)
   const currentCatalogDishes = useMemo(() => {
@@ -286,9 +332,12 @@ export function App() {
     navigate(`/plato/${next.id}`, { replace: true });
   };
 
-  // Handlers del Carrito (OOP)
-  const handleAddToCart = (dish, quantity = 1, note = '') => {
+  // Handlers del Carrito (OOP) con animación Fly-To-Cart
+  const handleAddToCart = (dish, quantity = 1, note = '', event = null) => {
     triggerHaptic(15);
+    if (event) {
+      triggerFlyToCart(event);
+    }
     setCart((prevCart) => prevCart.addItem(dish, quantity, note));
   };
 
@@ -411,6 +460,8 @@ export function App() {
             onAddToCart={handleAddToCart}
             onUpdateQuantity={handleUpdateQuantity}
             onOpenCart={handleOpenCart}
+            isFavorite={selectedDishForDetail ? favorites.includes(selectedDishForDetail.id) : false}
+            onToggleFavorite={handleToggleFavorite}
             onBack={() => {
               if (window.history.length > 1) {
                 navigate(-1);
@@ -426,6 +477,9 @@ export function App() {
             categories={categories}
             selectedCategory={searchQuery.trim() ? 'todos' : selectedCategory}
             onSelectCategory={handleSelectCategory}
+            favoritesCount={favorites.length}
+            showFavoritesOnly={showFavoritesOnly}
+            onToggleFavorites={handleToggleFavoritesFilter}
           />
 
           {/* 4. Catálogo de Platos */}
@@ -506,29 +560,67 @@ export function App() {
           </div>
         )}
 
+        {/* Banner de favoritos activos */}
+        {showFavoritesOnly && (
+          <div className="search-results-banner favorites-active-banner">
+            <div className="favorites-active-banner-left">
+              <Heart size={16} fill="var(--rojo)" color="var(--rojo)" />
+              <span>
+                Mostrando: <strong>Mis Favoritos</strong> ({favorites.length} {favorites.length === 1 ? 'plato' : 'platos'})
+              </span>
+            </div>
+            <button
+              type="button"
+              className="search-results-clear"
+              onClick={() => setShowFavoritesOnly(false)}
+            >
+              Ver toda la carta ✕
+            </button>
+          </div>
+        )}
+
         {groupedCatalog.length === 0 ? (
-          <div style={{
-            textAlign: 'center',
-            padding: '3.5rem 1rem',
-            color: 'var(--text-light)'
-          }}>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-main)' }}>
-              No se encontraron platos para "{searchQuery}"
-            </h2>
-            <p style={{ marginTop: '0.35rem', fontSize: '0.88rem' }}>
-              Intenta con otro término de búsqueda o selecciona otra sección.
-            </p>
-            {searchQuery && (
+          showFavoritesOnly ? (
+            <div className="favorites-empty-state">
+              <div className="favorites-empty-icon">
+                <Heart size={44} color="var(--rojo)" strokeWidth={1.8} />
+              </div>
+              <h2 className="favorites-empty-title">Aún no tienes platos en favoritos</h2>
+              <p className="favorites-empty-desc">
+                Guarda tus platos preferidos tocando el corazón en las tarjetas o en la vista de detalle para tenerlos siempre a mano.
+              </p>
               <button
                 type="button"
-                className="search-results-clear"
-                onClick={() => handleSearchChange('')}
-                style={{ marginTop: '1rem' }}
+                className="favorites-empty-btn"
+                onClick={() => setShowFavoritesOnly(false)}
               >
-                Limpiar búsqueda y ver carta completa
+                Explorar toda la carta
               </button>
-            )}
-          </div>
+            </div>
+          ) : (
+            <div style={{
+              textAlign: 'center',
+              padding: '3.5rem 1rem',
+              color: 'var(--text-light)'
+            }}>
+              <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-main)' }}>
+                No se encontraron platos para "{searchQuery}"
+              </h2>
+              <p style={{ marginTop: '0.35rem', fontSize: '0.88rem' }}>
+                Intenta con otro término de búsqueda o selecciona otra sección.
+              </p>
+              {searchQuery && (
+                <button
+                  type="button"
+                  className="search-results-clear"
+                  onClick={() => handleSearchChange('')}
+                  style={{ marginTop: '1rem' }}
+                >
+                  Limpiar búsqueda y ver carta completa
+                </button>
+              )}
+            </div>
+          )
         ) : (
           groupedCatalog.map(({ category, dishes }) => (
             <section
@@ -560,7 +652,9 @@ export function App() {
                       photoMode={photoMode}
                       quantity={qty}
                       viewMode={viewMode}
-                      onAddToCart={(d) => handleAddToCart(d, 1)}
+                      isFavorite={favorites.includes(dish.id)}
+                      onToggleFavorite={handleToggleFavorite}
+                      onAddToCart={(d, e) => handleAddToCart(d, 1, '', e)}
                       onUpdateQuantity={(id, q) => handleUpdateQuantity(id, q)}
                       onOpenDetail={(d) => handleOpenDishDetail(d)}
                     />
@@ -579,11 +673,14 @@ export function App() {
         <Footer photoMode={photoMode} onTogglePhotoMode={handleTogglePhotoMode} />
       )}
 
-      {/* 7. Barra Móvil Inferior (Home, Menú, Búsqueda, WhatsApp y Mi Pedido) */}
+      {/* 7. Barra Móvil Inferior (Home, Menú, Búsqueda, Favoritos y Mi Pedido) */}
       <MobileNavBar
         cart={cart}
         onOpenCart={handleOpenCart}
         onOpenMobileMenu={() => setIsMobileMenuOpen(true)}
+        favoritesCount={favorites.length}
+        showFavoritesOnly={showFavoritesOnly}
+        onToggleFavorites={handleToggleFavoritesFilter}
         onToggleSearch={() => {
           if (isDishDetailPage) {
             navigate('/');

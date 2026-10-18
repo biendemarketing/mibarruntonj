@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Plus, Minus } from 'lucide-react';
+import { Plus, Minus, Heart } from 'lucide-react';
 import { PlateIcon } from './Icons';
 
 export function ProductCard({
@@ -10,7 +10,9 @@ export function ProductCard({
   onUpdateQuantity,
   onOpenDetail,
   viewMode = 'grid',
-  index = 0
+  index = 0,
+  isFavorite = false,
+  onToggleFavorite
 }) {
   const hasPhoto = dish.hasImage(photoMode);
   const currentImage = dish.getResolvedImage ? dish.getResolvedImage(photoMode) : dish.getImage(photoMode);
@@ -82,7 +84,23 @@ export function ProductCard({
         {/* Contenido a la derecha */}
         <div className="compact-content">
           <div className="compact-header">
-            <h3 className="compact-title">{dish.name}</h3>
+            <div className="compact-title-row">
+              <h3 className="compact-title">{dish.name}</h3>
+              {onToggleFavorite && (
+                <button
+                  type="button"
+                  className={`card-fav-btn ${isFavorite ? 'is-fav' : ''}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onToggleFavorite(dish.id);
+                  }}
+                  aria-label={isFavorite ? `Quitar ${dish.name} de favoritos` : `Guardar ${dish.name} en favoritos`}
+                  title={isFavorite ? 'En tus favoritos' : 'Guardar en favoritos'}
+                >
+                  <Heart size={16} fill={isFavorite ? 'var(--rojo)' : 'none'} color={isFavorite ? 'var(--rojo)' : 'currentColor'} />
+                </button>
+              )}
+            </div>
             {dish.nameEn && (
               <p className="compact-en">{dish.nameEn}</p>
             )}
@@ -119,7 +137,7 @@ export function ProductCard({
               <button
                 type="button"
                 className="compact-add-btn"
-                onClick={() => onAddToCart(dish)}
+                onClick={(e) => onAddToCart(dish, e)}
                 title="Agregar a mi pedido"
                 aria-label={`Agregar ${dish.name}`}
               >
@@ -143,12 +161,12 @@ export function ProductCard({
       style={{ transitionDelay: staggerDelay }}
     >
       {/* Zona Superior: Imagen en alta calidad o placeholder gris con icono de plato */}
-      {hasPhoto && currentImage ? (
-        <div
-          className="product-card-image-wrap"
-          onClick={() => onOpenDetail(dish)}
-          title="Ver detalle del plato"
-        >
+      <div
+        className={`product-card-image-wrap ${!hasPhoto || !currentImage ? 'product-card-placeholder' : ''}`}
+        onClick={() => onOpenDetail(dish)}
+        title="Ver detalle del plato"
+      >
+        {hasPhoto && currentImage ? (
           <img
             src={currentImage}
             alt={`${dish.name} — Comida criolla peruana en Mi Barrunto`}
@@ -156,18 +174,28 @@ export function ProductCard({
             loading="lazy"
             decoding="async"
           />
-        </div>
-      ) : (
-        <div
-          className="product-card-image-wrap product-card-placeholder"
-          onClick={() => onOpenDetail(dish)}
-          title="Ver detalle del plato"
-        >
+        ) : (
           <div className="product-placeholder-icon-wrap">
             <PlateIcon size={44} className="product-placeholder-icon" />
           </div>
-        </div>
-      )}
+        )}
+
+        {/* Botón flotante de favoritos en la foto de la card */}
+        {onToggleFavorite && (
+          <button
+            type="button"
+            className={`card-fav-btn card-fav-btn-grid ${isFavorite ? 'is-fav' : ''}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleFavorite(dish.id);
+            }}
+            aria-label={isFavorite ? `Quitar ${dish.name} de favoritos` : `Guardar ${dish.name} en favoritos`}
+            title={isFavorite ? 'En tus favoritos' : 'Guardar en favoritos'}
+          >
+            <Heart size={18} fill={isFavorite ? 'var(--rojo)' : 'none'} color={isFavorite ? 'var(--rojo)' : '#ffffff'} />
+          </button>
+        )}
+      </div>
 
       {/* Cuerpo de la tarjeta: Título y descripción */}
       <div
@@ -216,7 +244,7 @@ export function ProductCard({
             className="btn-add-cart"
             onClick={(e) => {
               e.stopPropagation();
-              onAddToCart(dish);
+              onAddToCart(dish, e);
             }}
             title="Agregar a mi pedido"
             aria-label={`Agregar ${dish.name}`}

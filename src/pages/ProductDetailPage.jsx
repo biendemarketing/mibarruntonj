@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
   ArrowLeft, Plus, Minus, ShoppingCart, Share2, 
-  Check, ChevronLeft, ChevronRight, Utensils
+  Check, ChevronLeft, ChevronRight, Utensils, Heart
 } from 'lucide-react';
 import { PlateIcon } from '../components/Icons';
 import { menuRepository } from '../services/MenuRepository';
@@ -15,7 +15,9 @@ export function ProductDetailPage({
   onAddToCart,
   onUpdateQuantity,
   onOpenCart,
-  onBack
+  onBack,
+  isFavorite = false,
+  onToggleFavorite
 }) {
   const { id: paramId } = useParams();
   const navigate = useNavigate();
@@ -213,14 +215,14 @@ export function ProductDetailPage({
     }
   };
 
-  const handleMainAddToCart = () => {
+  const handleMainAddToCart = (e) => {
     triggerHaptic(20);
     // 1. Agregar plato principal
-    onAddToCart(dish, quantity, note);
+    onAddToCart(dish, quantity, note, e);
 
     // 2. Agregar cada acompañamiento seleccionado
     for (const item of selectedAccompanimentsList) {
-      onAddToCart(item, item.qty, '');
+      onAddToCart(item, item.qty, '', e);
     }
 
     const addedItemsSummary = selectedAccompanimentsList
@@ -238,9 +240,9 @@ export function ProductDetailPage({
     setSelectedAccompaniments({});
   };
 
-  const handleQuickAddRelated = (targetDish) => {
+  const handleQuickAddRelated = (targetDish, e) => {
     triggerHaptic(15);
-    onAddToCart(targetDish, 1, '');
+    onAddToCart(targetDish, 1, '', e);
     setAddedToast(`¡${targetDish.name} agregado a tu pedido!`);
     setTimeout(() => setAddedToast(''), 2500);
   };
@@ -335,6 +337,23 @@ export function ProductDetailPage({
           >
             {copiedShare ? <Check size={19} /> : <Share2 size={19} />}
           </button>
+
+          {/* Botón Favoritos: Solo icono */}
+          {onToggleFavorite && (
+            <button
+              type="button"
+              className={`product-page-top-fav-btn ${isFavorite ? 'is-fav' : ''}`}
+              onClick={() => onToggleFavorite(dish.id)}
+              aria-label={isFavorite ? 'Quitar de favoritos' : 'Guardar en favoritos'}
+              title={isFavorite ? 'En tus favoritos' : 'Guardar en favoritos'}
+            >
+              <Heart
+                size={19}
+                fill={isFavorite ? 'var(--rojo)' : 'none'}
+                color={isFavorite ? 'var(--rojo)' : 'currentColor'}
+              />
+            </button>
+          )}
         </div>
 
         {/* Flechas de navegación entre platos a la derecha */}
@@ -689,7 +708,7 @@ export function ProductDetailPage({
                         <button
                           type="button"
                           className="editorial-card-btn-2col"
-                          onClick={() => handleQuickAddRelated(relDish)}
+                          onClick={(e) => handleQuickAddRelated(relDish, e)}
                           title={`Agregar ${relDish.name} al pedido`}
                         >
                           <Plus size={14} />

@@ -28,17 +28,25 @@ export class WhatsAppService {
     const now = new Date();
     const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
     const dateStr = now.toLocaleDateString('es-US', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    const customer = cart.customer;
 
     let msg = `PEDIDO - CEVICHERIA MI BARRUNTO\n`;
     msg += `----------------------------------------\n`;
     msg += `Hora del pedido: ${timeStr} | Fecha: ${dateStr}\n`;
     
-    if (customer.name && customer.name.trim()) {
+    if (customer && customer.name && customer.name.trim()) {
       msg += `Cliente: ${customer.name.trim()}\n`;
     }
     
-    msg += `Modalidad: ${customer.getOrderTypeDisplay()}\n`;
-    msg += `Metodo de pago: ${customer.getPaymentDisplay()}\n`;
+    if (customer) {
+      msg += `Modalidad: ${customer.getOrderTypeDisplay()}\n`;
+      if (customer.orderType === 'mesa' && customer.table) {
+        msg += `Numero de Mesa: ${customer.table}\n`;
+      } else if (customer.orderType === 'delivery' && customer.address) {
+        msg += `Direccion de Entrega: ${customer.address}\n`;
+      }
+      msg += `Metodo de pago: ${customer.getPaymentDisplay()}\n`;
+    }
     
     msg += `----------------------------------------\n`;
     msg += `DETALLE DEL PEDIDO:\n`;
