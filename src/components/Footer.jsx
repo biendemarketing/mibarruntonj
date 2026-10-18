@@ -42,7 +42,8 @@ export function Footer({ photoMode = 'curated', onTogglePhotoMode, onOpenTvMode 
 
         {/* Redes y Plataformas de Delivery */}
         <div className="footer-actions-row">
-          <div className="footer-delivery-pills">
+          {/* Botones de Utilidad: Fotos, Modo TV, Imprimir, Descargar PDF */}
+          <div className="footer-tools-pills">
             {/* Botón Alternar Versión de Fotos (Solo Icono, Sin Fondo, al lado de Imprimir) */}
             <button
               type="button"
@@ -95,29 +96,9 @@ export function Footer({ photoMode = 'curated', onTogglePhotoMode, onOpenTvMode 
             >
               <Download size={18} />
             </a>
-
-            <a
-              href="https://www.doordash.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="footer-pill-btn"
-              title="Pedir en DoorDash"
-            >
-              <DoorDashIcon size={18} />
-              <span>DoorDash</span>
-            </a>
-            <a
-              href="https://www.ubereats.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="footer-pill-btn"
-              title="Pedir en Uber Eats"
-            >
-              <UberEatsIcon size={18} />
-              <span>Uber Eats</span>
-            </a>
           </div>
 
+          {/* Redes Sociales Oficiales */}
           <div className="footer-social-icons-group">
             <a
               href="https://www.facebook.com/cebicheriamibarrunto"
@@ -148,6 +129,30 @@ export function Footer({ photoMode = 'curated', onTogglePhotoMode, onOpenTvMode 
               title="WhatsApp: (973) 653-3749"
             >
               <WhatsAppIcon size={16} />
+            </a>
+          </div>
+
+          {/* Plataformas de Delivery: DoorDash y Uber Eats (En móvil en otra línea más abajo) */}
+          <div className="footer-delivery-pills">
+            <a
+              href="https://www.doordash.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="footer-pill-btn"
+              title="Pedir en DoorDash"
+            >
+              <DoorDashIcon size={18} />
+              <span>DoorDash</span>
+            </a>
+            <a
+              href="https://www.ubereats.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="footer-pill-btn"
+              title="Pedir en Uber Eats"
+            >
+              <UberEatsIcon size={18} />
+              <span>Uber Eats</span>
             </a>
           </div>
         </div>

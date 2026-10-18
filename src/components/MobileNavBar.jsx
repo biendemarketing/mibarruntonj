@@ -29,12 +29,12 @@ export function MobileNavBar({
           const currentScrollY = window.scrollY;
 
           // Cerca de la cima de la página siempre tamaño normal
-          if (currentScrollY <= 40) {
+          if (currentScrollY <= 60) {
             setIsCompact(false);
-          } else if (currentScrollY > lastScrollY + 8) {
+          } else if (currentScrollY > lastScrollY + 14) {
             // Scroll hacia abajo -> modo compacto
             setIsCompact(true);
-          } else if (currentScrollY < lastScrollY - 8) {
+          } else if (currentScrollY < lastScrollY - 14) {
             // Scroll hacia arriba -> tamaño normal
             setIsCompact(false);
           }
