@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
-  ArrowLeft, Plus, Minus, ShoppingBag, ShoppingCart, Share2, 
-  Check, ChevronLeft, ChevronRight, Sparkles, Utensils
+  ArrowLeft, Plus, Minus, ShoppingCart, Share2, 
+  Check, ChevronLeft, ChevronRight, Utensils
 } from 'lucide-react';
 import { PlateIcon } from '../components/Icons';
 import { menuRepository } from '../services/MenuRepository';
@@ -112,7 +112,6 @@ export function ProductDetailPage({
   const accompaniments = useMemo(() => {
     if (!dish) return [];
     
-    // IDs de bebidas auténticas y postres caseros de alta demanda
     let targetIds;
     if (dish.category === 'bebidas') {
       targetIds = [240, 241, 242, 243, 247, 248, 170, 71];
@@ -255,15 +254,11 @@ export function ProductDetailPage({
     carouselRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
   };
 
-  const handleBackToCatalog = () => {
-    triggerHaptic(10);
-    if (onBack) {
-      onBack();
-    } else if (window.history.length > 1) {
-      navigate(-1);
-    } else {
-      navigate('/');
-    }
+  // Botón volver a la carta conecta directamente al Home (/)
+  const handleBackToHome = () => {
+    triggerHaptic(12);
+    navigate('/');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   if (!dish) {
@@ -274,11 +269,11 @@ export function ProductDetailPage({
           <p>El plato seleccionado no está disponible en la carta actual.</p>
           <button
             type="button"
-            className="product-page-back-btn"
-            onClick={() => navigate('/')}
+            className="product-page-back-arrow-btn"
+            onClick={handleBackToHome}
+            aria-label="Volver a la carta principal"
           >
-            <ArrowLeft size={18} />
-            <span>Volver a la Carta Principal</span>
+            <ArrowLeft size={22} color="var(--rojo)" strokeWidth={2.6} />
           </button>
         </div>
       </div>
@@ -292,71 +287,70 @@ export function ProductDetailPage({
 
   return (
     <div className="product-page-container">
-      {/* 1. Barra Superior Autónoma y Minimalista */}
+      {/* 1. Barra Superior: Flecha Roja al Home al lado de Mi Pedido (solo iconos, sin texto) */}
       <div className="product-page-top-bar">
-        <button
-          type="button"
-          className="product-page-back-btn"
-          onClick={handleBackToCatalog}
-          aria-label="Volver a la carta"
-        >
-          <ArrowLeft size={18} />
-          <span>Volver a la Carta</span>
-        </button>
-
-        <div className="product-page-top-actions">
-          {/* Botón Mi Pedido rápido con contador */}
+        <div className="product-page-top-nav-group">
+          {/* Botón Volver a la Carta: Solo Flecha Roja que conecta directamente a Home */}
           <button
             type="button"
-            className={`product-page-top-cart-btn ${cartTotalCount > 0 ? 'has-items' : ''}`}
-            onClick={onOpenCart}
-            aria-label="Abrir mi pedido"
-            title="Abrir mi pedido"
+            className="product-page-back-arrow-btn"
+            onClick={handleBackToHome}
+            aria-label="Volver a la carta principal"
+            title="Volver a la carta principal"
           >
-            <ShoppingBag size={17} />
-            <span className="product-page-top-cart-text">Mi Pedido</span>
+            <ArrowLeft size={22} color="var(--rojo)" strokeWidth={2.6} />
+          </button>
+
+          {/* Botón Mi Pedido: Al lado de la flecha roja, solo icono de carrito */}
+          <button
+            type="button"
+            className={`product-page-top-cart-icon-btn ${cartTotalCount > 0 ? 'has-items' : ''}`}
+            onClick={onOpenCart}
+            aria-label="Ver mi pedido"
+            title="Ver mi pedido"
+          >
+            <ShoppingCart size={20} />
             {cartTotalCount > 0 && (
               <span className="product-page-top-cart-badge">{cartTotalCount}</span>
             )}
           </button>
 
-          {/* Botón Compartir con soporte Open Graph */}
+          {/* Botón Compartir: Solo icono */}
           <button
             type="button"
-            className={`product-page-share-btn ${copiedShare ? 'copied' : ''}`}
+            className={`product-page-top-share-icon-btn ${copiedShare ? 'copied' : ''}`}
             onClick={handleShare}
             aria-label="Compartir este plato"
             title="Compartir este plato"
           >
-            {copiedShare ? <Check size={16} /> : <Share2 size={16} />}
-            <span>{copiedShare ? '¡Enlace Copiado!' : 'Compartir'}</span>
+            {copiedShare ? <Check size={19} /> : <Share2 size={19} />}
           </button>
+        </div>
 
-          {/* Navegación anterior / siguiente entre platos */}
-          <div className="product-page-stepper-nav">
-            {prevDish && (
-              <button
-                type="button"
-                className="product-page-nav-arrow"
-                onClick={() => handleNavigateDish(prevDish)}
-                title={`Anterior: ${prevDish.name}`}
-                aria-label="Plato anterior"
-              >
-                <ChevronLeft size={18} />
-              </button>
-            )}
-            {nextDish && (
-              <button
-                type="button"
-                className="product-page-nav-arrow"
-                onClick={() => handleNavigateDish(nextDish)}
-                title={`Siguiente: ${nextDish.name}`}
-                aria-label="Siguiente plato"
-              >
-                <ChevronRight size={18} />
-              </button>
-            )}
-          </div>
+        {/* Flechas de navegación entre platos a la derecha */}
+        <div className="product-page-stepper-nav">
+          {prevDish && (
+            <button
+              type="button"
+              className="product-page-nav-arrow"
+              onClick={() => handleNavigateDish(prevDish)}
+              title={`Anterior: ${prevDish.name}`}
+              aria-label="Plato anterior"
+            >
+              <ChevronLeft size={18} />
+            </button>
+          )}
+          {nextDish && (
+            <button
+              type="button"
+              className="product-page-nav-arrow"
+              onClick={() => handleNavigateDish(nextDish)}
+              title={`Siguiente: ${nextDish.name}`}
+              aria-label="Siguiente plato"
+            >
+              <ChevronRight size={18} />
+            </button>
+          )}
         </div>
       </div>
 
@@ -448,7 +442,7 @@ export function ProductDetailPage({
             />
           </div>
 
-          {/* Resumen de Inversión y Botón de Agregar Todo al Pedido */}
+          {/* Resumen de Inversión y Botón de Ordenar */}
           <div className="product-page-action-box">
             {totalSelectedAccompanimentsCount > 0 && (
               <div className="product-page-combined-breakdown">
@@ -463,36 +457,30 @@ export function ProductDetailPage({
               </div>
             )}
 
+            {/* Botón Ordenar con Icono de Carrito y Total */}
             <button
               type="button"
               className="product-page-add-btn"
               onClick={handleMainAddToCart}
             >
               <ShoppingCart size={20} />
-              <span>
-                {totalSelectedAccompanimentsCount > 0
-                  ? `Agregar Todo a Mi Pedido (${1 + totalSelectedAccompanimentsCount})`
-                  : isDishInCart
-                    ? 'Actualizar en Mi Pedido'
-                    : 'Agregar a Mi Pedido'}
-              </span>
+              <span>Ordenar</span>
               <span className="product-page-add-total">${grandTotal.toFixed(2)}</span>
             </button>
           </div>
         </div>
       </div>
 
-      {/* 3. Sección: Acompáñalo con (Carrusel Dinámico de Bebidas & Postres con Imagen Circular) */}
+      {/* 3. Sección: Acompáñalo con (Sin fondo en las cards, clic directo en la foto para añadir) */}
       {accompaniments.length > 0 && (
         <section className="product-page-section">
           <div className="product-page-section-header">
             <div className="product-page-section-title-wrap">
-              <Sparkles size={20} className="product-page-section-icon" />
               <h2 className="product-page-section-title">Acompáñalo con</h2>
             </div>
             <div className="product-page-section-sub-row">
               <span className="product-page-section-sub">
-                Bebidas y postres peruanos para complementar tu plato. Selecciona varios y se sumarán a tu pedido.
+                Toca la foto para añadir bebidas y postres tradicionales a tu pedido
               </span>
               <div className="product-page-carousel-controls">
                 <button
@@ -526,10 +514,22 @@ export function ProductDetailPage({
               return (
                 <div
                   key={accItem.id}
-                  className={`accompaniment-circular-card ${isSelected ? 'is-selected' : ''}`}
+                  className={`accompaniment-circular-card-clean ${isSelected ? 'is-selected' : ''}`}
                 >
-                  {/* Imagen Circular */}
-                  <div className="accompaniment-circle-avatar-wrap">
+                  {/* Foto Circular: Clic directo para añadir / incrementar */}
+                  <div
+                    className="accompaniment-circle-avatar-wrap clickable-avatar"
+                    onClick={() => handleToggleAccompaniment(accItem, 1)}
+                    title={`Toca para añadir ${accItem.name}`}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        handleToggleAccompaniment(accItem, 1);
+                      }
+                    }}
+                  >
                     {accHasPhoto && accImage ? (
                       <img
                         src={accImage}
@@ -551,13 +551,18 @@ export function ProductDetailPage({
 
                   {/* Nombre y Precio */}
                   <div className="accompaniment-circle-meta">
-                    <h4 className="accompaniment-circle-name">{accItem.name}</h4>
+                    <h4 
+                      className="accompaniment-circle-name"
+                      onClick={() => handleToggleAccompaniment(accItem, 1)}
+                    >
+                      {accItem.name}
+                    </h4>
                     <span className="accompaniment-circle-price">{accItem.getFormattedPrice()}</span>
                   </div>
 
-                  {/* Controles de Selección Directa (Poner / Quitar) */}
-                  <div className="accompaniment-circle-actions">
-                    {isSelected ? (
+                  {/* Stepper para quitar o sumar si ya está seleccionado */}
+                  {isSelected && (
+                    <div className="accompaniment-circle-actions">
                       <div className="accompaniment-stepper">
                         <button
                           type="button"
@@ -577,18 +582,8 @@ export function ProductDetailPage({
                           <Plus size={13} />
                         </button>
                       </div>
-                    ) : (
-                      <button
-                        type="button"
-                        className="accompaniment-add-pill-btn"
-                        onClick={() => handleToggleAccompaniment(accItem, 1)}
-                        aria-label={`Añadir ${accItem.name}`}
-                      >
-                        <Plus size={14} />
-                        <span>Añadir</span>
-                      </button>
-                    )}
-                  </div>
+                    </div>
+                  )}
                 </div>
               );
             })}
@@ -596,14 +591,14 @@ export function ProductDetailPage({
         </section>
       )}
 
-      {/* 4. Sección: Más especialidades de la Categoría con Nuevo Diseño Editorial de Card */}
+      {/* 4. Sección: Más especialidades de la Categoría en 2 Columnas */}
       {relatedDishes.length > 0 && (
         <section className="product-page-section">
           <div className="product-page-section-header">
             <div className="product-page-section-title-wrap">
               <Utensils size={20} className="product-page-section-icon" />
               <h2 className="product-page-section-title">
-                Más especialidades de {dish.categoryName || dish.category}
+                Más {dish.categoryName || dish.category} y especialidades
               </h2>
             </div>
             <span className="product-page-section-sub">
@@ -611,7 +606,7 @@ export function ProductDetailPage({
             </span>
           </div>
 
-          <div className="product-page-editorial-grid">
+          <div className="product-page-editorial-grid-2col">
             {relatedDishes.map((relDish) => {
               const relHasPhoto = relDish.hasImage(photoMode);
               const relImage = relDish.getResolvedImage ? relDish.getResolvedImage(photoMode) : relDish.getImage(photoMode);
@@ -619,11 +614,11 @@ export function ProductDetailPage({
               return (
                 <article
                   key={relDish.id}
-                  className="product-page-editorial-card"
+                  className="product-page-editorial-card-2col"
                   onClick={() => handleNavigateDish(relDish)}
                   title={`Ver detalle de ${relDish.name}`}
                 >
-                  <div className="editorial-card-media">
+                  <div className="editorial-card-media-2col">
                     {relHasPhoto && relImage ? (
                       <img
                         src={relImage}
@@ -633,31 +628,31 @@ export function ProductDetailPage({
                       />
                     ) : (
                       <div className="editorial-card-placeholder">
-                        <PlateIcon size={36} />
+                        <PlateIcon size={32} />
                       </div>
                     )}
-                    <span className="editorial-card-tag">
+                    <span className="editorial-card-tag-2col">
                       {relDish.categoryName || relDish.category}
                     </span>
                   </div>
 
-                  <div className="editorial-card-content">
-                    <h3 className="editorial-card-title">{relDish.name}</h3>
+                  <div className="editorial-card-content-2col">
+                    <h3 className="editorial-card-title-2col">{relDish.name}</h3>
                     {relDish.nameEn && (
-                      <p className="editorial-card-desc">{relDish.nameEn}</p>
+                      <p className="editorial-card-desc-2col">{relDish.nameEn}</p>
                     )}
-                    <div className="editorial-card-footer">
-                      <span className="editorial-card-price">{relDish.getFormattedPrice()}</span>
+                    <div className="editorial-card-footer-2col">
+                      <span className="editorial-card-price-2col">{relDish.getFormattedPrice()}</span>
                       <button
                         type="button"
-                        className="editorial-card-btn"
+                        className="editorial-card-btn-2col"
                         onClick={(e) => {
                           e.stopPropagation();
                           handleQuickAddRelated(relDish);
                         }}
                         title={`Agregar ${relDish.name} al pedido`}
                       >
-                        <Plus size={15} />
+                        <Plus size={14} />
                         <span>Añadir</span>
                       </button>
                     </div>

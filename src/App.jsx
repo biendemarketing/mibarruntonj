@@ -577,21 +577,30 @@ export function App() {
         <Footer photoMode={photoMode} onTogglePhotoMode={handleTogglePhotoMode} />
       )}
 
-      {/* 7. Barra Móvil Inferior (Menú, Búsqueda, Mi Pedido y WhatsApp) (Oculto en vista detalle) */}
-      {!isDishDetailPage && (
-        <MobileNavBar
-          cart={cart}
-          onOpenCart={handleOpenCart}
-          onOpenMobileMenu={() => setIsMobileMenuOpen(true)}
-          onToggleSearch={() => {
-            const input = document.querySelector('.mobile-search-input') || document.querySelector('.header-search-input');
-            if (input) {
-              input.scrollIntoView({ behavior: 'smooth', block: 'center' });
-              setTimeout(() => input.focus(), 250);
-            }
-          }}
-        />
-      )}
+      {/* 7. Barra Móvil Inferior (Home, Menú, Búsqueda, WhatsApp y Mi Pedido) */}
+      <MobileNavBar
+        cart={cart}
+        onOpenCart={handleOpenCart}
+        onOpenMobileMenu={() => setIsMobileMenuOpen(true)}
+        onToggleSearch={() => {
+          if (isDishDetailPage) {
+            navigate('/');
+            setTimeout(() => {
+              const input = document.querySelector('.mobile-search-input') || document.querySelector('.header-search-input');
+              if (input) {
+                input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                input.focus();
+              }
+            }, 100);
+            return;
+          }
+          const input = document.querySelector('.mobile-search-input') || document.querySelector('.header-search-input');
+          if (input) {
+            input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            setTimeout(() => input.focus(), 250);
+          }
+        }}
+      />
 
       {/* 8. Carrito y Envío a WhatsApp */}
       <CartDrawer

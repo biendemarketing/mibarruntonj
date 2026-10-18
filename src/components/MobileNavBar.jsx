@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, Search, ShoppingCart } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { Home, Menu, Search, ShoppingCart } from 'lucide-react';
 import { WhatsAppIcon } from './Icons';
+import { triggerHaptic } from '../utils/haptics';
 
 export function MobileNavBar({
   cart,
@@ -8,8 +10,11 @@ export function MobileNavBar({
   onOpenMobileMenu,
   onToggleSearch
 }) {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [isCompact, setIsCompact] = useState(false);
   const totalCount = cart.getTotalCount();
+  const isHome = location.pathname === '/' || location.pathname.startsWith('/categoria/');
 
   // Detección de scroll estilo Apple (Safari iOS): compacto al bajar, normal al subir
   useEffect(() => {
@@ -51,11 +56,27 @@ export function MobileNavBar({
     );
   };
 
+  const handleHomeClick = () => {
+    triggerHaptic(12);
+    navigate('/');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <nav
       className={`mobile-nav-bar ${isCompact ? 'mobile-nav-bar-compact' : ''}`}
       aria-label="Navegación móvil"
     >
+      {/* 0. Home / Inicio al final de la izquierda */}
+      <button
+        type="button"
+        className={`mobile-nav-btn ${isHome ? 'active' : ''}`}
+        onClick={handleHomeClick}
+        aria-label="Ir al inicio de la carta"
+        title="Inicio"
+      >
+        <Home size={22} />
+      </button>
       {/* 1. Menú / Categorías */}
       <button
         type="button"
