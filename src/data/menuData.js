@@ -2946,9 +2946,9 @@ export const DISHES_DATA = [
     "priceDisplay": "$6.99",
     "category": "bebidas",
     "subcategory": "",
-    "image": null,
-    "hasPhoto": false,
-    "platosImage": "platos/inca_kola_2l.webp"
+    "image": "fotos/238-inca-kola-2l.webp",
+    "hasPhoto": true,
+    "platosImage": "./platos_webp/inca_kola_2l.webp"
   },
   {
     "id": 239,
@@ -2971,9 +2971,9 @@ export const DISHES_DATA = [
     "priceDisplay": "$7.99",
     "category": "postres",
     "subcategory": "",
-    "image": null,
-    "platosImage": "platos/crema_volteada.webp",
-    "hasPhoto": false
+    "image": "fotos/240-crema-volteada.webp",
+    "platosImage": "./platos_webp/crema_volteada.webp",
+    "hasPhoto": true
   },
   {
     "id": 241,
@@ -2984,9 +2984,9 @@ export const DISHES_DATA = [
     "priceDisplay": "$7.99",
     "category": "postres",
     "subcategory": "",
-    "image": null,
-    "platosImage": "platos/tres_leches.webp",
-    "hasPhoto": false
+    "image": "fotos/241-tres-leches.webp",
+    "platosImage": "./platos_webp/tres_leches.webp",
+    "hasPhoto": true
   },
   {
     "id": 242,
@@ -2997,9 +2997,9 @@ export const DISHES_DATA = [
     "priceDisplay": "$7.99",
     "category": "postres",
     "subcategory": "",
-    "image": null,
-    "platosImage": "platos/torta_chocolate.webp",
-    "hasPhoto": false
+    "image": "fotos/242-torta-de-chocolate.webp",
+    "platosImage": "./platos_webp/torta_chocolate.webp",
+    "hasPhoto": true
   },
   {
     "id": 243,
@@ -3010,9 +3010,9 @@ export const DISHES_DATA = [
     "priceDisplay": "$8.99",
     "category": "postres",
     "subcategory": "",
-    "image": null,
-    "platosImage": "platos/picarones.webp",
-    "hasPhoto": false
+    "image": "fotos/243-picarones.webp",
+    "platosImage": "./platos_webp/picarones.webp",
+    "hasPhoto": true
   },
   {
     "id": 244,
@@ -3023,9 +3023,9 @@ export const DISHES_DATA = [
     "priceDisplay": "$7.99",
     "category": "postres",
     "subcategory": "",
-    "image": null,
-    "platosImage": "platos/tiramisu.webp",
-    "hasPhoto": false
+    "image": "fotos/244-tiramisu.webp",
+    "platosImage": "./platos_webp/tiramisu.webp",
+    "hasPhoto": true
   },
   {
     "id": 245,
@@ -3036,9 +3036,9 @@ export const DISHES_DATA = [
     "priceDisplay": "$4.99",
     "category": "postres",
     "subcategory": "",
-    "image": null,
-    "platosImage": "platos/gelatina_sola.webp",
-    "hasPhoto": false
+    "image": "fotos/245-gelatina-sola.webp",
+    "platosImage": "./platos_webp/gelatina_sola.webp",
+    "hasPhoto": true
   },
   {
     "id": 246,
@@ -3049,9 +3049,9 @@ export const DISHES_DATA = [
     "priceDisplay": "$4.99",
     "category": "postres",
     "subcategory": "",
-    "image": null,
-    "platosImage": "platos/gelatina_con_flan.webp",
-    "hasPhoto": false
+    "image": "fotos/246-gelatina-con-flan.webp",
+    "platosImage": "./platos_webp/gelatina_con_flan.webp",
+    "hasPhoto": true
   },
   {
     "id": 247,
@@ -3062,9 +3062,9 @@ export const DISHES_DATA = [
     "priceDisplay": "$4.99",
     "category": "postres",
     "subcategory": "",
-    "image": null,
-    "platosImage": "platos/mazamorra_morada.webp",
-    "hasPhoto": false
+    "image": "fotos/247-mazamorra-morada.webp",
+    "platosImage": "./platos_webp/mazamorra_morada.webp",
+    "hasPhoto": true
   },
   {
     "id": 248,
@@ -3075,9 +3075,9 @@ export const DISHES_DATA = [
     "priceDisplay": "$4.99",
     "category": "postres",
     "subcategory": "",
-    "image": null,
-    "platosImage": "platos/arroz_con_leche.webp",
-    "hasPhoto": false
+    "image": "fotos/248-arroz-con-leche.webp",
+    "platosImage": "./platos_webp/arroz_con_leche.webp",
+    "hasPhoto": true
   },
   {
     "id": 249,
@@ -3089,7 +3089,7 @@ export const DISHES_DATA = [
     "category": "batidos",
     "subcategory": "Batidos y Jugos",
     "image": "fotos/238-jugo-de-naranja.jpg",
-    "platosImage": "platos/jugo_de_naranja.webp",
+    "platosImage": "./platos_webp/jugo_de_naranja.webp",
     "hasPhoto": true
   }
 ];
