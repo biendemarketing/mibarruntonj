@@ -5,12 +5,48 @@ export function CategoryPills({
   categories,
   selectedCategory,
   onSelectCategory,
+  activeScrollCategory = null,
   showFavoritesOnly = false,
   onToggleFavorites,
   viewMode = 'grid',
   onToggleViewMode,
   onSetViewMode
 }) {
+  // Auto-scroll del botón activo dentro del contenedor del sidebar
+  React.useEffect(() => {
+    if (activeScrollCategory) {
+      const activeBtn = document.getElementById(`cat-btn-${activeScrollCategory}`);
+      if (activeBtn) {
+        activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+  }, [activeScrollCategory]);
+
+  const handleCategoryClick = (catId) => {
+    if (showFavoritesOnly && onToggleFavorites) onToggleFavorites();
+
+    // Si estamos en Toda la Carta, hacer scroll suave directo a la sección
+    if (selectedCategory === 'todos') {
+      if (catId === 'todos') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+      const sectionEl = document.getElementById(catId);
+      if (sectionEl) {
+        const headerOffset = 110;
+        const elementPosition = sectionEl.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+        return;
+      }
+    }
+
+    onSelectCategory(catId);
+  };
+
   return (
     <aside className="categories-sidebar-nav" aria-label="Categorías de la carta">
       {/* Encabezado visible únicamente en el Sidebar de Escritorio */}
@@ -58,11 +94,8 @@ export function CategoryPills({
         {/* Opción "Toda la Carta" */}
         <button
           type="button"
-          className={`category-nav-item ${selectedCategory === 'todos' && !showFavoritesOnly ? 'active' : ''}`}
-          onClick={() => {
-            if (showFavoritesOnly && onToggleFavorites) onToggleFavorites();
-            onSelectCategory('todos');
-          }}
+          className={`category-nav-item ${(selectedCategory === 'todos' && !activeScrollCategory && !showFavoritesOnly) ? 'active' : ''}`}
+          onClick={() => handleCategoryClick('todos')}
         >
           <span className="category-nav-name">Toda la Carta</span>
           <span className="category-nav-indicator" />
@@ -70,17 +103,17 @@ export function CategoryPills({
 
         {/* Cada una de las categorías */}
         {categories.map((cat) => {
-          const isActive = selectedCategory === cat.id && !showFavoritesOnly;
+          const isCurrentActive =
+            (selectedCategory === 'todos' && activeScrollCategory === cat.id && !showFavoritesOnly) ||
+            (selectedCategory === cat.id && !showFavoritesOnly);
 
           return (
             <button
               key={cat.id}
+              id={`cat-btn-${cat.id}`}
               type="button"
-              className={`category-nav-item ${isActive ? 'active' : ''}`}
-              onClick={() => {
-                if (showFavoritesOnly && onToggleFavorites) onToggleFavorites();
-                onSelectCategory(cat.id);
-              }}
+              className={`category-nav-item ${isCurrentActive ? 'active' : ''}`}
+              onClick={() => handleCategoryClick(cat.id)}
             >
               <span className="category-nav-name">{cat.name}</span>
               {cat.nameEn && <span className="category-nav-sub">{cat.nameEn}</span>}

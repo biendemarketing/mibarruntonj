@@ -202,6 +202,37 @@ export function App() {
     }
   });
 
+  const [activeScrollCategory, setActiveScrollCategory] = useState(null);
+
+  // ScrollSpy para destacar la categoría activa en el sidebar al hacer scroll en Toda la Carta
+  useEffect(() => {
+    if (selectedCategory !== 'todos' || showFavoritesOnly || isDishDetailPage || searchQuery.trim()) {
+      setActiveScrollCategory(null);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveScrollCategory(entry.target.id);
+          }
+        });
+      },
+      {
+        rootMargin: '-100px 0px -65% 0px',
+        threshold: 0
+      }
+    );
+
+    categories.forEach((cat) => {
+      const el = document.getElementById(cat.id);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, [selectedCategory, showFavoritesOnly, isDishDetailPage, searchQuery, categories]);
+
   // Sincronización de rutas del navegador (Browser Routing con URLs reales)
   useEffect(() => {
     const path = location.pathname;
@@ -567,6 +598,7 @@ export function App() {
           <CategoryPills
             categories={categories}
             selectedCategory={searchQuery.trim() ? 'todos' : selectedCategory}
+            activeScrollCategory={activeScrollCategory}
             onSelectCategory={handleSelectCategory}
             favoritesCount={favorites.length}
             showFavoritesOnly={showFavoritesOnly}
