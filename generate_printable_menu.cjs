@@ -389,17 +389,8 @@ function renderPage2() {
           </div>
         </div>
 
-        <!-- Columna Lateral: Historia y Sellos -->
+        <!-- Columna Lateral: Información de Servicio -->
         <div class="toc-side-cards">
-          <div class="toc-side-card">
-            <div class="toc-scard-icon">${SVG_ICONS.star}</div>
-            <h3 class="toc-scard-title">NUESTRA HISTORIA</h3>
-            <p class="toc-scard-text">
-              Fundado con la auténtica pasión del barrio victoriano de Lima, <strong>Mi Barrunto</strong> traslada 
-              a Paterson el respeto por las recetas tradicionales: el pescado más fresco y el fuego del wok.
-            </p>
-          </div>
-
           <div class="toc-side-card">
             <div class="toc-scard-icon">${SVG_ICONS.utensils}</div>
             <h3 class="toc-scard-title">ATENCIÓN &amp; RESERVAS</h3>
@@ -797,10 +788,6 @@ function renderPage10() {
       </div>
 
       <h2 class="backcover-title">¡GRACIAS POR SU PREFERENCIA!</h2>
-      <p class="backcover-lead">
-        En <strong>Mi Barrunto</strong> nos apasiona compartir el verdadero sabor, la calidez y el alma 
-        de la gastronomía peruana. Cada receta rinde homenaje a nuestras raíces y a los barrios tradicionales de Lima.
-      </p>
 
       <div class="backcover-grid-info">
         <!-- Tarjeta Horarios (Sin fondos en textos) -->
