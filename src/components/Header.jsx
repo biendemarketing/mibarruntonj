@@ -1,6 +1,6 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Search, ShoppingCart, Moon, Sun, Menu, LayoutGrid, Rows3, MapPin, Phone, SlidersHorizontal, Sparkles, Heart } from 'lucide-react';
-import { FacebookIcon, InstagramIcon, WhatsAppIcon } from './Icons';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
+import { Search, ShoppingCart, Moon, Sun, Menu, LayoutGrid, Grid2X2, Rows3, MapPin, Phone, SlidersHorizontal, Sparkles, Heart } from 'lucide-react';
+import { FacebookIcon, InstagramIcon, WhatsAppIcon, PlateIcon } from './Icons';
 
 const POPULAR_SEARCHES = [
   'Ceviche Mi Barrunto',
@@ -27,7 +27,10 @@ export function Header({
   hasActiveFilters = false,
   favoritesCount = 0,
   showFavoritesOnly = false,
-  onToggleFavorites
+  onToggleFavorites,
+  allDishes = [],
+  onOpenDetail,
+  photoMode = 'curated'
 }) {
   const totalCount = cart.getTotalCount();
   const formattedTotal = cart.getFormattedTotal();
@@ -35,6 +38,21 @@ export function Header({
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const filterPopoverRef = useRef(null);
   const searchBoxRef = useRef(null);
+
+  // Platos que coinciden en vivo con la búsqueda para el dropdown con imágenes
+  const matchingDishes = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q || !allDishes || allDishes.length === 0) return [];
+    return allDishes
+      .filter((dish) => {
+        const nameMatch = dish.name && dish.name.toLowerCase().includes(q);
+        const nameEnMatch = dish.nameEn && dish.nameEn.toLowerCase().includes(q);
+        const catMatch = (dish.categoryName && dish.categoryName.toLowerCase().includes(q)) ||
+                         (dish.category && dish.category.toLowerCase().includes(q));
+        return nameMatch || nameEnMatch || catMatch;
+      })
+      .slice(0, 8);
+  }, [searchQuery, allDishes]);
 
   // Cerrar popovers al hacer clic fuera (compatible con mouse y touch)
   useEffect(() => {
@@ -219,6 +237,70 @@ export function Header({
             </div>
           )}
 
+          {/* Resultados de Búsqueda en Vivo con Imágenes en el Dropdown */}
+          {isSearchFocused && searchQuery.trim() && (
+            <div className="header-search-results-popover">
+              <div className="search-results-popover-header">
+                <Search size={14} color="var(--rojo)" />
+                <span>Resultados de la carta ({matchingDishes.length})</span>
+              </div>
+
+              {matchingDishes.length > 0 ? (
+                <div className="search-results-popover-list">
+                  {matchingDishes.map((dish) => {
+                    const img = dish.getResolvedImage ? dish.getResolvedImage(photoMode) : dish.getImage(photoMode);
+                    return (
+                      <div
+                        key={dish.id}
+                        className="search-result-popover-item"
+                        onMouseDown={(e) => {
+                          e.preventDefault();
+                          setIsSearchFocused(false);
+                          if (onOpenDetail) {
+                            onOpenDetail(dish);
+                          }
+                        }}
+                      >
+                        <div className="search-result-thumb-wrap">
+                          {img ? (
+                            <img
+                              src={img}
+                              alt={dish.name}
+                              className="search-result-thumb-img"
+                              loading="lazy"
+                            />
+                          ) : (
+                            <div className="search-result-thumb-placeholder">
+                              <PlateIcon size={20} />
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="search-result-info">
+                          <h4 className="search-result-name">{dish.name}</h4>
+                          {dish.nameEn && (
+                            <span className="search-result-name-en">{dish.nameEn}</span>
+                          )}
+                          {dish.categoryName && (
+                            <span className="search-result-category">{dish.categoryName}</span>
+                          )}
+                        </div>
+
+                        <div className="search-result-price-wrap">
+                          <span className="search-result-price">{dish.getFormattedPrice()}</span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="search-results-popover-empty">
+                  <p>No se encontraron platos para "{searchQuery}"</p>
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Popover Flotante de Filtros de la Carta */}
           {isFilterOpen && onUpdateFilter && (
             <div className="header-filter-popover" ref={filterPopoverRef}>
@@ -334,10 +416,22 @@ export function Header({
                 type="button"
                 className={`header-view-toggle-btn ${viewMode === 'compact' ? 'active' : ''}`}
                 onClick={onToggleViewMode}
-                title={viewMode === 'grid' ? 'Cambiar a vista compacta' : 'Cambiar a vista normal'}
+                title={
+                  viewMode === 'grid'
+                    ? 'Cambiar a 4 columnas cuadradas'
+                    : viewMode === 'grid4'
+                    ? 'Cambiar a vista compacta'
+                    : 'Cambiar a cuadrícula estándar'
+                }
                 aria-label="Alternar vista de la carta"
               >
-                {viewMode === 'grid' ? <Rows3 size={19} /> : <LayoutGrid size={19} />}
+                {viewMode === 'grid' ? (
+                  <Grid2X2 size={19} />
+                ) : viewMode === 'grid4' ? (
+                  <Rows3 size={19} />
+                ) : (
+                  <LayoutGrid size={19} />
+                )}
               </button>
             )}
 

@@ -1,12 +1,15 @@
 import React from 'react';
-import { Utensils } from 'lucide-react';
+import { Utensils, LayoutGrid, Grid2X2, Rows3 } from 'lucide-react';
 
 export function CategoryPills({
   categories,
   selectedCategory,
   onSelectCategory,
   showFavoritesOnly = false,
-  onToggleFavorites
+  onToggleFavorites,
+  viewMode = 'grid',
+  onToggleViewMode,
+  onSetViewMode
 }) {
   return (
     <aside className="categories-sidebar-nav" aria-label="Categorías de la carta">
@@ -16,6 +19,39 @@ export function CategoryPills({
           <Utensils size={17} color="var(--rojo)" />
           <h3 className="sidebar-nav-title">Categorías</h3>
         </div>
+
+        {/* Selector de Vistas en el Sidebar de Escritorio */}
+        {(onSetViewMode || onToggleViewMode) && (
+          <div className="sidebar-view-selector" role="group" aria-label="Cambiar modo de vista">
+            <button
+              type="button"
+              className={`sidebar-view-btn ${viewMode === 'grid' ? 'active' : ''}`}
+              onClick={() => (onSetViewMode ? onSetViewMode('grid') : onToggleViewMode && onToggleViewMode())}
+              title="Vista estándar (3 columnas)"
+              aria-label="Vista 3 columnas"
+            >
+              <LayoutGrid size={15} />
+            </button>
+            <button
+              type="button"
+              className={`sidebar-view-btn ${viewMode === 'grid4' ? 'active' : ''}`}
+              onClick={() => (onSetViewMode ? onSetViewMode('grid4') : onToggleViewMode && onToggleViewMode())}
+              title="Vista cuadrícula densa (4 columnas cuadradas)"
+              aria-label="Vista 4 columnas cuadradas"
+            >
+              <Grid2X2 size={15} />
+            </button>
+            <button
+              type="button"
+              className={`sidebar-view-btn ${viewMode === 'compact' ? 'active' : ''}`}
+              onClick={() => (onSetViewMode ? onSetViewMode('compact') : onToggleViewMode && onToggleViewMode())}
+              title="Vista compacta (filas horizontales)"
+              aria-label="Vista compacta"
+            >
+              <Rows3 size={15} />
+            </button>
+          </div>
+        )}
       </div>
 
       <div className="categories-nav-list">

@@ -253,8 +253,9 @@ export function App() {
     });
   };
 
-  // Modelos de categoría desde el repositorio OOP
+  // Modelos de categoría y todos los platos desde el repositorio OOP
   const categories = useMemo(() => menuRepository.getAllCategories(), []);
+  const allDishes = useMemo(() => menuRepository.getAllDishes(), []);
 
   // Catálogo agrupado según categoría o búsqueda automática y filtros (soporta filtro Mis Favoritos)
   const groupedCatalog = useMemo(() => {
@@ -403,26 +404,34 @@ export function App() {
     }
   };
 
-  // Modo de vista: 'compact' (compacta/horizontal con cards más pequeñas) o 'grid' (cuadrícula normal)
+  // Modo de vista: 'grid' (3 cols estándar), 'grid4' (4 cols cuadradas) o 'compact' (filas horizontales)
   const [viewMode, setViewMode] = useState(() => {
     try {
       const saved = localStorage.getItem('mb-vista-v2');
       if (saved) return saved;
-      return 'compact';
+      return 'grid';
     } catch {
-      return 'compact';
+      return 'grid';
     }
   });
 
   const handleToggleViewMode = () => {
     setViewMode((prev) => {
-      const next = prev === 'compact' ? 'grid' : 'compact';
+      const next = prev === 'grid' ? 'grid4' : prev === 'grid4' ? 'compact' : 'grid';
       try {
         localStorage.setItem('mb-vista-v2', next);
         localStorage.setItem('mb-vista', next);
       } catch {}
       return next;
     });
+  };
+
+  const handleSetViewMode = (mode) => {
+    setViewMode(mode);
+    try {
+      localStorage.setItem('mb-vista-v2', mode);
+      localStorage.setItem('mb-vista', mode);
+    } catch {}
   };
 
   const isDishDetailPage = location.pathname.startsWith('/plato/');
@@ -449,6 +458,9 @@ export function App() {
           favoritesCount={favorites.length}
           showFavoritesOnly={showFavoritesOnly}
           onToggleFavorites={handleToggleFavoritesFilter}
+          allDishes={allDishes}
+          onOpenDetail={handleOpenDishDetail}
+          photoMode={photoMode}
         />
       )}
 
@@ -501,6 +513,9 @@ export function App() {
             favoritesCount={favorites.length}
             showFavoritesOnly={showFavoritesOnly}
             onToggleFavorites={handleToggleFavoritesFilter}
+            viewMode={viewMode}
+            onToggleViewMode={handleToggleViewMode}
+            onSetViewMode={handleSetViewMode}
           />
 
           {/* 4. Catálogo de Platos */}
@@ -659,8 +674,8 @@ export function App() {
                 </h2>
               </div>
 
-              {/* Grid de Productos (Soporta vista normal y compacta horizontal) */}
-              <div className={`products-grid ${viewMode === 'compact' ? 'compact-grid' : ''}`}>
+              {/* Grid de Productos (Soporta vista normal 3 cols, cuadrícula 4 cols y compacta horizontal) */}
+              <div className={`products-grid ${viewMode === 'compact' ? 'compact-grid' : viewMode === 'grid4' ? 'grid4-grid' : ''}`}>
                 {dishes.map((dish, dishIdx) => {
                   const itemInCart = cart.getItem(dish.id);
                   const qty = itemInCart ? itemInCart.quantity : 0;
