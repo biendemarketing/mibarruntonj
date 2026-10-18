@@ -20,7 +20,7 @@ import { menuRepository } from './services/MenuRepository';
 import { Cart } from './models/Cart';
 import { CartItem } from './models/CartItem';
 import { Customer } from './models/Customer';
-import { Search, ShoppingCart, LayoutGrid, Rows3, ChevronUp, RotateCcw, X, Heart } from 'lucide-react';
+import { Search, ShoppingCart, LayoutGrid, Rows3, ChevronUp, RotateCcw, X, Heart, Trash2, CheckSquare, Square, CheckCircle2, Plus } from 'lucide-react';
 import { triggerHaptic } from './utils/haptics';
 import { triggerFlyToCart } from './utils/flyToCart';
 
@@ -103,6 +103,64 @@ export function App() {
     return [];
   });
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
+  const [selectedFavIds, setSelectedFavIds] = useState([]);
+
+  // Limpiar seleccionados que ya no existan en favoritos
+  useEffect(() => {
+    setSelectedFavIds((prev) => prev.filter((id) => favorites.includes(id)));
+  }, [favorites]);
+
+  const handleClearAllFavorites = () => {
+    if (favorites.length === 0) return;
+    triggerHaptic(20);
+    if (typeof window !== 'undefined' && !window.confirm('¿Deseas vaciar todos tus platos favoritos?')) {
+      return;
+    }
+    setFavorites([]);
+    setSelectedFavIds([]);
+    setToastMessage('Se vació tu lista de favoritos');
+    setTimeout(() => setToastMessage(''), 3000);
+  };
+
+  const handleToggleSelectAllFavs = () => {
+    triggerHaptic(10);
+    if (selectedFavIds.length === favorites.length) {
+      setSelectedFavIds([]);
+    } else {
+      setSelectedFavIds([...favorites]);
+    }
+  };
+
+  const handleToggleSelectFavDish = (dishId) => {
+    triggerHaptic(8);
+    setSelectedFavIds((prev) =>
+      prev.includes(dishId) ? prev.filter((id) => id !== dishId) : [...prev, dishId]
+    );
+  };
+
+  const handleAddSelectedFavsToCart = () => {
+    if (selectedFavIds.length === 0) return;
+    triggerHaptic(25);
+    selectedFavIds.forEach((id) => {
+      const dish = menuRepository.getDishById(id);
+      if (dish) {
+        setCart((prev) => prev.addItem(dish, 1));
+      }
+    });
+    setToastMessage(`Se agregaron ${selectedFavIds.length} platos a tu pedido`);
+    setSelectedFavIds([]);
+    setTimeout(() => setToastMessage(''), 3200);
+  };
+
+  const handleRemoveSelectedFavs = () => {
+    if (selectedFavIds.length === 0) return;
+    triggerHaptic(15);
+    const count = selectedFavIds.length;
+    setFavorites((prev) => prev.filter((id) => !selectedFavIds.includes(id)));
+    setSelectedFavIds([]);
+    setToastMessage(`Se quitaron ${count} platos de tus favoritos`);
+    setTimeout(() => setToastMessage(''), 3000);
+  };
 
   useEffect(() => {
     try {
@@ -596,22 +654,100 @@ export function App() {
           </div>
         )}
 
-        {/* Banner de favoritos activos */}
-        {showFavoritesOnly && (
-          <div className="search-results-banner favorites-active-banner">
-            <div className="favorites-active-banner-left">
-              <Heart size={16} fill="var(--rojo)" color="var(--rojo)" />
-              <span>
-                Mostrando: <strong>Mis Favoritos</strong> ({favorites.length} {favorites.length === 1 ? 'plato' : 'platos'})
-              </span>
+        {/* Panel de Gestión de Favoritos (Acciones en Lote y Limpiar Favoritos) */}
+        {showFavoritesOnly && favorites.length > 0 && (
+          <div className="favorites-management-panel">
+            <div className="favorites-panel-header">
+              <div className="favorites-panel-title-wrap">
+                <Heart size={18} fill="var(--rojo)" color="var(--rojo)" />
+                <span className="favorites-panel-title">
+                  Mis Favoritos <strong>({favorites.length})</strong>
+                </span>
+                {selectedFavIds.length > 0 && (
+                  <span className="favorites-selected-badge">
+                    {selectedFavIds.length} seleccionados
+                  </span>
+                )}
+              </div>
+
+              <div className="favorites-panel-quick-actions">
+                {/* Botón Seleccionar / Deseleccionar Todos */}
+                <button
+                  type="button"
+                  className="favorites-panel-btn favorites-select-all-btn"
+                  onClick={handleToggleSelectAllFavs}
+                  title={selectedFavIds.length === favorites.length ? 'Deseleccionar todos' : 'Seleccionar todos'}
+                >
+                  {selectedFavIds.length === favorites.length ? (
+                    <>
+                      <CheckSquare size={15} />
+                      <span>Deseleccionar todos</span>
+                    </>
+                  ) : (
+                    <>
+                      <Square size={15} />
+                      <span>Seleccionar todos</span>
+                    </>
+                  )}
+                </button>
+
+                {/* Botón Limpiar Todos los Favoritos */}
+                <button
+                  type="button"
+                  className="favorites-panel-btn favorites-clear-all-btn"
+                  onClick={handleClearAllFavorites}
+                  title="Vaciar todos los favoritos"
+                >
+                  <Trash2 size={15} />
+                  <span>Limpiar favoritos</span>
+                </button>
+
+                {/* Botón Salir / Ver Toda la Carta */}
+                <button
+                  type="button"
+                  className="favorites-panel-btn favorites-exit-btn"
+                  onClick={() => setShowFavoritesOnly(false)}
+                  title="Volver a toda la carta"
+                >
+                  <X size={15} />
+                  <span>Ver toda la carta</span>
+                </button>
+              </div>
             </div>
-            <button
-              type="button"
-              className="search-results-clear"
-              onClick={() => setShowFavoritesOnly(false)}
-            >
-              Ver toda la carta ✕
-            </button>
+
+            {/* Barra Flotante de Acciones en Lote cuando hay platos seleccionados */}
+            {selectedFavIds.length > 0 && (
+              <div className="favorites-batch-actions-bar">
+                <div className="batch-actions-info">
+                  <CheckCircle2 size={16} color="#ffffff" />
+                  <span>
+                    <strong>{selectedFavIds.length}</strong> {selectedFavIds.length === 1 ? 'plato seleccionado' : 'platos seleccionados'}
+                  </span>
+                </div>
+
+                <div className="batch-actions-btns">
+                  {/* Botón Añadir Seleccionados al Pedido */}
+                  <button
+                    type="button"
+                    className="batch-action-btn batch-add-cart-btn"
+                    onClick={handleAddSelectedFavsToCart}
+                  >
+                    <Plus size={16} />
+                    <span>Añadir al pedido ({selectedFavIds.length})</span>
+                  </button>
+
+                  {/* Botón Quitar Seleccionados de Favoritos */}
+                  <button
+                    type="button"
+                    className="batch-action-btn batch-remove-fav-btn"
+                    onClick={handleRemoveSelectedFavs}
+                  >
+                    <Trash2 size={15} />
+                    <span>Quitar seleccionados</span>
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         )}
 
@@ -690,6 +826,9 @@ export function App() {
                       viewMode={viewMode}
                       isFavorite={favorites.includes(dish.id)}
                       onToggleFavorite={handleToggleFavorite}
+                      isSelectionMode={showFavoritesOnly && favorites.length > 0}
+                      isSelected={selectedFavIds.includes(dish.id)}
+                      onToggleSelect={handleToggleSelectFavDish}
                       onAddToCart={(d, e) => handleAddToCart(d, 1, '', e)}
                       onUpdateQuantity={(id, q) => handleUpdateQuantity(id, q)}
                       onOpenDetail={(d) => handleOpenDishDetail(d)}

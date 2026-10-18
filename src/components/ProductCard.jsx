@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Plus, Minus, Heart } from 'lucide-react';
+import { Plus, Minus, Heart, Check } from 'lucide-react';
 import { PlateIcon } from './Icons';
 
 export function ProductCard({
@@ -12,7 +12,10 @@ export function ProductCard({
   viewMode = 'grid',
   index = 0,
   isFavorite = false,
-  onToggleFavorite
+  onToggleFavorite,
+  isSelectionMode = false,
+  isSelected = false,
+  onToggleSelect
 }) {
   const hasPhoto = dish.hasImage(photoMode);
   const currentImage = dish.getResolvedImage ? dish.getResolvedImage(photoMode) : dish.getImage(photoMode);
@@ -75,12 +78,27 @@ export function ProductCard({
     return (
       <article
         ref={cardRef}
-        className={`product-card product-card-compact ${hasPhoto ? 'has-photo' : 'no-photo'} ${isRevealed ? 'card-revealed' : 'card-hidden'}`}
+        className={`product-card product-card-compact ${hasPhoto ? 'has-photo' : 'no-photo'} ${isRevealed ? 'card-revealed' : 'card-hidden'} ${isSelected ? 'card-batch-selected' : ''}`}
         data-dish-id={dish.id}
         onClick={() => onOpenDetail(dish)}
         title="Clic para ver detalles"
         style={{ transitionDelay: staggerDelay }}
       >
+        {/* Selector Checkbox de selección múltiple (en vista de favoritos) */}
+        {isSelectionMode && onToggleSelect && (
+          <button
+            type="button"
+            className={`card-batch-select-btn compact-batch-select-btn ${isSelected ? 'is-selected' : ''}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleSelect(dish.id);
+            }}
+            aria-label={isSelected ? `Deseleccionar ${dish.name}` : `Seleccionar ${dish.name}`}
+            title={isSelected ? 'Deseleccionar' : 'Seleccionar'}
+          >
+            {isSelected ? <Check size={13} strokeWidth={3} /> : null}
+          </button>
+        )}
         {/* Imagen o Placeholder a la izquierda con Carga Diferida (Lazy Loading) */}
         <div className="compact-image-wrap">
           {hasPhoto && currentImage ? (
@@ -184,10 +202,25 @@ export function ProductCard({
   return (
     <article
       ref={cardRef}
-      className={`product-card ${hasPhoto ? 'has-photo' : 'no-photo'} ${isRevealed ? 'card-revealed' : 'card-hidden'}`}
+      className={`product-card ${hasPhoto ? 'has-photo' : 'no-photo'} ${isRevealed ? 'card-revealed' : 'card-hidden'} ${isSelected ? 'card-batch-selected' : ''}`}
       data-dish-id={dish.id}
       style={{ transitionDelay: staggerDelay }}
     >
+      {/* Selector Checkbox de selección múltiple (en vista de favoritos) */}
+      {isSelectionMode && onToggleSelect && (
+        <button
+          type="button"
+          className={`card-batch-select-btn ${isSelected ? 'is-selected' : ''}`}
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggleSelect(dish.id);
+          }}
+          aria-label={isSelected ? `Deseleccionar ${dish.name}` : `Seleccionar ${dish.name}`}
+          title={isSelected ? 'Deseleccionar' : 'Seleccionar'}
+        >
+          {isSelected ? <Check size={14} strokeWidth={3} /> : null}
+        </button>
+      )}
       {/* Zona Superior: Imagen en alta calidad con Carga Diferida (Lazy Loading) */}
       <div
         className={`product-card-image-wrap ${!hasPhoto || !currentImage ? 'product-card-placeholder' : ''}`}

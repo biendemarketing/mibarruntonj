@@ -5530,6 +5530,232 @@ html.dark .search-result-thumb-wrap {
   gap: 0.55rem;
 }
 
+/* ==========================================================================
+   PANEL DE GESTIÓN Y ACCIONES EN LOTE PARA FAVORITOS
+   ========================================================================== */
+.favorites-management-panel {
+  background-color: var(--card-bg);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-radius: 14px;
+  padding: 1rem 1.25rem;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 1.5rem;
+  border: none !important;
+  outline: none !important;
+  animation: bannerFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.favorites-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+}
+
+.favorites-panel-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.favorites-panel-title {
+  font-family: var(--font-primary);
+  font-size: 1.12rem;
+  font-weight: 700;
+  color: var(--text-main);
+  letter-spacing: 0.02em;
+}
+
+.favorites-selected-badge {
+  font-family: var(--font-primary);
+  font-size: 0.76rem;
+  font-weight: 800;
+  background-color: rgba(238, 0, 0, 0.12);
+  color: var(--rojo);
+  padding: 0.2rem 0.65rem;
+  border-radius: 9999px;
+  letter-spacing: 0.03em;
+}
+
+.favorites-panel-quick-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.favorites-panel-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.42rem 0.82rem;
+  border-radius: 8px;
+  font-family: var(--font-secondary);
+  font-size: 0.84rem;
+  font-weight: 600;
+  background-color: var(--secondary-bg);
+  color: var(--text-main);
+  border: none !important;
+  outline: none !important;
+  cursor: pointer;
+  transition: all 0.16s ease;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+.favorites-panel-btn:hover {
+  background-color: rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
+}
+
+html.dark .favorites-panel-btn:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+.favorites-clear-all-btn {
+  color: var(--rojo) !important;
+}
+
+.favorites-clear-all-btn:hover {
+  background-color: rgba(238, 0, 0, 0.12) !important;
+  color: var(--rojo-hover) !important;
+}
+
+.favorites-exit-btn {
+  color: var(--text-light);
+}
+
+.favorites-exit-btn:hover {
+  color: var(--text-main);
+}
+
+/* Barra Flotante de Acciones en Lote */
+.favorites-batch-actions-bar {
+  background: linear-gradient(135deg, #18181b 0%, #27272a 100%);
+  color: #ffffff;
+  padding: 0.75rem 1.1rem;
+  border-radius: 12px;
+  margin-top: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
+  border: none !important;
+  outline: none !important;
+  animation: bannerFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.batch-actions-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-secondary);
+  font-size: 0.92rem;
+  color: #ffffff;
+}
+
+.batch-actions-btns {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+}
+
+.batch-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border-radius: 8px;
+  border: none !important;
+  outline: none !important;
+  font-family: var(--font-primary);
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: all 0.16s ease;
+}
+
+.batch-add-cart-btn {
+  background-color: var(--rojo) !important;
+  color: #ffffff !important;
+  font-weight: 700;
+  padding: 0.48rem 1rem;
+  box-shadow: 0 4px 14px rgba(238, 0, 0, 0.45);
+}
+
+.batch-add-cart-btn:hover {
+  background-color: var(--rojo-hover) !important;
+  transform: scale(1.03);
+}
+
+.batch-remove-fav-btn {
+  background-color: rgba(255, 255, 255, 0.16) !important;
+  color: #ffffff !important;
+  font-weight: 600;
+  padding: 0.48rem 0.88rem;
+}
+
+.batch-remove-fav-btn:hover {
+  background-color: rgba(238, 0, 0, 0.45) !important;
+  transform: scale(1.02);
+}
+
+/* Checkbox flotante de Selección Múltiple en Cards */
+.card-batch-select-btn {
+  position: absolute;
+  top: 9px;
+  left: 9px;
+  z-index: 25;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.52);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+  border: none !important;
+  outline: none !important;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-batch-select-btn:hover {
+  transform: scale(1.12);
+  background: rgba(0, 0, 0, 0.72);
+}
+
+.card-batch-select-btn.is-selected {
+  background: var(--rojo) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(238, 0, 0, 0.5);
+  transform: scale(1.06);
+}
+
+.compact-batch-select-btn {
+  top: 7px;
+  left: 7px;
+  width: 24px;
+  height: 24px;
+}
+
+/* Resalte visual de tarjeta seleccionada sin usar bordes */
+.product-card.card-batch-selected,
+.product-card-compact.card-batch-selected {
+  box-shadow: 0 10px 28px rgba(238, 0, 0, 0.22), var(--shadow-md) !important;
+  background-color: rgba(238, 0, 0, 0.035) !important;
+}
+
+html.dark .product-card.card-batch-selected,
+html.dark .product-card-compact.card-batch-selected {
+  background-color: rgba(238, 0, 0, 0.1) !important;
+  box-shadow: 0 12px 32px rgba(238, 0, 0, 0.32) !important;
+}
+
 .favorites-empty-state {
   text-align: center;
   padding: 4.5rem 1.5rem;
