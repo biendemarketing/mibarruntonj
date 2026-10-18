@@ -202,28 +202,22 @@ function renderPage1() {
         <span class="cover-line"></span>
       </div>
 
-      <!-- Medallones de especialidades con FOTOS REALES de la cocina -->
+      <!-- Medallones de especialidades: SOLO ICONOS SIN FONDO (ESTILO LIMPIO) -->
       <div class="cover-features-row">
         <div class="cover-feature-item">
-          <div class="cover-feature-photo-wrap">
-            <img src="./fotos/196-arroz-con-pollo-huancaina-ceviche.jpg" onerror="if(!this.dataset.retried){this.dataset.retried=1;this.src='fotos/196-arroz-con-pollo-huancaina-ceviche.jpg';}" alt="Cevichería Tradicional" class="cover-feature-photo" />
-          </div>
+          <div class="cover-feature-icon-badge">${SVG_ICONS.fish}</div>
           <div class="cover-feature-title">CEVICHERÍA TRADICIONAL</div>
           <div class="cover-feature-sub">Pescado fresco, limón norteño, choclo y ají limo</div>
         </div>
         <div class="cover-feature-sep">·</div>
         <div class="cover-feature-item">
-          <div class="cover-feature-photo-wrap">
-            <img src="./fotos/201-seco-de-costilla-ceviche.jpg" onerror="if(!this.dataset.retried){this.dataset.retried=1;this.src='fotos/201-seco-de-costilla-ceviche.jpg';}" alt="Fuego & Sazón Criolla" class="cover-feature-photo" />
-          </div>
+          <div class="cover-feature-icon-badge">${SVG_ICONS.flame}</div>
           <div class="cover-feature-title">FUEGO &amp; SAZÓN CRIOLLA</div>
           <div class="cover-feature-sub">Lomo saltado al wok flameado, secos y tacu tacus</div>
         </div>
         <div class="cover-feature-sep">·</div>
         <div class="cover-feature-item">
-          <div class="cover-feature-photo-wrap">
-            <img src="./fotos/129-pollada-con-huancaina.jpg" onerror="if(!this.dataset.retried){this.dataset.retried=1;this.src='fotos/129-pollada-con-huancaina.jpg';}" alt="Parrillas al Carbón" class="cover-feature-photo" />
-          </div>
+          <div class="cover-feature-icon-badge">${SVG_ICONS.utensils}</div>
           <div class="cover-feature-title">PARRILLAS AL CARBÓN</div>
           <div class="cover-feature-sub">Anticuchos de corazón, cortes finos y salsas</div>
         </div>
@@ -1410,7 +1404,7 @@ function generateCompleteHtml(options = {}) {
        - Cero fondos en iconos y textos
        ========================================================================== */
     .page-cover {
-      background-image: linear-gradient(rgba(251, 247, 238, 0.90), rgba(251, 247, 238, 0.94)), url('/bg-restaurant.jpg');
+      background-image: linear-gradient(rgba(251, 247, 238, 0.82), rgba(251, 247, 238, 0.88)), url('./bg-restaurant.jpg');
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
@@ -1523,38 +1517,6 @@ function generateCompleteHtml(options = {}) {
       flex-direction: column;
       align-items: center;
       max-width: 210px;
-    }
-
-    /* Fotos reales de especialidades en la portada (Cero trazos, solo sombra volumétrica) */
-    .cover-feature-photo-wrap {
-      width: 76px;
-      height: 76px;
-      border-radius: 50%;
-      overflow: hidden;
-      margin-bottom: 6px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.22);
-      border: none !important;
-      outline: none !important;
-      background: transparent;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .cover-feature-photo {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      border: none !important;
-      outline: none !important;
-      transition: transform 0.25s ease;
-    }
-
-    body.dark-theme .cover-feature-photo-wrap {
-      box-shadow: 0 6px 20px rgba(0,0,0,0.7);
-      border: none !important;
     }
 
     /* Cero fondo en iconos de especialidades */
@@ -1670,7 +1632,7 @@ function generateCompleteHtml(options = {}) {
        - Teléfono único sin repeticiones
        ========================================================================== */
     .page-backcover {
-      background-image: linear-gradient(rgba(251, 247, 238, 0.90), rgba(251, 247, 238, 0.94)), url('/bg-restaurant.jpg');
+      background-image: linear-gradient(rgba(251, 247, 238, 0.82), rgba(251, 247, 238, 0.88)), url('./bg-restaurant.jpg');
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
@@ -1849,11 +1811,11 @@ function generateCompleteHtml(options = {}) {
     }
 
     body.dark-theme .page-cover {
-      background-image: linear-gradient(rgba(10, 11, 14, 0.88), rgba(10, 11, 14, 0.94)), url('/bg-restaurant.jpg') !important;
+      background-image: linear-gradient(rgba(10, 11, 14, 0.80), rgba(10, 11, 14, 0.88)), url('./bg-restaurant.jpg') !important;
     }
 
     body.dark-theme .page-backcover {
-      background-image: linear-gradient(rgba(10, 11, 14, 0.88), rgba(10, 11, 14, 0.94)), url('/bg-restaurant.jpg') !important;
+      background-image: linear-gradient(rgba(10, 11, 14, 0.80), rgba(10, 11, 14, 0.88)), url('./bg-restaurant.jpg') !important;
     }
 
     body.dark-theme .cover-brand-title {
