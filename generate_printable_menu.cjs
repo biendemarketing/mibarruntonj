@@ -1373,7 +1373,7 @@ function generateCompleteHtml(options = {}) {
        - Cero fondos en iconos y textos
        ========================================================================== */
     .page-cover {
-      background-image: linear-gradient(rgba(251, 247, 238, 0.82), rgba(251, 247, 238, 0.88)), url('./bg-restaurant.jpg');
+      background-image: linear-gradient(rgba(251, 247, 238, 0.82), rgba(251, 247, 238, 0.88)), url('bg-restaurant.jpg'), url('./bg-restaurant.jpg'), url('./public/bg-restaurant.jpg');
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
@@ -1601,7 +1601,7 @@ function generateCompleteHtml(options = {}) {
        - Teléfono único sin repeticiones
        ========================================================================== */
     .page-backcover {
-      background-image: linear-gradient(rgba(251, 247, 238, 0.82), rgba(251, 247, 238, 0.88)), url('./bg-restaurant.jpg');
+      background-image: linear-gradient(rgba(251, 247, 238, 0.82), rgba(251, 247, 238, 0.88)), url('bg-restaurant.jpg'), url('./bg-restaurant.jpg'), url('./public/bg-restaurant.jpg');
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
@@ -1780,11 +1780,11 @@ function generateCompleteHtml(options = {}) {
     }
 
     body.dark-theme .page-cover {
-      background-image: linear-gradient(rgba(10, 11, 14, 0.80), rgba(10, 11, 14, 0.88)), url('./bg-restaurant.jpg') !important;
+      background-image: linear-gradient(rgba(10, 11, 14, 0.80), rgba(10, 11, 14, 0.88)), url('bg-restaurant.jpg'), url('./bg-restaurant.jpg'), url('./public/bg-restaurant.jpg') !important;
     }
 
     body.dark-theme .page-backcover {
-      background-image: linear-gradient(rgba(10, 11, 14, 0.80), rgba(10, 11, 14, 0.88)), url('./bg-restaurant.jpg') !important;
+      background-image: linear-gradient(rgba(10, 11, 14, 0.80), rgba(10, 11, 14, 0.88)), url('bg-restaurant.jpg'), url('./bg-restaurant.jpg'), url('./public/bg-restaurant.jpg') !important;
     }
 
     body.dark-theme .cover-brand-title {
