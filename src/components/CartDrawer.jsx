@@ -4,7 +4,7 @@ import {
   Trash2,
   Plus,
   Minus,
-  ShoppingBag,
+  ShoppingCart,
   FileText,
   User,
   MapPin,
@@ -77,14 +77,15 @@ export function CartDrawer({
         className={`cart-drawer ${isClosing ? 'cart-drawer-content-closing' : 'cart-drawer-content-opening'}`}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Encabezado Moderno con Rojo Peruano */}
+        {/* Encabezado Moderno con Rojo Peruano Centrado */}
         <div className="cart-drawer-header">
           <div className="cart-drawer-header-inner">
+            <div className="cart-drawer-header-left" />
             <div className="cart-drawer-title-group">
               <div className="cart-drawer-icon-wrap">
-                <ShoppingBag size={20} />
+                <ShoppingCart size={20} />
               </div>
-              <div>
+              <div className="cart-drawer-title-text-wrap">
                 <h2 className="cart-drawer-heading">Mi Pedido</h2>
                 <span className="cart-drawer-count-badge">
                   {totalCount} {totalCount === 1 ? 'plato' : 'platos'}
@@ -107,7 +108,7 @@ export function CartDrawer({
           {cart.isEmpty() ? (
             <div className="cart-empty-state">
               <div className="cart-empty-icon-wrap">
-                <ShoppingBag size={42} />
+                <ShoppingCart size={42} />
               </div>
               <h3 className="cart-empty-title">Tu carrito está vacío</h3>
               <p className="cart-empty-text">
