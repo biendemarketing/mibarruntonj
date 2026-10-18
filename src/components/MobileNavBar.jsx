@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Home, Menu, Search, ShoppingCart, Heart, Tv } from 'lucide-react';
+import { Home, Menu, Search, ShoppingCart, Heart } from 'lucide-react';
 import { triggerHaptic } from '../utils/haptics';
 
 export function MobileNavBar({
@@ -10,8 +10,7 @@ export function MobileNavBar({
   onToggleSearch,
   favoritesCount = 0,
   showFavoritesOnly = false,
-  onToggleFavorites,
-  onOpenTvMode
+  onToggleFavorites
 }) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -117,21 +116,7 @@ export function MobileNavBar({
         <Search size={22} />
       </button>
 
-      {/* 3. Modo Menú TV */}
-      {onOpenTvMode && (
-        <button
-          type="button"
-          className="mobile-nav-btn mobile-tv-nav-btn"
-          onClick={() => {
-            triggerHaptic(14);
-            onOpenTvMode();
-          }}
-          aria-label="Modo Pantalla Completa TV"
-          title="Modo TV"
-        >
-          <Tv size={22} />
-        </button>
-      )}
+
 
       {/* 4. Favoritos (Corazón) */}
       <button

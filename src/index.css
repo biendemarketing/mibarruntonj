@@ -1606,19 +1606,30 @@ input, textarea, select {
   width: 100%;
 }
 
-.category-header-line {
+.category-header-double-line {
   flex: 1;
-  height: 2.5px;
-  border-radius: 9999px;
+  display: flex;
+  flex-direction: column;
+  gap: 3.5px;
+  justify-content: center;
   border: none !important;
   outline: none !important;
 }
 
-.category-header-line-left {
+.category-line-stripe {
+  width: 100%;
+  height: 2.5px;
+  border-radius: 9999px;
+  border: none !important;
+  outline: none !important;
+  display: block;
+}
+
+.category-line-stripe.stripe-rojo {
   background-color: var(--rojo, #ee0000);
 }
 
-.category-header-line-right {
+.category-line-stripe.stripe-naranja {
   background-color: #ff7a00;
 }
 
@@ -1667,9 +1678,12 @@ input, textarea, select {
   .category-title-en {
     font-size: 0.82rem;
   }
-  .category-header-line {
-    height: 2px;
+  .category-header-double-line {
     min-width: 14px;
+    gap: 2.5px;
+  }
+  .category-line-stripe {
+    height: 2px;
   }
 }
 

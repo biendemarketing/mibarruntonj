@@ -868,9 +868,12 @@ export function App() {
               id={category.id}
               style={{ marginBottom: '2.5rem' }}
             >
-              {/* Encabezado de la Categoría con Título Centrado y Líneas Horizontal Roja y Naranja */}
+              {/* Encabezado de la Categoría con Título Centrado y Doble Línea Horizontal (Roja y Naranja) */}
               <div className="category-section-header">
-                <div className="category-header-line category-header-line-left" />
+                <div className="category-header-double-line" aria-hidden="true">
+                  <span className="category-line-stripe stripe-rojo" />
+                  <span className="category-line-stripe stripe-naranja" />
+                </div>
                 <div className="category-header-center">
                   <h2 className="category-title">
                     <span>{category.name}</span>
@@ -879,7 +882,10 @@ export function App() {
                     <span className="category-title-en">{category.nameEn}</span>
                   )}
                 </div>
-                <div className="category-header-line category-header-line-right" />
+                <div className="category-header-double-line" aria-hidden="true">
+                  <span className="category-line-stripe stripe-rojo" />
+                  <span className="category-line-stripe stripe-naranja" />
+                </div>
               </div>
 
               {/* Grid de Productos (Soporta vista normal 3 cols, cuadrícula 4 cols y compacta horizontal) */}
@@ -924,7 +930,7 @@ export function App() {
         />
       )}
 
-      {/* 7. Barra Móvil Inferior (Home, Menú, Búsqueda, TV, Favoritos y Mi Pedido) */}
+      {/* 7. Barra Móvil Inferior (Home, Menú, Búsqueda, Favoritos y Mi Pedido) */}
       <MobileNavBar
         cart={cart}
         onOpenCart={handleOpenCart}
@@ -932,7 +938,6 @@ export function App() {
         favoritesCount={favorites.length}
         showFavoritesOnly={showFavoritesOnly}
         onToggleFavorites={handleToggleFavoritesFilter}
-        onOpenTvMode={() => setIsTvModeOpen(true)}
         onToggleSearch={() => {
           if (isDishDetailPage) {
             navigate('/');
