@@ -6024,9 +6024,8 @@ html.dark .product-card-compact.card-batch-selected {
   object-fit: cover;
   object-position: 28% center;
   display: block;
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
-  filter: contrast(1.05) saturate(1.08) brightness(0.98);
+  image-rendering: auto;
+  filter: contrast(1.03) saturate(1.06);
   transform: translateZ(0);
   backface-visibility: hidden;
   will-change: transform;
