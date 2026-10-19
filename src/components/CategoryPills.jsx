@@ -1,5 +1,6 @@
 import React from 'react';
 import { Utensils, LayoutGrid, Grid2X2, Rows3, ChevronRight } from 'lucide-react';
+import { triggerHaptic } from '../utils/haptics';
 
 export function CategoryPills({
   categories,
@@ -23,6 +24,7 @@ export function CategoryPills({
   }, [activeScrollCategory]);
 
   const handleCategoryClick = (catId) => {
+    triggerHaptic(10);
     if (showFavoritesOnly && onToggleFavorites) onToggleFavorites();
     onSelectCategory(catId);
   };
@@ -42,7 +44,11 @@ export function CategoryPills({
             <button
               type="button"
               className={`sidebar-view-btn ${viewMode === 'grid' ? 'active' : ''}`}
-              onClick={() => (onSetViewMode ? onSetViewMode('grid') : onToggleViewMode && onToggleViewMode())}
+              onClick={() => {
+                triggerHaptic(8);
+                if (onSetViewMode) onSetViewMode('grid');
+                else if (onToggleViewMode) onToggleViewMode();
+              }}
               title="Vista estándar (3 columnas)"
               aria-label="Vista 3 columnas"
             >
@@ -51,7 +57,11 @@ export function CategoryPills({
             <button
               type="button"
               className={`sidebar-view-btn ${viewMode === 'grid4' ? 'active' : ''}`}
-              onClick={() => (onSetViewMode ? onSetViewMode('grid4') : onToggleViewMode && onToggleViewMode())}
+              onClick={() => {
+                triggerHaptic(8);
+                if (onSetViewMode) onSetViewMode('grid4');
+                else if (onToggleViewMode) onToggleViewMode();
+              }}
               title="Vista cuadrícula densa (4 columnas cuadradas)"
               aria-label="Vista 4 columnas cuadradas"
             >
@@ -60,7 +70,11 @@ export function CategoryPills({
             <button
               type="button"
               className={`sidebar-view-btn ${viewMode === 'compact' ? 'active' : ''}`}
-              onClick={() => (onSetViewMode ? onSetViewMode('compact') : onToggleViewMode && onToggleViewMode())}
+              onClick={() => {
+                triggerHaptic(8);
+                if (onSetViewMode) onSetViewMode('compact');
+                else if (onToggleViewMode) onToggleViewMode();
+              }}
               title="Vista compacta (filas horizontales)"
               aria-label="Vista compacta"
             >
