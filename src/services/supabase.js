@@ -528,6 +528,24 @@ export const tablesService = {
   }
 };
 
+// Helper local para metadatos extendidos de personal (username y permission_level)
+const getWaitersLocalMeta = () => {
+  try {
+    const raw = localStorage.getItem('mb_waiters_meta');
+    return raw ? JSON.parse(raw) : {};
+  } catch {
+    return {};
+  }
+};
+
+const saveWaiterLocalMeta = (id, meta) => {
+  try {
+    const all = getWaitersLocalMeta();
+    all[id] = { ...(all[id] || {}), ...meta };
+    localStorage.setItem('mb_waiters_meta', JSON.stringify(all));
+  } catch {}
+};
+
 /**
  * SERVICIO DE MESEROS / PERSONAL (WAITERS)
  */
@@ -539,36 +557,113 @@ export const waitersService = {
       .order('name', { ascending: true });
 
     if (error) throw error;
-    return data || [];
+    const meta = getWaitersLocalMeta();
+
+    return (data || []).map(w => {
+      const waiterMeta = meta[w.id] || {};
+      const fallbackUser = w.name ? w.name.toLowerCase().replace(/[^a-z0-9]/g, '') : 'mesero';
+      return {
+        ...w,
+        username: w.username || waiterMeta.username || fallbackUser,
+        permission_level: w.permission_level || waiterMeta.permission_level || (w.role === 'admin' ? 'admin_completo' : w.role === 'capitan' ? 'pedidos_y_mesas' : 'solo_pedidos')
+      };
+    });
   },
 
-  async createWaiter({ name, pin = '1234', phone = '', role = 'mesero' }) {
-    const { data, error } = await supabase
-      .from('waiters')
-      .insert({
-        name,
-        pin,
-        phone,
-        role,
-        is_active: true
-      })
-      .select()
-      .single();
+  async createWaiter({ name, username, pin = '1234', phone = '', role = 'mesero', permission_level = 'solo_pedidos' }) {
+    const cleanUser = (username || name.toLowerCase().replace(/[^a-z0-9]/g, '')).toLowerCase().trim();
+    const basePayload = {
+      name,
+      pin: String(pin),
+      phone: phone || '',
+      role: role || 'mesero',
+      is_active: true
+    };
 
-    if (error) throw error;
-    return data;
+    try {
+      // Intentar insertar con columnas extendidas
+      const { data, error } = await supabase
+        .from('waiters')
+        .insert({
+          ...basePayload,
+          username: cleanUser,
+          permission_level
+        })
+        .select()
+        .single();
+
+      if (!error && data) {
+        saveWaiterLocalMeta(data.id, { username: cleanUser, permission_level });
+        return { ...data, username: cleanUser, permission_level };
+      }
+
+      // Si falla por columna no existente, insertar base y guardar metadatos localmente
+      if (error) {
+        console.warn('Fallback a inserción básica de mesero:', error.message);
+        const { data: fallbackData, error: fallbackError } = await supabase
+          .from('waiters')
+          .insert(basePayload)
+          .select()
+          .single();
+
+        if (fallbackError) throw fallbackError;
+        saveWaiterLocalMeta(fallbackData.id, { username: cleanUser, permission_level });
+        return { ...fallbackData, username: cleanUser, permission_level };
+      }
+    } catch (err) {
+      console.error('Error creando mesero en Supabase:', err);
+      throw err;
+    }
   },
 
   async updateWaiter(id, updates) {
-    const { data, error } = await supabase
-      .from('waiters')
-      .update(updates)
-      .eq('id', id)
-      .select()
-      .single();
+    const { username, permission_level, ...restUpdates } = updates;
+    if (username || permission_level) {
+      saveWaiterLocalMeta(id, {
+        ...(username ? { username: username.toLowerCase().trim() } : {}),
+        ...(permission_level ? { permission_level } : {})
+      });
+    }
 
-    if (error) throw error;
-    return data;
+    try {
+      const { data, error } = await supabase
+        .from('waiters')
+        .update(updates)
+        .select()
+        .eq('id', id)
+        .single();
+
+      if (!error && data) {
+        return {
+          ...data,
+          username: username || data.username,
+          permission_level: permission_level || data.permission_level
+        };
+      }
+
+      // Fallback a campos base si la columna no existe
+      if (error && error.message?.includes('column')) {
+        const { data: baseData, error: baseErr } = await supabase
+          .from('waiters')
+          .update(restUpdates)
+          .select()
+          .eq('id', id)
+          .single();
+
+        if (baseErr) throw baseErr;
+        return {
+          ...baseData,
+          username: username || baseData.username,
+          permission_level: permission_level || baseData.permission_level
+        };
+      }
+
+      if (error) throw error;
+      return data;
+    } catch (err) {
+      console.error('Error actualizando mesero:', err);
+      throw err;
+    }
   },
 
   async deleteWaiter(id) {
@@ -583,15 +678,35 @@ export const waitersService = {
 };
 
 /**
- * SERVICIO DE AUTENTICACIÓN / SESIÓN ADMINISTRATIVA
+ * SERVICIO DE AUTENTICACIÓN / SESIÓN ADMINISTRATIVA Y DE MESEROS
  */
 export const adminAuthService = {
   isAuthenticated() {
     try {
       const token = localStorage.getItem('mb-admin-auth');
-      return token === 'active_admin_session';
+      return token === 'active_admin_session' || token === 'waiter_session';
     } catch {
       return false;
+    }
+  },
+
+  getAuthRole() {
+    try {
+      const token = localStorage.getItem('mb-admin-auth');
+      if (token === 'active_admin_session') return 'admin';
+      if (token === 'waiter_session') return 'waiter';
+      return null;
+    } catch {
+      return null;
+    }
+  },
+
+  getCurrentWaiter() {
+    try {
+      const raw = localStorage.getItem('mb-waiter-info');
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      return null;
     }
   },
 
@@ -601,6 +716,7 @@ export const adminAuthService = {
       try {
         localStorage.setItem('mb-admin-auth', 'active_admin_session');
         localStorage.setItem('mb-admin-user', 'admin@mibarrunto.com');
+        localStorage.removeItem('mb-waiter-info');
       } catch {}
       return true;
     }
@@ -622,7 +738,8 @@ export const adminAuthService = {
       if (!error && data?.session) {
         localStorage.setItem('mb-admin-auth', 'active_admin_session');
         localStorage.setItem('mb-admin-user', data.user.email || emailToTry);
-        return { success: true, user: data.user };
+        localStorage.removeItem('mb-waiter-info');
+        return { success: true, user: data.user, role: 'admin' };
       }
     } catch (e) {
       console.warn('Supabase Auth error:', e.message);
@@ -636,11 +753,39 @@ export const adminAuthService = {
       try {
         localStorage.setItem('mb-admin-auth', 'active_admin_session');
         localStorage.setItem('mb-admin-user', u || 'admin@mibarrunto.com');
+        localStorage.removeItem('mb-waiter-info');
       } catch {}
-      return { success: true, user: { email: u || 'admin@mibarrunto.com' } };
+      return { success: true, user: { email: u || 'admin@mibarrunto.com' }, role: 'admin' };
     }
 
-    return { success: false, error: 'Credenciales inválidas' };
+    return { success: false, error: 'Credenciales de administrador inválidas' };
+  },
+
+  loginWaiter(username, pin, waitersList = []) {
+    const u = (username || '').toLowerCase().trim();
+    const p = String(pin || '').trim();
+
+    if (!u || !p) {
+      return { success: false, error: 'Por favor ingresa tu usuario y PIN de acceso.' };
+    }
+
+    const foundWaiter = waitersList.find(w => {
+      const wUser = (w.username || w.name?.toLowerCase().replace(/[^a-z0-9]/g, '') || '').toLowerCase().trim();
+      const wName = (w.name || '').toLowerCase().trim();
+      const wPin = String(w.pin || '').trim();
+      return (wUser === u || wName === u) && wPin === p;
+    });
+
+    if (foundWaiter) {
+      try {
+        localStorage.setItem('mb-admin-auth', 'waiter_session');
+        localStorage.setItem('mb-admin-user', foundWaiter.name);
+        localStorage.setItem('mb-waiter-info', JSON.stringify(foundWaiter));
+      } catch {}
+      return { success: true, waiter: foundWaiter, role: 'waiter' };
+    }
+
+    return { success: false, error: 'Usuario o PIN incorrecto. Verifica con administración.' };
   },
 
   getCurrentUser() {
@@ -656,6 +801,7 @@ export const adminAuthService = {
       await supabase.auth.signOut().catch(() => {});
       localStorage.removeItem('mb-admin-auth');
       localStorage.removeItem('mb-admin-user');
+      localStorage.removeItem('mb-waiter-info');
     } catch {}
   }
 };

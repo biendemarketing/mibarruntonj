@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Bell, BellRing, Utensils, Layers, QrCode, Users, LogOut, 
   ExternalLink, Lock, Check, ShieldCheck, KeyRound, 
   Clock, Volume2, VolumeX, ArrowLeft, RefreshCw, Printer,
-  Menu, X, Mail, ShieldAlert, Sparkles, ChefHat, User
+  Menu, X, Mail, ShieldAlert, Sparkles, ChefHat, User,
+  UserCheck, Eye, EyeOff
 } from 'lucide-react';
 import { 
   ordersService, menuService, tablesService, 
@@ -32,9 +33,21 @@ export function AdminPage() {
 
   // Estado de Autenticación
   const [isAuthenticated, setIsAuthenticated] = useState(() => adminAuthService.isAuthenticated());
+  const [authRole, setAuthRole] = useState(() => adminAuthService.getAuthRole());
+  const [currentWaiter, setCurrentWaiter] = useState(() => adminAuthService.getCurrentWaiter());
+
+  const [loginMode, setLoginMode] = useState('admin'); // 'admin' | 'waiter'
   const [loginUser, setLoginUser] = useState('admin@mibarrunto.com');
   const [loginPassword, setLoginPassword] = useState('');
+  const [waiterUsername, setWaiterUsername] = useState('');
+  const [waiterPin, setWaiterPin] = useState('');
+  const [showWaiterPin, setShowWaiterPin] = useState(false);
   const [loginError, setLoginError] = useState(false);
+
+  // Cargar lista de personal desde el inicio para permitir login de meseros
+  useEffect(() => {
+    waitersService.getWaiters().then(setWaiters).catch(() => {});
+  }, []);
 
   // Pestaña Activa
   const [activeTab, setActiveTab] = useState('orders'); // 'orders', 'dishes', 'categories', 'tables', 'waiters', 'printable'
@@ -196,6 +209,8 @@ export function AdminPage() {
     setIsLoading(false);
     if (result.success) {
       setIsAuthenticated(true);
+      setAuthRole('admin');
+      setCurrentWaiter(null);
       setLoginError(false);
       setLoginPassword('');
     } else {
@@ -205,18 +220,51 @@ export function AdminPage() {
     }
   };
 
+  const handleLoginWaiter = async (e) => {
+    e.preventDefault();
+    triggerHaptic(10);
+    setIsLoading(true);
+
+    let waiterList = waiters;
+    if (!waiterList || waiterList.length === 0) {
+      waiterList = await waitersService.getWaiters().catch(() => []);
+      setWaiters(waiterList);
+    }
+
+    const result = adminAuthService.loginWaiter(waiterUsername, waiterPin, waiterList);
+    setIsLoading(false);
+
+    if (result.success) {
+      setIsAuthenticated(true);
+      setAuthRole('waiter');
+      setCurrentWaiter(result.waiter);
+      setActiveTab('orders');
+      setLoginError(false);
+      setWaiterPin('');
+    } else {
+      setLoginError(result.error || true);
+      triggerHaptic([40, 60, 40]);
+      setTimeout(() => setLoginError(false), 3000);
+    }
+  };
+
   const handleLogout = async () => {
     triggerHaptic(10);
+    const isWaiter = authRole === 'waiter';
     const confirmed = await showConfirm({
-      title: '¿Cerrar Sesión?',
-      message: '¿Deseas salir del panel administrativo de Mi Barrunto?',
-      confirmText: 'Cerrar Sesión',
+      title: isWaiter ? '¿Finalizar Turno de Mesero?' : '¿Cerrar Sesión de Administrador?',
+      message: isWaiter
+        ? `¿Confirmas finalizar el turno de ${currentWaiter?.name || 'mesero'}? Podrás volver a ingresar con tu PIN.`
+        : '¿Deseas salir del panel administrativo central de Mi Barrunto?',
+      confirmText: isWaiter ? 'Finalizar Turno' : 'Cerrar Sesión',
       cancelText: 'Permanecer',
       isDestructive: true
     });
     if (confirmed) {
       await adminAuthService.logout();
       setIsAuthenticated(false);
+      setAuthRole(null);
+      setCurrentWaiter(null);
     }
   };
 
@@ -373,17 +421,48 @@ export function AdminPage() {
   };
 
   // Pestañas de navegación
+  // Pestañas de navegación según rol y permisos
   const pendingCount = orders.filter(o => o.status === 'pending').length;
-  const navTabs = [
-    { id: 'orders', label: 'Pedidos en Vivo', icon: Bell, badge: pendingCount },
-    { id: 'dishes', label: 'Gestión de Platos', icon: Utensils, badge: dishes.length },
-    { id: 'categories', label: 'Categorías', icon: Layers, badge: categories.length },
-    { id: 'tables', label: 'Mesas & QR', icon: QrCode, badge: tables.length },
-    { id: 'waiters', label: 'Personal & Meseros', icon: Users, badge: waiters.length },
-    { id: 'printable', label: 'Menú Imprimible', icon: Printer }
-  ];
+  const waiterPermLevel = currentWaiter?.permission_level || (currentWaiter?.role === 'capitan' ? 'pedidos_y_mesas' : 'solo_pedidos');
 
-  // 1. Pantalla de Login en TEMA LIGHT
+  const navTabs = useMemo(() => {
+    const allTabs = [
+      { id: 'orders', label: 'Pedidos en Vivo', icon: Bell, badge: pendingCount },
+      { id: 'dishes', label: 'Gestión de Platos', icon: Utensils, badge: dishes.length },
+      { id: 'categories', label: 'Categorías', icon: Layers, badge: categories.length },
+      { id: 'tables', label: 'Mesas & QR', icon: QrCode, badge: tables.length },
+      { id: 'waiters', label: 'Personal & Meseros', icon: Users, badge: waiters.length },
+      { id: 'printable', label: 'Menú Imprimible', icon: Printer }
+    ];
+
+    // La cuenta admin siempre puede ver todo
+    if (authRole === 'admin') {
+      return allTabs;
+    }
+
+    // Meseros con permisos según su nivel asignado
+    if (authRole === 'waiter') {
+      if (waiterPermLevel === 'admin_completo') {
+        return allTabs;
+      }
+      if (waiterPermLevel === 'pedidos_y_mesas') {
+        return allTabs.filter(t => t.id === 'orders' || t.id === 'tables');
+      }
+      // 'solo_pedidos' (predeterminado para meseros)
+      return allTabs.filter(t => t.id === 'orders');
+    }
+
+    return allTabs;
+  }, [authRole, waiterPermLevel, pendingCount, dishes.length, categories.length, tables.length, waiters.length]);
+
+  // Si la pestaña activa no está permitida para el rol actual, redirigir a 'orders'
+  useEffect(() => {
+    if (navTabs.length > 0 && !navTabs.some(t => t.id === activeTab)) {
+      setActiveTab(navTabs[0].id);
+    }
+  }, [navTabs, activeTab]);
+
+  // 1. Pantalla de Login en TEMA LIGHT con Switcher Admin / Mesero
   if (!isAuthenticated) {
     return (
       <div
@@ -429,145 +508,305 @@ export function AdminPage() {
               }}
             />
             <h1 style={{ fontSize: '1.35rem', fontWeight: 900, margin: 0, color: '#1f1e1c', letterSpacing: '-0.3px' }}>
-              Mi Barrunto · Administración
+              Mi Barrunto · Panel Operativo
             </h1>
             <p style={{ fontSize: '0.82rem', color: '#78716c', margin: 0 }}>
-              Acceso seguro para administración, cocina y meseros
+              Acceso para administración general y meseros de sala
             </p>
           </div>
 
-          {/* Caja de Referencia de Credenciales */}
+          {/* Switcher de Modo de Ingreso: Admin vs Mesero */}
           <div
             style={{
-              width: '100%',
-              backgroundColor: '#f8f4ec',
-              borderRadius: '16px',
-              padding: '0.85rem 1rem',
               display: 'flex',
-              flexDirection: 'column',
-              gap: '0.35rem',
-              textAlign: 'left'
+              width: '100%',
+              backgroundColor: '#f5efe4',
+              padding: '0.3rem',
+              borderRadius: '14px',
+              gap: '0.35rem'
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', color: 'var(--rojo, #d91c2b)', fontWeight: 800, fontSize: '0.78rem' }}>
-              <ShieldCheck size={16} />
-              <span>Credenciales de Acceso:</span>
-            </div>
-            <div style={{ fontSize: '0.76rem', color: '#57534e', display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
-              <span><strong>Usuario / Correo:</strong> <code style={{ backgroundColor: '#ffffff', padding: '0.1rem 0.35rem', borderRadius: '4px' }}>admin@mibarrunto.com</code></span>
-              <span><strong>Contraseña:</strong> <code style={{ backgroundColor: '#ffffff', padding: '0.1rem 0.35rem', borderRadius: '4px' }}>barrunto2026</code> (o PIN: <code style={{ backgroundColor: '#ffffff', padding: '0.1rem 0.35rem', borderRadius: '4px' }}>2026</code>)</span>
-            </div>
-          </div>
-
-          <form onSubmit={handleLogin} style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            {/* Campo Usuario o Correo */}
-            <div style={{ textAlign: 'left' }}>
-              <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 800, color: '#1f1e1c', marginBottom: '0.35rem' }}>
-                Usuario o Correo Electrónico
-              </label>
-              <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-                <div style={{ position: 'absolute', left: '1rem', color: '#78716c', pointerEvents: 'none' }}>
-                  <Mail size={17} />
-                </div>
-                <input
-                  type="text"
-                  required
-                  value={loginUser}
-                  onChange={(e) => setLoginUser(e.target.value)}
-                  placeholder="admin@mibarrunto.com"
-                  style={{
-                    width: '100%',
-                    padding: '0.85rem 1rem 0.85rem 2.85rem',
-                    fontSize: '0.92rem',
-                    fontWeight: 600,
-                    backgroundColor: '#f5efe4',
-                    color: '#1f1e1c',
-                    borderRadius: '16px',
-                    border: 'none !important',
-                    outline: 'none',
-                    boxShadow: 'none'
-                  }}
-                />
-              </div>
-            </div>
-
-            {/* Campo Contraseña o PIN */}
-            <div style={{ textAlign: 'left' }}>
-              <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 800, color: '#1f1e1c', marginBottom: '0.35rem' }}>
-                Contraseña o Clave Maestra
-              </label>
-              <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-                <div style={{ position: 'absolute', left: '1rem', color: '#78716c', pointerEvents: 'none' }}>
-                  <KeyRound size={17} />
-                </div>
-                <input
-                  type="password"
-                  required
-                  autoFocus
-                  value={loginPassword}
-                  onChange={(e) => setLoginPassword(e.target.value)}
-                  placeholder="••••••••"
-                  style={{
-                    width: '100%',
-                    padding: '0.85rem 1rem 0.85rem 2.85rem',
-                    fontSize: '0.95rem',
-                    fontWeight: 700,
-                    backgroundColor: '#f5efe4',
-                    color: '#1f1e1c',
-                    borderRadius: '16px',
-                    border: 'none !important',
-                    outline: 'none',
-                    boxShadow: loginError ? '0 0 0 2px #ef4444' : 'none'
-                  }}
-                />
-              </div>
-              {loginError && (
-                <span style={{ fontSize: '0.78rem', color: '#ef4444', fontWeight: 700, display: 'block', marginTop: '0.4rem' }}>
-                  Credenciales incorrectas. Verifica el correo y la contraseña.
-                </span>
-              )}
-            </div>
-
-            <button
-              type="submit"
-              style={{
-                width: '100%',
-                backgroundColor: 'var(--rojo, #d91c2b)',
-                color: '#ffffff',
-                fontWeight: 800,
-                fontSize: '0.98rem',
-                padding: '0.9rem',
-                borderRadius: '16px',
-                cursor: 'pointer',
-                border: 'none !important',
-                boxShadow: '0 8px 25px rgba(217, 28, 43, 0.35)',
-                marginTop: '0.35rem'
-              }}
-            >
-              Ingresar al Panel
-            </button>
-
             <button
               type="button"
-              onClick={() => navigate('/')}
+              onClick={() => {
+                triggerHaptic(6);
+                setLoginMode('admin');
+                setLoginError(false);
+              }}
               style={{
-                backgroundColor: 'transparent',
-                color: '#78716c',
-                fontSize: '0.84rem',
-                fontWeight: 700,
+                flex: 1,
+                padding: '0.65rem 0.5rem',
+                borderRadius: '10px',
+                backgroundColor: loginMode === 'admin' ? '#ffffff' : 'transparent',
+                color: loginMode === 'admin' ? 'var(--rojo, #d91c2b)' : '#6b635b',
+                fontWeight: 800,
+                fontSize: '0.82rem',
                 cursor: 'pointer',
                 border: 'none !important',
+                boxShadow: loginMode === 'admin' ? '0 2px 8px rgba(0,0,0,0.06)' : 'none',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '0.35rem',
-                marginTop: '0.25rem'
+                transition: 'all 0.15s ease'
               }}
             >
-              <ArrowLeft size={15} />
-              <span>Volver a la Carta del Menú</span>
+              <ShieldCheck size={15} />
+              <span>Administrador</span>
             </button>
-          </form>
+
+            <button
+              type="button"
+              onClick={() => {
+                triggerHaptic(6);
+                setLoginMode('waiter');
+                setLoginError(false);
+              }}
+              style={{
+                flex: 1,
+                padding: '0.65rem 0.5rem',
+                borderRadius: '10px',
+                backgroundColor: loginMode === 'waiter' ? '#ffffff' : 'transparent',
+                color: loginMode === 'waiter' ? '#2563eb' : '#6b635b',
+                fontWeight: 800,
+                fontSize: '0.82rem',
+                cursor: 'pointer',
+                border: 'none !important',
+                boxShadow: loginMode === 'waiter' ? '0 2px 8px rgba(0,0,0,0.06)' : 'none',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.35rem',
+                transition: 'all 0.15s ease'
+              }}
+            >
+              <UserCheck size={15} />
+              <span>Mesero / Sala</span>
+            </button>
+          </div>
+
+          {/* Formulario Administrador */}
+          {loginMode === 'admin' && (
+            <form onSubmit={handleLogin} style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              {/* Campo Usuario o Correo */}
+              <div style={{ textAlign: 'left' }}>
+                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 800, color: '#1f1e1c', marginBottom: '0.35rem' }}>
+                  Usuario o Correo Administrador
+                </label>
+                <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                  <div style={{ position: 'absolute', left: '1rem', color: '#78716c', pointerEvents: 'none' }}>
+                    <Mail size={17} />
+                  </div>
+                  <input
+                    type="text"
+                    required
+                    value={loginUser}
+                    onChange={(e) => setLoginUser(e.target.value)}
+                    placeholder="admin@mibarrunto.com"
+                    style={{
+                      width: '100%',
+                      padding: '0.85rem 1rem 0.85rem 2.85rem',
+                      fontSize: '0.92rem',
+                      fontWeight: 600,
+                      backgroundColor: '#f5efe4',
+                      color: '#1f1e1c',
+                      borderRadius: '16px',
+                      border: 'none !important',
+                      outline: 'none'
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* Campo Contraseña Admin */}
+              <div style={{ textAlign: 'left' }}>
+                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 800, color: '#1f1e1c', marginBottom: '0.35rem' }}>
+                  Contraseña de Administrador
+                </label>
+                <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                  <div style={{ position: 'absolute', left: '1rem', color: '#78716c', pointerEvents: 'none' }}>
+                    <KeyRound size={17} />
+                  </div>
+                  <input
+                    type="password"
+                    required
+                    autoFocus
+                    value={loginPassword}
+                    onChange={(e) => setLoginPassword(e.target.value)}
+                    placeholder="••••••••"
+                    style={{
+                      width: '100%',
+                      padding: '0.85rem 1rem 0.85rem 2.85rem',
+                      fontSize: '0.95rem',
+                      fontWeight: 700,
+                      backgroundColor: '#f5efe4',
+                      color: '#1f1e1c',
+                      borderRadius: '16px',
+                      border: 'none !important',
+                      outline: 'none',
+                      boxShadow: loginError ? '0 0 0 2px #ef4444' : 'none'
+                    }}
+                  />
+                </div>
+                {loginError && (
+                  <span style={{ fontSize: '0.78rem', color: '#ef4444', fontWeight: 700, display: 'block', marginTop: '0.4rem' }}>
+                    {typeof loginError === 'string' ? loginError : 'Credenciales incorrectas. Verifica el correo y la contraseña.'}
+                  </span>
+                )}
+              </div>
+
+              <button
+                type="submit"
+                disabled={isLoading}
+                style={{
+                  width: '100%',
+                  backgroundColor: 'var(--rojo, #d91c2b)',
+                  color: '#ffffff',
+                  fontWeight: 800,
+                  fontSize: '0.98rem',
+                  padding: '0.9rem',
+                  borderRadius: '16px',
+                  cursor: 'pointer',
+                  border: 'none !important',
+                  boxShadow: '0 8px 25px rgba(217, 28, 43, 0.35)',
+                  marginTop: '0.35rem'
+                }}
+              >
+                {isLoading ? 'Verificando...' : 'Ingresar como Administrador'}
+              </button>
+            </form>
+          )}
+
+          {/* Formulario Mesero (Usuario + PIN con Ojo) */}
+          {loginMode === 'waiter' && (
+            <form onSubmit={handleLoginWaiter} style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div style={{ textAlign: 'left' }}>
+                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 800, color: '#1f1e1c', marginBottom: '0.35rem' }}>
+                  Nombre de Usuario de Mesero
+                </label>
+                <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                  <div style={{ position: 'absolute', left: '1rem', color: '#78716c', pointerEvents: 'none' }}>
+                    <User size={17} />
+                  </div>
+                  <input
+                    type="text"
+                    required
+                    autoFocus
+                    value={waiterUsername}
+                    onChange={(e) => setWaiterUsername(e.target.value.toLowerCase().replace(/[^a-z0-9._-]/g, ''))}
+                    placeholder="ej: carlosg"
+                    style={{
+                      width: '100%',
+                      padding: '0.85rem 1rem 0.85rem 2.85rem',
+                      fontSize: '0.92rem',
+                      fontWeight: 600,
+                      backgroundColor: '#f5efe4',
+                      color: '#1f1e1c',
+                      borderRadius: '16px',
+                      border: 'none !important',
+                      outline: 'none'
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div style={{ textAlign: 'left' }}>
+                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 800, color: '#1f1e1c', marginBottom: '0.35rem' }}>
+                  PIN de Acceso (4 dígitos)
+                </label>
+                <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                  <div style={{ position: 'absolute', left: '1rem', color: '#78716c', pointerEvents: 'none' }}>
+                    <KeyRound size={17} />
+                  </div>
+                  <input
+                    type={showWaiterPin ? 'text' : 'password'}
+                    maxLength={6}
+                    required
+                    value={waiterPin}
+                    onChange={(e) => setWaiterPin(e.target.value.replace(/\D/g, ''))}
+                    placeholder="••••"
+                    style={{
+                      width: '100%',
+                      padding: '0.85rem 2.85rem 0.85rem 2.85rem',
+                      fontSize: '0.95rem',
+                      fontWeight: 700,
+                      backgroundColor: '#f5efe4',
+                      color: '#1f1e1c',
+                      borderRadius: '16px',
+                      border: 'none !important',
+                      outline: 'none',
+                      letterSpacing: showWaiterPin ? 'normal' : '3px',
+                      boxShadow: loginError ? '0 0 0 2px #ef4444' : 'none'
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowWaiterPin(!showWaiterPin)}
+                    style={{
+                      position: 'absolute',
+                      right: '0.85rem',
+                      background: 'none',
+                      border: 'none !important',
+                      color: '#78716c',
+                      cursor: 'pointer',
+                      padding: '0.3rem',
+                      display: 'flex',
+                      alignItems: 'center'
+                    }}
+                    title={showWaiterPin ? 'Ocultar PIN' : 'Ver PIN'}
+                  >
+                    {showWaiterPin ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
+                {loginError && (
+                  <span style={{ fontSize: '0.78rem', color: '#ef4444', fontWeight: 700, display: 'block', marginTop: '0.4rem' }}>
+                    {typeof loginError === 'string' ? loginError : 'Usuario o PIN incorrecto. Consulta con administración.'}
+                  </span>
+                )}
+              </div>
+
+              <button
+                type="submit"
+                disabled={isLoading}
+                style={{
+                  width: '100%',
+                  backgroundColor: '#2563eb',
+                  color: '#ffffff',
+                  fontWeight: 800,
+                  fontSize: '0.98rem',
+                  padding: '0.9rem',
+                  borderRadius: '16px',
+                  cursor: 'pointer',
+                  border: 'none !important',
+                  boxShadow: '0 8px 25px rgba(37, 99, 235, 0.35)',
+                  marginTop: '0.35rem'
+                }}
+              >
+                {isLoading ? 'Verificando...' : 'Iniciar Turno de Mesero'}
+              </button>
+            </form>
+          )}
+
+          <button
+            type="button"
+            onClick={() => navigate('/')}
+            style={{
+              backgroundColor: 'transparent',
+              color: '#78716c',
+              fontSize: '0.84rem',
+              fontWeight: 700,
+              cursor: 'pointer',
+              border: 'none !important',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.35rem',
+              marginTop: '0.25rem'
+            }}
+          >
+            <ArrowLeft size={15} />
+            <span>Volver a la Carta del Menú</span>
+          </button>
         </div>
       </div>
     );
@@ -800,31 +1039,36 @@ export function AdminPage() {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              padding: '0.65rem 0.85rem',
-              borderRadius: '14px',
+              padding: '0.75rem 0.95rem',
+              borderRadius: '16px',
               backgroundColor: '#f8f4ec'
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', minWidth: 0 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', minWidth: 0 }}>
               <div
                 style={{
-                  width: '32px',
-                  height: '32px',
-                  borderRadius: '10px',
-                  backgroundColor: 'rgba(217, 28, 43, 0.1)',
-                  color: 'var(--rojo, #d91c2b)',
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '12px',
+                  backgroundColor: authRole === 'waiter' ? 'rgba(37, 99, 235, 0.12)' : 'rgba(217, 28, 43, 0.1)',
+                  color: authRole === 'waiter' ? '#2563eb' : 'var(--rojo, #d91c2b)',
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'center'
+                  justifyContent: 'center',
+                  flexShrink: 0
                 }}
               >
-                <User size={16} />
+                {authRole === 'waiter' ? <UserCheck size={18} /> : <ShieldCheck size={18} />}
               </div>
               <div style={{ minWidth: 0 }}>
-                <p style={{ margin: 0, fontSize: '0.78rem', fontWeight: 800, color: '#1f1e1c', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                  {adminAuthService.getCurrentUser()}
+                <p style={{ margin: 0, fontSize: '0.82rem', fontWeight: 800, color: '#1f1e1c', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  {authRole === 'waiter' ? currentWaiter?.name || 'Mesero de Sala' : 'Administrador'}
                 </p>
-                <span style={{ fontSize: '0.68rem', color: '#78716c' }}>Administrador</span>
+                <span style={{ fontSize: '0.7rem', color: authRole === 'waiter' ? '#2563eb' : '#78716c', fontWeight: 700 }}>
+                  {authRole === 'waiter' 
+                    ? `@${currentWaiter?.username || 'mesero'} · Turno Activo` 
+                    : 'Acceso Total Central'}
+                </span>
               </div>
             </div>
 
@@ -834,14 +1078,14 @@ export function AdminPage() {
               style={{
                 backgroundColor: 'rgba(239, 68, 68, 0.1)',
                 color: '#ef4444',
-                padding: '0.45rem',
-                borderRadius: '8px',
+                padding: '0.5rem',
+                borderRadius: '10px',
                 border: 'none !important',
                 cursor: 'pointer'
               }}
-              title="Cerrar sesión"
+              title={authRole === 'waiter' ? 'Finalizar turno' : 'Cerrar sesión'}
             >
-              <LogOut size={15} />
+              <LogOut size={16} />
             </button>
           </div>
         </div>
@@ -1007,32 +1251,29 @@ export function AdminPage() {
 
       {/* ÁREA DE CONTENIDO PRINCIPAL */}
       <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
-        {/* Topbar Superior Flotante con Bordes Redondeados */}
+        {/* Barra Superior Mínima (Solo visible en Móvil/Tablet cuando el Sidebar lateral está oculto) */}
         <header
-          className="admin-floating-header"
+          className="admin-mobile-only-header"
           style={{
             position: 'sticky',
-            top: '1.25rem',
+            top: '0.75rem',
             zIndex: 700,
-            backgroundColor: 'rgba(255, 255, 255, 0.94)',
+            backgroundColor: 'rgba(255, 255, 255, 0.95)',
             backdropFilter: 'blur(16px)',
             WebkitBackdropFilter: 'blur(16px)',
-            margin: '1.25rem 1.25rem 0 1.25rem',
-            borderRadius: '20px',
-            padding: '0.85rem 1.5rem',
-            boxShadow: '0 8px 30px rgba(0, 0, 0, 0.04)',
-            display: 'flex',
+            margin: '0.75rem 0.75rem 0 0.75rem',
+            borderRadius: '16px',
+            padding: '0.65rem 1rem',
+            boxShadow: '0 6px 20px rgba(0, 0, 0, 0.04)',
+            display: 'none',
             alignItems: 'center',
             justifyContent: 'space-between',
-            gap: '1rem',
             border: 'none !important'
           }}
         >
-          {/* Botón Hamburguesa en Móvil + Título */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
             <button
               type="button"
-              className="admin-hamburger-btn"
               onClick={() => {
                 triggerHaptic(8);
                 setIsMobileSidebarOpen(true);
@@ -1040,96 +1281,40 @@ export function AdminPage() {
               style={{
                 backgroundColor: '#f5efe4',
                 color: '#1f1e1c',
-                padding: '0.5rem',
+                padding: '0.45rem',
                 borderRadius: '10px',
                 border: 'none !important',
                 cursor: 'pointer',
-                display: 'none' // Se muestra en CSS para móviles y tablets
+                display: 'flex',
+                alignItems: 'center'
               }}
+              title="Abrir menú"
             >
-              <Menu size={20} />
+              <Menu size={19} />
             </button>
-
             <div>
-              <h1 style={{ fontSize: '1.15rem', fontWeight: 900, margin: 0, color: '#1f1e1c' }}>
-                {navTabs.find(t => t.id === activeTab)?.label || 'Panel de Administración'}
-              </h1>
-              <span style={{ fontSize: '0.75rem', color: '#78716c' }}>
-                Gestión Integral del Restaurante
+              <span style={{ fontSize: '0.92rem', fontWeight: 900, color: '#1f1e1c', display: 'block', lineHeight: 1.2 }}>
+                {navTabs.find(t => t.id === activeTab)?.label || 'Panel de Sala'}
+              </span>
+              <span style={{ fontSize: '0.68rem', color: '#78716c' }}>
+                Mi Barrunto · {authRole === 'waiter' ? (currentWaiter?.name || 'Mesero') : 'Administración'}
               </span>
             </div>
           </div>
 
-          {/* Acciones Rápidas del Topbar */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexWrap: 'wrap' }}>
-            {notificationPermission !== 'granted' && (
-              <button
-                type="button"
-                onClick={handleEnableNotifications}
-                style={{
-                  backgroundColor: 'rgba(217, 28, 43, 0.08)',
-                  color: 'var(--rojo, #d91c2b)',
-                  padding: '0.55rem 0.95rem',
-                  borderRadius: '9999px',
-                  fontSize: '0.82rem',
-                  fontWeight: 800,
-                  cursor: 'pointer',
-                  border: 'none !important',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.45rem',
-                  transition: 'background-color 0.15s ease'
-                }}
-                title="Permitir avisos en pantalla cuando ingresen pedidos"
-              >
-                <BellRing size={15} />
-                <span>Activar Notificaciones</span>
-              </button>
-            )}
-
-            <button
-              type="button"
-              onClick={loadAllData}
-              disabled={isLoading}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+            <span
               style={{
-                backgroundColor: '#f5efe4',
-                color: '#1f1e1c',
-                padding: '0.55rem 0.95rem',
-                borderRadius: '9999px',
-                fontSize: '0.82rem',
-                fontWeight: 700,
-                cursor: 'pointer',
-                border: 'none !important',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.45rem'
-              }}
-            >
-              <RefreshCw size={14} className={isLoading ? 'spin-icon' : ''} />
-              <span>Sincronizar</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => navigate('/')}
-              style={{
-                backgroundColor: 'var(--rojo, #d91c2b)',
-                color: '#ffffff',
-                padding: '0.55rem 1.05rem',
-                borderRadius: '9999px',
-                fontSize: '0.82rem',
+                fontSize: '0.72rem',
                 fontWeight: 800,
-                cursor: 'pointer',
-                border: 'none !important',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.45rem',
-                boxShadow: '0 4px 15px rgba(217, 28, 43, 0.25)'
+                color: authRole === 'waiter' ? '#2563eb' : 'var(--rojo, #d91c2b)',
+                backgroundColor: authRole === 'waiter' ? 'rgba(37, 99, 235, 0.1)' : 'rgba(217, 28, 43, 0.1)',
+                padding: '0.25rem 0.6rem',
+                borderRadius: '8px'
               }}
             >
-              <ExternalLink size={14} />
-              <span>Ver Menú</span>
-            </button>
+              {authRole === 'waiter' ? (currentWaiter?.name?.split(' ')[0] || 'Mesero') : 'Admin'}
+            </span>
           </div>
         </header>
 
@@ -1334,98 +1519,104 @@ export function AdminPage() {
         }}
       >
         {/* Órdenes */}
-        <button
-          type="button"
-          onClick={() => {
-            triggerHaptic(8);
-            setActiveTab('orders');
-          }}
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: '0.2rem',
-            padding: '0.5rem 0.85rem',
-            borderRadius: '16px',
-            backgroundColor: activeTab === 'orders' ? 'rgba(217, 28, 43, 0.1)' : 'transparent',
-            color: activeTab === 'orders' ? 'var(--rojo, #d91c2b)' : '#6b635b',
-            cursor: 'pointer',
-            border: 'none !important',
-            position: 'relative'
-          }}
-        >
-          <Bell size={20} />
-          <span style={{ fontSize: '0.72rem', fontWeight: 800 }}>Pedidos</span>
-          {pendingCount > 0 && (
-            <span
-              style={{
-                position: 'absolute',
-                top: '4px',
-                right: '8px',
-                backgroundColor: 'var(--rojo, #d91c2b)',
-                color: '#ffffff',
-                fontSize: '0.62rem',
-                fontWeight: 900,
-                width: '16px',
-                height: '16px',
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}
-            >
-              {pendingCount}
-            </span>
-          )}
-        </button>
+        {navTabs.some(t => t.id === 'orders') && (
+          <button
+            type="button"
+            onClick={() => {
+              triggerHaptic(8);
+              setActiveTab('orders');
+            }}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '0.2rem',
+              padding: '0.5rem 0.85rem',
+              borderRadius: '16px',
+              backgroundColor: activeTab === 'orders' ? 'rgba(217, 28, 43, 0.1)' : 'transparent',
+              color: activeTab === 'orders' ? 'var(--rojo, #d91c2b)' : '#6b635b',
+              cursor: 'pointer',
+              border: 'none !important',
+              position: 'relative'
+            }}
+          >
+            <Bell size={20} />
+            <span style={{ fontSize: '0.72rem', fontWeight: 800 }}>Pedidos</span>
+            {pendingCount > 0 && (
+              <span
+                style={{
+                  position: 'absolute',
+                  top: '4px',
+                  right: '8px',
+                  backgroundColor: 'var(--rojo, #d91c2b)',
+                  color: '#ffffff',
+                  fontSize: '0.62rem',
+                  fontWeight: 900,
+                  width: '16px',
+                  height: '16px',
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+              >
+                {pendingCount}
+              </span>
+            )}
+          </button>
+        )}
 
         {/* Mesas & QR */}
-        <button
-          type="button"
-          onClick={() => {
-            triggerHaptic(8);
-            setActiveTab('tables');
-          }}
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: '0.2rem',
-            padding: '0.5rem 0.85rem',
-            borderRadius: '16px',
-            backgroundColor: activeTab === 'tables' ? 'rgba(217, 28, 43, 0.1)' : 'transparent',
-            color: activeTab === 'tables' ? 'var(--rojo, #d91c2b)' : '#6b635b',
-            cursor: 'pointer',
-            border: 'none !important'
-          }}
-        >
-          <QrCode size={20} />
-          <span style={{ fontSize: '0.72rem', fontWeight: 800 }}>Mesas</span>
-        </button>
+        {navTabs.some(t => t.id === 'tables') && (
+          <button
+            type="button"
+            onClick={() => {
+              triggerHaptic(8);
+              setActiveTab('tables');
+            }}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '0.2rem',
+              padding: '0.5rem 0.85rem',
+              borderRadius: '16px',
+              backgroundColor: activeTab === 'tables' ? 'rgba(217, 28, 43, 0.1)' : 'transparent',
+              color: activeTab === 'tables' ? 'var(--rojo, #d91c2b)' : '#6b635b',
+              cursor: 'pointer',
+              border: 'none !important'
+            }}
+          >
+            <QrCode size={20} />
+            <span style={{ fontSize: '0.72rem', fontWeight: 800 }}>Mesas</span>
+          </button>
+        )}
 
         {/* Platos */}
-        <button
-          type="button"
-          onClick={() => {
-            triggerHaptic(8);
-            setActiveTab('dishes');
-          }}
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: '0.2rem',
-            padding: '0.5rem 0.85rem',
-            borderRadius: '16px',
-            backgroundColor: activeTab === 'dishes' ? 'rgba(217, 28, 43, 0.1)' : 'transparent',
-            color: activeTab === 'dishes' ? 'var(--rojo, #d91c2b)' : '#6b635b',
-            cursor: 'pointer',
-            border: 'none !important'
-          }}
-        >
-          <Utensils size={20} />
-          <span style={{ fontSize: '0.72rem', fontWeight: 800 }}>Platos</span>
-        </button>
+        {navTabs.some(t => t.id === 'dishes') && (
+          <button
+            type="button"
+            onClick={() => {
+              triggerHaptic(8);
+              setActiveTab('dishes');
+            }}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '0.2rem',
+              padding: '0.5rem 0.85rem',
+              borderRadius: '16px',
+              backgroundColor: activeTab === 'dishes' ? 'rgba(217, 28, 43, 0.1)' : 'transparent',
+              color: activeTab === 'dishes' ? 'var(--rojo, #d91c2b)' : '#6b635b',
+              cursor: 'pointer',
+              border: 'none !important'
+            }}
+          >
+            <Utensils size={20} />
+            <span style={{ fontSize: '0.72rem', fontWeight: 800 }}>Platos</span>
+          </button>
+        )}
 
         {/* Más Opciones (Abre Drawer Lateral Completo) */}
         <button
@@ -1458,7 +1649,7 @@ export function AdminPage() {
           .admin-sidebar-desktop {
             display: none !important;
           }
-          .admin-hamburger-btn {
+          .admin-mobile-only-header {
             display: flex !important;
           }
           .admin-floating-bottom-nav {
@@ -1466,11 +1657,6 @@ export function AdminPage() {
           }
           main {
             padding-bottom: 90px !important;
-          }
-          .admin-floating-header {
-            margin: 0.75rem 0.75rem 0 0.75rem !important;
-            top: 0.75rem !important;
-            padding: 0.75rem 1rem !important;
           }
         }
       `}</style>

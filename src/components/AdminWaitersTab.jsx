@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Trash2, Edit2, UserCheck, Phone, KeyRound, RefreshCw, X, Shield } from 'lucide-react';
+import { Plus, Trash2, Edit2, UserCheck, Phone, KeyRound, RefreshCw, X, Shield, Eye, EyeOff, User, ShieldCheck } from 'lucide-react';
 import { useAlertConfirm } from '../context/AlertConfirmContext';
 import { triggerHaptic } from '../utils/haptics';
 
@@ -14,22 +14,43 @@ export function AdminWaitersTab({
   const { showConfirm, showAlert } = useAlertConfirm();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingWaiter, setEditingWaiter] = useState(null);
+  const [showModalPin, setShowModalPin] = useState(false);
+  const [revealedCardPins, setRevealedCardPins] = useState(new Set());
 
   const [formData, setFormData] = useState({
     name: '',
+    username: '',
     pin: '1234',
     phone: '',
-    role: 'mesero'
+    role: 'mesero',
+    permission_level: 'solo_pedidos'
   });
+
+  const toggleRevealCardPin = (waiterId) => {
+    triggerHaptic(6);
+    setRevealedCardPins(prev => {
+      const next = new Set(prev);
+      if (next.has(waiterId)) {
+        next.delete(waiterId);
+      } else {
+        next.add(waiterId);
+      }
+      return next;
+    });
+  };
 
   const handleOpenCreate = () => {
     triggerHaptic(10);
     setEditingWaiter(null);
+    setShowModalPin(false);
+    const generatedPin = String(Math.floor(1000 + Math.random() * 9000));
     setFormData({
       name: '',
-      pin: String(Math.floor(1000 + Math.random() * 9000)),
+      username: '',
+      pin: generatedPin,
       phone: '',
-      role: 'mesero'
+      role: 'mesero',
+      permission_level: 'solo_pedidos'
     });
     setIsModalOpen(true);
   };
@@ -37,11 +58,14 @@ export function AdminWaitersTab({
   const handleOpenEdit = (waiter) => {
     triggerHaptic(10);
     setEditingWaiter(waiter);
+    setShowModalPin(false);
     setFormData({
       name: waiter.name,
+      username: waiter.username || waiter.name.toLowerCase().replace(/[^a-z0-9]/g, ''),
       pin: waiter.pin || '1234',
       phone: waiter.phone || '',
-      role: waiter.role || 'mesero'
+      role: waiter.role || 'mesero',
+      permission_level: waiter.permission_level || (waiter.role === 'admin' ? 'admin_completo' : waiter.role === 'capitan' ? 'pedidos_y_mesas' : 'solo_pedidos')
     });
     setIsModalOpen(true);
   };
@@ -76,20 +100,38 @@ export function AdminWaitersTab({
       return;
     }
 
+    const cleanUsername = (formData.username || formData.name.toLowerCase().replace(/[^a-z0-9]/g, '')).toLowerCase().trim();
+    const cleanPin = String(formData.pin || '1234').trim();
+
+    if (cleanPin.length < 4) {
+      showAlert({
+        title: 'PIN Inválido',
+        message: 'El PIN de acceso debe tener al menos 4 dígitos.',
+        type: 'warning'
+      });
+      return;
+    }
+
+    const payload = {
+      ...formData,
+      username: cleanUsername,
+      pin: cleanPin
+    };
+
     try {
       triggerHaptic(12);
       if (editingWaiter) {
-        await onUpdateWaiter(editingWaiter.id, formData);
+        await onUpdateWaiter(editingWaiter.id, payload);
         showAlert({
           title: 'Datos Actualizados',
-          message: 'Personal actualizado correctamente.',
+          message: `Personal "${formData.name}" actualizado correctamente con usuario @${cleanUsername}.`,
           type: 'success'
         });
       } else {
-        await onCreateWaiter(formData);
+        await onCreateWaiter(payload);
         showAlert({
-          title: 'Mesero Creado',
-          message: `${formData.name} ha sido registrado en el equipo.`,
+          title: 'Mesero Registrado',
+          message: `${formData.name} registrado con usuario de login @${cleanUsername}.`,
           type: 'success'
         });
       }
@@ -223,9 +265,15 @@ export function AdminWaitersTab({
                     <h3 style={{ fontSize: '0.98rem', fontWeight: 800, color: '#1f1e1c', margin: 0 }}>
                       {waiter.name}
                     </h3>
-                    <span style={{ fontSize: '0.75rem', color: '#78716c', fontWeight: 600 }}>
-                      {roleLabels[waiter.role] || waiter.role}
-                    </span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', marginTop: '0.15rem' }}>
+                      <span style={{ fontSize: '0.74rem', color: '#6b635b', fontWeight: 700 }}>
+                        @{waiter.username || waiter.name.toLowerCase().replace(/[^a-z0-9]/g, '')}
+                      </span>
+                      <span style={{ fontSize: '0.68rem', color: '#9ca3af' }}>•</span>
+                      <span style={{ fontSize: '0.72rem', color: '#78716c' }}>
+                        {roleLabels[waiter.role] || waiter.role}
+                      </span>
+                    </div>
                   </div>
                 </div>
 
@@ -265,7 +313,63 @@ export function AdminWaitersTab({
                 </div>
               </div>
 
-              {/* Datos de contacto y PIN */}
+              {/* Badge de Nivel de Permisos */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                {waiter.permission_level === 'admin_completo' ? (
+                  <span
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.3rem',
+                      backgroundColor: '#ecfdf5',
+                      color: '#059669',
+                      fontSize: '0.72rem',
+                      fontWeight: 800,
+                      padding: '0.2rem 0.55rem',
+                      borderRadius: '8px'
+                    }}
+                  >
+                    <ShieldCheck size={12} />
+                    Acceso Total (Administrador)
+                  </span>
+                ) : waiter.permission_level === 'pedidos_y_mesas' ? (
+                  <span
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.3rem',
+                      backgroundColor: '#f5f3ff',
+                      color: '#7c3aed',
+                      fontSize: '0.72rem',
+                      fontWeight: 800,
+                      padding: '0.2rem 0.55rem',
+                      borderRadius: '8px'
+                    }}
+                  >
+                    <UserCheck size={12} />
+                    Pedidos & Mesas
+                  </span>
+                ) : (
+                  <span
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.3rem',
+                      backgroundColor: '#eff6ff',
+                      color: '#2563eb',
+                      fontSize: '0.72rem',
+                      fontWeight: 800,
+                      padding: '0.2rem 0.55rem',
+                      borderRadius: '8px'
+                    }}
+                  >
+                    <User size={12} />
+                    Solo Pedidos (Comandas)
+                  </span>
+                )}
+              </div>
+
+              {/* Datos de contacto y PIN con Ojo para Visualizar */}
               <div
                 style={{
                   backgroundColor: '#f8f4ec',
@@ -282,9 +386,27 @@ export function AdminWaitersTab({
                   <span>{waiter.phone || 'Sin teléfono'}</span>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#d97706', fontWeight: 800 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: '#b45309', fontWeight: 800 }}>
                   <KeyRound size={13} />
-                  <span>PIN: {waiter.pin || '----'}</span>
+                  <span>
+                    PIN: {revealedCardPins.has(waiter.id) ? waiter.pin : '••••'}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => toggleRevealCardPin(waiter.id)}
+                    style={{
+                      background: 'none',
+                      border: 'none !important',
+                      color: '#b45309',
+                      cursor: 'pointer',
+                      padding: '2px',
+                      display: 'flex',
+                      alignItems: 'center'
+                    }}
+                    title={revealedCardPins.has(waiter.id) ? 'Ocultar PIN' : 'Ver PIN'}
+                  >
+                    {revealedCardPins.has(waiter.id) ? <EyeOff size={14} /> : <Eye size={14} />}
+                  </button>
                 </div>
               </div>
             </div>
@@ -315,7 +437,7 @@ export function AdminWaitersTab({
           <div
             style={{
               width: '100%',
-              maxWidth: '440px',
+              maxWidth: '460px',
               backgroundColor: '#ffffff',
               color: '#1f1e1c',
               borderRadius: '24px',
@@ -334,7 +456,7 @@ export function AdminWaitersTab({
                   {editingWaiter ? 'Editar Colaborador' : 'Nuevo Colaborador'}
                 </h3>
                 <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.8rem', color: '#78716c' }}>
-                  Asignación a comandas y control de servicio
+                  Asignación de usuario, PIN de acceso y permisos
                 </p>
               </div>
               <button
@@ -362,8 +484,15 @@ export function AdminWaitersTab({
                   type="text"
                   required
                   value={formData.name}
-                  onChange={(e) => setFormData(p => ({ ...p, name: e.target.value }))}
-                  placeholder="Ej: Juan Perez"
+                  onChange={(e) => {
+                    const nameVal = e.target.value;
+                    setFormData(p => ({
+                      ...p,
+                      name: nameVal,
+                      username: p.username ? p.username : nameVal.toLowerCase().replace(/[^a-z0-9]/g, '')
+                    }));
+                  }}
+                  placeholder="Ej: Carlos Gómez"
                   style={{
                     width: '100%',
                     padding: '0.75rem 0.95rem',
@@ -377,10 +506,87 @@ export function AdminWaitersTab({
                 />
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1.3fr 1fr', gap: '0.85rem' }}>
+              {/* Fila: Nombre de Usuario para Login + PIN con Ojo */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '0.85rem' }}>
                 <div>
                   <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 800, color: '#1f1e1c', marginBottom: '0.35rem' }}>
-                    Teléfono
+                    Usuario Login *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.username}
+                    onChange={(e) => setFormData(p => ({ ...p, username: e.target.value.toLowerCase().replace(/[^a-z0-9._-]/g, '') }))}
+                    placeholder="ej: carlosg"
+                    style={{
+                      width: '100%',
+                      padding: '0.75rem 0.95rem',
+                      backgroundColor: '#f5efe4',
+                      color: '#1f1e1c',
+                      borderRadius: '14px',
+                      fontSize: '0.9rem',
+                      border: 'none !important',
+                      outline: 'none'
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 800, color: '#1f1e1c', marginBottom: '0.35rem' }}>
+                    PIN de Acceso *
+                  </label>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      backgroundColor: '#f5efe4',
+                      borderRadius: '14px',
+                      padding: '0 0.5rem 0 0.95rem'
+                    }}
+                  >
+                    <input
+                      type={showModalPin ? 'text' : 'password'}
+                      maxLength={6}
+                      required
+                      value={formData.pin}
+                      onChange={(e) => setFormData(p => ({ ...p, pin: e.target.value.replace(/\D/g, '') }))}
+                      placeholder="4 dígitos"
+                      style={{
+                        width: '100%',
+                        padding: '0.75rem 0',
+                        backgroundColor: 'transparent',
+                        color: '#1f1e1c',
+                        fontSize: '0.9rem',
+                        border: 'none !important',
+                        outline: 'none',
+                        letterSpacing: showModalPin ? 'normal' : '2px'
+                      }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowModalPin(!showModalPin)}
+                      style={{
+                        background: 'none',
+                        border: 'none !important',
+                        color: '#6b635b',
+                        cursor: 'pointer',
+                        padding: '0.4rem',
+                        display: 'flex',
+                        alignItems: 'center'
+                      }}
+                      title={showModalPin ? 'Ocultar PIN' : 'Ver PIN'}
+                    >
+                      {showModalPin ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Fila: Teléfono + Rol */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '0.85rem' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 800, color: '#1f1e1c', marginBottom: '0.35rem' }}>
+                    Teléfono (Opcional)
                   </label>
                   <input
                     type="text"
@@ -402,14 +608,11 @@ export function AdminWaitersTab({
 
                 <div>
                   <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 800, color: '#1f1e1c', marginBottom: '0.35rem' }}>
-                    PIN de Acceso
+                    Puesto
                   </label>
-                  <input
-                    type="text"
-                    maxLength={6}
-                    value={formData.pin}
-                    onChange={(e) => setFormData(p => ({ ...p, pin: e.target.value }))}
-                    placeholder="4 dígitos"
+                  <select
+                    value={formData.role}
+                    onChange={(e) => setFormData(p => ({ ...p, role: e.target.value }))}
                     style={{
                       width: '100%',
                       padding: '0.75rem 0.95rem',
@@ -418,19 +621,26 @@ export function AdminWaitersTab({
                       borderRadius: '14px',
                       fontSize: '0.9rem',
                       border: 'none !important',
-                      outline: 'none'
+                      outline: 'none',
+                      cursor: 'pointer'
                     }}
-                  />
+                  >
+                    <option value="mesero">Mesero / Mozo</option>
+                    <option value="capitan">Capitán de Sala</option>
+                    <option value="cocina">Cocina / Pase</option>
+                    <option value="cajero">Cajero / Bar</option>
+                  </select>
                 </div>
               </div>
 
+              {/* Selector de Nivel de Permisos para el Sistema */}
               <div>
                 <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 800, color: '#1f1e1c', marginBottom: '0.35rem' }}>
-                  Rol en el Restaurante
+                  Nivel de Permisos en el Panel
                 </label>
                 <select
-                  value={formData.role}
-                  onChange={(e) => setFormData(p => ({ ...p, role: e.target.value }))}
+                  value={formData.permission_level}
+                  onChange={(e) => setFormData(p => ({ ...p, permission_level: e.target.value }))}
                   style={{
                     width: '100%',
                     padding: '0.75rem 0.95rem',
@@ -440,14 +650,17 @@ export function AdminWaitersTab({
                     fontSize: '0.9rem',
                     border: 'none !important',
                     outline: 'none',
-                    cursor: 'pointer'
+                    cursor: 'pointer',
+                    fontWeight: 700
                   }}
                 >
-                  <option value="mesero">Mesero / Salonero</option>
-                  <option value="capitan">Capitán de Sala</option>
-                  <option value="cocina">Cocina / Chef</option>
-                  <option value="cajero">Cajero / Recepción</option>
+                  <option value="solo_pedidos">Solo Pedidos (Comandas, tiempos y entregas)</option>
+                  <option value="pedidos_y_mesas">Pedidos y Mesas & QR (Gestión de comandas + liberar mesas)</option>
+                  <option value="admin_completo">Acceso Total (Permite platos, categorías y meseros)</option>
                 </select>
+                <span style={{ fontSize: '0.72rem', color: '#78716c', display: 'block', marginTop: '0.3rem' }}>
+                  Al seleccionar "Solo Pedidos", el mesero no podrá editar platos, categorías ni crear otros meseros.
+                </span>
               </div>
 
               <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.5rem' }}>

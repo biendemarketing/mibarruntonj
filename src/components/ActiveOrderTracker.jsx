@@ -10,6 +10,16 @@ export function ActiveOrderTracker({ activeOrder, onClose, onRefresh }) {
     setOrder(activeOrder);
   }, [activeOrder]);
 
+  // Si el pedido pasa a completado (mesa desocupada y comensal retirado), auto-cerrar tras 6 segundos
+  useEffect(() => {
+    if (order?.status === 'completed') {
+      const timer = setTimeout(() => {
+        if (onClose) onClose();
+      }, 6000);
+      return () => clearTimeout(timer);
+    }
+  }, [order?.status, onClose]);
+
   // Suscribirse a cambios en tiempo real del pedido específico
   useEffect(() => {
     if (!order?.id) return;
@@ -218,7 +228,7 @@ export function ActiveOrderTracker({ activeOrder, onClose, onRefresh }) {
               {isExpanded ? <ChevronDown size={17} /> : <ChevronUp size={17} />}
             </button>
 
-            {order.status === 'delivered' || order.status === 'cancelled' ? (
+            {order.status === 'delivered' || order.status === 'paid' || order.status === 'completed' || order.status === 'cancelled' ? (
               <button
                 type="button"
                 onClick={onClose}
