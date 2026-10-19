@@ -25,6 +25,7 @@ import { TvMenuModal } from './components/TvMenuModal';
 import { triggerHaptic } from './utils/haptics';
 import { triggerFlyToCart } from './utils/flyToCart';
 import { useAlertConfirm } from './context/AlertConfirmContext';
+import { getDishGridClass } from './utils/gridOptimizer';
 
 export function App() {
   const { showAlert, showConfirm } = useAlertConfirm();
@@ -902,6 +903,7 @@ export function App() {
                       photoMode={photoMode}
                       quantity={qty}
                       viewMode={viewMode}
+                      layoutClassName={getDishGridClass(dishIdx, dishes.length, viewMode)}
                       isFavorite={favorites.includes(dish.id)}
                       onToggleFavorite={handleToggleFavorite}
                       isSelectionMode={showFavoritesOnly && favorites.length > 0}

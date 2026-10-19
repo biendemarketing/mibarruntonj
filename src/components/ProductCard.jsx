@@ -15,7 +15,8 @@ export function ProductCard({
   onToggleFavorite,
   isSelectionMode = false,
   isSelected = false,
-  onToggleSelect
+  onToggleSelect,
+  layoutClassName = ''
 }) {
   const hasPhoto = dish.hasImage(photoMode);
   const currentImage = dish.getResolvedImage ? dish.getResolvedImage(photoMode) : dish.getImage(photoMode);
@@ -29,7 +30,7 @@ export function ProductCard({
   if (isCompact) {
     return (
       <article
-        className={`product-card product-card-compact ${hasPhoto ? 'has-photo' : 'no-photo'} ${isSelected ? 'card-batch-selected' : ''}`}
+        className={`product-card product-card-compact ${layoutClassName} ${hasPhoto ? 'has-photo' : 'no-photo'} ${isSelected ? 'card-batch-selected' : ''}`.trim()}
         data-dish-id={dish.id}
         onClick={() => onOpenDetail(dish)}
         title="Clic para ver detalles"
@@ -147,7 +148,7 @@ export function ProductCard({
   // =========================================================================
   return (
     <article
-      className={`product-card ${hasPhoto ? 'has-photo' : 'no-photo'} ${isSelected ? 'card-batch-selected' : ''}`}
+      className={`product-card ${layoutClassName} ${hasPhoto ? 'has-photo' : 'no-photo'} ${isSelected ? 'card-batch-selected' : ''}`.trim()}
       data-dish-id={dish.id}
     >
       {/* Selector Checkbox de selección múltiple (en vista de favoritos) */}

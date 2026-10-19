@@ -1715,16 +1715,16 @@ input, textarea, select {
     grid-column: span 2;
   }
 
-  /* Si solo hay 1 tarjeta, centrada armónicamente */
-  .products-grid > .product-card:only-child {
-    grid-column: 2 / span 4;
+  .products-grid > .product-card.col-grid-third {
+    grid-column: span 2;
   }
 
-  /* Si faltan tarjetas para completar el trío (ej. 2 tarjetas en la última fila),
-     las últimas 2 tarjetas se reparten la fila 50/50 (3 + 3 = 6 columnas) */
-  .products-grid > .product-card:nth-last-child(2):nth-child(3n + 1),
-  .products-grid > .product-card:nth-last-child(2):nth-child(3n + 1) ~ .product-card {
+  .products-grid > .product-card.col-grid-half {
     grid-column: span 3;
+  }
+
+  .products-grid > .product-card.col-grid-single {
+    grid-column: 2 / span 4;
   }
 }
 
@@ -1946,16 +1946,16 @@ input, textarea, select {
     grid-column: span 3;
   }
 
-  /* Si solo hay 1 tarjeta, centrada elegantemente */
-  .products-grid.compact-grid > .product-card-compact:only-child {
-    grid-column: 2 / span 4;
+  .products-grid.compact-grid > .product-card-compact.col-span-half {
+    grid-column: span 3;
   }
 
-  /* Si falta 1 para completar el par (cantidad impar como 3, 5, 7, etc.),
-     las últimas 3 tarjetas comparten la misma fila (2 + 2 + 2 = 6 columnas, 33.3% cada una) */
-  .products-grid.compact-grid > .product-card-compact:nth-last-child(3):nth-child(odd),
-  .products-grid.compact-grid > .product-card-compact:nth-last-child(3):nth-child(odd) ~ .product-card-compact {
+  .products-grid.compact-grid > .product-card-compact.col-span-third {
     grid-column: span 2;
+  }
+
+  .products-grid.compact-grid > .product-card-compact.col-compact-single {
+    grid-column: 2 / span 4;
   }
 }
 
@@ -1985,21 +1985,20 @@ input, textarea, select {
     grid-column: span 3;
   }
 
-  /* Si solo hay 1 tarjeta, centrada */
-  .products-grid.grid4-grid > .product-card:only-child {
-    grid-column: 4 / span 6;
+  .products-grid.grid4-grid > .product-card.col-grid4-quarter {
+    grid-column: span 3;
   }
 
-  /* Si la última fila tiene 3 tarjetas (falta 1 para 4), se reparten la fila (4 + 4 + 4 = 12 columnas = 33.3% cada una) */
-  .products-grid.grid4-grid > .product-card:nth-last-child(3):nth-child(4n + 1),
-  .products-grid.grid4-grid > .product-card:nth-last-child(3):nth-child(4n + 1) ~ .product-card {
+  .products-grid.grid4-grid > .product-card.col-grid4-third {
     grid-column: span 4;
   }
 
-  /* Si la última fila tiene 2 tarjetas (faltan 2 para 4), se reparten la fila 50/50 (6 + 6 = 12 columnas) */
-  .products-grid.grid4-grid > .product-card:nth-last-child(2):nth-child(4n + 1),
-  .products-grid.grid4-grid > .product-card:nth-last-child(2):nth-child(4n + 1) ~ .product-card {
+  .products-grid.grid4-grid > .product-card.col-grid4-half {
     grid-column: span 6;
+  }
+
+  .products-grid.grid4-grid > .product-card.col-grid4-single {
+    grid-column: 4 / span 6;
   }
 }
 
