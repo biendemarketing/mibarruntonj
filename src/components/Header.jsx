@@ -106,12 +106,13 @@ export function Header({
               className="header-top-address-link"
               title="Abrir ubicación en Google Maps"
             >
-              <MapPin size={13} color="var(--naranja)" />
-              <span>21 Mill St, #9, Paterson, NJ</span>
+              <MapPin size={12} color="var(--naranja)" />
+              <span className="header-address-full">21 Mill St, #9, Paterson, NJ</span>
+              <span className="header-address-short">21 Mill St, NJ</span>
             </a>
             <span className="header-top-divider">·</span>
             <a href="tel:9736533749" className="header-top-phone-link" title="Llamar a Mi Barrunto">
-              <Phone size={13} color="var(--naranja)" />
+              <Phone size={12} color="var(--naranja)" />
               <span>(973) 653-3749</span>
             </a>
           </div>
