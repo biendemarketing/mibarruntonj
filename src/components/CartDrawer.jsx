@@ -34,6 +34,7 @@ export function CartDrawer({
   onUpdateQuantity,
   onRemoveItem,
   onUpdateCustomerField,
+  onUpdateItemNote,
   onClearCart,
   photoMode = 'complete',
   onOrderPlaced
@@ -84,9 +85,11 @@ export function CartDrawer({
 
   if (!isOpen) return null;
 
-  const totalCount = cart.getTotalCount();
-  const totalPrice = cart.getFormattedTotal();
-  const customer = cart.customer;
+  const items = (typeof cart?.getItems === 'function' ? cart.getItems() : cart?.items) || [];
+  const isCartEmpty = typeof cart?.isEmpty === 'function' ? cart.isEmpty() : items.length === 0;
+  const totalCount = typeof cart?.getTotalCount === 'function' ? cart.getTotalCount() : items.reduce((s, i) => s + (i.quantity || 1), 0);
+  const totalPrice = typeof cart?.getFormattedTotal === 'function' ? cart.getFormattedTotal() : `$${items.reduce((s, i) => s + (typeof i.getSubtotal === 'function' ? i.getSubtotal() : ((i.dish?.price || 0) * (i.quantity || 1))), 0).toFixed(2)}`;
+  const customer = cart?.customer || {};
 
   // Enviar pedido en vivo a Supabase (Cocina & Panel Administrativo)
   const handleConfirmOrder = async () => {
@@ -138,26 +141,30 @@ export function CartDrawer({
         tableNumber: cleanTable
       });
 
-      const items = cart.getItems().map(item => ({
+      const orderItems = items.map(item => ({
         dishId: item.dish.id,
         dishName: item.dish.name,
         dishPrice: item.dish.price,
         quantity: item.quantity,
-        subtotal: item.getSubtotal(),
+        subtotal: typeof item.getSubtotal === 'function' ? item.getSubtotal() : ((item.dish?.price || 0) * (item.quantity || 1)),
         notes: sanitizeNotes(item.note || '')
       }));
 
       const tableNumberStr = customer.orderType === 'mesa' ? cleanTable : `Llevar (${customer.orderType})`;
+
+      const calculatedSubtotal = typeof cart?.getSubtotal === 'function' ? cart.getSubtotal() : (typeof cart?.getTotalPrice === 'function' ? cart.getTotalPrice() : 0);
+      const calculatedTotal = typeof cart?.getTotal === 'function' ? cart.getTotal() : (typeof cart?.getTotalPrice === 'function' ? cart.getTotalPrice() : 0);
+      const calculatedTip = typeof cart?.getTipAmount === 'function' ? cart.getTipAmount() : 0;
 
       const order = await ordersService.createOrder({
         clientUuid,
         customerName: cleanName,
         customerPhone: cleanPhone,
         tableNumber: tableNumberStr,
-        items,
-        subtotal: cart.getSubtotal(),
-        tipAmount: cart.getTipAmount(),
-        totalAmount: cart.getTotal(),
+        items: orderItems,
+        subtotal: calculatedSubtotal,
+        tipAmount: calculatedTip,
+        totalAmount: calculatedTotal,
         paymentMethod: customer.paymentMethod || 'efectivo',
         dinerCount: Number(customer.dinerCount) || 2,
         notes: cleanNotes
@@ -228,7 +235,7 @@ export function CartDrawer({
 
         {/* Contenido / Lista de Ítems */}
         <div className="cart-drawer-body">
-          {cart.isEmpty() ? (
+          {isCartEmpty ? (
             <div className="cart-empty-state">
               <div className="cart-empty-icon-wrap">
                 <ShoppingCart size={42} />
@@ -258,7 +265,7 @@ export function CartDrawer({
 
               {/* Lista de Platos en el Carrito */}
               <div className="cart-items-list">
-                {cart.getItems().map((item) => {
+                {items.map((item) => {
                   const dishImg = item.dish.getImage(photoMode) || item.dish.getImage('complete') || item.dish.getImage('curated');
 
                   return (
@@ -339,7 +346,13 @@ export function CartDrawer({
                             className="cart-item-note-input"
                             placeholder="Indicación para este plato (ej: sin cebolla)..."
                             value={item.note || ''}
-                            onChange={(e) => cart.updateItemNote(item.dish.id, e.target.value)}
+                            onChange={(e) => {
+                              if (onUpdateItemNote) {
+                                onUpdateItemNote(item.dish.id, e.target.value);
+                              } else if (typeof cart?.updateItemNote === 'function') {
+                                cart.updateItemNote(item.dish.id, e.target.value);
+                              }
+                            }}
                           />
                         </div>
                       </div>
@@ -480,7 +493,7 @@ export function CartDrawer({
         </div>
 
         {/* Footer Fijo con Total y Envío Oficial a Cocina */}
-        {!cart.isEmpty() && (
+        {!isCartEmpty && (
           <div className="cart-drawer-footer">
             <div className="cart-drawer-footer-inner" style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
               <div className="cart-summary-row">

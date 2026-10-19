@@ -108,6 +108,14 @@ export class Cart {
   }
 
   /**
+   * Obtiene la lista completa de ítems
+   * @returns {CartItem[]}
+   */
+  getItems() {
+    return this.items || [];
+  }
+
+  /**
    * Obtiene un ítem por id de plato
    * @param {number} dishId 
    * @returns {CartItem|undefined}
@@ -140,6 +148,30 @@ export class Cart {
    */
   getTotalPrice() {
     return this.items.reduce((sum, item) => sum + item.getSubtotal(), 0);
+  }
+
+  /**
+   * Alias de subtotal
+   * @returns {number}
+   */
+  getSubtotal() {
+    return this.getTotalPrice();
+  }
+
+  /**
+   * Propina (0 por defecto a menos que se aplique)
+   * @returns {number}
+   */
+  getTipAmount() {
+    return 0;
+  }
+
+  /**
+   * Total general
+   * @returns {number}
+   */
+  getTotal() {
+    return this.getTotalPrice();
   }
 
   /**

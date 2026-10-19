@@ -506,6 +506,10 @@ export function App() {
     setCart((prevCart) => prevCart.updateCustomerField(field, value));
   };
 
+  const handleUpdateItemNote = (dishId, note) => {
+    setCart((prevCart) => prevCart.updateItemNote(dishId, note));
+  };
+
   const handleClearCart = async () => {
     if (cart.isEmpty()) return;
     const confirmed = await showConfirm({
@@ -1039,6 +1043,7 @@ export function App() {
           onUpdateQuantity={handleUpdateQuantity}
           onRemoveItem={handleRemoveItem}
           onUpdateCustomerField={handleUpdateCustomerField}
+          onUpdateItemNote={handleUpdateItemNote}
           onClearCart={handleClearCart}
           photoMode={photoMode}
           onOrderPlaced={(createdOrder) => {
