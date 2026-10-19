@@ -34,6 +34,7 @@ import { triggerHaptic } from './utils/haptics';
 import { triggerFlyToCart } from './utils/flyToCart';
 import { useAlertConfirm } from './context/AlertConfirmContext';
 import { getDishGridClass } from './utils/gridOptimizer';
+import PWAInstallPrompt from './components/PWAInstallPrompt';
 
 export function App() {
   const { showAlert, showConfirm } = useAlertConfirm();
@@ -1121,6 +1122,9 @@ export function App() {
         dishes={allDishes}
         photoMode={photoMode}
       />
+
+      {/* Banner inteligente de instalación PWA (con logo sobre fondo negro) */}
+      <PWAInstallPrompt />
     </div>
   );
 }

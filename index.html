@@ -47,15 +47,21 @@
   <meta name="twitter:image:alt" content="Mi Barrunto Restaurant &amp; Grocery Paterson NJ" />
 
   <!-- Metadatos para Dispositivos Móviles y PWA -->
-  <meta name="theme-color" content="#e30613" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Mi Barrunto" />
   <meta name="application-name" content="Mi Barrunto" />
 
-  <!-- Logo oficial como Favicon y Apple Touch Icon -->
-  <link rel="icon" type="image/png" href="/logo/logo.png" />
-  <link rel="apple-touch-icon" href="/logo/logo.png" />
+  <!-- PWA Web App Manifest -->
+  <link rel="manifest" href="/manifest.webmanifest" />
+
+  <!-- Iconos PWA Oficiales con Fondo Negro (Android, iOS y Navegador) -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/LogoPWA/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/LogoPWA/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/LogoPWA/apple-touch-icon.png" />
+  <link rel="apple-touch-icon" href="/LogoPWA/apple-touch-icon.png" />
 
   <!-- Datos Estructurados JSON-LD (Schema.org Restaurant) -->
   <script type="application/ld+json">
