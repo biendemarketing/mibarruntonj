@@ -24,26 +24,6 @@ export function CategoryPills({
 
   const handleCategoryClick = (catId) => {
     if (showFavoritesOnly && onToggleFavorites) onToggleFavorites();
-
-    // Si estamos en Toda la Carta, hacer scroll suave directo a la sección
-    if (selectedCategory === 'todos') {
-      if (catId === 'todos') {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        return;
-      }
-      const sectionEl = document.getElementById(catId);
-      if (sectionEl) {
-        const headerOffset = 110;
-        const elementPosition = sectionEl.getBoundingClientRect().top;
-        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: 'smooth'
-        });
-        return;
-      }
-    }
-
     onSelectCategory(catId);
   };
 

@@ -760,6 +760,22 @@ export function App() {
           </div>
         )}
 
+        {/* Banner de categoría activa con opción para regresar a toda la carta */}
+        {!searchQuery.trim() && selectedCategory !== 'todos' && !showFavoritesOnly && (
+          <div className="search-results-banner">
+            <span>
+              Categoría: <strong style={{ color: 'var(--rojo)' }}>{categories.find((c) => c.id === selectedCategory)?.name || selectedCategory}</strong> ({groupedCatalog.reduce((acc, g) => acc + g.dishes.length, 0)} platos)
+            </span>
+            <button
+              type="button"
+              className="search-results-clear"
+              onClick={() => handleSelectCategory('todos')}
+            >
+              Ver toda la carta ✕
+            </button>
+          </div>
+        )}
+
         {/* Banner de filtros activos cuando no hay búsqueda por texto */}
         {!searchQuery.trim() && hasActiveFilters && (
           <div className="search-results-banner active-filter-notice">
