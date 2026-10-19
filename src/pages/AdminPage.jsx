@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { 
   Bell, Utensils, Layers, QrCode, Users, LogOut, 
   ExternalLink, Lock, Check, ShieldCheck, KeyRound, 
-  Clock, Volume2, VolumeX, ArrowLeft, RefreshCw 
+  Clock, Volume2, VolumeX, ArrowLeft, RefreshCw, Printer 
 } from 'lucide-react';
 import { 
   ordersService, menuService, tablesService, 
@@ -14,6 +14,7 @@ import { AdminDishesTab } from '../components/AdminDishesTab';
 import { AdminCategoriesTab } from '../components/AdminCategoriesTab';
 import { AdminTablesTab } from '../components/AdminTablesTab';
 import { AdminWaitersTab } from '../components/AdminWaitersTab';
+import { AdminPrintableTab } from '../components/AdminPrintableTab';
 import { playOrderNotificationSound } from '../utils/orderSound';
 import { useAlertConfirm } from '../context/AlertConfirmContext';
 import { triggerHaptic } from '../utils/haptics';
@@ -150,6 +151,17 @@ export function AdminPage() {
     setOrders(prev => prev.map(o => o.id === orderId ? { ...o, waiter_id: waiterId } : o));
   };
 
+  const handleMarkOrderPaid = async (orderId, isPaid = true) => {
+    triggerHaptic(10);
+    await ordersService.markOrderPaid(orderId, isPaid);
+    setOrders(prev => prev.map(o => o.id === orderId ? { 
+      ...o, 
+      is_paid: isPaid, 
+      payment_status: isPaid ? 'paid' : 'pending',
+      paid_at: isPaid ? new Date().toISOString() : null 
+    } : o));
+  };
+
   // --- HANDLERS DE PLATOS ---
   const handleCreateDish = async (dishData) => {
     const created = await menuService.createDish(dishData);
@@ -201,6 +213,12 @@ export function AdminPage() {
   const handleDeleteTable = async (id) => {
     await tablesService.deleteTable(id);
     setTables(prev => prev.filter(t => t.id !== id));
+  };
+
+  const handleCloseTable = async (tableId, tableNumber) => {
+    triggerHaptic(12);
+    await tablesService.closeTable(tableId, tableNumber);
+    await loadAllData();
   };
 
   // --- HANDLERS DE MESEROS ---
@@ -509,7 +527,8 @@ export function AdminPage() {
             { id: 'dishes', label: 'Gestión de Platos', icon: Utensils, badge: dishes.length },
             { id: 'categories', label: 'Categorías', icon: Layers, badge: categories.length },
             { id: 'tables', label: 'Mesas & QR', icon: QrCode, badge: tables.length },
-            { id: 'waiters', label: 'Personal & Meseros', icon: Users, badge: waiters.length }
+            { id: 'waiters', label: 'Personal & Meseros', icon: Users, badge: waiters.length },
+            { id: 'printable', label: 'Menú Imprimible', icon: Printer }
           ].map(tab => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -575,6 +594,7 @@ export function AdminPage() {
             waiters={waiters}
             onUpdateStatus={handleUpdateOrderStatus}
             onAssignWaiter={handleAssignWaiter}
+            onMarkOrderPaid={handleMarkOrderPaid}
             soundEnabled={soundEnabled}
             onToggleSound={() => setSoundEnabled(!soundEnabled)}
             onRefresh={loadAllData}
@@ -609,9 +629,11 @@ export function AdminPage() {
         {activeTab === 'tables' && (
           <AdminTablesTab
             tables={tables}
+            orders={orders}
             onCreateTable={handleCreateTable}
             onUpdateTable={handleUpdateTable}
             onDeleteTable={handleDeleteTable}
+            onCloseTable={handleCloseTable}
             onRefresh={loadAllData}
             isLoading={isLoading}
           />
@@ -626,6 +648,10 @@ export function AdminPage() {
             onRefresh={loadAllData}
             isLoading={isLoading}
           />
+        )}
+
+        {activeTab === 'printable' && (
+          <AdminPrintableTab />
         )}
       </main>
     </div>

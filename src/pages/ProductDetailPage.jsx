@@ -50,6 +50,7 @@ export function ProductDetailPage({
   const [note, setNote] = useState(cartItem?.note || '');
   const [copiedShare, setCopiedShare] = useState(false);
   const [addedToast, setAddedToast] = useState('');
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   // Estado de acompañamientos seleccionados en la página: { [dishId]: quantity }
   const [selectedAccompaniments, setSelectedAccompaniments] = useState({});
@@ -108,6 +109,7 @@ export function ProductDetailPage({
     setNote(currentInCart?.note || '');
     setCopiedShare(false);
     setSelectedAccompaniments({});
+    setSelectedImageIndex(0);
   }, [dish?.id, photoMode]);
 
   // Lista de Acompañamientos Recomendados (Bebidas + Postres Tradicionales Peruanos)
@@ -294,6 +296,21 @@ export function ProductDetailPage({
 
   const hasPhoto = dish.hasImage(photoMode);
   const currentImage = dish.getResolvedImage ? dish.getResolvedImage(photoMode) : dish.getImage(photoMode);
+
+  // Galería de imágenes (soporte para múltiples imágenes por plato)
+  const galleryImages = useMemo(() => {
+    if (!dish) return [];
+    const list = [];
+    if (currentImage) list.push(currentImage);
+    if (Array.isArray(dish.images)) {
+      dish.images.forEach(img => {
+        if (img && !list.includes(img)) list.push(img);
+      });
+    }
+    return list;
+  }, [dish, currentImage]);
+
+  const displayImage = galleryImages[selectedImageIndex] || currentImage;
   const isDishInCart = cart && cart.getItem(dish.id);
   const cartTotalCount = cart ? cart.getTotalCount() : 0;
 
@@ -385,12 +402,12 @@ export function ProductDetailPage({
 
       {/* 2. Hero Showcase del Plato Principal */}
       <div className="product-page-hero-grid">
-        {/* Imagen en Alta Resolución con Badge */}
+        {/* Imagen en Alta Resolución con Badge y Galería */}
         <div className="product-page-media">
-          {hasPhoto && currentImage ? (
+          {hasPhoto && displayImage ? (
             <div className="product-page-image-box">
               <img
-                src={currentImage}
+                src={displayImage}
                 alt={`${dish.name} — Mi Barrunto`}
                 className="product-page-img"
                 loading="eager"
@@ -405,6 +422,53 @@ export function ProductDetailPage({
               <span className="product-page-category-tag">
                 {dish.categoryName || dish.category}
               </span>
+            </div>
+          )}
+
+          {/* Miniaturas de galería si el plato tiene múltiples fotos */}
+          {galleryImages.length > 1 && (
+            <div
+              style={{
+                display: 'flex',
+                gap: '0.5rem',
+                marginTop: '0.75rem',
+                overflowX: 'auto',
+                paddingBottom: '0.25rem'
+              }}
+            >
+              {galleryImages.map((imgUrl, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => {
+                    triggerHaptic(8);
+                    setSelectedImageIndex(idx);
+                  }}
+                  style={{
+                    width: '60px',
+                    height: '60px',
+                    borderRadius: '12px',
+                    overflow: 'hidden',
+                    backgroundColor: '#1c1d22',
+                    cursor: 'pointer',
+                    border: 'none !important',
+                    boxShadow: selectedImageIndex === idx 
+                      ? '0 0 0 2px var(--rojo, #d91c2b), 0 4px 12px rgba(217, 28, 43, 0.4)' 
+                      : '0 2px 8px rgba(0,0,0,0.25)',
+                    opacity: selectedImageIndex === idx ? 1 : 0.6,
+                    padding: 0,
+                    flexShrink: 0,
+                    transition: 'all 0.2s ease'
+                  }}
+                  title={`Ver foto ${idx + 1}`}
+                >
+                  <img
+                    src={imgUrl}
+                    alt={`${dish.name} foto ${idx + 1}`}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                  />
+                </button>
+              ))}
             </div>
           )}
         </div>

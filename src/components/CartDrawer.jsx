@@ -14,10 +14,15 @@ import {
   Loader2,
   CheckCircle2
 } from 'lucide-react';
-import { whatsAppService } from '../services/MenuRepository';
-import { WhatsAppIcon, PlateIcon } from './Icons';
+import { PlateIcon } from './Icons';
 import { ordersService } from '../services/supabase';
-import { getClientUuid, getSavedCustomerInfo, saveCustomerInfo } from '../utils/clientIdentity';
+import { 
+  getClientUuid, 
+  getSavedCustomerInfo, 
+  saveCustomerInfo, 
+  checkOrderRateLimit, 
+  recordOrderTimestamp 
+} from '../utils/clientIdentity';
 import { useAlertConfirm } from '../context/AlertConfirmContext';
 import { triggerHaptic } from '../utils/haptics';
 
@@ -33,8 +38,6 @@ export function CartDrawer({
   onOrderPlaced
 }) {
   const { showAlert } = useAlertConfirm();
-  const [showPreview, setShowPreview] = useState(false);
-  const [phoneInput, setPhoneInput] = useState('19736533749'); // WhatsApp oficial: (973) 653-3749
   const [isClosing, setIsClosing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -86,6 +89,18 @@ export function CartDrawer({
 
   // Enviar pedido en vivo a Supabase (Cocina & Panel Administrativo)
   const handleConfirmOrder = async () => {
+    // 1. Rate Limiting Check
+    const rateCheck = checkOrderRateLimit(45);
+    if (!rateCheck.allowed) {
+      triggerHaptic(15);
+      showAlert({
+        title: 'Espera un momento',
+        message: `Acabamos de recibir un pedido desde este dispositivo. Por favor espera ${rateCheck.secondsLeft} segundos antes de enviar otra orden para evitar duplicados.`,
+        type: 'warning'
+      });
+      return;
+    }
+
     if (!customer.name.trim()) {
       triggerHaptic(15);
       showAlert({
@@ -141,10 +156,13 @@ export function CartDrawer({
         notes: customer.generalNotes || ''
       });
 
+      // Registrar timestamp de orden para Rate Limiting
+      recordOrderTimestamp();
+
       triggerHaptic([30, 80, 50]);
       showAlert({
-        title: '¡Pedido Recibido con Éxito!',
-        message: `Tu pedido #${order.order_number} ya está en la pantalla de cocina. Podrás seguir el tiempo estimado en vivo.`,
+        title: '¡Pedido Recibido en Cocina!',
+        message: `Tu pedido #${order.order_number} ya fue recibido por el equipo. Podrás ver su preparación y tiempo de espera en vivo aquí abajo.`,
         type: 'success'
       });
 
@@ -158,17 +176,12 @@ export function CartDrawer({
       console.error('Error enviando pedido a Supabase:', err);
       showAlert({
         title: 'Error de Conexión',
-        message: err.message || 'No se pudo conectar con el servidor. También puedes enviarlo directamente por WhatsApp.',
+        message: err.message || 'No se pudo conectar con el servidor. Inténtalo de nuevo en unos segundos.',
         type: 'error'
       });
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  const handleSendWhatsApp = () => {
-    whatsAppService.setPhone(phoneInput);
-    whatsAppService.sendOrder(cart);
   };
 
   return (
@@ -438,26 +451,11 @@ export function CartDrawer({
                 </div>
               </div>
 
-              {/* Botón para previsualizar mensaje WhatsApp */}
-              <button
-                type="button"
-                className="cart-preview-toggle-btn"
-                onClick={() => setShowPreview(!showPreview)}
-              >
-                <FileText size={14} />
-                <span>{showPreview ? 'Ocultar vista previa WhatsApp' : 'Ver mensaje para WhatsApp'}</span>
-              </button>
-
-              {showPreview && (
-                <pre className="cart-preview-box">
-                  {whatsAppService.buildMessage(cart)}
-                </pre>
-              )}
             </>
           )}
         </div>
 
-        {/* Footer Fijo con Total y Envío Oficial */}
+        {/* Footer Fijo con Total y Envío Oficial a Cocina */}
         {!cart.isEmpty() && (
           <div className="cart-drawer-footer">
             <div className="cart-drawer-footer-inner" style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
@@ -466,7 +464,7 @@ export function CartDrawer({
                 <span className="cart-summary-total">{totalPrice}</span>
               </div>
 
-              {/* Botón Principal: Confirmar y Enviar a Cocina (Supabase en Vivo) */}
+              {/* Botón Principal Único: Confirmar y Enviar a Cocina (Supabase en Vivo) */}
               <button
                 type="button"
                 disabled={isSubmitting}
@@ -476,13 +474,13 @@ export function CartDrawer({
                   backgroundColor: 'var(--rojo, #d91c2b)',
                   color: '#ffffff',
                   fontWeight: 800,
-                  fontSize: '0.95rem',
-                  padding: '0.85rem 1.25rem',
-                  borderRadius: '14px',
+                  fontSize: '0.98rem',
+                  padding: '0.95rem 1.25rem',
+                  borderRadius: '16px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  gap: '0.6rem',
+                  gap: '0.65rem',
                   cursor: isSubmitting ? 'not-allowed' : 'pointer',
                   border: 'none !important',
                   boxShadow: '0 8px 25px rgba(217, 28, 43, 0.45)',
@@ -494,31 +492,7 @@ export function CartDrawer({
                 ) : (
                   <Send size={18} />
                 )}
-                <span>{isSubmitting ? 'Enviando a cocina...' : 'Confirmar Pedido (Enviar a Cocina)'}</span>
-              </button>
-
-              {/* Botón Secundario: Enviar copia a WhatsApp */}
-              <button
-                type="button"
-                className="cart-submit-whatsapp-btn"
-                onClick={handleSendWhatsApp}
-                style={{
-                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                  color: '#ffffff',
-                  fontWeight: 700,
-                  fontSize: '0.85rem',
-                  padding: '0.65rem 1rem',
-                  borderRadius: '12px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '0.5rem',
-                  cursor: 'pointer',
-                  border: 'none !important'
-                }}
-              >
-                <WhatsAppIcon size={18} color="#25D366" />
-                <span>Enviar también por WhatsApp</span>
+                <span>{isSubmitting ? 'Enviando comanda a cocina...' : 'Confirmar y Enviar Pedido a Cocina'}</span>
               </button>
             </div>
           </div>

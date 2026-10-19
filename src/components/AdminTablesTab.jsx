@@ -5,9 +5,11 @@ import { triggerHaptic } from '../utils/haptics';
 
 export function AdminTablesTab({
   tables = [],
+  orders = [],
   onCreateTable,
   onUpdateTable,
   onDeleteTable,
+  onCloseTable,
   onRefresh,
   isLoading
 }) {
@@ -19,6 +21,24 @@ export function AdminTablesTab({
     capacity: 4,
     status: 'available'
   });
+
+  const handleCloseTableClick = async (table) => {
+    triggerHaptic(14);
+    const confirmed = await showConfirm({
+      title: `¿Cerrar Mesa #${table.number}?`,
+      message: `¿Deseas cerrar y liberar la Mesa ${table.number}? Sus pedidos activos se marcarán automáticamente como entregados y pagados.`,
+      confirmText: 'Sí, Cerrar Mesa',
+      cancelText: 'Cancelar'
+    });
+    if (confirmed && onCloseTable) {
+      await onCloseTable(table.id, table.number);
+      showAlert({
+        title: 'Mesa Cerrada con Éxito',
+        message: `La Mesa ${table.number} ahora está disponible y sus pedidos han sido saldados.`,
+        type: 'success'
+      });
+    }
+  };
 
   const handleOpenCreate = () => {
     triggerHaptic(10);
@@ -168,12 +188,18 @@ export function AdminTablesTab({
       {/* Grid de Mesas */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '1rem' }}>
         {tables.map(table => {
-          const isAvail = table.status === 'available';
-          const isOcc = table.status === 'occupied';
-          const isRes = table.status === 'reserved';
+          const activeOrdersForTable = (orders || []).filter(o => 
+            String(o.table_number) === String(table.number) && 
+            ['pending', 'in_kitchen', 'accepted', 'ready'].includes(o.status)
+          );
+          const hasActiveOrders = activeOrdersForTable.length > 0;
+          const isOccupied = table.status === 'occupied' || hasActiveOrders;
+          const isAvail = !isOccupied && table.status === 'available';
+          const isRes = !isOccupied && table.status === 'reserved';
 
-          const statusColor = isAvail ? '#10b981' : isOcc ? '#ef4444' : '#f59e0b';
-          const statusText = isAvail ? 'Disponible' : isOcc ? 'Ocupada' : 'Reservada';
+          const statusColor = isOccupied ? '#ef4444' : isAvail ? '#10b981' : '#f59e0b';
+          const statusText = isOccupied ? 'Ocupada' : isAvail ? 'Disponible' : 'Reservada';
+          const totalActiveAmount = activeOrdersForTable.reduce((sum, o) => sum + Number(o.total_amount || 0), 0);
 
           return (
             <div
@@ -182,7 +208,9 @@ export function AdminTablesTab({
                 backgroundColor: 'var(--bg-card, #1c1d22)',
                 borderRadius: '16px',
                 padding: '1.25rem',
-                boxShadow: '0 4px 20px rgba(0,0,0,0.18)',
+                boxShadow: isOccupied 
+                  ? '0 6px 24px rgba(239, 68, 68, 0.22)' 
+                  : '0 4px 20px rgba(0,0,0,0.18)',
                 border: 'none !important',
                 display: 'flex',
                 flexDirection: 'column',
@@ -204,15 +232,44 @@ export function AdminTablesTab({
               />
 
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span
-                  style={{
-                    fontSize: '1.4rem',
-                    fontWeight: 900,
-                    color: '#ffffff'
-                  }}
-                >
-                  #{table.number}
-                </span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <span
+                    style={{
+                      fontSize: '1.4rem',
+                      fontWeight: 900,
+                      color: '#ffffff'
+                    }}
+                  >
+                    #{table.number}
+                  </span>
+                  {isOccupied && (
+                    <span
+                      style={{
+                        backgroundColor: 'rgba(239, 68, 68, 0.2)',
+                        color: '#ef4444',
+                        padding: '0.15rem 0.5rem',
+                        borderRadius: '9999px',
+                        fontSize: '0.68rem',
+                        fontWeight: 800,
+                        textTransform: 'uppercase',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.3rem'
+                      }}
+                    >
+                      <span
+                        style={{
+                          width: '6px',
+                          height: '6px',
+                          borderRadius: '50%',
+                          backgroundColor: '#ef4444',
+                          boxShadow: '0 0 6px #ef4444'
+                        }}
+                      />
+                      Ocupada
+                    </span>
+                  )}
+                </div>
 
                 <button
                   type="button"
@@ -238,9 +295,25 @@ export function AdminTablesTab({
                 <span style={{ fontSize: '0.75rem', color: '#9ca3af', display: 'flex', alignItems: 'center', gap: '0.3rem', marginTop: '0.2rem' }}>
                   <Users size={12} /> Capacidad: {table.capacity || 4} personas
                 </span>
+
+                {hasActiveOrders && (
+                  <div
+                    style={{
+                      marginTop: '0.45rem',
+                      padding: '0.4rem 0.6rem',
+                      backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                      borderRadius: '8px',
+                      fontSize: '0.75rem',
+                      color: '#f87171',
+                      fontWeight: 700
+                    }}
+                  >
+                    {activeOrdersForTable.length} orden(es) activa(s) · ${totalActiveAmount.toFixed(2)}
+                  </div>
+                )}
               </div>
 
-              {/* Selector de Estado */}
+              {/* Selector de Estado Rápido */}
               <div style={{ display: 'flex', gap: '0.3rem' }}>
                 {[
                   { id: 'available', label: 'Libre' },
@@ -253,8 +326,12 @@ export function AdminTablesTab({
                     onClick={() => handleStatusChange(table, s.id)}
                     style={{
                       flex: 1,
-                      backgroundColor: table.status === s.id ? `${statusColor}35` : 'rgba(255, 255, 255, 0.06)',
-                      color: table.status === s.id ? statusColor : '#9ca3af',
+                      backgroundColor: (isOccupied && s.id === 'occupied') || (!isOccupied && table.status === s.id)
+                        ? `${statusColor}35`
+                        : 'rgba(255, 255, 255, 0.06)',
+                      color: (isOccupied && s.id === 'occupied') || (!isOccupied && table.status === s.id)
+                        ? statusColor
+                        : '#9ca3af',
                       fontWeight: 700,
                       fontSize: '0.72rem',
                       padding: '0.35rem 0',
@@ -267,6 +344,35 @@ export function AdminTablesTab({
                   </button>
                 ))}
               </div>
+
+              {/* Botón de CERRAR MESA si está ocupada */}
+              {isOccupied && (
+                <button
+                  type="button"
+                  onClick={() => handleCloseTableClick(table)}
+                  style={{
+                    width: '100%',
+                    backgroundColor: '#ef4444',
+                    color: '#ffffff',
+                    fontWeight: 800,
+                    fontSize: '0.82rem',
+                    padding: '0.6rem',
+                    borderRadius: '10px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.45rem',
+                    cursor: 'pointer',
+                    border: 'none !important',
+                    boxShadow: '0 4px 15px rgba(239, 68, 68, 0.4)',
+                    transition: 'all 0.2s ease'
+                  }}
+                  title="Liberar mesa y marcar todos sus pedidos como entregados y pagados"
+                >
+                  <Check size={16} />
+                  <span>Cerrar Mesa &amp; Liquidar</span>
+                </button>
+              )}
 
               {/* Botón Copiar Enlace QR */}
               <button
@@ -285,8 +391,7 @@ export function AdminTablesTab({
                   justifyContent: 'center',
                   gap: '0.4rem',
                   cursor: 'pointer',
-                  border: 'none !important',
-                  marginTop: '0.25rem'
+                  border: 'none !important'
                 }}
                 title="Copiar enlace directo para generar QR de esta mesa"
               >

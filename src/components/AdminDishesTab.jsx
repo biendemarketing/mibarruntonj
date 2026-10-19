@@ -14,6 +14,7 @@ export function AdminDishesTab({
   onUpdateDish,
   onDeleteDish,
   onToggleAvailability,
+  onToggleVisibility,
   onRefresh,
   isLoading
 }) {
@@ -321,31 +322,59 @@ export function AdminDishesTab({
                   padding: '0.5rem 0.75rem'
                 }}
               >
-                {/* Switch Rápido Disponible / Agotado */}
-                <button
-                  type="button"
-                  onClick={() => {
-                    triggerHaptic(8);
-                    onToggleAvailability(dish.id, !isAvail);
-                  }}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.4rem',
-                    backgroundColor: isAvail ? 'rgba(16, 185, 129, 0.18)' : 'rgba(239, 68, 68, 0.18)',
-                    color: isAvail ? '#10b981' : '#ef4444',
-                    border: 'none !important',
-                    borderRadius: '9999px',
-                    padding: '0.35rem 0.7rem',
-                    fontSize: '0.75rem',
-                    fontWeight: 700,
-                    cursor: 'pointer'
-                  }}
-                  title={isAvail ? 'Plato disponible en la carta' : 'Plato marcado como agotado'}
-                >
-                  {isAvail ? <Eye size={13} /> : <EyeOff size={13} />}
-                  <span>{isAvail ? 'Disponible' : 'Agotado'}</span>
-                </button>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                  {/* Switch Rápido Disponible / Agotado */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      triggerHaptic(8);
+                      onToggleAvailability(dish.id, !isAvail);
+                    }}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.35rem',
+                      backgroundColor: isAvail ? 'rgba(16, 185, 129, 0.18)' : 'rgba(239, 68, 68, 0.18)',
+                      color: isAvail ? '#10b981' : '#ef4444',
+                      border: 'none !important',
+                      borderRadius: '9999px',
+                      padding: '0.3rem 0.65rem',
+                      fontSize: '0.72rem',
+                      fontWeight: 700,
+                      cursor: 'pointer'
+                    }}
+                    title={isAvail ? 'Plato disponible en la carta' : 'Plato marcado como agotado temporal'}
+                  >
+                    <span>{isAvail ? 'Disponible' : 'Agotado'}</span>
+                  </button>
+
+                  {/* Switch Rápido Visible / Oculto */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      triggerHaptic(8);
+                      const isVis = dish.is_active !== false;
+                      onToggleVisibility(dish.id, !isVis);
+                    }}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.35rem',
+                      backgroundColor: (dish.is_active !== false) ? 'rgba(59, 130, 246, 0.18)' : 'rgba(156, 163, 175, 0.18)',
+                      color: (dish.is_active !== false) ? '#3b82f6' : '#9ca3af',
+                      border: 'none !important',
+                      borderRadius: '9999px',
+                      padding: '0.3rem 0.65rem',
+                      fontSize: '0.72rem',
+                      fontWeight: 700,
+                      cursor: 'pointer'
+                    }}
+                    title={(dish.is_active !== false) ? 'Visible en la carta del cliente' : 'Oculto de la carta'}
+                  >
+                    {(dish.is_active !== false) ? <Eye size={12} /> : <EyeOff size={12} />}
+                    <span>{(dish.is_active !== false) ? 'Visible' : 'Oculto'}</span>
+                  </button>
+                </div>
 
                 {/* Acciones Editar y Eliminar */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>

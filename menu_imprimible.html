@@ -5151,6 +5151,48 @@
         }
       } catch (e) {}
     })();
+
+    // Carga dinámica de la configuración del restaurante desde Supabase
+    (async function() {
+      try {
+        const res = await fetch('https://scvlxcgmhbwjmvycrttf.supabase.co/rest/v1/restaurant_config?key=eq.printable_menu&select=value', {
+          headers: {
+            'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNjdmx4Y2dtaGJ3am12eWNydHRmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIzNjA2MzAsImV4cCI6MjEwNzkzNjYzMH0.XuSQAMlh6XCYXDSLxwuWsvptluV0kGvUYw0zKuq9kKc',
+            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNjdmx4Y2dtaGJ3am12eWNydHRmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIzNjA2MzAsImV4cCI6MjEwNzkzNjYzMH0.XuSQAMlh6XCYXDSLxwuWsvptluV0kGvUYw0zKuq9kKc'
+          }
+        });
+        if (!res.ok) return;
+        const json = await res.json();
+        const conf = json && json[0] && json[0].value;
+        if (!conf) return;
+
+        if (conf.title) {
+          document.querySelectorAll('.cover-brand-title').forEach(el => el.textContent = conf.title);
+        }
+        if (conf.subtitle) {
+          document.querySelectorAll('.cover-slogan-main').forEach(el => el.textContent = conf.subtitle);
+        }
+        if (conf.tagline) {
+          document.querySelectorAll('.cover-slogan-sub').forEach(el => el.textContent = conf.tagline);
+        }
+        if (conf.gratitudeTextEs) {
+          document.querySelectorAll('.gratitude-es').forEach(el => el.textContent = conf.gratitudeTextEs);
+        }
+        if (conf.gratitudeTextEn) {
+          document.querySelectorAll('.gratitude-en').forEach(el => el.textContent = conf.gratitudeTextEn);
+        }
+        if (conf.phone) {
+          document.querySelectorAll('.cover-footer-info, .backcover-content').forEach(container => {
+            const spans = container.querySelectorAll('span');
+            spans.forEach(s => {
+              if (s.textContent.includes('Teléfono') || s.textContent.includes('(973)')) {
+                s.textContent = `Teléfono & Pedidos: ${conf.phone}`;
+              }
+            });
+          });
+        }
+      } catch (err) {}
+    })();
   </script>
 
 </body>

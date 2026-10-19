@@ -140,6 +140,25 @@ export const ordersService = {
     return data;
   },
 
+  // Marcar una orden como pagada
+  async markOrderPaid(orderId, isPaid = true, paymentMethod = 'efectivo') {
+    const { data, error } = await supabase
+      .from('orders')
+      .update({
+        is_paid: isPaid,
+        payment_status: isPaid ? 'paid' : 'pending',
+        paid_at: isPaid ? new Date().toISOString() : null,
+        payment_method: paymentMethod,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', orderId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  },
+
   // Asignar mesero a un pedido
   async assignWaiter(orderId, waiterId) {
     const { data, error } = await supabase
@@ -342,12 +361,28 @@ export const menuService = {
     return data;
   },
 
-  // Alternar disponibilidad rápida de un plato
+  // Alternar disponibilidad rápida de un plato (Disponible / Agotado)
   async toggleDishAvailability(id, isAvailable) {
     const { data, error } = await supabase
       .from('dishes')
       .update({
         is_available: isAvailable,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  },
+
+  // Alternar visibilidad de un plato (Ocultar / Mostrar en la carta del cliente)
+  async toggleDishVisibility(id, isActive) {
+    const { data, error } = await supabase
+      .from('dishes')
+      .update({
+        is_active: isActive,
         updated_at: new Date().toISOString()
       })
       .eq('id', id)
@@ -447,6 +482,35 @@ export const tablesService = {
 
     if (error) throw error;
     return true;
+  },
+
+  // Cerrar mesa: marca la mesa como disponible y archiva/pasa pedidos activos a entregados/pagados
+  async closeTable(tableId, tableNumber) {
+    // 1. Marcar mesa como disponible
+    const { data: updatedTable, error: tableErr } = await supabase
+      .from('tables')
+      .update({ status: 'available' })
+      .eq('id', tableId)
+      .select()
+      .single();
+
+    if (tableErr) throw tableErr;
+
+    // 2. Marcar pedidos activos de esta mesa como entregados y pagados
+    if (tableNumber) {
+      await supabase
+        .from('orders')
+        .update({
+          status: 'delivered',
+          is_paid: true,
+          payment_status: 'paid',
+          updated_at: new Date().toISOString()
+        })
+        .ilike('table_number', `%${tableNumber}%`)
+        .in('status', ['pending', 'in_kitchen', 'accepted', 'ready']);
+    }
+
+    return updatedTable;
   }
 };
 
@@ -535,3 +599,39 @@ export const adminAuthService = {
     } catch {}
   }
 };
+
+/**
+ * SERVICIO DE CONFIGURACIÓN Y MENÚ IMPRIMIBLE
+ */
+export const restaurantConfigService = {
+  async getPrintableMenuConfig() {
+    try {
+      const { data, error } = await supabase
+        .from('restaurant_config')
+        .select('value')
+        .eq('key', 'printable_menu')
+        .single();
+
+      if (error) return null;
+      return data?.value || null;
+    } catch {
+      return null;
+    }
+  },
+
+  async updatePrintableMenuConfig(config) {
+    const { data, error } = await supabase
+      .from('restaurant_config')
+      .upsert({
+        key: 'printable_menu',
+        value: config,
+        updated_at: new Date().toISOString()
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data?.value;
+  }
+};
+

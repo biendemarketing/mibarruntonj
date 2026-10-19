@@ -1,5 +1,8 @@
 import React, { useState, useRef } from 'react';
-import { X, Upload, Check, Image as ImageIcon, AlertCircle, Loader2 } from 'lucide-react';
+import { 
+  X, Upload, Check, Image as ImageIcon, AlertCircle, 
+  Loader2, Trash2, Eye, EyeOff, Star 
+} from 'lucide-react';
 import { menuService } from '../services/supabase';
 import { useAlertConfirm } from '../context/AlertConfirmContext';
 import { triggerHaptic } from '../utils/haptics';
@@ -11,8 +14,13 @@ export function AdminDishModal({
   onClose,
   onSave
 }) {
-  const { showAlert } = useAlertConfirm();
+  const { showAlert, showConfirm } = useAlertConfirm();
   const fileInputRef = useRef(null);
+
+  // Imágenes existentes o array inicial
+  const initialImages = Array.isArray(dish?.images) && dish.images.length > 0 
+    ? dish.images 
+    : (dish?.platos_image ? [dish.platos_image] : dish?.image_url ? [dish.image_url] : []);
 
   const [formData, setFormData] = useState({
     id: dish?.id || '',
@@ -22,7 +30,8 @@ export function AdminDishModal({
     price: dish ? Number(dish.price) : 15.00,
     category_id: dish?.category_id || (categories[0]?.id || 'sandwiches'),
     image_url: dish?.image_url || dish?.image || '',
-    platos_image: dish?.platos_image || dish?.platosImage || '',
+    platos_image: dish?.platos_image || dish?.platosImage || initialImages[0] || '',
+    images: initialImages,
     badge: dish?.badge || '',
     is_available: dish ? dish.is_available !== false : true,
     is_active: dish ? dish.is_active !== false : true
@@ -37,31 +46,72 @@ export function AdminDishModal({
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleImageUpload = async (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  // Subir una o varias imágenes en paralelo a Supabase Storage
+  const handleMultipleImageUpload = async (e) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
 
     try {
       setIsUploading(true);
       triggerHaptic(10);
-      const publicUrl = await menuService.uploadImage(file);
-      handleChange('image_url', publicUrl);
-      handleChange('platos_image', publicUrl);
+
+      const uploadedUrls = [];
+      for (const file of files) {
+        const publicUrl = await menuService.uploadImage(file);
+        uploadedUrls.push(publicUrl);
+      }
+
+      setFormData(prev => {
+        const nextImages = [...prev.images, ...uploadedUrls];
+        return {
+          ...prev,
+          images: nextImages,
+          platos_image: prev.platos_image || nextImages[0],
+          image_url: prev.image_url || nextImages[0]
+        };
+      });
+
       showAlert({
-        title: 'Imagen Subida',
-        message: 'La fotografía se cargó correctamente al servidor de Supabase Storage.',
+        title: 'Fotos Subidas',
+        message: `Se agregaron ${uploadedUrls.length} ${uploadedUrls.length === 1 ? 'fotografía' : 'fotografías'} a la galería del plato.`,
         type: 'success'
       });
     } catch (err) {
-      console.error('Error subiendo imagen:', err);
+      console.error('Error subiendo imágenes:', err);
       showAlert({
-        title: 'Error al subir imagen',
-        message: err.message || 'No se pudo subir la fotografía. Inténtalo nuevamente.',
+        title: 'Error de carga',
+        message: err.message || 'No se pudieron subir las imágenes.',
         type: 'error'
       });
     } finally {
       setIsUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
     }
+  };
+
+  // Establecer una foto como portada principal
+  const handleSetMainImage = (url) => {
+    triggerHaptic(8);
+    setFormData(prev => ({
+      ...prev,
+      platos_image: url,
+      image_url: url
+    }));
+  };
+
+  // Eliminar una foto de la galería
+  const handleRemoveImage = (urlToRemove) => {
+    triggerHaptic(10);
+    setFormData(prev => {
+      const remaining = prev.images.filter(u => u !== urlToRemove);
+      const nextMain = prev.platos_image === urlToRemove ? (remaining[0] || '') : prev.platos_image;
+      return {
+        ...prev,
+        images: remaining,
+        platos_image: nextMain,
+        image_url: nextMain
+      };
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -78,7 +128,15 @@ export function AdminDishModal({
     try {
       setIsSubmitting(true);
       triggerHaptic(12);
-      await onSave(formData);
+
+      const payload = {
+        ...formData,
+        platos_image: formData.platos_image || formData.images[0] || '',
+        image_url: formData.platos_image || formData.images[0] || '',
+        images: formData.images
+      };
+
+      await onSave(payload);
       onClose();
     } catch (err) {
       console.error('Error guardando plato:', err);
@@ -92,9 +150,6 @@ export function AdminDishModal({
     }
   };
 
-  // Preview de la imagen
-  const previewImage = formData.platos_image || formData.image_url;
-
   return (
     <div
       style={{
@@ -103,9 +158,9 @@ export function AdminDishModal({
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundColor: 'rgba(0, 0, 0, 0.75)',
-        backdropFilter: 'blur(10px)',
-        WebkitBackdropFilter: 'blur(10px)',
+        backgroundColor: 'rgba(0, 0, 0, 0.78)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
         zIndex: 1000,
         display: 'flex',
         alignItems: 'center',
@@ -117,12 +172,12 @@ export function AdminDishModal({
       <div
         style={{
           width: '100%',
-          maxWidth: '560px',
+          maxWidth: '580px',
           maxHeight: '90vh',
           backgroundColor: 'var(--bg-card, #1c1d22)',
           color: '#ffffff',
           borderRadius: '24px',
-          boxShadow: '0 25px 60px rgba(0, 0, 0, 0.65)',
+          boxShadow: '0 25px 60px rgba(0, 0, 0, 0.75)',
           overflow: 'hidden',
           display: 'flex',
           flexDirection: 'column',
@@ -130,7 +185,7 @@ export function AdminDishModal({
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Cabecera del Modal */}
+        {/* Cabecera */}
         <div
           style={{
             padding: '1.25rem 1.5rem',
@@ -145,7 +200,7 @@ export function AdminDishModal({
               {dish ? 'Editar Plato' : 'Nuevo Plato'}
             </h2>
             <p style={{ fontSize: '0.8rem', color: '#9ca3af', margin: '0.2rem 0 0 0' }}>
-              Gestión directa en Supabase
+              Galería múltiple & visibilidad en Supabase
             </p>
           </div>
 
@@ -271,7 +326,7 @@ export function AdminDishModal({
               Descripción / Ingredientes
             </label>
             <textarea
-              rows={3}
+              rows={2}
               value={formData.description}
               onChange={(e) => handleChange('description', e.target.value)}
               placeholder="Detalla los ingredientes y preparación..."
@@ -288,129 +343,166 @@ export function AdminDishModal({
             />
           </div>
 
-          {/* Subida de Imagen a Supabase Storage */}
-          <div>
-            <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#9ca3af', marginBottom: '0.35rem' }}>
-              Fotografía del Plato (Supabase Storage)
-            </label>
+          {/* Galería Múltiple de Imágenes */}
+          <div style={{ backgroundColor: 'rgba(0, 0, 0, 0.25)', padding: '1rem', borderRadius: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.65rem' }}>
+              <div>
+                <label style={{ fontSize: '0.85rem', fontWeight: 800, color: '#ffffff' }}>
+                  Galería de Fotos ({formData.images.length})
+                </label>
+                <span style={{ display: 'block', fontSize: '0.72rem', color: '#9ca3af' }}>
+                  Sube múltiples fotos. La foto con estrella es la portada principal.
+                </span>
+              </div>
 
-            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-              {/* Preview */}
-              <div
+              <input
+                type="file"
+                ref={fileInputRef}
+                multiple
+                accept="image/*"
+                onChange={handleMultipleImageUpload}
+                style={{ display: 'none' }}
+              />
+
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={isUploading}
                 style={{
-                  width: '90px',
-                  height: '90px',
-                  borderRadius: '14px',
-                  backgroundColor: 'rgba(0,0,0,0.4)',
-                  overflow: 'hidden',
+                  backgroundColor: 'var(--rojo, #d91c2b)',
+                  color: '#ffffff',
+                  fontWeight: 800,
+                  fontSize: '0.78rem',
+                  padding: '0.5rem 0.85rem',
+                  borderRadius: '10px',
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'center',
-                  flexShrink: 0
-                }}
-              >
-                {previewImage ? (
-                  <img
-                    src={previewImage}
-                    alt="Preview"
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                    onError={(e) => { e.currentTarget.style.display = 'none'; }}
-                  />
-                ) : (
-                  <ImageIcon size={28} color="#9ca3af" />
-                )}
-              </div>
-
-              {/* Botón de carga */}
-              <div style={{ flex: 1 }}>
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                  style={{ display: 'none' }}
-                />
-
-                <button
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  disabled={isUploading}
-                  style={{
-                    backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                    color: '#ffffff',
-                    fontWeight: 700,
-                    fontSize: '0.82rem',
-                    padding: '0.65rem 1rem',
-                    borderRadius: '12px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    cursor: 'pointer',
-                    border: 'none !important',
-                    marginBottom: '0.35rem'
-                  }}
-                >
-                  {isUploading ? <Loader2 size={16} className="spin-icon" /> : <Upload size={16} />}
-                  <span>{isUploading ? 'Subiendo imagen...' : 'Subir nueva foto'}</span>
-                </button>
-
-                <input
-                  type="text"
-                  value={formData.platos_image || formData.image_url}
-                  onChange={(e) => {
-                    handleChange('platos_image', e.target.value);
-                    handleChange('image_url', e.target.value);
-                  }}
-                  placeholder="O pega aquí la URL de la imagen..."
-                  style={{
-                    width: '100%',
-                    padding: '0.45rem 0.75rem',
-                    backgroundColor: 'rgba(255, 255, 255, 0.04)',
-                    color: '#9ca3af',
-                    borderRadius: '8px',
-                    fontSize: '0.75rem',
-                    border: 'none !important'
-                  }}
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Badge y Disponibilidad */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', alignItems: 'center', marginTop: '0.25rem' }}>
-            <div>
-              <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#9ca3af', marginBottom: '0.35rem' }}>
-                Etiqueta / Badge
-              </label>
-              <input
-                type="text"
-                value={formData.badge}
-                onChange={(e) => handleChange('badge', e.target.value)}
-                placeholder="Ej: Recomendado"
-                style={{
-                  width: '100%',
-                  padding: '0.55rem 0.85rem',
-                  backgroundColor: 'rgba(255, 255, 255, 0.06)',
-                  color: '#ffffff',
-                  borderRadius: '12px',
-                  fontSize: '0.85rem',
+                  gap: '0.4rem',
+                  cursor: 'pointer',
                   border: 'none !important'
                 }}
-              />
+              >
+                {isUploading ? <Loader2 size={14} className="spin-icon" /> : <Upload size={14} />}
+                <span>{isUploading ? 'Subiendo...' : '+ Agregar Fotos'}</span>
+              </button>
             </div>
 
+            {/* Cuadrícula de Galería */}
+            {formData.images.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '1.5rem', color: '#6b7280', fontSize: '0.82rem' }}>
+                <ImageIcon size={28} style={{ margin: '0 auto 0.4rem', opacity: 0.4 }} />
+                <span>Aún no hay fotos en este plato. Puedes subir una o varias imágenes.</span>
+              </div>
+            ) : (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(80px, 1fr))', gap: '0.65rem' }}>
+                {formData.images.map((imgUrl, idx) => {
+                  const isMain = formData.platos_image === imgUrl;
+                  return (
+                    <div
+                      key={idx}
+                      style={{
+                        position: 'relative',
+                        width: '100%',
+                        aspectRatio: '1',
+                        borderRadius: '12px',
+                        overflow: 'hidden',
+                        backgroundColor: '#111215',
+                        boxShadow: isMain ? '0 0 0 2px var(--naranja, #f97316)' : 'none'
+                      }}
+                    >
+                      <img
+                        src={imgUrl}
+                        alt={`Foto ${idx + 1}`}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover', cursor: 'pointer' }}
+                        onClick={() => handleSetMainImage(imgUrl)}
+                        title="Toca para seleccionar como foto principal"
+                      />
+
+                      {/* Botón Estrella Portada */}
+                      <button
+                        type="button"
+                        onClick={() => handleSetMainImage(imgUrl)}
+                        style={{
+                          position: 'absolute',
+                          top: '4px',
+                          left: '4px',
+                          backgroundColor: isMain ? 'var(--naranja, #f97316)' : 'rgba(0,0,0,0.6)',
+                          color: '#ffffff',
+                          border: 'none !important',
+                          borderRadius: '6px',
+                          padding: '0.2rem',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center'
+                        }}
+                        title={isMain ? 'Foto Principal' : 'Hacer foto principal'}
+                      >
+                        <Star size={11} fill={isMain ? '#ffffff' : 'none'} />
+                      </button>
+
+                      {/* Botón Eliminar de la Galería */}
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveImage(imgUrl)}
+                        style={{
+                          position: 'absolute',
+                          top: '4px',
+                          right: '4px',
+                          backgroundColor: 'rgba(239, 68, 68, 0.85)',
+                          color: '#ffffff',
+                          border: 'none !important',
+                          borderRadius: '6px',
+                          padding: '0.2rem',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center'
+                        }}
+                        title="Quitar foto de la galería"
+                      >
+                        <Trash2 size={11} />
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {/* Badge */}
+          <div>
+            <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#9ca3af', marginBottom: '0.35rem' }}>
+              Etiqueta Promocional / Badge
+            </label>
+            <input
+              type="text"
+              value={formData.badge}
+              onChange={(e) => handleChange('badge', e.target.value)}
+              placeholder="Ej: Recomendado, Más Pedido, Especial..."
+              style={{
+                width: '100%',
+                padding: '0.55rem 0.85rem',
+                backgroundColor: 'rgba(255, 255, 255, 0.06)',
+                color: '#ffffff',
+                borderRadius: '12px',
+                fontSize: '0.85rem',
+                border: 'none !important'
+              }}
+            />
+          </div>
+
+          {/* Dos Switches: Disponibilidad (Agotado) y Visibilidad (Ocultar) */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
             {/* Switch Disponible */}
             <div
               onClick={() => handleChange('is_available', !formData.is_available)}
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.75rem',
+                gap: '0.65rem',
                 backgroundColor: formData.is_available ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.15)',
-                padding: '0.65rem 0.85rem',
+                padding: '0.75rem 0.85rem',
                 borderRadius: '12px',
-                cursor: 'pointer',
-                marginTop: '1.25rem'
+                cursor: 'pointer'
               }}
             >
               <div
@@ -422,19 +514,63 @@ export function AdminDishModal({
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: '#ffffff'
+                  color: '#ffffff',
+                  flexShrink: 0
                 }}
               >
                 {formData.is_available && <Check size={14} strokeWidth={3} />}
               </div>
-              <span style={{ fontSize: '0.82rem', fontWeight: 700, color: formData.is_available ? '#10b981' : '#ef4444' }}>
-                {formData.is_available ? 'Disponible en Carta' : 'Agotado Temporal'}
-              </span>
+              <div>
+                <span style={{ fontSize: '0.8rem', fontWeight: 800, color: formData.is_available ? '#10b981' : '#ef4444', display: 'block' }}>
+                  {formData.is_available ? 'Disponible' : 'Agotado'}
+                </span>
+                <span style={{ fontSize: '0.68rem', color: '#9ca3af' }}>
+                  {formData.is_available ? 'En cocina hoy' : 'Pausar pedidos'}
+                </span>
+              </div>
+            </div>
+
+            {/* Switch Ocultar / Mostrar */}
+            <div
+              onClick={() => handleChange('is_active', !formData.is_active)}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.65rem',
+                backgroundColor: formData.is_active ? 'rgba(59, 130, 246, 0.15)' : 'rgba(156, 163, 175, 0.15)',
+                padding: '0.75rem 0.85rem',
+                borderRadius: '12px',
+                cursor: 'pointer'
+              }}
+            >
+              <div
+                style={{
+                  width: '20px',
+                  height: '20px',
+                  borderRadius: '6px',
+                  backgroundColor: formData.is_active ? '#3b82f6' : '#6b7280',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#ffffff',
+                  flexShrink: 0
+                }}
+              >
+                {formData.is_active ? <Eye size={13} /> : <EyeOff size={13} />}
+              </div>
+              <div>
+                <span style={{ fontSize: '0.8rem', fontWeight: 800, color: formData.is_active ? '#3b82f6' : '#9ca3af', display: 'block' }}>
+                  {formData.is_active ? 'Visible en Menú' : 'Oculto'}
+                </span>
+                <span style={{ fontSize: '0.68rem', color: '#9ca3af' }}>
+                  {formData.is_active ? 'Público en carta' : 'Oculto de carta'}
+                </span>
+              </div>
             </div>
           </div>
 
-          {/* Botones de Acción */}
-          <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.75rem' }}>
+          {/* Botones de Guardar */}
+          <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.5rem' }}>
             <button
               type="button"
               onClick={onClose}
@@ -444,7 +580,7 @@ export function AdminDishModal({
                 color: '#ffffff',
                 fontWeight: 700,
                 fontSize: '0.88rem',
-                padding: '0.75rem',
+                padding: '0.85rem',
                 borderRadius: '14px',
                 cursor: 'pointer',
                 border: 'none !important'
@@ -462,7 +598,7 @@ export function AdminDishModal({
                 color: '#ffffff',
                 fontWeight: 800,
                 fontSize: '0.88rem',
-                padding: '0.75rem',
+                padding: '0.85rem',
                 borderRadius: '14px',
                 display: 'flex',
                 alignItems: 'center',

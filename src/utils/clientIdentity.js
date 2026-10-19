@@ -64,3 +64,33 @@ export function saveCustomerInfo({ name, phone, tableNumber }) {
     );
   } catch {}
 }
+
+/**
+ * RATE LIMIT: Evitar abuso o spam de pedidos repetidos
+ * Cooldown de 45 segundos entre pedidos desde el mismo dispositivo
+ */
+export function checkOrderRateLimit(cooldownSeconds = 45) {
+  try {
+    const lastTimestampStr = localStorage.getItem('mb-last-order-timestamp');
+    if (!lastTimestampStr) return { allowed: true, secondsLeft: 0 };
+
+    const lastTimestamp = parseInt(lastTimestampStr, 10);
+    const elapsedSeconds = Math.floor((Date.now() - lastTimestamp) / 1000);
+
+    if (elapsedSeconds < cooldownSeconds) {
+      return {
+        allowed: false,
+        secondsLeft: cooldownSeconds - elapsedSeconds
+      };
+    }
+  } catch {}
+
+  return { allowed: true, secondsLeft: 0 };
+}
+
+export function recordOrderTimestamp() {
+  try {
+    localStorage.setItem('mb-last-order-timestamp', String(Date.now()));
+  } catch {}
+}
+
