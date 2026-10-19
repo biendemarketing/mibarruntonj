@@ -266,7 +266,9 @@ export function CartDrawer({
               {/* Lista de Platos en el Carrito */}
               <div className="cart-items-list">
                 {items.map((item) => {
-                  const dishImg = item.dish.getImage(photoMode) || item.dish.getImage('complete') || item.dish.getImage('curated');
+                  const dishImg = item.dish.getResolvedImage
+                    ? item.dish.getResolvedImage(photoMode)
+                    : (item.dish.getImage ? item.dish.getImage(photoMode) : item.dish.image);
 
                   return (
                     <div key={item.dish.id} className="cart-item-card">
@@ -279,9 +281,14 @@ export function CartDrawer({
                             className="cart-item-image"
                             loading="lazy"
                             onError={(e) => {
+                              const fallback = item.dish.getLocalFallbackImage ? item.dish.getLocalFallbackImage(photoMode) : null;
+                              if (fallback && e.currentTarget.src !== fallback) {
+                                e.currentTarget.src = fallback;
+                                return;
+                              }
                               e.currentTarget.style.display = 'none';
-                              const fallback = e.currentTarget.parentElement?.querySelector('.cart-item-fallback-icon');
-                              if (fallback) fallback.style.display = 'flex';
+                              const fb = e.currentTarget.parentElement?.querySelector('.cart-item-fallback-icon');
+                              if (fb) fb.style.display = 'flex';
                             }}
                           />
                         ) : null}

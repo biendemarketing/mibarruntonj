@@ -60,6 +60,12 @@ export function ProductCard({
               loading="lazy"
               decoding="async"
               onLoad={() => setIsImageLoaded(true)}
+              onError={(e) => {
+                const fallback = dish.getLocalFallbackImage ? dish.getLocalFallbackImage(photoMode) : null;
+                if (fallback && e.currentTarget.src !== fallback) {
+                  e.currentTarget.src = fallback;
+                }
+              }}
             />
           ) : (
             <div className="compact-placeholder">
@@ -180,6 +186,12 @@ export function ProductCard({
             loading="lazy"
             decoding="async"
             onLoad={() => setIsImageLoaded(true)}
+            onError={(e) => {
+              const fallback = dish.getLocalFallbackImage ? dish.getLocalFallbackImage(photoMode) : null;
+              if (fallback && e.currentTarget.src !== fallback) {
+                e.currentTarget.src = fallback;
+              }
+            }}
           />
         ) : (
           <div className="product-placeholder-icon-wrap">

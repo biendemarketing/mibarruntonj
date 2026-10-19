@@ -115,8 +115,8 @@ body {
   -webkit-font-smoothing: antialiased;
   padding-bottom: 95px;
   
-  /* Imagen de Fondo Fija */
-  background-image: linear-gradient(var(--overlay-bg), var(--overlay-bg)), url('/bg-restaurant.jpg');
+  /* Imagen de Fondo Fija - CDN de Supabase Storage con fallback local */
+  background-image: linear-gradient(var(--overlay-bg), var(--overlay-bg)), url('https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/assets/bg-restaurant.jpg'), url('/bg-restaurant.jpg');
   background-attachment: fixed;
   background-size: cover;
   background-position: center;

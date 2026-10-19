@@ -211,7 +211,22 @@ export function AdminDishesTab({
           const cat = categories.find(c => c.id === dish.category_id);
           const isAvail = dish.is_available !== false;
           const isActive = dish.is_active !== false;
-          const imgUrl = dish.platos_image || dish.image_url || '';
+          const SUPABASE_CDN_BASE = 'https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes';
+          let imgUrl = dish.platos_image || dish.image_url || '';
+          let fallbackUrl = '';
+          if (imgUrl) {
+            if (imgUrl.startsWith('http://') || imgUrl.startsWith('https://')) {
+              const filename = imgUrl.split('/').pop();
+              fallbackUrl = `/platos_webp/${filename}`;
+            } else {
+              const clean = imgUrl.replace(/^(\.\/|\/)+/, '');
+              const filename = clean.split('/').pop();
+              fallbackUrl = `/${clean}`;
+              imgUrl = filename && filename.toLowerCase().endsWith('.webp')
+                ? `${SUPABASE_CDN_BASE}/platos_webp/${filename}`
+                : `${SUPABASE_CDN_BASE}/${clean}`;
+            }
+          }
 
           return (
             <div
@@ -250,6 +265,11 @@ export function AdminDishesTab({
                       alt={dish.name}
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                       loading="lazy"
+                      onError={(e) => {
+                        if (fallbackUrl && e.currentTarget.src !== fallbackUrl) {
+                          e.currentTarget.src = fallbackUrl;
+                        }
+                      }}
                     />
                   ) : (
                     <ImageIcon size={24} color="#6b635b" />

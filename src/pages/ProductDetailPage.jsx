@@ -411,6 +411,12 @@ export function ProductDetailPage({
                 alt={`${dish.name} — Mi Barrunto`}
                 className="product-page-img"
                 loading="eager"
+                onError={(e) => {
+                  const fallback = dish.getLocalFallbackImage ? dish.getLocalFallbackImage(photoMode) : null;
+                  if (fallback && e.currentTarget.src !== fallback) {
+                    e.currentTarget.src = fallback;
+                  }
+                }}
               />
               <span className="product-page-category-tag">
                 {dish.categoryName || dish.category}
@@ -632,6 +638,12 @@ export function ProductDetailPage({
                         className="accompaniment-circle-avatar"
                         loading="lazy"
                         decoding="async"
+                        onError={(e) => {
+                          const fallback = accItem.getLocalFallbackImage ? accItem.getLocalFallbackImage(photoMode) : null;
+                          if (fallback && e.currentTarget.src !== fallback) {
+                            e.currentTarget.src = fallback;
+                          }
+                        }}
                       />
                     ) : (
                       <div className="accompaniment-circle-placeholder">
@@ -730,6 +742,12 @@ export function ProductDetailPage({
                         className="editorial-card-img"
                         loading="lazy"
                         decoding="async"
+                        onError={(e) => {
+                          const fallback = relDish.getLocalFallbackImage ? relDish.getLocalFallbackImage(photoMode) : null;
+                          if (fallback && e.currentTarget.src !== fallback) {
+                            e.currentTarget.src = fallback;
+                          }
+                        }}
                       />
                     ) : (
                       <div className="editorial-card-placeholder">

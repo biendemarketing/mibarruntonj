@@ -90,7 +90,9 @@ export function Header({
           muted
           playsInline
           preload="metadata"
+          poster="https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/assets/bg-restaurant.jpg"
         >
+          <source src="https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/assets/header-bg.mp4" type="video/mp4" />
           <source src="./header-bg.mp4" type="video/mp4" />
         </video>
       </div>
@@ -274,6 +276,12 @@ export function Header({
                               alt={dish.name}
                               className="search-result-thumb-img"
                               loading="lazy"
+                              onError={(e) => {
+                                const fallback = dish.getLocalFallbackImage ? dish.getLocalFallbackImage(photoMode) : null;
+                                if (fallback && e.currentTarget.src !== fallback) {
+                                  e.currentTarget.src = fallback;
+                                }
+                              }}
                             />
                           ) : (
                             <div className="search-result-thumb-placeholder">

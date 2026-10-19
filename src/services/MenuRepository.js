@@ -3,6 +3,7 @@ import { Category } from '../models/Category';
 import { CATEGORIES_DATA, DISHES_DATA } from '../data/menuData';
 import platosMap from '../data/platosMap.json';
 import { WhatsAppService } from './WhatsAppService';
+import { menuService } from './supabase';
 
 /**
  * Repositorio de Menú y Catálogo
@@ -44,6 +45,61 @@ export class MenuRepository {
         cat.addDish(dish);
       }
     });
+
+    // Iniciar sincronización de fondo con Supabase
+    if (typeof window !== 'undefined') {
+      setTimeout(() => this.syncWithSupabase(), 100);
+    }
+  }
+
+  /**
+   * Sincroniza el catálogo en caliente con la base de datos de Supabase
+   * Aprovecha el CDN de Storage y refleja cambios en vivo realizados desde el Admin Panel
+   */
+  async syncWithSupabase() {
+    try {
+      const remoteDishes = await menuService.getDishes();
+      if (!remoteDishes || remoteDishes.length === 0) return;
+
+      remoteDishes.forEach(remote => {
+        const numId = Number(remote.id);
+        const existing = this.dishesMap.get(numId) || this.dishesMap.get(String(remote.id));
+        if (existing) {
+          if (remote.name) existing.name = remote.name;
+          if (remote.name_en) existing.nameEn = remote.name_en;
+          if (remote.price !== undefined) existing.price = Number(remote.price);
+          if (remote.priceDisplay) existing.priceDisplay = remote.priceDisplay;
+          if (remote.platos_image) existing.platosImage = remote.platos_image;
+          if (remote.image_url) existing.image = remote.image_url;
+          if (Array.isArray(remote.images) && remote.images.length > 0) {
+            existing.images = remote.images;
+          }
+          if (remote.is_available !== undefined) existing.isAvailable = remote.is_available;
+          if (remote.is_active !== undefined) existing.isActive = remote.is_active;
+        } else {
+          const cat = this.categoriesMap.get(remote.category_id);
+          const newDish = new Dish({
+            id: remote.id,
+            name: remote.name,
+            nameEn: remote.name_en || '',
+            price: remote.price,
+            category: remote.category_id,
+            platosImage: remote.platos_image,
+            image: remote.image_url,
+            images: remote.images,
+            isAvailable: remote.is_available,
+            isActive: remote.is_active,
+            categoryName: cat ? cat.name : '',
+            categoryNameEn: cat ? cat.nameEn : ''
+          });
+          this.dishes.push(newDish);
+          this.dishesMap.set(numId, newDish);
+          if (cat) cat.addDish(newDish);
+        }
+      });
+    } catch (e) {
+      // Modo offline seguro
+    }
   }
 
   /**

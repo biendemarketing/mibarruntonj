@@ -120,6 +120,12 @@ export function TvMenuModal({ isOpen, onClose, dishes = [], photoMode = 'complet
             alt=""
             aria-hidden="true"
             className="tv-ambient-bg-image"
+            onError={(e) => {
+              const fallback = currentDish.getLocalFallbackImage ? currentDish.getLocalFallbackImage(photoMode) : null;
+              if (fallback && e.currentTarget.src !== fallback) {
+                e.currentTarget.src = fallback;
+              }
+            }}
           />
         )}
       </div>
@@ -131,6 +137,12 @@ export function TvMenuModal({ isOpen, onClose, dishes = [], photoMode = 'complet
             src={image}
             alt={currentDish.name}
             className="tv-dish-hero-image"
+            onError={(e) => {
+              const fallback = currentDish.getLocalFallbackImage ? currentDish.getLocalFallbackImage(photoMode) : null;
+              if (fallback && e.currentTarget.src !== fallback) {
+                e.currentTarget.src = fallback;
+              }
+            }}
           />
         ) : (
           <div className="tv-fullscreen-placeholder">

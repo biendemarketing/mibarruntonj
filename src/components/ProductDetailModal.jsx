@@ -134,6 +134,12 @@ export function ProductDetailModal({
                 alt={`${dish.name} — Especialidad tradicional de Mi Barrunto`}
                 className="modal-image"
                 loading="eager"
+                onError={(e) => {
+                  const fallback = dish.getLocalFallbackImage ? dish.getLocalFallbackImage(photoMode) : null;
+                  if (fallback && e.currentTarget.src !== fallback) {
+                    e.currentTarget.src = fallback;
+                  }
+                }}
               />
             </div>
           ) : (

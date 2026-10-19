@@ -471,25 +471,46 @@ export function AdminDishModal({
                 }}
               >
                 {formData.images.map((imgUrl, idx) => {
-                  const isMain = (formData.platos_image === imgUrl) || (!formData.platos_image && idx === 0);
-                  return (
-                    <div
-                      key={idx}
-                      style={{
-                        position: 'relative',
-                        width: '100%',
-                        height: '75px',
-                        borderRadius: '10px',
-                        overflow: 'hidden',
-                        backgroundColor: '#f5efe4',
-                        boxShadow: isMain ? '0 0 0 2px var(--rojo, #d91c2b)' : 'none'
-                      }}
-                    >
-                      <img
-                        src={imgUrl}
-                        alt={`Foto ${idx + 1}`}
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                      />
+                    const SUPABASE_CDN_BASE = 'https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes';
+                    let resolvedSrc = imgUrl;
+                    let localFallback = '';
+                    if (imgUrl) {
+                      if (imgUrl.startsWith('http://') || imgUrl.startsWith('https://')) {
+                        const filename = imgUrl.split('/').pop();
+                        localFallback = `/platos_webp/${filename}`;
+                      } else {
+                        const clean = imgUrl.replace(/^(\.\/|\/)+/, '');
+                        const filename = clean.split('/').pop();
+                        localFallback = `/${clean}`;
+                        resolvedSrc = (filename && filename.toLowerCase().endsWith('.webp'))
+                          ? `${SUPABASE_CDN_BASE}/platos_webp/${filename}`
+                          : `${SUPABASE_CDN_BASE}/${clean}`;
+                      }
+                    }
+
+                    return (
+                      <div
+                        key={idx}
+                        style={{
+                          position: 'relative',
+                          width: '100%',
+                          height: '75px',
+                          borderRadius: '10px',
+                          overflow: 'hidden',
+                          backgroundColor: '#f5efe4',
+                          boxShadow: isMain ? '0 0 0 2px var(--rojo, #d91c2b)' : 'none'
+                        }}
+                      >
+                        <img
+                          src={resolvedSrc}
+                          alt={`Foto ${idx + 1}`}
+                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                          onError={(e) => {
+                            if (localFallback && e.currentTarget.src !== localFallback) {
+                              e.currentTarget.src = localFallback;
+                            }
+                          }}
+                        />
 
                       {/* Botón Estrella: Establecer como Principal */}
                       <button
