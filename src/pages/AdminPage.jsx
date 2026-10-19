@@ -387,6 +387,7 @@ export function AdminPage() {
   if (!isAuthenticated) {
     return (
       <div
+        className="admin-theme"
         style={{
           minHeight: '100vh',
           backgroundColor: '#fbf7ee',
@@ -396,7 +397,7 @@ export function AdminPage() {
           alignItems: 'center',
           justifyContent: 'center',
           padding: '1.5rem',
-          fontFamily: 'var(--font-primary, system-ui, sans-serif)'
+          fontFamily: 'var(--font-admin-primary, "DM Sans", -apple-system, sans-serif)'
         }}
       >
         <div
@@ -575,11 +576,12 @@ export function AdminPage() {
   // 2. DASHBOARD ADMINISTRATIVO COMPLETO EN TEMA LIGHT CON SIDEBAR
   return (
     <div
+      className="admin-theme"
       style={{
         minHeight: '100vh',
         backgroundColor: '#fbf7ee',
         color: '#1f1e1c',
-        fontFamily: 'var(--font-primary, system-ui, sans-serif)',
+        fontFamily: 'var(--font-admin-primary, "DM Sans", -apple-system, sans-serif)',
         display: 'flex',
         flexDirection: 'row',
         position: 'relative'

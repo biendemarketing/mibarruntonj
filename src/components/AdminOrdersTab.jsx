@@ -5,7 +5,8 @@ import {
   MessageSquare, Phone, UserCheck, CreditCard, 
   DollarSign, Kanban, LayoutGrid, CheckCheck, 
   Users, Search, Calendar, FileText, Star, X,
-  ArrowLeft, ArrowRight, Sparkles, Move
+  ArrowLeft, ArrowRight, Sparkles, Move,
+  ChevronDown, ChevronUp
 } from 'lucide-react';
 import { useAlertConfirm } from '../context/AlertConfirmContext';
 import { triggerHaptic } from '../utils/haptics';
@@ -33,6 +34,26 @@ export function AdminOrdersTab({
   const [dragOverColId, setDragOverColId] = useState(null);
   const [paymentModalOrder, setPaymentModalOrder] = useState(null);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('efectivo');
+  const [expandedCardIds, setExpandedCardIds] = useState(new Set());
+  const [expandAll, setExpandAll] = useState(false);
+
+  const toggleExpandCard = (orderId) => {
+    triggerHaptic(6);
+    setExpandedCardIds(prev => {
+      const next = new Set(prev);
+      if (next.has(orderId)) {
+        next.delete(orderId);
+      } else {
+        next.add(orderId);
+      }
+      return next;
+    });
+  };
+
+  const handleToggleExpandAll = () => {
+    triggerHaptic(8);
+    setExpandAll(prev => !prev);
+  };
 
   // Calcular clientes recurrentes agregando el número de órdenes por identificador
   const customerStats = useMemo(() => {
@@ -587,441 +608,526 @@ export function AdminOrdersTab({
           </div>
         </div>
 
-        {/* Fila de Método de Pago y Cantidad de Comensales */}
+        {/* Fila Resumen Clave: Total, Comensales y Píldora de Pago */}
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
             backgroundColor: '#fcf9f2',
-            padding: '0.5rem 0.75rem',
+            padding: '0.45rem 0.65rem',
             borderRadius: '10px'
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.78rem', color: '#1f1e1c', fontWeight: 700 }}>
-            <Users size={14} color="var(--rojo, #d91c2b)" />
-            <span>{order.diner_count || 2} comensales</span>
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.78rem', color: '#1f1e1c', fontWeight: 700 }}>
-            <CreditCard size={14} color="#059669" />
-            <span style={{ textTransform: 'capitalize' }}>{order.payment_method || 'Efectivo'}</span>
-          </div>
-        </div>
-
-        {/* Lista de Platos Solicitados */}
-        <div
-          style={{
-            backgroundColor: '#f5efe4',
-            borderRadius: '12px',
-            padding: '0.65rem 0.75rem',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '0.45rem',
-            maxHeight: isCompact ? '130px' : '180px',
-            overflowY: 'auto'
-          }}
-        >
-          {(order.order_items || []).map((item, idx) => (
-            <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', fontSize: '0.82rem' }}>
-              <div style={{ flex: 1, paddingRight: '0.5rem' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                  <span style={{ fontWeight: 800, color: cardColor, minWidth: '18px' }}>
-                    {item.quantity}x
-                  </span>
-                  <span style={{ color: '#1f1e1c', fontWeight: 700 }}>
-                    {item.dish_name}
-                  </span>
-                </div>
-                {item.notes && (
-                  <div style={{ fontSize: '0.72rem', color: '#b45309', marginTop: '0.1rem', fontStyle: 'italic', paddingLeft: '1.4rem' }}>
-                    Nota: "{item.notes}"
-                  </div>
-                )}
-              </div>
-              <span style={{ fontWeight: 800, color: '#6b635b', fontSize: '0.8rem' }}>
-                ${Number(item.subtotal || item.dish_price * item.quantity || 0).toFixed(2)}
-              </span>
-            </div>
-          ))}
-        </div>
-
-        {/* Indicaciones Generales */}
-        {order.notes && (
-          <div
-            style={{
-              fontSize: '0.75rem',
-              color: '#b45309',
-              backgroundColor: '#fef3c7',
-              padding: '0.45rem 0.65rem',
-              borderRadius: '8px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.4rem'
-            }}
-          >
-            <MessageSquare size={13} style={{ flexShrink: 0 }} />
-            <span>Indicaciones: {order.notes}</span>
-          </div>
-        )}
-
-        {/* Fila de Total y Mesero */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '0.2rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-            <span style={{ fontSize: '0.8rem', color: '#6b635b' }}>Total:</span>
-            <span style={{ fontSize: '1.15rem', fontWeight: 900, color: '#1f1e1c' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ fontSize: '1.08rem', fontWeight: 900, color: '#1f1e1c', fontFamily: 'var(--font-admin-primary, "DM Sans", sans-serif)' }}>
               ${Number(order.total_amount || 0).toFixed(2)}
+            </span>
+            <span style={{ fontSize: '0.72rem', color: '#6b635b', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
+              <Users size={12} color="var(--rojo, #d91c2b)" />
+              {order.diner_count || 2} pers.
             </span>
           </div>
 
-          {/* Asignación de Mesero */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-            <UserCheck size={14} color="#6b635b" />
-            <select
-              value={order.waiter_id || ''}
-              onChange={(e) => onAssignWaiter(order.id, e.target.value || null)}
-              style={{
-                backgroundColor: '#f5efe4',
-                color: '#1f1e1c',
-                fontSize: '0.75rem',
-                fontWeight: 700,
-                padding: '0.3rem 0.5rem',
-                borderRadius: '8px',
-                border: 'none !important',
-                cursor: 'pointer'
-              }}
-            >
-              <option value="">Sin mesero</option>
-              {waiters.map(w => (
-                <option key={w.id} value={w.id}>{w.name}</option>
-              ))}
-            </select>
-          </div>
-        </div>
-
-        {/* Estado de Pago (Pagada / Marcar como Pagada) */}
-        <div>
-          {isPaidOrder ? (
-            <button
-              type="button"
-              onClick={() => handleTogglePaid(order)}
-              style={{
-                width: '100%',
-                backgroundColor: '#ecfdf5',
-                color: '#059669',
-                padding: '0.45rem 0.65rem',
-                borderRadius: '8px',
-                fontSize: '0.78rem',
-                fontWeight: 800,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '0.4rem',
-                cursor: 'pointer',
-                border: 'none !important'
-              }}
-              title="Click para cambiar estado de pago"
-            >
-              <CheckCheck size={15} />
-              <span>ORDEN PAGADA (${Number(order.total_amount || 0).toFixed(2)}) · {order.payment_method || 'Efectivo'}</span>
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={() => handleOpenPaymentModal(order)}
-              style={{
-                width: '100%',
-                backgroundColor: '#fef3c7',
-                color: '#b45309',
-                padding: '0.45rem 0.65rem',
-                borderRadius: '8px',
-                fontSize: '0.78rem',
-                fontWeight: 800,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '0.4rem',
-                cursor: 'pointer',
-                border: 'none !important'
-              }}
-              title="Marcar orden como pagada por el cliente"
-            >
-              <CreditCard size={14} />
-              <span>Pendiente de Pago (${Number(order.total_amount || 0).toFixed(2)}) · Cobrar</span>
-            </button>
-          )}
-        </div>
-
-        {/* Control de Tiempo de Espera (para pendientes o en cocina) */}
-        {(isPending || isKitchen) && (
-          <div
-            style={{
-              backgroundColor: '#fcf9f2',
-              padding: '0.55rem',
-              borderRadius: '10px',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '0.35rem'
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#6b635b', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-                <Clock size={12} />
-                Tiempo de Espera:
+          <div>
+            {isPaidOrder ? (
+              <span
+                style={{
+                  backgroundColor: '#ecfdf5',
+                  color: '#059669',
+                  padding: '0.2rem 0.55rem',
+                  borderRadius: '9999px',
+                  fontSize: '0.72rem',
+                  fontWeight: 800,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.25rem'
+                }}
+              >
+                <CheckCheck size={12} />
+                <span>Pagado</span>
               </span>
-              <strong style={{ fontSize: '0.8rem', color: cardColor }}>
-                {timeInputs[order.id] || order.estimated_time || '15-20 min'}
-              </strong>
-            </div>
-
-            {/* Presets de Tiempo rápido */}
-            <div style={{ display: 'flex', gap: '0.25rem' }}>
-              {['10 min', '15 min', '20 min', '30 min'].map(timePreset => (
-                <button
-                  key={timePreset}
-                  type="button"
-                  onClick={() => handleQuickTime(order.id, parseInt(timePreset))}
-                  style={{
-                    flex: 1,
-                    backgroundColor: (timeInputs[order.id] || order.estimated_time) === timePreset ? '#dbeafe' : '#f5efe4',
-                    color: (timeInputs[order.id] || order.estimated_time) === timePreset ? '#1d4ed8' : '#1f1e1c',
-                    fontSize: '0.7rem',
-                    fontWeight: 800,
-                    padding: '0.25rem 0',
-                    borderRadius: '6px',
-                    border: 'none !important',
-                    cursor: 'pointer'
-                  }}
-                >
-                  {timePreset}
-                </button>
-              ))}
-            </div>
+            ) : (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleOpenPaymentModal(order);
+                }}
+                style={{
+                  backgroundColor: '#fef3c7',
+                  color: '#b45309',
+                  padding: '0.2rem 0.55rem',
+                  borderRadius: '9999px',
+                  fontSize: '0.72rem',
+                  fontWeight: 800,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.25rem',
+                  cursor: 'pointer',
+                  border: 'none !important'
+                }}
+                title="Cobrar orden del cliente"
+              >
+                <CreditCard size={12} />
+                <span>Cobrar</span>
+              </button>
+            )}
           </div>
-        )}
+        </div>
 
-        {/* Botones de Acción de Estado del Pedido con Confirmación Estricta */}
-        <div style={{ display: 'flex', gap: '0.45rem', marginTop: '0.2rem' }}>
-          {isPending && (
+        {/* Botón Dropdown / Acordeón para Ver Detalles y Platos */}
+        {(() => {
+          const isCardExpanded = expandAll || (!isCompact) || expandedCardIds.has(order.id);
+          const totalDishesCount = (order.order_items || []).reduce((acc, it) => acc + Number(it.quantity || 1), 0);
+
+          return (
             <>
               <button
                 type="button"
-                onClick={() => handleAcceptOrder(order)}
-                style={{
-                  flex: 2,
-                  backgroundColor: '#059669',
-                  color: '#ffffff',
-                  fontWeight: 800,
-                  fontSize: '0.82rem',
-                  padding: '0.65rem 0.85rem',
-                  borderRadius: '10px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '0.4rem',
-                  cursor: 'pointer',
-                  border: 'none !important',
-                  boxShadow: '0 4px 15px rgba(5, 150, 105, 0.25)'
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleExpandCard(order.id);
                 }}
-              >
-                <Check size={15} />
-                <span>Aceptar Pedido</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleCancelOrder(order)}
-                style={{
-                  flex: 1,
-                  backgroundColor: '#fee2e2',
-                  color: '#b91c1c',
-                  fontWeight: 800,
-                  fontSize: '0.78rem',
-                  padding: '0.65rem 0.65rem',
-                  borderRadius: '10px',
-                  cursor: 'pointer',
-                  border: 'none !important'
-                }}
-              >
-                Rechazar
-              </button>
-            </>
-          )}
-
-          {isKitchen && (
-            <>
-              <button
-                type="button"
-                onClick={() => handleReadyOrder(order)}
-                style={{
-                  flex: 2,
-                  backgroundColor: '#2563eb',
-                  color: '#ffffff',
-                  fontWeight: 800,
-                  fontSize: '0.82rem',
-                  padding: '0.65rem 0.85rem',
-                  borderRadius: '10px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '0.4rem',
-                  cursor: 'pointer',
-                  border: 'none !important',
-                  boxShadow: '0 4px 15px rgba(37, 99, 235, 0.25)'
-                }}
-              >
-                <ChefHat size={15} />
-                <span>Marcar Listo</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleCancelOrder(order)}
-                style={{
-                  flex: 1,
-                  backgroundColor: '#fee2e2',
-                  color: '#b91c1c',
-                  fontWeight: 800,
-                  fontSize: '0.78rem',
-                  padding: '0.65rem 0.5rem',
-                  borderRadius: '10px',
-                  cursor: 'pointer',
-                  border: 'none !important'
-                }}
-              >
-                Cancelar
-              </button>
-            </>
-          )}
-
-          {isReady && (
-            <button
-              type="button"
-              onClick={() => handleDeliverOrder(order)}
-              style={{
-                width: '100%',
-                backgroundColor: '#059669',
-                color: '#ffffff',
-                fontWeight: 800,
-                fontSize: '0.85rem',
-                padding: '0.7rem 1rem',
-                borderRadius: '10px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '0.45rem',
-                cursor: 'pointer',
-                border: 'none !important',
-                boxShadow: '0 4px 15px rgba(5, 150, 105, 0.25)'
-              }}
-            >
-              <CheckCircle2 size={16} />
-              <span>Marcar como Entregado</span>
-            </button>
-          )}
-
-          {isDelivered && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', width: '100%' }}>
-              <div style={{ display: 'flex', gap: '0.45rem' }}>
-                {!isPaidOrder && (
-                  <button
-                    type="button"
-                    onClick={() => handleOpenPaymentModal(order)}
-                    style={{
-                      flex: 1,
-                      backgroundColor: '#0d9488',
-                      color: '#ffffff',
-                      fontWeight: 800,
-                      fontSize: '0.78rem',
-                      padding: '0.6rem 0.65rem',
-                      borderRadius: '10px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '0.35rem',
-                      cursor: 'pointer',
-                      border: 'none !important',
-                      boxShadow: '0 4px 12px rgba(13, 148, 136, 0.25)'
-                    }}
-                  >
-                    <CreditCard size={14} />
-                    <span>Cobrar Cuenta</span>
-                  </button>
-                )}
-
-                <button
-                  type="button"
-                  onClick={() => handleFreeTable(order)}
-                  style={{
-                    flex: 1,
-                    backgroundColor: 'var(--rojo, #d91c2b)',
-                    color: '#ffffff',
-                    fontWeight: 800,
-                    fontSize: '0.78rem',
-                    padding: '0.6rem 0.65rem',
-                    borderRadius: '10px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '0.35rem',
-                    cursor: 'pointer',
-                    border: 'none !important',
-                    boxShadow: '0 4px 12px rgba(217, 28, 43, 0.25)'
-                  }}
-                  title="Liberar mesa cuando el comensal se retira"
-                >
-                  <Sparkles size={14} />
-                  <span>Desocupar Mesa</span>
-                </button>
-              </div>
-            </div>
-          )}
-
-          {order.status === 'paid' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', width: '100%' }}>
-              <button
-                type="button"
-                onClick={() => handleFreeTable(order)}
                 style={{
                   width: '100%',
-                  backgroundColor: 'var(--rojo, #d91c2b)',
-                  color: '#ffffff',
+                  backgroundColor: isCardExpanded ? '#f5efe4' : '#faf6ee',
+                  color: isCardExpanded ? 'var(--rojo, #d91c2b)' : '#6b635b',
+                  padding: '0.38rem 0.65rem',
+                  borderRadius: '8px',
+                  fontSize: '0.74rem',
                   fontWeight: 800,
-                  fontSize: '0.82rem',
-                  padding: '0.65rem 0.85rem',
-                  borderRadius: '10px',
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '0.4rem',
+                  justifyContent: 'space-between',
                   cursor: 'pointer',
                   border: 'none !important',
-                  boxShadow: '0 4px 15px rgba(217, 28, 43, 0.3)'
+                  transition: 'all 0.15s ease'
                 }}
               >
-                <Sparkles size={15} />
-                <span>Desocupar y Liberar Mesa {order.table_number}</span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                  <Utensils size={13} />
+                  <span>
+                    {totalDishesCount} {totalDishesCount === 1 ? 'plato' : 'platos'} {isCardExpanded ? '· Ocultar detalle' : '· Ver detalle'}
+                  </span>
+                </span>
+                {isCardExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
               </button>
-            </div>
-          )}
 
-          {isCompleted && (
-            <div
-              style={{
-                width: '100%',
-                textAlign: 'center',
-                fontSize: '0.78rem',
-                color: '#4b5563',
-                fontWeight: 800,
-                padding: '0.5rem',
-                backgroundColor: '#f3f4f6',
-                borderRadius: '8px'
-              }}
-            >
-              Mesa {order.table_number} Desocupada · Completada
-            </div>
-          )}
-        </div>
+              {/* CONTENIDO DESPLEGABLE (Platos, Notas, Mesero, Acciones) */}
+              {isCardExpanded && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', paddingTop: '0.15rem' }}>
+                  {/* Lista de Platos Solicitados */}
+                  <div
+                    style={{
+                      backgroundColor: '#f5efe4',
+                      borderRadius: '12px',
+                      padding: '0.65rem 0.75rem',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '0.45rem',
+                      maxHeight: '180px',
+                      overflowY: 'auto'
+                    }}
+                  >
+                    {(order.order_items || []).map((item, idx) => (
+                      <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', fontSize: '0.82rem' }}>
+                        <div style={{ flex: 1, paddingRight: '0.5rem' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                            <span style={{ fontWeight: 800, color: cardColor, minWidth: '18px' }}>
+                              {item.quantity}x
+                            </span>
+                            <span style={{ color: '#1f1e1c', fontWeight: 700 }}>
+                              {item.dish_name}
+                            </span>
+                          </div>
+                          {item.notes && (
+                            <div style={{ fontSize: '0.72rem', color: '#b45309', marginTop: '0.1rem', fontStyle: 'italic', paddingLeft: '1.4rem' }}>
+                              Nota: "{item.notes}"
+                            </div>
+                          )}
+                        </div>
+                        <span style={{ fontWeight: 800, color: '#6b635b', fontSize: '0.8rem' }}>
+                          ${Number(item.subtotal || item.dish_price * item.quantity || 0).toFixed(2)}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Indicaciones Generales */}
+                  {order.notes && (
+                    <div
+                      style={{
+                        fontSize: '0.75rem',
+                        color: '#b45309',
+                        backgroundColor: '#fef3c7',
+                        padding: '0.45rem 0.65rem',
+                        borderRadius: '8px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.4rem'
+                      }}
+                    >
+                      <MessageSquare size={13} style={{ flexShrink: 0 }} />
+                      <span>Indicaciones: {order.notes}</span>
+                    </div>
+                  )}
+
+                  {/* Fila de Mesero */}
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#fcf9f2', padding: '0.4rem 0.65rem', borderRadius: '8px' }}>
+                    <span style={{ fontSize: '0.75rem', color: '#6b635b', fontWeight: 700 }}>Mesero a cargo:</span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                      <UserCheck size={14} color="#6b635b" />
+                      <select
+                        value={order.waiter_id || ''}
+                        onChange={(e) => onAssignWaiter(order.id, e.target.value || null)}
+                        style={{
+                          backgroundColor: '#f5efe4',
+                          color: '#1f1e1c',
+                          fontSize: '0.75rem',
+                          fontWeight: 700,
+                          padding: '0.25rem 0.45rem',
+                          borderRadius: '6px',
+                          border: 'none !important',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        <option value="">Sin mesero</option>
+                        {waiters.map(w => (
+                          <option key={w.id} value={w.id}>{w.name}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Botón de Pago Completo */}
+                  <div>
+                    {isPaidOrder ? (
+                      <button
+                        type="button"
+                        onClick={() => handleTogglePaid(order)}
+                        style={{
+                          width: '100%',
+                          backgroundColor: '#ecfdf5',
+                          color: '#059669',
+                          padding: '0.45rem 0.65rem',
+                          borderRadius: '8px',
+                          fontSize: '0.78rem',
+                          fontWeight: 800,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '0.4rem',
+                          cursor: 'pointer',
+                          border: 'none !important'
+                        }}
+                        title="Click para cambiar estado de pago"
+                      >
+                        <CheckCheck size={15} />
+                        <span>ORDEN PAGADA (${Number(order.total_amount || 0).toFixed(2)}) · {order.payment_method || 'Efectivo'}</span>
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => handleOpenPaymentModal(order)}
+                        style={{
+                          width: '100%',
+                          backgroundColor: '#fef3c7',
+                          color: '#b45309',
+                          padding: '0.45rem 0.65rem',
+                          borderRadius: '8px',
+                          fontSize: '0.78rem',
+                          fontWeight: 800,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '0.4rem',
+                          cursor: 'pointer',
+                          border: 'none !important'
+                        }}
+                        title="Marcar orden como pagada por el cliente"
+                      >
+                        <CreditCard size={14} />
+                        <span>Pendiente de Pago (${Number(order.total_amount || 0).toFixed(2)}) · Cobrar</span>
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Control de Tiempo de Espera (para pendientes o en cocina) */}
+                  {(isPending || isKitchen) && (
+                    <div
+                      style={{
+                        backgroundColor: '#fcf9f2',
+                        padding: '0.55rem',
+                        borderRadius: '10px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '0.35rem'
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#6b635b', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                          <Clock size={12} />
+                          Tiempo de Espera:
+                        </span>
+                        <strong style={{ fontSize: '0.8rem', color: cardColor }}>
+                          {timeInputs[order.id] || order.estimated_time || '15-20 min'}
+                        </strong>
+                      </div>
+
+                      {/* Presets de Tiempo rápido */}
+                      <div style={{ display: 'flex', gap: '0.25rem' }}>
+                        {['10 min', '15 min', '20 min', '30 min'].map(timePreset => (
+                          <button
+                            key={timePreset}
+                            type="button"
+                            onClick={() => handleQuickTime(order.id, parseInt(timePreset))}
+                            style={{
+                              flex: 1,
+                              backgroundColor: (timeInputs[order.id] || order.estimated_time) === timePreset ? '#dbeafe' : '#f5efe4',
+                              color: (timeInputs[order.id] || order.estimated_time) === timePreset ? '#1d4ed8' : '#1f1e1c',
+                              fontSize: '0.7rem',
+                              fontWeight: 800,
+                              padding: '0.25rem 0',
+                              borderRadius: '6px',
+                              border: 'none !important',
+                              cursor: 'pointer'
+                            }}
+                          >
+                            {timePreset}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Botones de Acción de Estado del Pedido */}
+                  <div style={{ display: 'flex', gap: '0.45rem', marginTop: '0.1rem' }}>
+                    {isPending && (
+                      <>
+                        <button
+                          type="button"
+                          onClick={() => handleAcceptOrder(order)}
+                          style={{
+                            flex: 2,
+                            backgroundColor: '#059669',
+                            color: '#ffffff',
+                            fontWeight: 800,
+                            fontSize: '0.82rem',
+                            padding: '0.65rem 0.85rem',
+                            borderRadius: '10px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '0.4rem',
+                            cursor: 'pointer',
+                            border: 'none !important',
+                            boxShadow: '0 4px 15px rgba(5, 150, 105, 0.25)'
+                          }}
+                        >
+                          <Check size={15} />
+                          <span>Aceptar Pedido</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => handleCancelOrder(order)}
+                          style={{
+                            flex: 1,
+                            backgroundColor: '#fee2e2',
+                            color: '#b91c1c',
+                            fontWeight: 800,
+                            fontSize: '0.78rem',
+                            padding: '0.65rem 0.65rem',
+                            borderRadius: '10px',
+                            cursor: 'pointer',
+                            border: 'none !important'
+                          }}
+                        >
+                          Rechazar
+                        </button>
+                      </>
+                    )}
+
+                    {isKitchen && (
+                      <>
+                        <button
+                          type="button"
+                          onClick={() => handleReadyOrder(order)}
+                          style={{
+                            flex: 2,
+                            backgroundColor: '#2563eb',
+                            color: '#ffffff',
+                            fontWeight: 800,
+                            fontSize: '0.82rem',
+                            padding: '0.65rem 0.85rem',
+                            borderRadius: '10px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '0.4rem',
+                            cursor: 'pointer',
+                            border: 'none !important',
+                            boxShadow: '0 4px 15px rgba(37, 99, 255, 0.25)'
+                          }}
+                        >
+                          <ChefHat size={15} />
+                          <span>Marcar Listo</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => handleCancelOrder(order)}
+                          style={{
+                            flex: 1,
+                            backgroundColor: '#fee2e2',
+                            color: '#b91c1c',
+                            fontWeight: 800,
+                            fontSize: '0.78rem',
+                            padding: '0.65rem 0.5rem',
+                            borderRadius: '10px',
+                            cursor: 'pointer',
+                            border: 'none !important'
+                          }}
+                        >
+                          Cancelar
+                        </button>
+                      </>
+                    )}
+
+                    {isReady && (
+                      <button
+                        type="button"
+                        onClick={() => handleDeliverOrder(order)}
+                        style={{
+                          width: '100%',
+                          backgroundColor: '#059669',
+                          color: '#ffffff',
+                          fontWeight: 800,
+                          fontSize: '0.85rem',
+                          padding: '0.7rem 1rem',
+                          borderRadius: '10px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '0.45rem',
+                          cursor: 'pointer',
+                          border: 'none !important',
+                          boxShadow: '0 4px 15px rgba(5, 150, 105, 0.25)'
+                        }}
+                      >
+                        <CheckCircle2 size={16} />
+                        <span>Marcar como Entregado</span>
+                      </button>
+                    )}
+
+                    {isDelivered && (
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', width: '100%' }}>
+                        <div style={{ display: 'flex', gap: '0.45rem' }}>
+                          {!isPaidOrder && (
+                            <button
+                              type="button"
+                              onClick={() => handleOpenPaymentModal(order)}
+                              style={{
+                                flex: 1,
+                                backgroundColor: '#0d9488',
+                                color: '#ffffff',
+                                fontWeight: 800,
+                                fontSize: '0.78rem',
+                                padding: '0.6rem 0.65rem',
+                                borderRadius: '10px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '0.35rem',
+                                cursor: 'pointer',
+                                border: 'none !important',
+                                boxShadow: '0 4px 12px rgba(13, 148, 136, 0.25)'
+                              }}
+                            >
+                              <CreditCard size={14} />
+                              <span>Cobrar Cuenta</span>
+                            </button>
+                          )}
+
+                          <button
+                            type="button"
+                            onClick={() => handleFreeTable(order)}
+                            style={{
+                              flex: 1,
+                              backgroundColor: 'var(--rojo, #d91c2b)',
+                              color: '#ffffff',
+                              fontWeight: 800,
+                              fontSize: '0.78rem',
+                              padding: '0.6rem 0.65rem',
+                              borderRadius: '10px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              gap: '0.35rem',
+                              cursor: 'pointer',
+                              border: 'none !important',
+                              boxShadow: '0 4px 12px rgba(217, 28, 43, 0.25)'
+                            }}
+                            title="Liberar mesa cuando el comensal se retira"
+                          >
+                            <Sparkles size={14} />
+                            <span>Desocupar Mesa</span>
+                          </button>
+                        </div>
+                      </div>
+                    )}
+
+                    {order.status === 'paid' && (
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', width: '100%' }}>
+                        <button
+                          type="button"
+                          onClick={() => handleFreeTable(order)}
+                          style={{
+                            width: '100%',
+                            backgroundColor: 'var(--rojo, #d91c2b)',
+                            color: '#ffffff',
+                            fontWeight: 800,
+                            fontSize: '0.82rem',
+                            padding: '0.65rem 0.85rem',
+                            borderRadius: '10px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '0.4rem',
+                            cursor: 'pointer',
+                            border: 'none !important',
+                            boxShadow: '0 4px 15px rgba(217, 28, 43, 0.3)'
+                          }}
+                        >
+                          <Sparkles size={15} />
+                          <span>Desocupar y Liberar Mesa {order.table_number}</span>
+                        </button>
+                      </div>
+                    )}
+
+                    {isCompleted && (
+                      <div
+                        style={{
+                          width: '100%',
+                          textAlign: 'center',
+                          fontSize: '0.78rem',
+                          color: '#4b5563',
+                          fontWeight: 800,
+                          padding: '0.5rem',
+                          backgroundColor: '#f3f4f6',
+                          borderRadius: '8px'
+                        }}
+                      >
+                        Mesa {order.table_number} Desocupada · Completada
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </>
+          );
+        })()}
 
         {/* Barra Inferior con Flechas Direccionales para Meseros (1 toque en móvil/tablet) */}
         <div
@@ -1403,8 +1509,33 @@ export function AdminOrdersTab({
           </div>
         </div>
 
-        {/* Acciones Rápidas (Sonido y Refrescar) */}
+        {/* Acciones Rápidas (Expandir/Colapsar, Sonido y Refrescar) */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          {viewMode === 'pipeline' && (
+            <button
+              type="button"
+              onClick={handleToggleExpandAll}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+                backgroundColor: expandAll ? '#fef3c7' : '#f5efe4',
+                color: expandAll ? '#b45309' : '#6b635b',
+                padding: '0.45rem 0.85rem',
+                borderRadius: '9999px',
+                fontSize: '0.82rem',
+                fontWeight: 800,
+                cursor: 'pointer',
+                border: 'none !important',
+                transition: 'all 0.2s'
+              }}
+              title={expandAll ? 'Colapsar todas las tarjetas para vista panorámica' : 'Expandir todas las tarjetas'}
+            >
+              {expandAll ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
+              <span>{expandAll ? 'Colapsar Todo' : 'Expandir Todo'}</span>
+            </button>
+          )}
+
           <button
             type="button"
             onClick={onToggleSound}
