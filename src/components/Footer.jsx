@@ -173,9 +173,25 @@ export function Footer({ photoMode = 'complete', onTogglePhotoMode, onOpenTvMode
           <span>Gratitude of 18% on table 2 or more people</span>
         </div>
 
-        {/* Copyright */}
+        {/* Copyright y Acceso Administrativo */}
         <div className="footer-compact-bottom">
           <p>Mi Barrunto © Todos los derechos reservados · Paterson, NJ</p>
+          <div style={{ marginTop: '0.35rem' }}>
+            <a
+              href="/admin"
+              style={{
+                color: 'rgba(255, 255, 255, 0.35)',
+                fontSize: '0.72rem',
+                textDecoration: 'none',
+                fontWeight: 600,
+                transition: 'color 0.2s'
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = '#ffffff'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(255, 255, 255, 0.35)'; }}
+            >
+              Acceso Administrativo
+            </a>
+          </div>
         </div>
       </div>
     </footer>

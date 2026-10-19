@@ -9,10 +9,17 @@ import {
   User,
   MapPin,
   UtensilsCrossed,
-  MessageSquare
+  MessageSquare,
+  Send,
+  Loader2,
+  CheckCircle2
 } from 'lucide-react';
 import { whatsAppService } from '../services/MenuRepository';
 import { WhatsAppIcon, PlateIcon } from './Icons';
+import { ordersService } from '../services/supabase';
+import { getClientUuid, getSavedCustomerInfo, saveCustomerInfo } from '../utils/clientIdentity';
+import { useAlertConfirm } from '../context/AlertConfirmContext';
+import { triggerHaptic } from '../utils/haptics';
 
 export function CartDrawer({
   isOpen,
@@ -22,11 +29,27 @@ export function CartDrawer({
   onRemoveItem,
   onUpdateCustomerField,
   onClearCart,
-  photoMode = 'complete'
+  photoMode = 'complete',
+  onOrderPlaced
 }) {
+  const { showAlert } = useAlertConfirm();
   const [showPreview, setShowPreview] = useState(false);
   const [phoneInput, setPhoneInput] = useState('19736533749'); // WhatsApp oficial: (973) 653-3749
   const [isClosing, setIsClosing] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Auto-cargar datos recordados del cliente (o mesa desde la URL ?mesa=X)
+  useEffect(() => {
+    if (isOpen) {
+      const savedInfo = getSavedCustomerInfo();
+      if (savedInfo.name && !cart.customer.name) {
+        onUpdateCustomerField('name', savedInfo.name);
+      }
+      if (savedInfo.tableNumber && !cart.customer.table) {
+        onUpdateCustomerField('table', savedInfo.tableNumber);
+      }
+    }
+  }, [isOpen]);
 
   const handleClose = () => {
     if (isClosing) return;
@@ -60,6 +83,88 @@ export function CartDrawer({
   const totalCount = cart.getTotalCount();
   const totalPrice = cart.getFormattedTotal();
   const customer = cart.customer;
+
+  // Enviar pedido en vivo a Supabase (Cocina & Panel Administrativo)
+  const handleConfirmOrder = async () => {
+    if (!customer.name.trim()) {
+      triggerHaptic(15);
+      showAlert({
+        title: 'Tu Nombre es Requerido',
+        message: 'Por favor escribe tu nombre para identificar tu pedido en cocina y sala.',
+        type: 'warning'
+      });
+      return;
+    }
+
+    if (customer.orderType === 'mesa' && !customer.table.trim()) {
+      triggerHaptic(15);
+      showAlert({
+        title: 'Número de Mesa Requerido',
+        message: 'Por favor indica tu número de mesa (ej: Mesa 4).',
+        type: 'warning'
+      });
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      triggerHaptic(12);
+
+      const clientUuid = getClientUuid();
+      saveCustomerInfo({
+        name: customer.name,
+        phone: customer.phone,
+        tableNumber: customer.table
+      });
+
+      const items = cart.getItems().map(item => ({
+        dishId: item.dish.id,
+        dishName: item.dish.name,
+        dishPrice: item.dish.price,
+        quantity: item.quantity,
+        subtotal: item.getSubtotal(),
+        notes: item.note || ''
+      }));
+
+      const tableNumberStr = customer.orderType === 'mesa' ? customer.table : `Llevar (${customer.orderType})`;
+
+      const order = await ordersService.createOrder({
+        clientUuid,
+        customerName: customer.name,
+        customerPhone: customer.phone || '',
+        tableNumber: tableNumberStr,
+        items,
+        subtotal: cart.getSubtotal(),
+        tipAmount: cart.getTipAmount(),
+        totalAmount: cart.getTotal(),
+        paymentMethod: customer.paymentMethod || 'efectivo',
+        notes: customer.generalNotes || ''
+      });
+
+      triggerHaptic([30, 80, 50]);
+      showAlert({
+        title: '¡Pedido Recibido con Éxito!',
+        message: `Tu pedido #${order.order_number} ya está en la pantalla de cocina. Podrás seguir el tiempo estimado en vivo.`,
+        type: 'success'
+      });
+
+      if (onOrderPlaced) {
+        onOrderPlaced(order);
+      }
+
+      onClearCart();
+      handleClose();
+    } catch (err) {
+      console.error('Error enviando pedido a Supabase:', err);
+      showAlert({
+        title: 'Error de Conexión',
+        message: err.message || 'No se pudo conectar con el servidor. También puedes enviarlo directamente por WhatsApp.',
+        type: 'error'
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const handleSendWhatsApp = () => {
     whatsAppService.setPhone(phoneInput);
@@ -108,132 +213,134 @@ export function CartDrawer({
               <div className="cart-empty-icon-wrap">
                 <ShoppingCart size={42} />
               </div>
-              <h3 className="cart-empty-title">Tu carrito está vacío</h3>
-              <p className="cart-empty-text">
-                Explora nuestra carta criolla y marina y añade tus platos favoritos para enviarlos directamente por WhatsApp.
+              <p className="cart-empty-title">Tu pedido está vacío</p>
+              <p className="cart-empty-desc">
+                Explora nuestra carta y agrega los mejores platos peruanos.
               </p>
-              <button
-                type="button"
-                className="cart-empty-action-btn"
-                onClick={onClose}
-              >
-                Ver la carta
-              </button>
             </div>
           ) : (
             <>
-              {/* Encabezado de la lista con acción de vaciar */}
-              <div className="cart-items-section-header">
-                <span className="cart-section-title">Platos Seleccionados</span>
+              {/* Acciones superiores: Limpiar pedido */}
+              <div className="cart-drawer-actions-top">
+                <span className="cart-items-count-text">
+                  {totalCount} {totalCount === 1 ? 'ítem seleccionado' : 'ítems seleccionados'}
+                </span>
                 <button
                   type="button"
                   className="cart-clear-btn"
                   onClick={onClearCart}
-                  title="Vaciar carrito"
+                  title="Vaciar todo el pedido"
                 >
                   <Trash2 size={13} />
                   <span>Vaciar</span>
                 </button>
               </div>
 
-              {/* Lista de productos en el carrito */}
+              {/* Lista de Platos en el Carrito */}
               <div className="cart-items-list">
-                {cart.items.map((item) => {
+                {cart.getItems().map((item) => {
                   const dishImg = item.dish.getImage(photoMode) || item.dish.getImage('complete') || item.dish.getImage('curated');
-                  const hasImg = Boolean(dishImg);
 
                   return (
                     <div key={item.dish.id} className="cart-item-card">
-                      <div className="cart-item-main">
-                        {hasImg ? (
+                      {/* Miniatura del plato */}
+                      <div className="cart-item-image-wrap">
+                        {dishImg ? (
                           <img
-                            src={dishImg.startsWith('http') ? dishImg : `./${dishImg.replace(/^\//, '')}`}
+                            src={dishImg}
                             alt={item.dish.name}
-                            className="cart-item-img"
+                            className="cart-item-image"
                             loading="lazy"
                             onError={(e) => {
-                              if (!e.target.dataset.retried) {
-                                e.target.dataset.retried = '1';
-                                e.target.src = `${import.meta.env.BASE_URL}${dishImg.replace(/^\//, '')}`;
-                              }
+                              e.currentTarget.style.display = 'none';
+                              const fallback = e.currentTarget.parentElement?.querySelector('.cart-item-fallback-icon');
+                              if (fallback) fallback.style.display = 'flex';
                             }}
                           />
-                        ) : (
-                          <div className="cart-item-img-placeholder">
-                            <PlateIcon size={20} />
-                          </div>
-                        )}
-                        <div className="cart-item-details">
+                        ) : null}
+                        <div
+                          className="cart-item-fallback-icon"
+                          style={{ display: dishImg ? 'none' : 'flex' }}
+                        >
+                          <PlateIcon size={20} />
+                        </div>
+                      </div>
+
+                      {/* Información del Ítem */}
+                      <div className="cart-item-info">
+                        <div className="cart-item-header-row">
                           <h4 className="cart-item-name">{item.dish.name}</h4>
-                          {item.dish.nameEn && (
-                            <span className="cart-item-sub">{item.dish.nameEn}</span>
-                          )}
-                          <span className="cart-item-unit-price">
-                            {item.dish.getFormattedPrice()} c/u
+                          <button
+                            type="button"
+                            className="cart-item-remove-btn"
+                            onClick={() => onRemoveItem(item.dish.id)}
+                            aria-label={`Eliminar ${item.dish.name}`}
+                          >
+                            <Trash2 size={13} />
+                          </button>
+                        </div>
+
+                        <span className="cart-item-unit-price">
+                          ${item.dish.price.toFixed(2)} c/u
+                        </span>
+
+                        {/* Controles de Cantidad y Subtotal */}
+                        <div className="cart-item-footer-row">
+                          <div className="cart-qty-controls">
+                            <button
+                              type="button"
+                              className="cart-qty-btn"
+                              onClick={() => onUpdateQuantity(item.dish.id, item.quantity - 1)}
+                              aria-label="Disminuir cantidad"
+                            >
+                              <Minus size={12} />
+                            </button>
+                            <span className="cart-qty-display">{item.quantity}</span>
+                            <button
+                              type="button"
+                              className="cart-qty-btn"
+                              onClick={() => onUpdateQuantity(item.dish.id, item.quantity + 1)}
+                              aria-label="Aumentar cantidad"
+                            >
+                              <Plus size={12} />
+                            </button>
+                          </div>
+
+                          <span className="cart-item-subtotal">
+                            {item.getFormattedSubtotal()}
                           </span>
                         </div>
-                        <span className="cart-item-subtotal">
-                          {item.getFormattedSubtotal()}
-                        </span>
-                      </div>
 
-                    {/* Nota del plato si existe */}
-                    {item.note && (
-                      <div className="cart-item-note-pill">
-                        <MessageSquare size={12} />
-                        <span>{item.note}</span>
+                        {/* Campo de notas específicas para este plato */}
+                        <div className="cart-item-note-row">
+                          <MessageSquare size={11} className="cart-item-note-icon" />
+                          <input
+                            type="text"
+                            className="cart-item-note-input"
+                            placeholder="Indicación para este plato (ej: sin cebolla)..."
+                            value={item.note || ''}
+                            onChange={(e) => cart.updateItemNote(item.dish.id, e.target.value)}
+                          />
+                        </div>
                       </div>
-                    )}
-
-                    {/* Controles: Stepper y botón de eliminar */}
-                    <div className="cart-item-actions">
-                      <div className="cart-stepper">
-                        <button
-                          type="button"
-                          className="cart-stepper-btn"
-                          onClick={() => onUpdateQuantity(item.dish.id, item.quantity - 1)}
-                          aria-label="Disminuir cantidad"
-                        >
-                          <Minus size={13} />
-                        </button>
-                        <span className="cart-stepper-value">{item.quantity}</span>
-                        <button
-                          type="button"
-                          className="cart-stepper-btn"
-                          onClick={() => onUpdateQuantity(item.dish.id, item.quantity + 1)}
-                          aria-label="Aumentar cantidad"
-                        >
-                          <Plus size={13} />
-                        </button>
-                      </div>
-
-                      <button
-                        type="button"
-                        className="cart-item-remove-btn"
-                        onClick={() => onRemoveItem(item.dish.id)}
-                        aria-label="Eliminar plato"
-                      >
-                        <Trash2 size={14} />
-                        <span>Eliminar</span>
-                      </button>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
               </div>
 
               {/* Datos de Entrega y Pedido */}
               <div className="cart-checkout-card">
-                <span className="cart-checkout-title">Datos del Pedido</span>
+                <span className="cart-checkout-title">Datos para tu Mesa y Cocina</span>
 
                 {/* Nombre del cliente */}
                 <div className="cart-field-group">
                   <label className="cart-field-label">
                     <User size={13} />
-                    <span>Tu Nombre:</span>
+                    <span>Tu Nombre *:</span>
                   </label>
                   <input
                     type="text"
+                    required
                     className="cart-text-input"
                     placeholder="Ej: Juan Pérez"
                     value={customer.name}
@@ -241,7 +348,7 @@ export function CartDrawer({
                   />
                 </div>
 
-                {/* Modalidad de Pedido: Segmented Pills */}
+                {/* Modalidad de Pedido */}
                 <div className="cart-field-group">
                   <label className="cart-field-label">
                     <UtensilsCrossed size={13} />
@@ -275,11 +382,12 @@ export function CartDrawer({
                 {/* Campo condicional según modalidad */}
                 {customer.orderType === 'mesa' && (
                   <div className="cart-field-group">
-                    <label className="cart-field-label">Número de Mesa:</label>
+                    <label className="cart-field-label">Número de Mesa *:</label>
                     <input
                       type="text"
+                      required
                       className="cart-text-input"
-                      placeholder="Ej: Mesa 4"
+                      placeholder="Ej: Mesa 4 o 4"
                       value={customer.table}
                       onChange={(e) => onUpdateCustomerField('table', e.target.value)}
                     />
@@ -337,7 +445,7 @@ export function CartDrawer({
                 onClick={() => setShowPreview(!showPreview)}
               >
                 <FileText size={14} />
-                <span>{showPreview ? 'Ocultar vista previa del mensaje' : 'Ver mensaje que se enviará'}</span>
+                <span>{showPreview ? 'Ocultar vista previa WhatsApp' : 'Ver mensaje para WhatsApp'}</span>
               </button>
 
               {showPreview && (
@@ -349,22 +457,68 @@ export function CartDrawer({
           )}
         </div>
 
-        {/* Footer Fijo con Total y Envío Oficial a WhatsApp */}
+        {/* Footer Fijo con Total y Envío Oficial */}
         {!cart.isEmpty() && (
           <div className="cart-drawer-footer">
-            <div className="cart-drawer-footer-inner">
+            <div className="cart-drawer-footer-inner" style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
               <div className="cart-summary-row">
                 <span className="cart-summary-label">Total a Pagar:</span>
                 <span className="cart-summary-total">{totalPrice}</span>
               </div>
 
+              {/* Botón Principal: Confirmar y Enviar a Cocina (Supabase en Vivo) */}
+              <button
+                type="button"
+                disabled={isSubmitting}
+                className="cart-submit-btn"
+                onClick={handleConfirmOrder}
+                style={{
+                  backgroundColor: 'var(--rojo, #d91c2b)',
+                  color: '#ffffff',
+                  fontWeight: 800,
+                  fontSize: '0.95rem',
+                  padding: '0.85rem 1.25rem',
+                  borderRadius: '14px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.6rem',
+                  cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                  border: 'none !important',
+                  boxShadow: '0 8px 25px rgba(217, 28, 43, 0.45)',
+                  transition: 'transform 0.15s ease'
+                }}
+              >
+                {isSubmitting ? (
+                  <Loader2 size={20} className="spin-icon" />
+                ) : (
+                  <Send size={18} />
+                )}
+                <span>{isSubmitting ? 'Enviando a cocina...' : 'Confirmar Pedido (Enviar a Cocina)'}</span>
+              </button>
+
+              {/* Botón Secundario: Enviar copia a WhatsApp */}
               <button
                 type="button"
                 className="cart-submit-whatsapp-btn"
                 onClick={handleSendWhatsApp}
+                style={{
+                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                  color: '#ffffff',
+                  fontWeight: 700,
+                  fontSize: '0.85rem',
+                  padding: '0.65rem 1rem',
+                  borderRadius: '12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.5rem',
+                  cursor: 'pointer',
+                  border: 'none !important'
+                }}
               >
-                <WhatsAppIcon size={22} color="#ffffff" />
-                <span>Enviar Pedido a WhatsApp</span>
+                <WhatsAppIcon size={18} color="#25D366" />
+                <span>Enviar también por WhatsApp</span>
               </button>
             </div>
           </div>

@@ -27,3 +27,4 @@ scratch_*
 *.txt
 __pycache__/
 *.py
+.env

@@ -16,6 +16,14 @@ const CartDrawer = lazy(() =>
 const MobileDrawer = lazy(() =>
   import('./components/MobileDrawer').then((m) => ({ default: m.MobileDrawer }))
 );
+const AdminPage = lazy(() =>
+  import('./pages/AdminPage').then((m) => ({ default: m.AdminPage }))
+);
+const ActiveOrderTracker = lazy(() =>
+  import('./components/ActiveOrderTracker').then((m) => ({ default: m.ActiveOrderTracker }))
+);
+import { getClientUuid } from './utils/clientIdentity';
+import { ordersService } from './services/supabase';
 import { menuRepository } from './services/MenuRepository';
 import { Cart } from './models/Cart';
 import { CartItem } from './models/CartItem';
@@ -31,10 +39,32 @@ export function App() {
   const { showAlert, showConfirm } = useAlertConfirm();
   const location = useLocation();
   const navigate = useNavigate();
+  const isAdminPage = location.pathname.startsWith('/admin');
   const isDishDetailPage = location.pathname.startsWith('/plato/');
   const categories = useMemo(() => menuRepository.getAllCategories(), []);
   const allDishes = useMemo(() => menuRepository.getAllDishes(), []);
   const [isTvModeOpen, setIsTvModeOpen] = useState(false);
+  const [activeClientOrder, setActiveClientOrder] = useState(null);
+
+  // Consultar pedidos activos del cliente actual (sin registro, usando client_uuid)
+  useEffect(() => {
+    if (isAdminPage) return;
+    const fetchActiveOrder = async () => {
+      try {
+        const clientUuid = getClientUuid();
+        const clientOrders = await ordersService.getClientOrders(clientUuid);
+        const active = clientOrders.find(o => 
+          o.status === 'pending' || o.status === 'in_kitchen' || o.status === 'accepted' || o.status === 'ready'
+        );
+        if (active) {
+          setActiveClientOrder(active);
+        }
+      } catch (err) {
+        // En caso de modo offline temporal
+      }
+    };
+    fetchActiveOrder();
+  }, [isAdminPage]);
 
   // Historial de último pedido (One-Tap Reorder)
   const [lastOrder, setLastOrder] = useState(() => {
@@ -560,6 +590,29 @@ export function App() {
 
   const isAnyModalOpen = Boolean(isCartOpen || isMobileMenuOpen || isTvModeOpen);
 
+  // Si la ruta es /admin, renderizar directamente el panel de administración
+  if (isAdminPage) {
+    return (
+      <Suspense fallback={
+        <div style={{
+          minHeight: '100vh',
+          backgroundColor: '#0c0d10',
+          color: '#ffffff',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontFamily: 'var(--font-primary, system-ui, sans-serif)',
+          fontSize: '1rem',
+          fontWeight: 700
+        }}>
+          Cargando Panel Administrativo Mi Barrunto...
+        </div>
+      }>
+        <AdminPage />
+      </Suspense>
+    );
+  }
+
   return (
     <div className="app-container">
       {/* 1. Header con Logo Centrado en Móvil y Botones al lado del Buscador en Escritorio (Oculto en vista detalle y en favoritos) */}
@@ -988,8 +1041,21 @@ export function App() {
           onUpdateCustomerField={handleUpdateCustomerField}
           onClearCart={handleClearCart}
           photoMode={photoMode}
+          onOrderPlaced={(createdOrder) => {
+            setActiveClientOrder(createdOrder);
+          }}
         />
       </Suspense>
+
+      {/* 9. Seguimiento en Vivo del Pedido para el Cliente (Sin Registro) */}
+      {activeClientOrder && (
+        <Suspense fallback={null}>
+          <ActiveOrderTracker
+            activeOrder={activeClientOrder}
+            onClose={() => setActiveClientOrder(null)}
+          />
+        </Suspense>
+      )}
 
       {/* 10. Botón Flotante de Carrito en Escritorio (Solo Icono de Carrito sin texto y Badge) */}
       {cart.getTotalCount() > 0 && !isAnyModalOpen && (
