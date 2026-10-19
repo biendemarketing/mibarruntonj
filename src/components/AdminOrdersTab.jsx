@@ -4,7 +4,8 @@ import {
   Check, RefreshCw, Volume2, VolumeX, Utensils, 
   MessageSquare, Phone, UserCheck, CreditCard, 
   DollarSign, Kanban, LayoutGrid, CheckCheck, 
-  Users, Search, Calendar, FileText, Star, X
+  Users, Search, Calendar, FileText, Star, X,
+  ArrowLeft, ArrowRight, Sparkles, Move
 } from 'lucide-react';
 import { useAlertConfirm } from '../context/AlertConfirmContext';
 import { triggerHaptic } from '../utils/haptics';
@@ -13,9 +14,11 @@ import { getClientShortCode } from '../utils/clientIdentity';
 export function AdminOrdersTab({
   orders = [],
   waiters = [],
+  tables = [],
   onUpdateStatus,
   onAssignWaiter,
   onMarkOrderPaid,
+  onFreeTable,
   soundEnabled,
   onToggleSound,
   onRefresh,
@@ -26,6 +29,10 @@ export function AdminOrdersTab({
   const [filterStatus, setFilterStatus] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [timeInputs, setTimeInputs] = useState({});
+  const [draggedOrderId, setDraggedOrderId] = useState(null);
+  const [dragOverColId, setDragOverColId] = useState(null);
+  const [paymentModalOrder, setPaymentModalOrder] = useState(null);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('efectivo');
 
   // Calcular clientes recurrentes agregando el número de órdenes por identificador
   const customerStats = useMemo(() => {
@@ -84,8 +91,8 @@ export function AdminOrdersTab({
     triggerHaptic(12);
     const confirmed = await showConfirm({
       title: '¿Confirmar Entrega de Pedido?',
-      message: `¿Marcar el pedido ${order.order_number} de la Mesa ${order.table_number} como entregado a los comensales?`,
-      confirmText: 'Sí, Entregado',
+      message: `¿Marcar el pedido ${order.order_number} de la Mesa ${order.table_number} como entregado a los comensales? La mesa permanecerá ocupada comiendo.`,
+      confirmText: 'Sí, Entregado en Mesa',
       cancelText: 'Volver'
     });
     if (confirmed) {
@@ -112,33 +119,207 @@ export function AdminOrdersTab({
     }
   };
 
-  const handleTogglePaid = async (order) => {
-    triggerHaptic(12);
-    const nextIsPaid = !order.is_paid;
+  // Desocupar y liberar mesa (cuando los comensales se van)
+  const handleFreeTable = async (order) => {
+    triggerHaptic(14);
+    const isPaid = Boolean(order.is_paid || order.payment_status === 'paid');
+
     const confirmed = await showConfirm({
-      title: nextIsPaid ? '¿Marcar Orden como Pagada?' : '¿Revertir Estado de Pago?',
-      message: nextIsPaid
-        ? `¿Confirmas que la orden ${order.order_number} (Mesa ${order.table_number}) fue pagada por $${Number(order.total_amount || 0).toFixed(2)} mediante ${order.payment_method || 'efectivo'}?`
-        : `¿Deseas desmarcar el pago de la orden ${order.order_number}?`,
-      confirmText: nextIsPaid ? 'Sí, Marcar Pagada' : 'Revertir',
-      cancelText: 'Cancelar'
+      title: `¿Desocupar Mesa ${order.table_number}?`,
+      message: isPaid
+        ? `La Mesa ${order.table_number} quedará disponible inmediatamente para nuevos clientes. La orden ${order.order_number} se archivará como completada.`
+        : `Atención: Esta orden de Mesa ${order.table_number} ($${Number(order.total_amount || 0).toFixed(2)}) aún figuraba como pendiente de pago. ¿Deseas cobrarla y desocupar la mesa ahora?`,
+      confirmText: isPaid ? 'Sí, Desocupar Mesa' : 'Cobrar y Desocupar',
+      cancelText: 'Volver a Sala'
     });
 
-    if (confirmed && onMarkOrderPaid) {
-      await onMarkOrderPaid(order.id, nextIsPaid);
+    if (confirmed) {
+      if (!isPaid && onMarkOrderPaid) {
+        await onMarkOrderPaid(order.id, true, order.payment_method || 'efectivo');
+      }
+      if (onFreeTable) {
+        await onFreeTable(order.table_number, order.id);
+      } else {
+        await onUpdateStatus(order.id, 'completed');
+      }
       showAlert({
-        title: nextIsPaid ? 'Orden Pagada' : 'Pago Revertido',
-        message: `La orden ${order.order_number} fue actualizada correctamente.`,
+        title: 'Mesa Desocupada',
+        message: `La Mesa ${order.table_number} quedó libre y lista para nuevos comensales.`,
         type: 'success'
       });
     }
   };
 
-  // Contadores de estado
+  // Abrir modal de cobro
+  const handleOpenPaymentModal = (order) => {
+    triggerHaptic(8);
+    setSelectedPaymentMethod(order.payment_method || 'efectivo');
+    setPaymentModalOrder(order);
+  };
+
+  // Confirmar cobro desde modal
+  const handleConfirmPayment = async (order, paymentMethod) => {
+    triggerHaptic(12);
+    if (onMarkOrderPaid) {
+      await onMarkOrderPaid(order.id, true, paymentMethod);
+    }
+    await onUpdateStatus(order.id, 'paid', order.estimated_time);
+    setPaymentModalOrder(null);
+    showAlert({
+      title: 'Cuenta Cobrada',
+      message: `La orden ${order.order_number} (Mesa ${order.table_number}) fue cobrada exitosamente ($${Number(order.total_amount || 0).toFixed(2)}) con ${paymentMethod}.`,
+      type: 'success'
+    });
+  };
+
+  const handleTogglePaid = async (order) => {
+    triggerHaptic(12);
+    const nextIsPaid = !order.is_paid;
+    if (nextIsPaid) {
+      handleOpenPaymentModal(order);
+      return;
+    }
+
+    const confirmed = await showConfirm({
+      title: '¿Revertir Estado de Pago?',
+      message: `¿Deseas desmarcar el pago de la orden ${order.order_number}? Volverá a figurar como pendiente de cobro.`,
+      confirmText: 'Sí, Revertir',
+      cancelText: 'Cancelar'
+    });
+
+    if (confirmed && onMarkOrderPaid) {
+      await onMarkOrderPaid(order.id, false);
+      if (order.status === 'paid') {
+        await onUpdateStatus(order.id, 'delivered', order.estimated_time);
+      }
+      showAlert({
+        title: 'Pago Revertido',
+        message: `La orden ${order.order_number} ahora figura como pendiente de pago.`,
+        type: 'success'
+      });
+    }
+  };
+
+  // Manejador de Arrastrar y Soltar (Drag & Drop) entre columnas del Pipeline
+  const handleDropToColumn = async (order, targetColId) => {
+    if (order.status === targetColId) return;
+    triggerHaptic(12);
+
+    if (targetColId === 'pending') {
+      await onUpdateStatus(order.id, 'pending');
+    } else if (targetColId === 'in_kitchen') {
+      const estTime = timeInputs[order.id] || order.estimated_time || '20 min';
+      await onUpdateStatus(order.id, 'in_kitchen', estTime);
+    } else if (targetColId === 'ready') {
+      await onUpdateStatus(order.id, 'ready', order.estimated_time);
+    } else if (targetColId === 'delivered') {
+      await onUpdateStatus(order.id, 'delivered', order.estimated_time);
+    } else if (targetColId === 'paid') {
+      await onUpdateStatus(order.id, 'paid', order.estimated_time);
+      if (!order.is_paid && onMarkOrderPaid) {
+        await onMarkOrderPaid(order.id, true, order.payment_method || 'efectivo');
+      }
+    } else if (targetColId === 'completed') {
+      await handleFreeTable(order);
+    }
+  };
+
+  // Acciones rápidas de flechas direccionales para cada estado (para meseros)
+  const getOrderStepActions = (order) => {
+    const isPaid = Boolean(order.is_paid || order.payment_status === 'paid');
+    const status = order.status;
+
+    if (status === 'pending') {
+      return {
+        prev: null,
+        next: {
+          label: 'Aceptar (Cocina)',
+          color: '#2563eb',
+          handler: () => handleAcceptOrder(order)
+        }
+      };
+    }
+
+    if (status === 'in_kitchen' || status === 'accepted') {
+      return {
+        prev: {
+          label: 'Pendiente',
+          handler: () => onUpdateStatus(order.id, 'pending')
+        },
+        next: {
+          label: 'Listo para Servir',
+          color: '#059669',
+          handler: () => handleReadyOrder(order)
+        }
+      };
+    }
+
+    if (status === 'ready') {
+      return {
+        prev: {
+          label: 'Cocina',
+          handler: () => onUpdateStatus(order.id, 'in_kitchen')
+        },
+        next: {
+          label: 'Servir en Mesa',
+          color: '#7c3aed',
+          handler: () => handleDeliverOrder(order)
+        }
+      };
+    }
+
+    if (status === 'delivered') {
+      return {
+        prev: {
+          label: 'Listos',
+          handler: () => onUpdateStatus(order.id, 'ready')
+        },
+        next: isPaid ? {
+          label: 'Desocupar Mesa',
+          color: 'var(--rojo, #d91c2b)',
+          handler: () => handleFreeTable(order)
+        } : {
+          label: 'Cobrar Cuenta',
+          color: '#0d9488',
+          handler: () => handleOpenPaymentModal(order)
+        }
+      };
+    }
+
+    if (status === 'paid') {
+      return {
+        prev: {
+          label: 'En Mesa',
+          handler: () => onUpdateStatus(order.id, 'delivered')
+        },
+        next: {
+          label: 'Desocupar Mesa',
+          color: 'var(--rojo, #d91c2b)',
+          handler: () => handleFreeTable(order)
+        }
+      };
+    }
+
+    if (status === 'completed') {
+      return {
+        prev: {
+          label: 'Reabrir',
+          handler: () => onUpdateStatus(order.id, 'paid')
+        },
+        next: null
+      };
+    }
+
+    return { prev: null, next: null };
+  };
+
+  // Contadores de estado divididos con precisión de restaurante
   const countPending = orders.filter(o => o.status === 'pending').length;
   const countKitchen = orders.filter(o => o.status === 'in_kitchen' || o.status === 'accepted').length;
   const countReady = orders.filter(o => o.status === 'ready').length;
-  const countDelivered = orders.filter(o => o.status === 'delivered').length;
+  const countDelivered = orders.filter(o => o.status === 'delivered' && !o.is_paid && o.payment_status !== 'paid').length;
+  const countPaid = orders.filter(o => o.status === 'paid' || (o.status === 'delivered' && (o.is_paid || o.payment_status === 'paid'))).length;
+  const countCompleted = orders.filter(o => o.status === 'completed').length;
 
   // Filtrado de pedidos según término de búsqueda y filtro de estado
   const filteredOrders = useMemo(() => {
@@ -148,10 +329,11 @@ export function AdminOrdersTab({
         if (filterStatus === 'pending' && o.status !== 'pending') return false;
         if (filterStatus === 'in_kitchen' && o.status !== 'in_kitchen' && o.status !== 'accepted') return false;
         if (filterStatus === 'ready' && o.status !== 'ready') return false;
-        if (filterStatus === 'delivered' && o.status !== 'delivered') return false;
+        if (filterStatus === 'delivered' && (o.status !== 'delivered' || o.is_paid || o.payment_status === 'paid')) return false;
+        if (filterStatus === 'paid' && o.status !== 'paid' && !(o.status === 'delivered' && (o.is_paid || o.payment_status === 'paid'))) return false;
+        if (filterStatus === 'completed' && o.status !== 'completed') return false;
         if (filterStatus === 'cancelled' && o.status !== 'cancelled') return false;
-        if (filterStatus === 'paid' && !o.is_paid) return false;
-        if (filterStatus === 'unpaid' && o.is_paid) return false;
+        if (filterStatus === 'unpaid' && (o.is_paid || o.payment_status === 'paid')) return false;
       }
 
       // Filtro por búsqueda
@@ -171,11 +353,12 @@ export function AdminOrdersTab({
     });
   }, [orders, filterStatus, searchQuery]);
 
-  // Columnas para el Pipeline / Kanban
+  // Columnas para el Pipeline / Kanban: Entregados y Pagados claramente separados
   const pipelineColumns = [
     {
       id: 'pending',
       title: 'Pendientes',
+      subtitle: 'Por Aceptar',
       icon: Clock,
       color: '#d97706',
       bgLight: '#fef3c7',
@@ -184,6 +367,7 @@ export function AdminOrdersTab({
     {
       id: 'in_kitchen',
       title: 'En Cocina',
+      subtitle: 'En Preparación',
       icon: ChefHat,
       color: '#2563eb',
       bgLight: '#eff6ff',
@@ -192,6 +376,7 @@ export function AdminOrdersTab({
     {
       id: 'ready',
       title: 'Listos para Servir',
+      subtitle: 'En Barra / Pase',
       icon: CheckCircle2,
       color: '#059669',
       bgLight: '#ecfdf5',
@@ -199,11 +384,30 @@ export function AdminOrdersTab({
     },
     {
       id: 'delivered',
-      title: 'Entregados / Pagados',
+      title: 'Entregados (En Mesa)',
+      subtitle: 'Comiendo · Mesa Ocupada',
       icon: Utensils,
+      color: '#7c3aed',
+      bgLight: '#f5f3ff',
+      orders: orders.filter(o => o.status === 'delivered' && !o.is_paid && o.payment_status !== 'paid')
+    },
+    {
+      id: 'paid',
+      title: 'Cuenta Pagada',
+      subtitle: 'Cobrada · Mesa Ocupada',
+      icon: CreditCard,
+      color: '#0d9488',
+      bgLight: '#f0fdfa',
+      orders: orders.filter(o => o.status === 'paid' || (o.status === 'delivered' && (o.is_paid || o.payment_status === 'paid')))
+    },
+    {
+      id: 'completed',
+      title: 'Mesas Desocupadas',
+      subtitle: 'Órdenes Finalizadas',
+      icon: CheckCheck,
       color: '#4b5563',
       bgLight: '#f3f4f6',
-      orders: orders.filter(o => o.status === 'delivered')
+      orders: orders.filter(o => o.status === 'completed')
     }
   ];
 
@@ -213,7 +417,10 @@ export function AdminOrdersTab({
     const isKitchen = order.status === 'in_kitchen' || order.status === 'accepted';
     const isReady = order.status === 'ready';
     const isDelivered = order.status === 'delivered';
-    const isPaid = Boolean(order.is_paid || order.payment_status === 'paid');
+    const isPaidOrder = order.status === 'paid' || Boolean(order.is_paid || order.payment_status === 'paid');
+    const isCompleted = order.status === 'completed';
+    const stepActions = getOrderStepActions(order);
+    const isDragging = draggedOrderId === order.id;
 
     const cardColor = isPending
       ? '#d97706'
@@ -221,6 +428,10 @@ export function AdminOrdersTab({
       ? '#2563eb'
       : isReady
       ? '#059669'
+      : order.status === 'paid'
+      ? '#0d9488'
+      : isDelivered
+      ? '#7c3aed'
       : '#4b5563';
 
     const formattedTime = new Date(order.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -229,17 +440,34 @@ export function AdminOrdersTab({
     return (
       <div
         key={order.id}
+        draggable={true}
+        onDragStart={(e) => {
+          e.dataTransfer.setData('text/plain', order.id);
+          e.dataTransfer.effectAllowed = 'move';
+          setDraggedOrderId(order.id);
+          triggerHaptic(8);
+        }}
+        onDragEnd={() => {
+          setDraggedOrderId(null);
+          setDragOverColId(null);
+        }}
         style={{
-          backgroundColor: '#ffffff',
+          backgroundColor: isDragging ? '#fffbf0' : '#ffffff',
           borderRadius: '16px',
           padding: isCompact ? '1rem' : '1.25rem',
-          boxShadow: '0 4px 20px rgba(0,0,0,0.06)',
+          boxShadow: isDragging 
+            ? '0 12px 30px rgba(0,0,0,0.18)' 
+            : '0 4px 20px rgba(0,0,0,0.06)',
           border: 'none !important',
           display: 'flex',
           flexDirection: 'column',
           gap: isCompact ? '0.75rem' : '0.9rem',
           position: 'relative',
-          overflow: 'hidden'
+          overflow: 'hidden',
+          opacity: isDragging ? 0.6 : 1,
+          transform: isDragging ? 'scale(0.98)' : 'none',
+          transition: 'all 0.18s ease',
+          cursor: isDragging ? 'grabbing' : 'grab'
         }}
       >
         {/* Franja superior de color de fase */}
@@ -473,7 +701,7 @@ export function AdminOrdersTab({
 
         {/* Estado de Pago (Pagada / Marcar como Pagada) */}
         <div>
-          {isPaid ? (
+          {isPaidOrder ? (
             <button
               type="button"
               onClick={() => handleTogglePaid(order)}
@@ -495,12 +723,12 @@ export function AdminOrdersTab({
               title="Click para cambiar estado de pago"
             >
               <CheckCheck size={15} />
-              <span>ORDEN PAGADA (${Number(order.total_amount || 0).toFixed(2)})</span>
+              <span>ORDEN PAGADA (${Number(order.total_amount || 0).toFixed(2)}) · {order.payment_method || 'Efectivo'}</span>
             </button>
           ) : (
             <button
               type="button"
-              onClick={() => handleTogglePaid(order)}
+              onClick={() => handleOpenPaymentModal(order)}
               style={{
                 width: '100%',
                 backgroundColor: '#fef3c7',
@@ -519,7 +747,7 @@ export function AdminOrdersTab({
               title="Marcar orden como pagada por el cliente"
             >
               <CreditCard size={14} />
-              <span>Pendiente de Pago · Marcar Pagada</span>
+              <span>Pendiente de Pago (${Number(order.total_amount || 0).toFixed(2)}) · Cobrar</span>
             </button>
           )}
         </div>
@@ -693,20 +921,187 @@ export function AdminOrdersTab({
           )}
 
           {isDelivered && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', width: '100%' }}>
+              <div style={{ display: 'flex', gap: '0.45rem' }}>
+                {!isPaidOrder && (
+                  <button
+                    type="button"
+                    onClick={() => handleOpenPaymentModal(order)}
+                    style={{
+                      flex: 1,
+                      backgroundColor: '#0d9488',
+                      color: '#ffffff',
+                      fontWeight: 800,
+                      fontSize: '0.78rem',
+                      padding: '0.6rem 0.65rem',
+                      borderRadius: '10px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '0.35rem',
+                      cursor: 'pointer',
+                      border: 'none !important',
+                      boxShadow: '0 4px 12px rgba(13, 148, 136, 0.25)'
+                    }}
+                  >
+                    <CreditCard size={14} />
+                    <span>Cobrar Cuenta</span>
+                  </button>
+                )}
+
+                <button
+                  type="button"
+                  onClick={() => handleFreeTable(order)}
+                  style={{
+                    flex: 1,
+                    backgroundColor: 'var(--rojo, #d91c2b)',
+                    color: '#ffffff',
+                    fontWeight: 800,
+                    fontSize: '0.78rem',
+                    padding: '0.6rem 0.65rem',
+                    borderRadius: '10px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.35rem',
+                    cursor: 'pointer',
+                    border: 'none !important',
+                    boxShadow: '0 4px 12px rgba(217, 28, 43, 0.25)'
+                  }}
+                  title="Liberar mesa cuando el comensal se retira"
+                >
+                  <Sparkles size={14} />
+                  <span>Desocupar Mesa</span>
+                </button>
+              </div>
+            </div>
+          )}
+
+          {order.status === 'paid' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', width: '100%' }}>
+              <button
+                type="button"
+                onClick={() => handleFreeTable(order)}
+                style={{
+                  width: '100%',
+                  backgroundColor: 'var(--rojo, #d91c2b)',
+                  color: '#ffffff',
+                  fontWeight: 800,
+                  fontSize: '0.82rem',
+                  padding: '0.65rem 0.85rem',
+                  borderRadius: '10px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.4rem',
+                  cursor: 'pointer',
+                  border: 'none !important',
+                  boxShadow: '0 4px 15px rgba(217, 28, 43, 0.3)'
+                }}
+              >
+                <Sparkles size={15} />
+                <span>Desocupar y Liberar Mesa {order.table_number}</span>
+              </button>
+            </div>
+          )}
+
+          {isCompleted && (
             <div
               style={{
                 width: '100%',
                 textAlign: 'center',
                 fontSize: '0.78rem',
-                color: '#059669',
+                color: '#4b5563',
                 fontWeight: 800,
                 padding: '0.5rem',
-                backgroundColor: '#ecfdf5',
+                backgroundColor: '#f3f4f6',
                 borderRadius: '8px'
               }}
             >
-              Orden completada y servida
+              Mesa {order.table_number} Desocupada · Completada
             </div>
+          )}
+        </div>
+
+        {/* Barra Inferior con Flechas Direccionales para Meseros (1 toque en móvil/tablet) */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '0.4rem',
+            marginTop: '0.35rem',
+            backgroundColor: '#faf6ee',
+            margin: '0.35rem -0.5rem -0.5rem -0.5rem',
+            padding: '0.55rem 0.65rem',
+            borderRadius: '0 0 16px 16px'
+          }}
+        >
+          {/* Flecha Izquierda: Retroceder */}
+          {stepActions.prev ? (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                triggerHaptic(8);
+                stepActions.prev.handler();
+              }}
+              style={{
+                backgroundColor: '#ffffff',
+                color: '#6b635b',
+                fontWeight: 800,
+                fontSize: '0.74rem',
+                padding: '0.35rem 0.6rem',
+                borderRadius: '8px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.25rem',
+                cursor: 'pointer',
+                border: 'none !important',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.04)'
+              }}
+              title={`Mover atrás a ${stepActions.prev.label}`}
+            >
+              <ArrowLeft size={13} />
+              <span>{stepActions.prev.label}</span>
+            </button>
+          ) : (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', color: '#9ca3af', fontSize: '0.7rem' }}>
+              <Move size={12} />
+              <span>Arrastrar</span>
+            </div>
+          )}
+
+          {/* Flecha Derecha: Avanzar */}
+          {stepActions.next ? (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                triggerHaptic(10);
+                stepActions.next.handler();
+              }}
+              style={{
+                backgroundColor: stepActions.next.color || cardColor,
+                color: '#ffffff',
+                fontWeight: 800,
+                fontSize: '0.74rem',
+                padding: '0.4rem 0.75rem',
+                borderRadius: '8px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.35rem',
+                cursor: 'pointer',
+                border: 'none !important',
+                boxShadow: `0 3px 10px ${stepActions.next.color || cardColor}40`
+              }}
+              title={`Avanzar pedido a ${stepActions.next.label}`}
+            >
+              <span>{stepActions.next.label}</span>
+              <ArrowRight size={13} />
+            </button>
+          ) : (
+            <span style={{ fontSize: '0.72rem', color: '#059669', fontWeight: 800 }}>Mesa Libre</span>
           )}
         </div>
       </div>
@@ -719,7 +1114,7 @@ export function AdminOrdersTab({
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))',
           gap: '0.75rem'
         }}
       >
@@ -740,10 +1135,10 @@ export function AdminOrdersTab({
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: '#d97706' }}>
-            <span style={{ fontSize: '0.78rem', fontWeight: 800, textTransform: 'uppercase' }}>Pendientes</span>
-            <Clock size={18} />
+            <span style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase' }}>Pendientes</span>
+            <Clock size={16} />
           </div>
-          <div style={{ fontSize: '1.75rem', fontWeight: 900, color: '#1f1e1c', marginTop: '0.35rem' }}>
+          <div style={{ fontSize: '1.65rem', fontWeight: 900, color: '#1f1e1c', marginTop: '0.35rem' }}>
             {countPending}
           </div>
         </div>
@@ -765,10 +1160,10 @@ export function AdminOrdersTab({
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: '#2563eb' }}>
-            <span style={{ fontSize: '0.78rem', fontWeight: 800, textTransform: 'uppercase' }}>En Cocina</span>
-            <ChefHat size={18} />
+            <span style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase' }}>Cocina</span>
+            <ChefHat size={16} />
           </div>
-          <div style={{ fontSize: '1.75rem', fontWeight: 900, color: '#1f1e1c', marginTop: '0.35rem' }}>
+          <div style={{ fontSize: '1.65rem', fontWeight: 900, color: '#1f1e1c', marginTop: '0.35rem' }}>
             {countKitchen}
           </div>
         </div>
@@ -790,22 +1185,72 @@ export function AdminOrdersTab({
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: '#059669' }}>
-            <span style={{ fontSize: '0.78rem', fontWeight: 800, textTransform: 'uppercase' }}>Listos</span>
-            <CheckCircle2 size={18} />
+            <span style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase' }}>Listos</span>
+            <CheckCircle2 size={16} />
           </div>
-          <div style={{ fontSize: '1.75rem', fontWeight: 900, color: '#1f1e1c', marginTop: '0.35rem' }}>
+          <div style={{ fontSize: '1.65rem', fontWeight: 900, color: '#1f1e1c', marginTop: '0.35rem' }}>
             {countReady}
           </div>
         </div>
 
-        {/* Métrica: Entregados */}
+        {/* Métrica: En Mesa (Entregados) */}
         <div
           onClick={() => {
             triggerHaptic(8);
             setFilterStatus('delivered');
           }}
           style={{
-            backgroundColor: filterStatus === 'delivered' ? '#f3f4f6' : '#ffffff',
+            backgroundColor: filterStatus === 'delivered' ? '#f5f3ff' : '#ffffff',
+            padding: '1rem',
+            borderRadius: '16px',
+            boxShadow: '0 4px 20px rgba(0,0,0,0.06)',
+            cursor: 'pointer',
+            transition: 'all 0.2s',
+            border: 'none !important'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: '#7c3aed' }}>
+            <span style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase' }}>En Mesa</span>
+            <Utensils size={16} />
+          </div>
+          <div style={{ fontSize: '1.65rem', fontWeight: 900, color: '#1f1e1c', marginTop: '0.35rem' }}>
+            {countDelivered}
+          </div>
+        </div>
+
+        {/* Métrica: Cuenta Pagada */}
+        <div
+          onClick={() => {
+            triggerHaptic(8);
+            setFilterStatus('paid');
+          }}
+          style={{
+            backgroundColor: filterStatus === 'paid' ? '#f0fdfa' : '#ffffff',
+            padding: '1rem',
+            borderRadius: '16px',
+            boxShadow: '0 4px 20px rgba(0,0,0,0.06)',
+            cursor: 'pointer',
+            transition: 'all 0.2s',
+            border: 'none !important'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: '#0d9488' }}>
+            <span style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase' }}>Pagados</span>
+            <CreditCard size={16} />
+          </div>
+          <div style={{ fontSize: '1.65rem', fontWeight: 900, color: '#1f1e1c', marginTop: '0.35rem' }}>
+            {countPaid}
+          </div>
+        </div>
+
+        {/* Métrica: Mesas Desocupadas / Finalizadas */}
+        <div
+          onClick={() => {
+            triggerHaptic(8);
+            setFilterStatus('completed');
+          }}
+          style={{
+            backgroundColor: filterStatus === 'completed' ? '#f3f4f6' : '#ffffff',
             padding: '1rem',
             borderRadius: '16px',
             boxShadow: '0 4px 20px rgba(0,0,0,0.06)',
@@ -815,11 +1260,11 @@ export function AdminOrdersTab({
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: '#4b5563' }}>
-            <span style={{ fontSize: '0.78rem', fontWeight: 800, textTransform: 'uppercase' }}>Entregados</span>
-            <Utensils size={18} />
+            <span style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase' }}>Desocupadas</span>
+            <CheckCheck size={16} />
           </div>
-          <div style={{ fontSize: '1.75rem', fontWeight: 900, color: '#1f1e1c', marginTop: '0.35rem' }}>
-            {countDelivered}
+          <div style={{ fontSize: '1.65rem', fontWeight: 900, color: '#1f1e1c', marginTop: '0.35rem' }}>
+            {countCompleted}
           </div>
         </div>
       </div>
@@ -1012,7 +1457,7 @@ export function AdminOrdersTab({
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(4, minmax(280px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(290px, 1fr))',
             gap: '1rem',
             overflowX: 'auto',
             paddingBottom: '1rem'
@@ -1020,6 +1465,7 @@ export function AdminOrdersTab({
         >
           {pipelineColumns.map(col => {
             const Icon = col.icon;
+            const isDropTarget = dragOverColId === col.id;
             // Filtrar también por término de búsqueda si existe
             const colOrders = col.orders.filter(o => {
               if (!searchQuery.trim()) return true;
@@ -1036,15 +1482,42 @@ export function AdminOrdersTab({
             return (
               <div
                 key={col.id}
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  e.dataTransfer.dropEffect = 'move';
+                  if (dragOverColId !== col.id) {
+                    setDragOverColId(col.id);
+                  }
+                }}
+                onDragLeave={(e) => {
+                  if (!e.currentTarget.contains(e.relatedTarget)) {
+                    setDragOverColId(null);
+                  }
+                }}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  const orderId = e.dataTransfer.getData('text/plain') || draggedOrderId;
+                  setDragOverColId(null);
+                  setDraggedOrderId(null);
+                  if (!orderId) return;
+                  const targetOrder = orders.find(o => o.id === orderId);
+                  if (targetOrder) {
+                    handleDropToColumn(targetOrder, col.id);
+                  }
+                }}
                 style={{
-                  backgroundColor: '#ffffff',
+                  backgroundColor: isDropTarget ? '#fffdf7' : '#ffffff',
                   borderRadius: '18px',
                   padding: '1rem',
                   display: 'flex',
                   flexDirection: 'column',
                   gap: '0.85rem',
                   minHeight: '480px',
-                  boxShadow: '0 4px 20px rgba(0,0,0,0.06)',
+                  boxShadow: isDropTarget 
+                    ? `0 10px 30px ${col.color}25, 0 4px 15px rgba(0,0,0,0.06)` 
+                    : '0 4px 20px rgba(0,0,0,0.06)',
+                  transform: isDropTarget ? 'translateY(-2px)' : 'none',
+                  transition: 'all 0.2s ease',
                   border: 'none !important'
                 }}
               >
@@ -1059,9 +1532,16 @@ export function AdminOrdersTab({
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', color: col.color }}>
                     <Icon size={18} />
-                    <h3 style={{ fontSize: '0.92rem', fontWeight: 800, margin: 0 }}>
-                      {col.title}
-                    </h3>
+                    <div>
+                      <h3 style={{ fontSize: '0.92rem', fontWeight: 800, margin: 0 }}>
+                        {col.title}
+                      </h3>
+                      {col.subtitle && (
+                        <span style={{ fontSize: '0.68rem', color: '#6b635b', fontWeight: 600 }}>
+                          {col.subtitle}
+                        </span>
+                      )}
+                    </div>
                   </div>
 
                   <span
@@ -1309,6 +1789,202 @@ export function AdminOrdersTab({
               })}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {/* MODAL PERSONALIZADO PARA COBRO DE ORDEN */}
+      {paymentModalOrder && (
+        <div
+          onClick={() => setPaymentModalOrder(null)}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(15, 23, 42, 0.55)',
+            backdropFilter: 'blur(8px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1050,
+            padding: '1rem'
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              backgroundColor: '#ffffff',
+              borderRadius: '24px',
+              padding: '1.75rem',
+              width: '100%',
+              maxWidth: '460px',
+              boxShadow: '0 25px 60px rgba(0, 0, 0, 0.25)',
+              border: 'none !important',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '1.25rem'
+            }}
+          >
+            {/* Header del Modal */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                <div
+                  style={{
+                    backgroundColor: '#ecfdf5',
+                    color: '#059669',
+                    padding: '0.65rem',
+                    borderRadius: '14px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
+                >
+                  <CreditCard size={22} />
+                </div>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: '1.15rem', fontWeight: 900, color: '#1f1e1c' }}>
+                    Registrar Cobro
+                  </h3>
+                  <span style={{ fontSize: '0.8rem', color: '#6b635b' }}>
+                    Orden {paymentModalOrder.order_number} · Mesa {paymentModalOrder.table_number}
+                  </span>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setPaymentModalOrder(null)}
+                style={{
+                  backgroundColor: '#f5efe4',
+                  color: '#6b635b',
+                  borderRadius: '9999px',
+                  padding: '0.45rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  border: 'none !important'
+                }}
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* Cuadro Resumen de Monto */}
+            <div
+              style={{
+                backgroundColor: '#fcf9f2',
+                borderRadius: '18px',
+                padding: '1.25rem',
+                textAlign: 'center',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.25rem'
+              }}
+            >
+              <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#6b635b', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                Monto Total a Cobrar
+              </span>
+              <div style={{ fontSize: '2.4rem', fontWeight: 900, color: '#059669' }}>
+                ${Number(paymentModalOrder.total_amount || 0).toFixed(2)}
+              </div>
+              <span style={{ fontSize: '0.85rem', color: '#1f1e1c', fontWeight: 700 }}>
+                Cliente: {paymentModalOrder.customer_name} ({paymentModalOrder.diner_count || 2} comensales)
+              </span>
+            </div>
+
+            {/* Selección de Método de Pago */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <label style={{ fontSize: '0.82rem', fontWeight: 800, color: '#1f1e1c' }}>
+                Selecciona el Método de Pago:
+              </label>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem' }}>
+                {[
+                  { id: 'efectivo', label: 'Efectivo', icon: DollarSign },
+                  { id: 'tarjeta', label: 'Tarjeta', icon: CreditCard },
+                  { id: 'zelle', label: 'Zelle / Transf.', icon: Sparkles }
+                ].map((item) => {
+                  const ItemIcon = item.icon;
+                  const isSelected = selectedPaymentMethod === item.id;
+                  return (
+                    <button
+                      key={item.id}
+                      type="button"
+                      onClick={() => {
+                        triggerHaptic(8);
+                        setSelectedPaymentMethod(item.id);
+                      }}
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '0.4rem',
+                        padding: '0.85rem 0.5rem',
+                        borderRadius: '14px',
+                        backgroundColor: isSelected ? '#059669' : '#f5efe4',
+                        color: isSelected ? '#ffffff' : '#1f1e1c',
+                        fontWeight: 800,
+                        fontSize: '0.8rem',
+                        cursor: 'pointer',
+                        border: 'none !important',
+                        boxShadow: isSelected ? '0 4px 15px rgba(5, 150, 105, 0.3)' : 'none',
+                        transition: 'all 0.2s ease'
+                      }}
+                    >
+                      <ItemIcon size={18} />
+                      <span>{item.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Botones de Acción */}
+            <div style={{ display: 'flex', gap: '0.65rem', marginTop: '0.5rem' }}>
+              <button
+                type="button"
+                onClick={() => setPaymentModalOrder(null)}
+                style={{
+                  flex: 1,
+                  backgroundColor: '#f5efe4',
+                  color: '#6b635b',
+                  fontWeight: 800,
+                  fontSize: '0.88rem',
+                  padding: '0.85rem',
+                  borderRadius: '12px',
+                  cursor: 'pointer',
+                  border: 'none !important'
+                }}
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                onClick={() => handleConfirmPayment(paymentModalOrder, selectedPaymentMethod)}
+                style={{
+                  flex: 2,
+                  backgroundColor: '#059669',
+                  color: '#ffffff',
+                  fontWeight: 800,
+                  fontSize: '0.88rem',
+                  padding: '0.85rem',
+                  borderRadius: '12px',
+                  cursor: 'pointer',
+                  border: 'none !important',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.45rem',
+                  boxShadow: '0 4px 20px rgba(5, 150, 105, 0.35)'
+                }}
+              >
+                <Check size={18} />
+                <span>Confirmar Cobro</span>
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

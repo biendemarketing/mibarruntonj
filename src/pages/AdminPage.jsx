@@ -188,11 +188,13 @@ export function AdminPage() {
   };
 
   // Login Handler con Usuario + Contraseña y Referencia
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     triggerHaptic(10);
-    const success = adminAuthService.loginWithCredentials(loginUser, loginPassword);
-    if (success) {
+    setIsLoading(true);
+    const result = await adminAuthService.loginWithCredentials(loginUser, loginPassword);
+    setIsLoading(false);
+    if (result.success) {
       setIsAuthenticated(true);
       setLoginError(false);
       setLoginPassword('');
@@ -213,7 +215,7 @@ export function AdminPage() {
       isDestructive: true
     });
     if (confirmed) {
-      adminAuthService.logout();
+      await adminAuthService.logout();
       setIsAuthenticated(false);
     }
   };
@@ -251,15 +253,34 @@ export function AdminPage() {
     setOrders(prev => prev.map(o => o.id === orderId ? { ...o, waiter_id: waiterId } : o));
   };
 
-  const handleMarkOrderPaid = async (orderId, isPaid = true) => {
+  const handleMarkOrderPaid = async (orderId, isPaid = true, paymentMethod = 'efectivo') => {
     triggerHaptic(10);
-    await ordersService.markOrderPaid(orderId, isPaid);
+    await ordersService.markOrderPaid(orderId, isPaid, paymentMethod);
     setOrders(prev => prev.map(o => o.id === orderId ? { 
       ...o, 
       is_paid: isPaid, 
       payment_status: isPaid ? 'paid' : 'pending',
+      payment_method: paymentMethod,
       paid_at: isPaid ? new Date().toISOString() : null 
     } : o));
+  };
+
+  // Desocupar y Liberar Mesa
+  const handleFreeTable = async (tableNumber, orderId = null) => {
+    triggerHaptic(12);
+    try {
+      const tableObj = tables.find(t => String(t.number) === String(tableNumber) || t.name?.includes(String(tableNumber)));
+      if (tableObj) {
+        await tablesService.closeTable(tableObj.id, tableNumber);
+      }
+      if (orderId) {
+        await ordersService.updateOrderStatus(orderId, 'completed');
+        setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: 'completed' } : o));
+      }
+      setTables(prev => prev.map(t => (String(t.number) === String(tableNumber)) ? { ...t, status: 'available' } : t));
+    } catch (err) {
+      console.error('Error liberando mesa:', err);
+    }
   };
 
   // --- HANDLERS DE PLATOS ---
@@ -1214,9 +1235,11 @@ export function AdminPage() {
             <AdminOrdersTab
               orders={orders}
               waiters={waiters}
+              tables={tables}
               onUpdateStatus={handleUpdateOrderStatus}
               onAssignWaiter={handleAssignWaiter}
               onMarkOrderPaid={handleMarkOrderPaid}
+              onFreeTable={handleFreeTable}
               soundEnabled={soundEnabled}
               onToggleSound={() => setSoundEnabled(!soundEnabled)}
               onRefresh={loadAllData}

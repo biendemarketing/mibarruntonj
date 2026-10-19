@@ -607,21 +607,40 @@ export const adminAuthService = {
     return false;
   },
 
-  loginWithCredentials(userOrEmail, password) {
-    const u = (userOrEmail || '').trim().toLowerCase();
+  async loginWithCredentials(userOrEmail, password) {
+    const u = (userOrEmail || '').trim();
     const p = (password || '').trim();
+    const emailToTry = u.includes('@') ? u : `${u}@mibarrunto.com`;
 
+    // 1. Intentar autenticar contra Supabase Auth oficial
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: emailToTry,
+        password: p
+      });
+
+      if (!error && data?.session) {
+        localStorage.setItem('mb-admin-auth', 'active_admin_session');
+        localStorage.setItem('mb-admin-user', data.user.email || emailToTry);
+        return { success: true, user: data.user };
+      }
+    } catch (e) {
+      console.warn('Supabase Auth error:', e.message);
+    }
+
+    // 2. Fallback de contingencia con credenciales autorizadas del restaurante
     const validUsers = ['admin@mibarrunto.com', 'admin', 'gerencia@mibarrunto.com', 'barrunto'];
     const validPasswords = ['barrunto2026', 'admin2026', '2026'];
 
-    if ((validUsers.includes(u) && validPasswords.includes(p)) || p === 'barrunto2026' || p === '2026') {
+    if ((validUsers.includes(u.toLowerCase()) && validPasswords.includes(p)) || p === 'barrunto2026' || p === '2026') {
       try {
         localStorage.setItem('mb-admin-auth', 'active_admin_session');
         localStorage.setItem('mb-admin-user', u || 'admin@mibarrunto.com');
       } catch {}
-      return true;
+      return { success: true, user: { email: u || 'admin@mibarrunto.com' } };
     }
-    return false;
+
+    return { success: false, error: 'Credenciales inválidas' };
   },
 
   getCurrentUser() {
@@ -632,8 +651,9 @@ export const adminAuthService = {
     }
   },
 
-  logout() {
+  async logout() {
     try {
+      await supabase.auth.signOut().catch(() => {});
       localStorage.removeItem('mb-admin-auth');
       localStorage.removeItem('mb-admin-user');
     } catch {}

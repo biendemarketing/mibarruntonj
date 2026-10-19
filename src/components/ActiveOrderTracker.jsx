@@ -62,8 +62,26 @@ export function ActiveOrderTracker({ activeOrder, onClose, onRefresh }) {
         };
       case 'delivered':
         return {
-          title: 'Entregado',
+          title: 'Entregado en Mesa',
           subtitle: '¡Que disfrutes tu comida en Mi Barrunto!',
+          badgeClass: 'status-badge-delivered',
+          icon: CheckCircle2,
+          color: '#7c3aed',
+          step: 4
+        };
+      case 'paid':
+        return {
+          title: 'Cuenta Pagada',
+          subtitle: '¡Gracias por tu pago! Disfruta tu sobremesa.',
+          badgeClass: 'status-badge-delivered',
+          icon: CheckCircle2,
+          color: '#0d9488',
+          step: 4
+        };
+      case 'completed':
+        return {
+          title: 'Visita Finalizada',
+          subtitle: '¡Muchas gracias por visitar Mi Barrunto! ¡Hasta pronto!',
           badgeClass: 'status-badge-delivered',
           icon: CheckCircle2,
           color: '#10b981',
@@ -106,7 +124,7 @@ export function ActiveOrderTracker({ activeOrder, onClose, onRefresh }) {
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
         borderRadius: '20px',
-        boxShadow: '0 16px 45px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.08)',
+        boxShadow: '0 20px 50px rgba(0, 0, 0, 0.75)',
         border: 'none !important',
         zIndex: 998,
         color: '#ffffff',
