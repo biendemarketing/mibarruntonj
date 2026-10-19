@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
-  Bell, Utensils, Layers, QrCode, Users, LogOut, 
+  Bell, BellRing, Utensils, Layers, QrCode, Users, LogOut, 
   ExternalLink, Lock, Check, ShieldCheck, KeyRound, 
   Clock, Volume2, VolumeX, ArrowLeft, RefreshCw, Printer,
   Menu, X, Mail, ShieldAlert, Sparkles, ChefHat, User
@@ -16,7 +16,13 @@ import { AdminCategoriesTab } from '../components/AdminCategoriesTab';
 import { AdminTablesTab } from '../components/AdminTablesTab';
 import { AdminWaitersTab } from '../components/AdminWaitersTab';
 import { AdminPrintableTab } from '../components/AdminPrintableTab';
-import { playOrderNotificationSound } from '../utils/orderSound';
+import { 
+  playOrderNotificationSound, 
+  unlockAudio, 
+  sendBrowserNotification, 
+  requestNotificationPermission, 
+  getNotificationPermissionStatus 
+} from '../utils/orderSound';
 import { useAlertConfirm } from '../context/AlertConfirmContext';
 import { triggerHaptic } from '../utils/haptics';
 
@@ -43,9 +49,35 @@ export function AdminPage() {
   const [tables, setTables] = useState([]);
   const [waiters, setWaiters] = useState([]);
 
-  // Estados de carga y sonido
+  // Estados de carga, sonido y notificaciones
   const [isLoading, setIsLoading] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
+  const [notificationPermission, setNotificationPermission] = useState(() => getNotificationPermissionStatus());
+  const [incomingOrderAlert, setIncomingOrderAlert] = useState(null);
+
+  // Desbloqueo de AudioContext en la primera interacción táctil o clic
+  useEffect(() => {
+    const handleUnlock = () => {
+      unlockAudio();
+    };
+    window.addEventListener('click', handleUnlock, { once: true });
+    window.addEventListener('touchstart', handleUnlock, { once: true });
+    window.addEventListener('keydown', handleUnlock, { once: true });
+    return () => {
+      window.removeEventListener('click', handleUnlock);
+      window.removeEventListener('touchstart', handleUnlock);
+      window.removeEventListener('keydown', handleUnlock);
+    };
+  }, []);
+
+  // Auto-cerrar alerta flotante de nuevo pedido tras 14 segundos
+  useEffect(() => {
+    if (!incomingOrderAlert) return;
+    const timer = setTimeout(() => {
+      setIncomingOrderAlert(null);
+    }, 14000);
+    return () => clearTimeout(timer);
+  }, [incomingOrderAlert]);
 
   // Cargar datos completos desde Supabase
   const loadAllData = useCallback(async () => {
@@ -84,10 +116,12 @@ export function AdminPage() {
     const unsubscribe = ordersService.subscribeToAllOrders(
       // On Insert (Nuevo Pedido en Vivo)
       (newOrder) => {
-        triggerHaptic([30, 80, 50]);
+        triggerHaptic([40, 100, 60]);
         if (soundEnabled) {
           playOrderNotificationSound();
         }
+        sendBrowserNotification(newOrder);
+        setIncomingOrderAlert(newOrder);
         setOrders(prev => [newOrder, ...prev.filter(o => o.id !== newOrder.id)]);
       },
       // On Update
@@ -104,6 +138,54 @@ export function AdminPage() {
       unsubscribe();
     };
   }, [isAuthenticated, soundEnabled]);
+
+  // Activar Notificaciones del Navegador
+  const handleEnableNotifications = async () => {
+    triggerHaptic(10);
+    const granted = await requestNotificationPermission();
+    setNotificationPermission(granted ? 'granted' : 'denied');
+    if (granted) {
+      sendBrowserNotification({
+        order_number: 'DEMO',
+        customer_name: 'Notificación Activada',
+        table_number: 'Mesa Demo',
+        total_amount: 28.50,
+        items: [{ id: 1 }]
+      });
+      showAlert({
+        title: '¡Avisos y Campana Activados!',
+        message: 'Recibirás sonido de campana y notificaciones nativas en pantalla cuando los clientes envíen un pedido.',
+        type: 'success'
+      });
+    } else {
+      showAlert({
+        title: 'Permiso Requerido',
+        message: 'Por favor autoriza las notificaciones en la barra de direcciones de tu navegador para que los avisos lleguen a tu pantalla.',
+        type: 'warning'
+      });
+    }
+  };
+
+  // Probar sonido y alerta de campana
+  const handleTestChime = () => {
+    triggerHaptic(12);
+    unlockAudio();
+    playOrderNotificationSound();
+    sendBrowserNotification({
+      order_number: 'TEST',
+      customer_name: 'Prueba de Sonido',
+      table_number: 'Mesa 4',
+      total_amount: 35.00,
+      items: [{ id: 1 }]
+    });
+    setIncomingOrderAlert({
+      order_number: 'TEST',
+      customer_name: 'Prueba de Campana',
+      table_number: 'Mesa 4',
+      total_amount: 35.00,
+      items: [{ id: 1 }]
+    });
+  };
 
   // Login Handler con Usuario + Contraseña y Referencia
   const handleLogin = (e) => {
@@ -590,7 +672,55 @@ export function AdminPage() {
         </div>
 
         {/* Parte Inferior del Sidebar */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', paddingTop: '1rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', paddingTop: '1rem' }}>
+          {/* Activar Notificaciones Web Push si no están concedidas */}
+          {notificationPermission !== 'granted' && (
+            <button
+              type="button"
+              onClick={handleEnableNotifications}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.55rem',
+                padding: '0.65rem 0.85rem',
+                borderRadius: '12px',
+                backgroundColor: 'rgba(217, 28, 43, 0.08)',
+                color: 'var(--rojo, #d91c2b)',
+                fontSize: '0.8rem',
+                fontWeight: 800,
+                cursor: 'pointer',
+                border: 'none !important'
+              }}
+              title="Recibir avisos en pantalla incluso fuera del navegador"
+            >
+              <BellRing size={16} />
+              <span>Activar Notificaciones Push</span>
+            </button>
+          )}
+
+          {/* Botón para Probar Campana y Alerta */}
+          <button
+            type="button"
+            onClick={handleTestChime}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.55rem',
+              padding: '0.65rem 0.85rem',
+              borderRadius: '12px',
+              backgroundColor: '#f5efe4',
+              color: '#1f1e1c',
+              fontSize: '0.8rem',
+              fontWeight: 700,
+              cursor: 'pointer',
+              border: 'none !important'
+            }}
+            title="Probar sonido de campana y notificación en este dispositivo"
+          >
+            <Bell size={15} />
+            <span>Probar Sonido & Alerta</span>
+          </button>
+
           {/* Toggle Sonido de Pedidos */}
           <button
             type="button"
@@ -613,7 +743,7 @@ export function AdminPage() {
             }}
           >
             {soundEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
-            <span>{soundEnabled ? 'Notificación Sonora Activa' : 'Sonido Silenciado'}</span>
+            <span>{soundEnabled ? 'Campana Sonora Activa' : 'Campana Silenciada'}</span>
           </button>
 
           {/* Enlace al Menú Público */}
@@ -901,7 +1031,32 @@ export function AdminPage() {
           </div>
 
           {/* Acciones Rápidas del Topbar */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexWrap: 'wrap' }}>
+            {notificationPermission !== 'granted' && (
+              <button
+                type="button"
+                onClick={handleEnableNotifications}
+                style={{
+                  backgroundColor: 'rgba(217, 28, 43, 0.08)',
+                  color: 'var(--rojo, #d91c2b)',
+                  padding: '0.55rem 0.95rem',
+                  borderRadius: '9999px',
+                  fontSize: '0.82rem',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  border: 'none !important',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.45rem',
+                  transition: 'background-color 0.15s ease'
+                }}
+                title="Permitir avisos en pantalla cuando ingresen pedidos"
+              >
+                <BellRing size={15} />
+                <span>Activar Notificaciones</span>
+              </button>
+            )}
+
             <button
               type="button"
               onClick={loadAllData}
@@ -947,6 +1102,102 @@ export function AdminPage() {
             </button>
           </div>
         </header>
+
+        {/* ALERTA FLOTANTE EN VIVO CUANDO LLEGA UN PEDIDO */}
+        {incomingOrderAlert && (
+          <div
+            style={{
+              position: 'fixed',
+              top: '1.25rem',
+              right: '1.25rem',
+              zIndex: 1200,
+              backgroundColor: '#ffffff',
+              borderRadius: '22px',
+              padding: '1.15rem 1.35rem',
+              boxShadow: '0 15px 45px rgba(217, 28, 43, 0.22)',
+              border: 'none !important',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '1rem',
+              maxWidth: '440px',
+              width: 'calc(100vw - 2.5rem)',
+              boxSizing: 'border-box',
+              animation: 'modalFadeIn 0.28s cubic-bezier(0.16, 1, 0.3, 1)'
+            }}
+          >
+            <div
+              style={{
+                width: '46px',
+                height: '46px',
+                borderRadius: '14px',
+                backgroundColor: 'var(--rojo, #d91c2b)',
+                color: '#ffffff',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0
+              }}
+            >
+              <BellRing size={24} />
+            </div>
+
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                <span style={{ fontSize: '0.72rem', fontWeight: 900, textTransform: 'uppercase', color: 'var(--rojo, #d91c2b)', letterSpacing: '0.5px' }}>
+                  ¡Nuevo Pedido!
+                </span>
+                <span style={{ fontSize: '0.72rem', fontWeight: 800, backgroundColor: '#f5efe4', padding: '0.1rem 0.45rem', borderRadius: '6px' }}>
+                  #{incomingOrderAlert.order_number || ''}
+                </span>
+              </div>
+              <h4 style={{ margin: '0.2rem 0 0 0', fontSize: '0.96rem', fontWeight: 800, color: '#1f1e1c', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                {incomingOrderAlert.customer_name} · {incomingOrderAlert.table_number}
+              </h4>
+              <p style={{ margin: '0.15rem 0 0 0', fontSize: '0.78rem', color: '#78716c' }}>
+                {incomingOrderAlert.items?.length || 1} platos · Total: ${Number(incomingOrderAlert.total_amount || 0).toFixed(2)}
+              </p>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+              <button
+                type="button"
+                onClick={() => {
+                  triggerHaptic(10);
+                  setActiveTab('orders');
+                  setIncomingOrderAlert(null);
+                }}
+                style={{
+                  backgroundColor: 'var(--rojo, #d91c2b)',
+                  color: '#ffffff',
+                  fontSize: '0.78rem',
+                  fontWeight: 800,
+                  padding: '0.45rem 0.85rem',
+                  borderRadius: '10px',
+                  border: 'none !important',
+                  cursor: 'pointer'
+                }}
+              >
+                Ver
+              </button>
+              <button
+                type="button"
+                onClick={() => setIncomingOrderAlert(null)}
+                style={{
+                  backgroundColor: '#f5efe4',
+                  color: '#78716c',
+                  fontSize: '0.72rem',
+                  fontWeight: 700,
+                  padding: '0.3rem',
+                  borderRadius: '8px',
+                  border: 'none !important',
+                  cursor: 'pointer'
+                }}
+              >
+                Cerrar
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Contenedor del Cuerpo */}
         <main
