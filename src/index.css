@@ -1697,24 +1697,6 @@ input, textarea, select {
   gap: 1.15rem;
 }
 
-/* Si una categoría tiene solo 1 producto, se centra armónicamente sin estirarse en exceso */
-.products-grid:has(> .product-card:only-child) {
-  grid-template-columns: minmax(280px, 420px);
-  justify-content: center;
-}
-
-.products-grid:has(> .product-card-compact:only-child) {
-  grid-template-columns: minmax(320px, 580px);
-  justify-content: center;
-}
-
-/* Si una categoría tiene exactamente 2 productos, se dividen equilibradamente centrados */
-.products-grid:has(> .product-card:nth-child(2):last-child),
-.products-grid:has(> .product-card-compact:nth-child(2):last-child) {
-  grid-template-columns: repeat(2, minmax(280px, 480px));
-  justify-content: center;
-}
-
 @media (min-width: 640px) {
   .products-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -1724,19 +1706,25 @@ input, textarea, select {
 
 @media (min-width: 1024px) {
   .products-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(6, 1fr);
     gap: 1.35rem;
   }
 
-  /* Si una categoría tiene 2 productos en desktop, se reparten 50/50 centrados */
-  .products-grid:has(> .product-card:nth-child(2):last-child) {
-    grid-template-columns: repeat(2, minmax(300px, 480px));
-    justify-content: center;
+  /* Por defecto en vista normal: 3 tarjetas por fila (cada tarjeta ocupa 2 de 6 columnas = 33.3%) */
+  .products-grid > .product-card {
+    grid-column: span 2;
   }
 
-  /* Si una categoría tiene 3 productos en desktop, ocupan las 3 columnas exactamente */
-  .products-grid:has(> .product-card:nth-child(3):last-child) {
-    grid-template-columns: repeat(3, 1fr);
+  /* Si solo hay 1 tarjeta, centrada armónicamente */
+  .products-grid > .product-card:only-child {
+    grid-column: 2 / span 4;
+  }
+
+  /* Si faltan tarjetas para completar el trío (ej. 2 tarjetas en la última fila),
+     las últimas 2 tarjetas se reparten la fila 50/50 (3 + 3 = 6 columnas) */
+  .products-grid > .product-card:nth-last-child(2):nth-child(3n + 1),
+  .products-grid > .product-card:nth-last-child(2):nth-child(3n + 1) ~ .product-card {
+    grid-column: span 3;
   }
 }
 
@@ -1949,13 +1937,25 @@ input, textarea, select {
 
 @media (min-width: 768px) {
   .products-grid.compact-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(6, 1fr);
     gap: 0.95rem;
   }
 
-  .products-grid.compact-grid:has(> .product-card-compact:only-child) {
-    grid-template-columns: minmax(320px, 580px);
-    justify-content: center;
+  /* Por defecto en vista compacta: 2 tarjetas por fila (cada una ocupa 3 de 6 columnas = 50%) */
+  .products-grid.compact-grid > .product-card-compact {
+    grid-column: span 3;
+  }
+
+  /* Si solo hay 1 tarjeta, centrada elegantemente */
+  .products-grid.compact-grid > .product-card-compact:only-child {
+    grid-column: 2 / span 4;
+  }
+
+  /* Si falta 1 para completar el par (cantidad impar como 3, 5, 7, etc.),
+     las últimas 3 tarjetas comparten la misma fila (2 + 2 + 2 = 6 columnas, 33.3% cada una) */
+  .products-grid.compact-grid > .product-card-compact:nth-last-child(3):nth-child(odd),
+  .products-grid.compact-grid > .product-card-compact:nth-last-child(3):nth-child(odd) ~ .product-card-compact {
+    grid-column: span 2;
   }
 }
 
@@ -1976,23 +1976,30 @@ input, textarea, select {
 
 @media (min-width: 1024px) {
   .products-grid.grid4-grid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(12, 1fr);
     gap: 1.05rem;
   }
 
-  .products-grid.grid4-grid:has(> .product-card:only-child) {
-    grid-template-columns: minmax(220px, 320px);
-    justify-content: center;
+  /* Por defecto: 4 tarjetas por fila (cada tarjeta ocupa 3 de 12 columnas = 25%) */
+  .products-grid.grid4-grid > .product-card {
+    grid-column: span 3;
   }
 
-  .products-grid.grid4-grid:has(> .product-card:nth-child(2):last-child) {
-    grid-template-columns: repeat(2, minmax(220px, 340px));
-    justify-content: center;
+  /* Si solo hay 1 tarjeta, centrada */
+  .products-grid.grid4-grid > .product-card:only-child {
+    grid-column: 4 / span 6;
   }
 
-  .products-grid.grid4-grid:has(> .product-card:nth-child(3):last-child) {
-    grid-template-columns: repeat(3, minmax(220px, 340px));
-    justify-content: center;
+  /* Si la última fila tiene 3 tarjetas (falta 1 para 4), se reparten la fila (4 + 4 + 4 = 12 columnas = 33.3% cada una) */
+  .products-grid.grid4-grid > .product-card:nth-last-child(3):nth-child(4n + 1),
+  .products-grid.grid4-grid > .product-card:nth-last-child(3):nth-child(4n + 1) ~ .product-card {
+    grid-column: span 4;
+  }
+
+  /* Si la última fila tiene 2 tarjetas (faltan 2 para 4), se reparten la fila 50/50 (6 + 6 = 12 columnas) */
+  .products-grid.grid4-grid > .product-card:nth-last-child(2):nth-child(4n + 1),
+  .products-grid.grid4-grid > .product-card:nth-last-child(2):nth-child(4n + 1) ~ .product-card {
+    grid-column: span 6;
   }
 }
 
