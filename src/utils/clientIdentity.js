@@ -94,3 +94,19 @@ export function recordOrderTimestamp() {
   } catch {}
 }
 
+/**
+ * Obtener código corto amigable de cliente para meseros (ej: #CLI-8492)
+ * Evita confusiones cuando comensales tienen el mismo nombre.
+ */
+export function getClientShortCode(clientUuid) {
+  if (!clientUuid) return '#CLI-0001';
+  let hash = 0;
+  for (let i = 0; i < clientUuid.length; i++) {
+    hash = (hash << 5) - hash + clientUuid.charCodeAt(i);
+    hash |= 0;
+  }
+  const positive = Math.abs(hash) % 9000 + 1000;
+  return `#CLI-${positive}`;
+}
+
+

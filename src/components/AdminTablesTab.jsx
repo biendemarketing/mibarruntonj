@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Trash2, Check, QrCode, Copy, RefreshCw, X, Users } from 'lucide-react';
+import { Plus, Trash2, Check, QrCode, Copy, RefreshCw, X, Users, AlertTriangle } from 'lucide-react';
 import { useAlertConfirm } from '../context/AlertConfirmContext';
 import { triggerHaptic } from '../utils/haptics';
 
@@ -26,7 +26,7 @@ export function AdminTablesTab({
     triggerHaptic(14);
     const confirmed = await showConfirm({
       title: `¿Cerrar Mesa #${table.number}?`,
-      message: `¿Deseas cerrar y liberar la Mesa ${table.number}? Sus pedidos activos se marcarán automáticamente como entregados y pagados.`,
+      message: `¿Deseas cerrar y liberar la Mesa ${table.number}? Sus pedidos activos se marcarán automáticamente como entregados y pagados en Supabase.`,
       confirmText: 'Sí, Cerrar Mesa',
       cancelText: 'Cancelar'
     });
@@ -112,7 +112,7 @@ export function AdminTablesTab({
       console.error('Error creando mesa:', err);
       showAlert({
         title: 'Error',
-        message: err.message || 'No se pudo crear la mesa (quizás el número ya existe).',
+        message: err.message || 'No se pudo crear la mesa.',
         type: 'error'
       });
     }
@@ -124,21 +124,23 @@ export function AdminTablesTab({
       <div
         style={{
           display: 'flex',
+          flexWrap: 'wrap',
           alignItems: 'center',
           justifyContent: 'space-between',
-          backgroundColor: 'var(--bg-card, #1c1d22)',
-          padding: '1rem',
+          gap: '1rem',
+          backgroundColor: '#ffffff',
+          padding: '1rem 1.25rem',
           borderRadius: '16px',
-          boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
+          boxShadow: '0 4px 20px rgba(0,0,0,0.06)',
           border: 'none !important'
         }}
       >
         <div>
-          <h2 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
-            Mesas del Restaurante
+          <h2 style={{ fontSize: '1.15rem', fontWeight: 900, color: '#1f1e1c', margin: 0 }}>
+            Mesas &amp; Generador QR
           </h2>
-          <span style={{ fontSize: '0.8rem', color: '#9ca3af' }}>
-            {tables.length} mesas registradas · Cada mesa tiene enlace QR único
+          <span style={{ fontSize: '0.8rem', color: '#6b635b' }}>
+            {tables.length} mesas registradas · Detección de ocupación y cierre de comanda
           </span>
         </div>
 
@@ -148,8 +150,8 @@ export function AdminTablesTab({
             onClick={onRefresh}
             disabled={isLoading}
             style={{
-              backgroundColor: 'rgba(255, 255, 255, 0.08)',
-              color: '#ffffff',
+              backgroundColor: '#f5efe4',
+              color: '#1f1e1c',
               padding: '0.65rem 0.85rem',
               borderRadius: '9999px',
               fontSize: '0.82rem',
@@ -176,7 +178,7 @@ export function AdminTablesTab({
               display: 'flex',
               alignItems: 'center',
               gap: '0.45rem',
-              boxShadow: '0 4px 15px rgba(217, 28, 43, 0.4)'
+              boxShadow: '0 4px 15px rgba(217, 28, 43, 0.25)'
             }}
           >
             <Plus size={18} />
@@ -186,7 +188,7 @@ export function AdminTablesTab({
       </div>
 
       {/* Grid de Mesas */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '1rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '1rem' }}>
         {tables.map(table => {
           const activeOrdersForTable = (orders || []).filter(o => 
             String(o.table_number) === String(table.number) && 
@@ -197,20 +199,19 @@ export function AdminTablesTab({
           const isAvail = !isOccupied && table.status === 'available';
           const isRes = !isOccupied && table.status === 'reserved';
 
-          const statusColor = isOccupied ? '#ef4444' : isAvail ? '#10b981' : '#f59e0b';
-          const statusText = isOccupied ? 'Ocupada' : isAvail ? 'Disponible' : 'Reservada';
+          const statusColor = isOccupied ? '#ef4444' : isAvail ? '#059669' : '#d97706';
           const totalActiveAmount = activeOrdersForTable.reduce((sum, o) => sum + Number(o.total_amount || 0), 0);
 
           return (
             <div
               key={table.id}
               style={{
-                backgroundColor: 'var(--bg-card, #1c1d22)',
+                backgroundColor: '#ffffff',
                 borderRadius: '16px',
                 padding: '1.25rem',
                 boxShadow: isOccupied 
-                  ? '0 6px 24px rgba(239, 68, 68, 0.22)' 
-                  : '0 4px 20px rgba(0,0,0,0.18)',
+                  ? '0 6px 24px rgba(239, 68, 68, 0.15)' 
+                  : '0 4px 20px rgba(0,0,0,0.06)',
                 border: 'none !important',
                 display: 'flex',
                 flexDirection: 'column',
@@ -237,7 +238,7 @@ export function AdminTablesTab({
                     style={{
                       fontSize: '1.4rem',
                       fontWeight: 900,
-                      color: '#ffffff'
+                      color: '#1f1e1c'
                     }}
                   >
                     #{table.number}
@@ -245,12 +246,12 @@ export function AdminTablesTab({
                   {isOccupied && (
                     <span
                       style={{
-                        backgroundColor: 'rgba(239, 68, 68, 0.2)',
-                        color: '#ef4444',
+                        backgroundColor: '#fee2e2',
+                        color: '#b91c1c',
                         padding: '0.15rem 0.5rem',
                         borderRadius: '9999px',
                         fontSize: '0.68rem',
-                        fontWeight: 800,
+                        fontWeight: 900,
                         textTransform: 'uppercase',
                         display: 'flex',
                         alignItems: 'center',
@@ -275,8 +276,8 @@ export function AdminTablesTab({
                   type="button"
                   onClick={() => handleDelete(table)}
                   style={{
-                    backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                    color: '#ef4444',
+                    backgroundColor: '#fee2e2',
+                    color: '#b91c1c',
                     border: 'none !important',
                     borderRadius: '8px',
                     padding: '0.35rem',
@@ -289,11 +290,11 @@ export function AdminTablesTab({
               </div>
 
               <div>
-                <h3 style={{ fontSize: '1rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+                <h3 style={{ fontSize: '1rem', fontWeight: 800, color: '#1f1e1c', margin: 0 }}>
                   {table.name}
                 </h3>
-                <span style={{ fontSize: '0.75rem', color: '#9ca3af', display: 'flex', alignItems: 'center', gap: '0.3rem', marginTop: '0.2rem' }}>
-                  <Users size={12} /> Capacidad: {table.capacity || 4} personas
+                <span style={{ fontSize: '0.75rem', color: '#6b635b', display: 'flex', alignItems: 'center', gap: '0.3rem', marginTop: '0.2rem', fontWeight: 600 }}>
+                  <Users size={13} color="var(--rojo, #d91c2b)" /> Capacidad: {table.capacity || 4} comensales
                 </span>
 
                 {hasActiveOrders && (
@@ -301,14 +302,14 @@ export function AdminTablesTab({
                     style={{
                       marginTop: '0.45rem',
                       padding: '0.4rem 0.6rem',
-                      backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                      backgroundColor: '#fee2e2',
                       borderRadius: '8px',
                       fontSize: '0.75rem',
-                      color: '#f87171',
-                      fontWeight: 700
+                      color: '#b91c1c',
+                      fontWeight: 800
                     }}
                   >
-                    {activeOrdersForTable.length} orden(es) activa(s) · ${totalActiveAmount.toFixed(2)}
+                    {activeOrdersForTable.length} orden(es) en curso · ${totalActiveAmount.toFixed(2)}
                   </div>
                 )}
               </div>
@@ -327,12 +328,12 @@ export function AdminTablesTab({
                     style={{
                       flex: 1,
                       backgroundColor: (isOccupied && s.id === 'occupied') || (!isOccupied && table.status === s.id)
-                        ? `${statusColor}35`
-                        : 'rgba(255, 255, 255, 0.06)',
+                        ? `${statusColor}22`
+                        : '#f5efe4',
                       color: (isOccupied && s.id === 'occupied') || (!isOccupied && table.status === s.id)
                         ? statusColor
-                        : '#9ca3af',
-                      fontWeight: 700,
+                        : '#6b635b',
+                      fontWeight: 800,
                       fontSize: '0.72rem',
                       padding: '0.35rem 0',
                       borderRadius: '8px',
@@ -364,7 +365,7 @@ export function AdminTablesTab({
                     gap: '0.45rem',
                     cursor: 'pointer',
                     border: 'none !important',
-                    boxShadow: '0 4px 15px rgba(239, 68, 68, 0.4)',
+                    boxShadow: '0 4px 15px rgba(239, 68, 68, 0.25)',
                     transition: 'all 0.2s ease'
                   }}
                   title="Liberar mesa y marcar todos sus pedidos como entregados y pagados"
@@ -380,16 +381,16 @@ export function AdminTablesTab({
                 onClick={() => handleCopyLink(table.number)}
                 style={{
                   width: '100%',
-                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                  color: '#ffffff',
-                  fontWeight: 700,
+                  backgroundColor: '#f5efe4',
+                  color: '#1f1e1c',
+                  fontWeight: 800,
                   fontSize: '0.78rem',
-                  padding: '0.5rem',
+                  padding: '0.55rem',
                   borderRadius: '10px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  gap: '0.4rem',
+                  gap: '0.45rem',
                   cursor: 'pointer',
                   border: 'none !important'
                 }}
@@ -412,9 +413,8 @@ export function AdminTablesTab({
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundColor: 'rgba(0,0,0,0.75)',
-            backdropFilter: 'blur(10px)',
-            WebkitBackdropFilter: 'blur(10px)',
+            backgroundColor: 'rgba(0, 0, 0, 0.45)',
+            backdropFilter: 'blur(8px)',
             zIndex: 1000,
             display: 'flex',
             alignItems: 'center',
@@ -427,31 +427,26 @@ export function AdminTablesTab({
             style={{
               width: '100%',
               maxWidth: '420px',
-              backgroundColor: 'var(--bg-card, #1c1d22)',
-              color: '#ffffff',
-              borderRadius: '20px',
-              boxShadow: '0 25px 60px rgba(0,0,0,0.65)',
-              border: 'none !important',
-              padding: '1.5rem',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '1rem'
+              backgroundColor: '#ffffff',
+              borderRadius: '24px',
+              padding: '1.75rem',
+              boxShadow: '0 25px 60px rgba(0, 0, 0, 0.2)',
+              border: 'none !important'
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <h3 style={{ fontSize: '1.15rem', fontWeight: 800, margin: 0 }}>
-                Crear Nueva Mesa
-              </h3>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
+              <h2 style={{ fontSize: '1.2rem', fontWeight: 900, color: '#1f1e1c', margin: 0 }}>
+                Nueva Mesa
+              </h2>
               <button
                 type="button"
                 onClick={() => setIsModalOpen(false)}
                 style={{
-                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                  backgroundColor: '#f5efe4',
                   border: 'none !important',
                   borderRadius: '9999px',
                   padding: '0.4rem',
-                  color: '#ffffff',
                   cursor: 'pointer'
                 }}
               >
@@ -459,90 +454,89 @@ export function AdminTablesTab({
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '0.75rem' }}>
-                <div>
-                  <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#9ca3af', marginBottom: '0.35rem' }}>
-                    Número *
-                  </label>
-                  <input
-                    type="number"
-                    min="1"
-                    required
-                    value={formData.number}
-                    onChange={(e) => {
-                      const num = e.target.value;
-                      setFormData(p => ({ ...p, number: num, name: `Mesa ${num}` }));
-                    }}
-                    style={{
-                      width: '100%',
-                      padding: '0.65rem 0.85rem',
-                      backgroundColor: 'rgba(255, 255, 255, 0.06)',
-                      color: '#ffffff',
-                      borderRadius: '12px',
-                      fontSize: '0.88rem',
-                      border: 'none !important'
-                    }}
-                  />
-                </div>
-
-                <div>
-                  <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#9ca3af', marginBottom: '0.35rem' }}>
-                    Nombre / Ubicación *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.name}
-                    onChange={(e) => setFormData(p => ({ ...p, name: e.target.value }))}
-                    placeholder="Ej: Mesa 21 (Terraza)"
-                    style={{
-                      width: '100%',
-                      padding: '0.65rem 0.85rem',
-                      backgroundColor: 'rgba(255, 255, 255, 0.06)',
-                      color: '#ffffff',
-                      borderRadius: '12px',
-                      fontSize: '0.88rem',
-                      border: 'none !important'
-                    }}
-                  />
-                </div>
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#6b635b', marginBottom: '0.35rem' }}>
+                  Número de Mesa *
+                </label>
+                <input
+                  type="number"
+                  min="1"
+                  required
+                  value={formData.number}
+                  onChange={(e) => setFormData({ ...formData, number: e.target.value })}
+                  style={{
+                    width: '100%',
+                    padding: '0.65rem 0.85rem',
+                    backgroundColor: '#f5efe4',
+                    color: '#1f1e1c',
+                    borderRadius: '12px',
+                    fontSize: '0.9rem',
+                    fontWeight: 700,
+                    border: 'none !important',
+                    outline: 'none'
+                  }}
+                />
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#9ca3af', marginBottom: '0.35rem' }}>
-                  Capacidad de Personas
+                <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#6b635b', marginBottom: '0.35rem' }}>
+                  Nombre / Etiqueta (Ej: Terraza 1, VIP 2)
+                </label>
+                <input
+                  type="text"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  style={{
+                    width: '100%',
+                    padding: '0.65rem 0.85rem',
+                    backgroundColor: '#f5efe4',
+                    color: '#1f1e1c',
+                    borderRadius: '12px',
+                    fontSize: '0.9rem',
+                    fontWeight: 600,
+                    border: 'none !important',
+                    outline: 'none'
+                  }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#6b635b', marginBottom: '0.35rem' }}>
+                  Capacidad (Personas)
                 </label>
                 <input
                   type="number"
                   min="1"
                   value={formData.capacity}
-                  onChange={(e) => setFormData(p => ({ ...p, capacity: e.target.value }))}
+                  onChange={(e) => setFormData({ ...formData, capacity: e.target.value })}
                   style={{
                     width: '100%',
                     padding: '0.65rem 0.85rem',
-                    backgroundColor: 'rgba(255, 255, 255, 0.06)',
-                    color: '#ffffff',
+                    backgroundColor: '#f5efe4',
+                    color: '#1f1e1c',
                     borderRadius: '12px',
-                    fontSize: '0.88rem',
-                    border: 'none !important'
+                    fontSize: '0.9rem',
+                    fontWeight: 700,
+                    border: 'none !important',
+                    outline: 'none'
                   }}
                 />
               </div>
 
-              <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.5rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', marginTop: '0.5rem' }}>
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
                   style={{
-                    flex: 1,
-                    backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                    color: '#ffffff',
-                    fontWeight: 700,
-                    padding: '0.75rem',
+                    backgroundColor: '#f5efe4',
+                    color: '#1f1e1c',
+                    padding: '0.65rem 1.25rem',
                     borderRadius: '12px',
-                    border: 'none !important',
-                    cursor: 'pointer'
+                    fontWeight: 700,
+                    fontSize: '0.85rem',
+                    cursor: 'pointer',
+                    border: 'none !important'
                   }}
                 >
                   Cancelar
@@ -551,18 +545,18 @@ export function AdminTablesTab({
                 <button
                   type="submit"
                   style={{
-                    flex: 1.5,
                     backgroundColor: 'var(--rojo, #d91c2b)',
                     color: '#ffffff',
-                    fontWeight: 800,
-                    padding: '0.75rem',
+                    padding: '0.65rem 1.5rem',
                     borderRadius: '12px',
-                    border: 'none !important',
+                    fontWeight: 800,
+                    fontSize: '0.85rem',
                     cursor: 'pointer',
-                    boxShadow: '0 4px 15px rgba(217, 28, 43, 0.4)'
+                    border: 'none !important',
+                    boxShadow: '0 4px 15px rgba(217, 28, 43, 0.3)'
                   }}
                 >
-                  Registrar Mesa
+                  Guardar Mesa
                 </button>
               </div>
             </form>

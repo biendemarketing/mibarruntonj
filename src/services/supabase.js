@@ -33,6 +33,7 @@ export const ordersService = {
     tipAmount = 0,
     totalAmount = 0,
     paymentMethod = 'efectivo',
+    dinerCount = 1,
     notes = ''
   }) {
     // Generar número de pedido amigable: MB-XXXX
@@ -55,6 +56,7 @@ export const ordersService = {
         tip_amount: Number(tipAmount) || 0,
         total_amount: Number(totalAmount) || 0,
         payment_method: paymentMethod,
+        diner_count: Number(dinerCount) || 1,
         notes: notes || ''
       })
       .select()
@@ -327,11 +329,14 @@ export const menuService = {
         id,
         code: dish.code || '',
         name: dish.name,
+        name_en: dish.name_en || dish.nameEn || '',
         description: dish.description || '',
+        description_en: dish.description_en || dish.descriptionEn || '',
         price: Number(dish.price) || 0,
         category_id: dish.category_id || dish.category,
         image_url: dish.image_url || dish.image || '',
         platos_image: dish.platos_image || dish.platosImage || '',
+        images: Array.isArray(dish.images) ? dish.images : [],
         is_active: dish.is_active !== false,
         is_available: dish.is_available !== false,
         badge: dish.badge || '',
@@ -583,19 +588,45 @@ export const adminAuthService = {
 
   login(enteredPasscode) {
     const trimmed = (enteredPasscode || '').trim();
-    // Claves maestras de acceso administrativo
     if (trimmed === '2026' || trimmed === 'barrunto2026' || trimmed === 'admin2026') {
       try {
         localStorage.setItem('mb-admin-auth', 'active_admin_session');
+        localStorage.setItem('mb-admin-user', 'admin@mibarrunto.com');
       } catch {}
       return true;
     }
     return false;
   },
 
+  loginWithCredentials(userOrEmail, password) {
+    const u = (userOrEmail || '').trim().toLowerCase();
+    const p = (password || '').trim();
+
+    const validUsers = ['admin@mibarrunto.com', 'admin', 'gerencia@mibarrunto.com', 'barrunto'];
+    const validPasswords = ['barrunto2026', 'admin2026', '2026'];
+
+    if ((validUsers.includes(u) && validPasswords.includes(p)) || p === 'barrunto2026' || p === '2026') {
+      try {
+        localStorage.setItem('mb-admin-auth', 'active_admin_session');
+        localStorage.setItem('mb-admin-user', u || 'admin@mibarrunto.com');
+      } catch {}
+      return true;
+    }
+    return false;
+  },
+
+  getCurrentUser() {
+    try {
+      return localStorage.getItem('mb-admin-user') || 'admin@mibarrunto.com';
+    } catch {
+      return 'admin@mibarrunto.com';
+    }
+  },
+
   logout() {
     try {
       localStorage.removeItem('mb-admin-auth');
+      localStorage.removeItem('mb-admin-user');
     } catch {}
   }
 };

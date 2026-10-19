@@ -28,6 +28,7 @@ export function AdminDishesTab({
   const filteredDishes = dishes.filter(d => {
     const matchesSearch = !search.trim() || 
       d.name.toLowerCase().includes(search.toLowerCase()) || 
+      (d.name_en && d.name_en.toLowerCase().includes(search.toLowerCase())) ||
       (d.description && d.description.toLowerCase().includes(search.toLowerCase())) ||
       (d.code && d.code.toLowerCase().includes(search.toLowerCase()));
     
@@ -80,26 +81,27 @@ export function AdminDishesTab({
       await onCreateDish(formData);
       showAlert({
         title: 'Plato Creado',
-        message: 'El nuevo plato ha sido añadido a la carta en Supabase.',
+        message: `"${formData.name}" ha sido agregado a la carta en Supabase.`,
         type: 'success'
       });
     }
+    setIsModalOpen(false);
   };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-      {/* Barra Superior de Control y Búsqueda */}
+      {/* Barra de Búsqueda y Botón Crear */}
       <div
         style={{
           display: 'flex',
           flexWrap: 'wrap',
           alignItems: 'center',
           justifyContent: 'space-between',
-          gap: '0.75rem',
-          backgroundColor: 'var(--bg-card, #1c1d22)',
+          gap: '1rem',
+          backgroundColor: '#ffffff',
           padding: '1rem',
           borderRadius: '16px',
-          boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
+          boxShadow: '0 4px 20px rgba(0,0,0,0.06)',
           border: 'none !important'
         }}
       >
@@ -113,20 +115,22 @@ export function AdminDishesTab({
               alignItems: 'center'
             }}
           >
-            <Search size={16} style={{ position: 'absolute', left: '12px', color: '#9ca3af' }} />
+            <Search size={16} style={{ position: 'absolute', left: '12px', color: '#6b635b' }} />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Buscar plato por nombre o código..."
+              placeholder="Buscar por nombre, descripción o código..."
               style={{
                 width: '100%',
                 padding: '0.65rem 0.85rem 0.65rem 2.4rem',
-                backgroundColor: 'rgba(255, 255, 255, 0.06)',
-                color: '#ffffff',
+                backgroundColor: '#f5efe4',
+                color: '#1f1e1c',
                 borderRadius: '9999px',
                 fontSize: '0.85rem',
-                border: 'none !important'
+                fontWeight: 600,
+                border: 'none !important',
+                outline: 'none'
               }}
             />
           </div>
@@ -136,19 +140,19 @@ export function AdminDishesTab({
             value={selectedCat}
             onChange={(e) => setSelectedCat(e.target.value)}
             style={{
-              backgroundColor: 'rgba(255, 255, 255, 0.08)',
-              color: '#ffffff',
+              backgroundColor: '#f5efe4',
+              color: '#1f1e1c',
               padding: '0.65rem 0.85rem',
               borderRadius: '9999px',
               fontSize: '0.82rem',
-              fontWeight: 600,
+              fontWeight: 700,
               border: 'none !important',
               cursor: 'pointer'
             }}
           >
-            <option value="all" style={{ backgroundColor: '#1c1d22' }}>Todas las Categorías</option>
+            <option value="all">Todas las Categorías</option>
             {categories.map(c => (
-              <option key={c.id} value={c.id} style={{ backgroundColor: '#1c1d22' }}>{c.name}</option>
+              <option key={c.id} value={c.id}>{c.name}</option>
             ))}
           </select>
         </div>
@@ -160,8 +164,8 @@ export function AdminDishesTab({
             onClick={onRefresh}
             disabled={isLoading}
             style={{
-              backgroundColor: 'rgba(255, 255, 255, 0.08)',
-              color: '#ffffff',
+              backgroundColor: '#f5efe4',
+              color: '#1f1e1c',
               padding: '0.65rem 0.85rem',
               borderRadius: '9999px',
               fontSize: '0.82rem',
@@ -192,7 +196,7 @@ export function AdminDishesTab({
               display: 'flex',
               alignItems: 'center',
               gap: '0.45rem',
-              boxShadow: '0 4px 15px rgba(217, 28, 43, 0.4)'
+              boxShadow: '0 4px 15px rgba(217, 28, 43, 0.25)'
             }}
           >
             <Plus size={18} />
@@ -201,45 +205,38 @@ export function AdminDishesTab({
         </div>
       </div>
 
-      {/* Contador de Platos */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 0.25rem' }}>
-        <span style={{ fontSize: '0.85rem', color: '#9ca3af', fontWeight: 600 }}>
-          Mostrando <strong style={{ color: '#ffffff' }}>{filteredDishes.length}</strong> de {dishes.length} platos en Supabase
-        </span>
-      </div>
-
-      {/* Lista de Platos en Tabla / Cards Responsive */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1rem' }}>
+      {/* Grid de Platos */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem' }}>
         {filteredDishes.map(dish => {
-          const imgSrc = dish.platos_image || dish.image_url;
+          const cat = categories.find(c => c.id === dish.category_id);
           const isAvail = dish.is_available !== false;
-          const categoryName = categories.find(c => c.id === dish.category_id)?.name || dish.category_id;
+          const isActive = dish.is_active !== false;
+          const imgUrl = dish.platos_image || dish.image_url || '';
 
           return (
             <div
               key={dish.id}
               style={{
-                backgroundColor: 'var(--bg-card, #1c1d22)',
+                backgroundColor: '#ffffff',
                 borderRadius: '16px',
-                padding: '1rem',
-                boxShadow: '0 4px 20px rgba(0,0,0,0.2)',
+                padding: '1.15rem',
+                boxShadow: '0 4px 20px rgba(0,0,0,0.06)',
                 border: 'none !important',
                 display: 'flex',
                 flexDirection: 'column',
-                justifyContent: 'space-between',
                 gap: '0.75rem',
-                opacity: isAvail ? 1 : 0.65,
-                transition: 'opacity 0.2s'
+                opacity: isActive ? 1 : 0.65,
+                transition: 'opacity 0.2s ease'
               }}
             >
-              <div style={{ display: 'flex', gap: '0.85rem', alignItems: 'flex-start' }}>
-                {/* Miniatura */}
+              {/* Encabezado: Foto en miniatura + Info básica */}
+              <div style={{ display: 'flex', gap: '0.85rem', alignItems: 'center' }}>
                 <div
                   style={{
-                    width: '68px',
-                    height: '68px',
+                    width: '64px',
+                    height: '64px',
                     borderRadius: '12px',
-                    backgroundColor: 'rgba(0,0,0,0.3)',
+                    backgroundColor: '#f5efe4',
                     overflow: 'hidden',
                     flexShrink: 0,
                     display: 'flex',
@@ -247,187 +244,200 @@ export function AdminDishesTab({
                     justifyContent: 'center'
                   }}
                 >
-                  {imgSrc ? (
+                  {imgUrl ? (
                     <img
-                      src={imgSrc}
+                      src={imgUrl}
                       alt={dish.name}
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                       loading="lazy"
-                      onError={(e) => { e.currentTarget.style.display = 'none'; }}
                     />
                   ) : (
-                    <ImageIcon size={22} color="#9ca3af" />
+                    <ImageIcon size={24} color="#6b635b" />
                   )}
                 </div>
 
-                {/* Info */}
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.35rem' }}>
-                    <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--rojo, #d91c2b)', textTransform: 'uppercase' }}>
-                      {categoryName}
-                    </span>
-                    {dish.code && (
-                      <span style={{ fontSize: '0.7rem', color: '#9ca3af', fontWeight: 600 }}>
-                        {dish.code}
-                      </span>
-                    )}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                    <h3
+                      style={{
+                        fontSize: '0.92rem',
+                        fontWeight: 800,
+                        color: '#1f1e1c',
+                        margin: 0,
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis'
+                      }}
+                      title={dish.name}
+                    >
+                      {dish.name}
+                    </h3>
                   </div>
 
-                  <h3
-                    style={{
-                      fontSize: '0.95rem',
-                      fontWeight: 800,
-                      color: '#ffffff',
-                      margin: '0.15rem 0 0.25rem 0',
-                      whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis'
-                    }}
-                    title={dish.name}
-                  >
-                    {dish.name}
-                  </h3>
-
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <span style={{ fontSize: '1.05rem', fontWeight: 900, color: 'var(--naranja, #f97316)' }}>
-                      ${Number(dish.price).toFixed(2)}
+                  {dish.name_en && (
+                    <span
+                      style={{
+                        display: 'block',
+                        fontSize: '0.74rem',
+                        color: '#6b635b',
+                        fontStyle: 'italic',
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis'
+                      }}
+                    >
+                      {dish.name_en}
                     </span>
-                    {dish.badge && (
-                      <span
-                        style={{
-                          fontSize: '0.68rem',
-                          fontWeight: 800,
-                          backgroundColor: 'rgba(249, 115, 22, 0.18)',
-                          color: 'var(--naranja, #f97316)',
-                          padding: '0.15rem 0.5rem',
-                          borderRadius: '9999px'
-                        }}
-                      >
-                        {dish.badge}
+                  )}
+
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.2rem' }}>
+                    <span style={{ fontSize: '0.72rem', color: '#6b635b', backgroundColor: '#f5efe4', padding: '0.1rem 0.4rem', borderRadius: '4px', fontWeight: 700 }}>
+                      {cat?.name || dish.category_id}
+                    </span>
+                    {dish.code && (
+                      <span style={{ fontSize: '0.72rem', color: '#6b635b', fontWeight: 600 }}>
+                        {dish.code}
                       </span>
                     )}
                   </div>
                 </div>
               </div>
 
-              {/* Barra Inferior con Switch de Disponibilidad y Acciones */}
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  paddingTop: '0.65rem',
-                  backgroundColor: 'rgba(0, 0, 0, 0.2)',
-                  borderRadius: '10px',
-                  padding: '0.5rem 0.75rem'
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                  {/* Switch Rápido Disponible / Agotado */}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      triggerHaptic(8);
-                      onToggleAvailability(dish.id, !isAvail);
-                    }}
+              {/* Precio y Badges */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '0.15rem' }}>
+                <span style={{ fontSize: '1.25rem', fontWeight: 900, color: 'var(--rojo, #d91c2b)' }}>
+                  ${Number(dish.price || 0).toFixed(2)}
+                </span>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                  {/* Badge de Visibilidad */}
+                  <span
                     style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.35rem',
-                      backgroundColor: isAvail ? 'rgba(16, 185, 129, 0.18)' : 'rgba(239, 68, 68, 0.18)',
-                      color: isAvail ? '#10b981' : '#ef4444',
-                      border: 'none !important',
+                      fontSize: '0.7rem',
+                      fontWeight: 800,
+                      padding: '0.15rem 0.5rem',
                       borderRadius: '9999px',
-                      padding: '0.3rem 0.65rem',
-                      fontSize: '0.72rem',
-                      fontWeight: 700,
-                      cursor: 'pointer'
+                      backgroundColor: isActive ? '#ecfdf5' : '#fef3c7',
+                      color: isActive ? '#059669' : '#b45309'
                     }}
-                    title={isAvail ? 'Plato disponible en la carta' : 'Plato marcado como agotado temporal'}
                   >
-                    <span>{isAvail ? 'Disponible' : 'Agotado'}</span>
-                  </button>
+                    {isActive ? 'Visible' : 'Oculto'}
+                  </span>
 
-                  {/* Switch Rápido Visible / Oculto */}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      triggerHaptic(8);
-                      const isVis = dish.is_active !== false;
-                      onToggleVisibility(dish.id, !isVis);
-                    }}
+                  {/* Badge de Disponibilidad */}
+                  <span
                     style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.35rem',
-                      backgroundColor: (dish.is_active !== false) ? 'rgba(59, 130, 246, 0.18)' : 'rgba(156, 163, 175, 0.18)',
-                      color: (dish.is_active !== false) ? '#3b82f6' : '#9ca3af',
-                      border: 'none !important',
+                      fontSize: '0.7rem',
+                      fontWeight: 800,
+                      padding: '0.15rem 0.5rem',
                       borderRadius: '9999px',
-                      padding: '0.3rem 0.65rem',
-                      fontSize: '0.72rem',
-                      fontWeight: 700,
-                      cursor: 'pointer'
+                      backgroundColor: isAvail ? '#eff6ff' : '#fee2e2',
+                      color: isAvail ? '#2563eb' : '#b91c1c'
                     }}
-                    title={(dish.is_active !== false) ? 'Visible en la carta del cliente' : 'Oculto de la carta'}
                   >
-                    {(dish.is_active !== false) ? <Eye size={12} /> : <EyeOff size={12} />}
-                    <span>{(dish.is_active !== false) ? 'Visible' : 'Oculto'}</span>
-                  </button>
+                    {isAvail ? 'Disponible' : 'Agotado'}
+                  </span>
                 </div>
+              </div>
 
-                {/* Acciones Editar y Eliminar */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                  <button
-                    type="button"
-                    onClick={() => handleOpenEdit(dish)}
-                    style={{
-                      backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                      color: '#ffffff',
-                      border: 'none !important',
-                      borderRadius: '8px',
-                      padding: '0.4rem',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }}
-                    title="Editar plato"
-                  >
-                    <Edit2 size={15} />
-                  </button>
+              {/* Botones de Acción */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', marginTop: '0.25rem' }}>
+                {/* Alternar Disponibilidad */}
+                <button
+                  type="button"
+                  onClick={() => onToggleAvailability(dish.id, !isAvail)}
+                  style={{
+                    flex: 1,
+                    backgroundColor: isAvail ? '#f5efe4' : '#ecfdf5',
+                    color: isAvail ? '#6b635b' : '#059669',
+                    padding: '0.45rem',
+                    borderRadius: '8px',
+                    fontSize: '0.74rem',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                    border: 'none !important',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.3rem'
+                  }}
+                  title={isAvail ? 'Marcar como agotado' : 'Marcar como disponible'}
+                >
+                  <Check size={13} />
+                  <span>{isAvail ? 'Agotar' : 'Reactivar'}</span>
+                </button>
 
-                  <button
-                    type="button"
-                    onClick={() => handleDelete(dish)}
-                    style={{
-                      backgroundColor: 'rgba(239, 68, 68, 0.12)',
-                      color: '#ef4444',
-                      border: 'none !important',
-                      borderRadius: '8px',
-                      padding: '0.4rem',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }}
-                    title="Eliminar plato"
-                  >
-                    <Trash2 size={15} />
-                  </button>
-                </div>
+                {/* Alternar Visibilidad (Ocultar / Mostrar) */}
+                <button
+                  type="button"
+                  onClick={() => onToggleVisibility && onToggleVisibility(dish.id, !isActive)}
+                  style={{
+                    backgroundColor: '#f5efe4',
+                    color: isActive ? '#6b635b' : '#b45309',
+                    padding: '0.45rem 0.6rem',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    border: 'none !important',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
+                  title={isActive ? 'Ocultar plato en la carta del comensal' : 'Mostrar plato en la carta'}
+                >
+                  {isActive ? <Eye size={14} /> : <EyeOff size={14} />}
+                </button>
+
+                {/* Editar */}
+                <button
+                  type="button"
+                  onClick={() => handleOpenEdit(dish)}
+                  style={{
+                    backgroundColor: '#f5efe4',
+                    color: '#1f1e1c',
+                    padding: '0.45rem 0.65rem',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    border: 'none !important',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
+                  title="Editar plato"
+                >
+                  <Edit2 size={14} />
+                </button>
+
+                {/* Eliminar */}
+                <button
+                  type="button"
+                  onClick={() => handleDelete(dish)}
+                  style={{
+                    backgroundColor: '#fee2e2',
+                    color: '#b91c1c',
+                    padding: '0.45rem 0.65rem',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    border: 'none !important',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
+                  title="Eliminar plato"
+                >
+                  <Trash2 size={14} />
+                </button>
               </div>
             </div>
           );
         })}
       </div>
 
-      {/* Modal para Crear / Editar Plato */}
+      {/* Modal de Crear / Editar Plato */}
       <AdminDishModal
         isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
         dish={editingDish}
         categories={categories}
-        onClose={() => setIsModalOpen(false)}
         onSave={handleSaveModal}
       />
     </div>

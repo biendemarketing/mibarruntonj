@@ -11,6 +11,7 @@ export class Customer {
     address = '',
     phone = '',
     paymentMethod = 'efectivo',
+    dinerCount = 2,
     generalNotes = ''
   } = {}) {
     this.name = name;
@@ -19,6 +20,7 @@ export class Customer {
     this.address = address;
     this.phone = phone;
     this.paymentMethod = paymentMethod; // 'efectivo', 'yape', 'tarjeta', 'transferencia'
+    this.dinerCount = dinerCount;
     this.generalNotes = generalNotes;
   }
 

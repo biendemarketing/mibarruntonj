@@ -1,20 +1,20 @@
 import React, { useState, useRef } from 'react';
 import { 
-  X, Upload, Check, Image as ImageIcon, AlertCircle, 
-  Loader2, Trash2, Eye, EyeOff, Star 
+  X, Upload, Plus, Trash2, Check, Star, 
+  Sparkles, AlertCircle, Eye, EyeOff 
 } from 'lucide-react';
 import { menuService } from '../services/supabase';
 import { useAlertConfirm } from '../context/AlertConfirmContext';
 import { triggerHaptic } from '../utils/haptics';
 
 export function AdminDishModal({
-  dish = null,
-  categories = [],
   isOpen,
   onClose,
+  dish = null,
+  categories = [],
   onSave
 }) {
-  const { showAlert, showConfirm } = useAlertConfirm();
+  const { showAlert } = useAlertConfirm();
   const fileInputRef = useRef(null);
 
   // Imágenes existentes o array inicial
@@ -25,8 +25,10 @@ export function AdminDishModal({
   const [formData, setFormData] = useState({
     id: dish?.id || '',
     name: dish?.name || '',
+    name_en: dish?.name_en || dish?.nameEn || '',
     code: dish?.code || '',
     description: dish?.description || '',
+    description_en: dish?.description_en || dish?.descriptionEn || '',
     price: dish ? Number(dish.price) : 15.00,
     category_id: dish?.category_id || (categories[0]?.id || 'sandwiches'),
     image_url: dish?.image_url || dish?.image || '',
@@ -46,7 +48,7 @@ export function AdminDishModal({
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  // Subir una o varias imágenes en paralelo a Supabase Storage
+  // Subir múltiples fotos al Bucket CDN de Supabase Storage
   const handleMultipleImageUpload = async (e) => {
     const files = Array.from(e.target.files || []);
     if (files.length === 0) return;
@@ -158,9 +160,9 @@ export function AdminDishModal({
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundColor: 'rgba(0, 0, 0, 0.78)',
-        backdropFilter: 'blur(12px)',
-        WebkitBackdropFilter: 'blur(12px)',
+        backgroundColor: 'rgba(0, 0, 0, 0.45)',
+        backdropFilter: 'blur(8px)',
+        WebkitBackdropFilter: 'blur(8px)',
         zIndex: 1000,
         display: 'flex',
         alignItems: 'center',
@@ -174,10 +176,10 @@ export function AdminDishModal({
           width: '100%',
           maxWidth: '580px',
           maxHeight: '90vh',
-          backgroundColor: 'var(--bg-card, #1c1d22)',
-          color: '#ffffff',
+          backgroundColor: '#ffffff',
+          color: '#1f1e1c',
           borderRadius: '24px',
-          boxShadow: '0 25px 60px rgba(0, 0, 0, 0.75)',
+          boxShadow: '0 25px 60px rgba(0, 0, 0, 0.2)',
           overflow: 'hidden',
           display: 'flex',
           flexDirection: 'column',
@@ -189,18 +191,18 @@ export function AdminDishModal({
         <div
           style={{
             padding: '1.25rem 1.5rem',
-            backgroundColor: 'rgba(255, 255, 255, 0.03)',
+            backgroundColor: '#fcf9f2',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between'
           }}
         >
           <div>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 800, margin: 0 }}>
+            <h2 style={{ fontSize: '1.2rem', fontWeight: 900, margin: 0, color: '#1f1e1c' }}>
               {dish ? 'Editar Plato' : 'Nuevo Plato'}
             </h2>
-            <p style={{ fontSize: '0.8rem', color: '#9ca3af', margin: '0.2rem 0 0 0' }}>
-              Galería múltiple & visibilidad en Supabase
+            <p style={{ fontSize: '0.8rem', color: '#6b635b', margin: '0.2rem 0 0 0' }}>
+              Español, inglés, galería múltiple y visibilidad
             </p>
           </div>
 
@@ -208,25 +210,37 @@ export function AdminDishModal({
             type="button"
             onClick={onClose}
             style={{
-              backgroundColor: 'rgba(255, 255, 255, 0.08)',
+              backgroundColor: '#f5efe4',
               border: 'none !important',
               borderRadius: '9999px',
               padding: '0.5rem',
-              color: '#ffffff',
-              cursor: 'pointer'
+              color: '#1f1e1c',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
             }}
           >
             <X size={18} />
           </button>
         </div>
 
-        {/* Formulario con Scroll */}
-        <form onSubmit={handleSubmit} style={{ padding: '1.5rem', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          {/* Nombre y Código */}
+        {/* Formulario con scroll suave */}
+        <form
+          onSubmit={handleSubmit}
+          style={{
+            padding: '1.5rem',
+            overflowY: 'auto',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1rem'
+          }}
+        >
+          {/* Nombre en Español y Código */}
           <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '0.75rem' }}>
             <div>
-              <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#9ca3af', marginBottom: '0.35rem' }}>
-                Nombre del Plato *
+              <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#6b635b', marginBottom: '0.35rem' }}>
+                Nombre del Plato (Español) *
               </label>
               <input
                 type="text"
@@ -237,17 +251,19 @@ export function AdminDishModal({
                 style={{
                   width: '100%',
                   padding: '0.65rem 0.85rem',
-                  backgroundColor: 'rgba(255, 255, 255, 0.06)',
-                  color: '#ffffff',
+                  backgroundColor: '#f5efe4',
+                  color: '#1f1e1c',
                   borderRadius: '12px',
                   fontSize: '0.88rem',
-                  border: 'none !important'
+                  fontWeight: 600,
+                  border: 'none !important',
+                  outline: 'none'
                 }}
               />
             </div>
 
             <div>
-              <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#9ca3af', marginBottom: '0.35rem' }}>
+              <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#6b635b', marginBottom: '0.35rem' }}>
                 Código
               </label>
               <input
@@ -258,20 +274,46 @@ export function AdminDishModal({
                 style={{
                   width: '100%',
                   padding: '0.65rem 0.85rem',
-                  backgroundColor: 'rgba(255, 255, 255, 0.06)',
-                  color: '#ffffff',
+                  backgroundColor: '#f5efe4',
+                  color: '#1f1e1c',
                   borderRadius: '12px',
                   fontSize: '0.88rem',
-                  border: 'none !important'
+                  fontWeight: 600,
+                  border: 'none !important',
+                  outline: 'none'
                 }}
               />
             </div>
           </div>
 
+          {/* Nombre en Inglés */}
+          <div>
+            <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#6b635b', marginBottom: '0.35rem' }}>
+              Nombre en Inglés (Name in English)
+            </label>
+            <input
+              type="text"
+              value={formData.name_en}
+              onChange={(e) => handleChange('name_en', e.target.value)}
+              placeholder="Ej: Classic Peruvian Ceviche with Sweet Potato & Corn"
+              style={{
+                width: '100%',
+                padding: '0.65rem 0.85rem',
+                backgroundColor: '#f5efe4',
+                color: '#1f1e1c',
+                borderRadius: '12px',
+                fontSize: '0.88rem',
+                fontWeight: 600,
+                border: 'none !important',
+                outline: 'none'
+              }}
+            />
+          </div>
+
           {/* Categoría y Precio */}
           <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: '0.75rem' }}>
             <div>
-              <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#9ca3af', marginBottom: '0.35rem' }}>
+              <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#6b635b', marginBottom: '0.35rem' }}>
                 Categoría *
               </label>
               <select
@@ -280,16 +322,17 @@ export function AdminDishModal({
                 style={{
                   width: '100%',
                   padding: '0.65rem 0.85rem',
-                  backgroundColor: 'rgba(255, 255, 255, 0.06)',
-                  color: '#ffffff',
+                  backgroundColor: '#f5efe4',
+                  color: '#1f1e1c',
                   borderRadius: '12px',
                   fontSize: '0.88rem',
+                  fontWeight: 700,
                   border: 'none !important',
                   cursor: 'pointer'
                 }}
               >
                 {categories.map(cat => (
-                  <option key={cat.id} value={cat.id} style={{ backgroundColor: '#1c1d22', color: '#ffffff' }}>
+                  <option key={cat.id} value={cat.id}>
                     {cat.name}
                   </option>
                 ))}
@@ -297,7 +340,7 @@ export function AdminDishModal({
             </div>
 
             <div>
-              <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#9ca3af', marginBottom: '0.35rem' }}>
+              <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#6b635b', marginBottom: '0.35rem' }}>
                 Precio ($ USD) *
               </label>
               <input
@@ -310,47 +353,76 @@ export function AdminDishModal({
                 style={{
                   width: '100%',
                   padding: '0.65rem 0.85rem',
-                  backgroundColor: 'rgba(255, 255, 255, 0.06)',
-                  color: '#ffffff',
+                  backgroundColor: '#f5efe4',
+                  color: '#1f1e1c',
                   borderRadius: '12px',
                   fontSize: '0.88rem',
-                  border: 'none !important'
+                  fontWeight: 700,
+                  border: 'none !important',
+                  outline: 'none'
                 }}
               />
             </div>
           </div>
 
-          {/* Descripción */}
+          {/* Descripción en Español */}
           <div>
-            <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#9ca3af', marginBottom: '0.35rem' }}>
-              Descripción / Ingredientes
+            <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#6b635b', marginBottom: '0.35rem' }}>
+              Descripción en Español (Ingredientes y Sabor)
             </label>
             <textarea
               rows={2}
               value={formData.description}
               onChange={(e) => handleChange('description', e.target.value)}
-              placeholder="Detalla los ingredientes y preparación..."
+              placeholder="Detalla los ingredientes y preparación en español..."
               style={{
                 width: '100%',
                 padding: '0.65rem 0.85rem',
-                backgroundColor: 'rgba(255, 255, 255, 0.06)',
-                color: '#ffffff',
+                backgroundColor: '#f5efe4',
+                color: '#1f1e1c',
                 borderRadius: '12px',
                 fontSize: '0.88rem',
+                fontWeight: 600,
                 border: 'none !important',
+                outline: 'none',
+                resize: 'none'
+              }}
+            />
+          </div>
+
+          {/* Descripción en Inglés */}
+          <div>
+            <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#6b635b', marginBottom: '0.35rem' }}>
+              Descripción en Inglés (Description in English)
+            </label>
+            <textarea
+              rows={2}
+              value={formData.description_en}
+              onChange={(e) => handleChange('description_en', e.target.value)}
+              placeholder="English description and ingredients for foreign guests..."
+              style={{
+                width: '100%',
+                padding: '0.65rem 0.85rem',
+                backgroundColor: '#f5efe4',
+                color: '#1f1e1c',
+                borderRadius: '12px',
+                fontSize: '0.88rem',
+                fontWeight: 600,
+                border: 'none !important',
+                outline: 'none',
                 resize: 'none'
               }}
             />
           </div>
 
           {/* Galería Múltiple de Imágenes */}
-          <div style={{ backgroundColor: 'rgba(0, 0, 0, 0.25)', padding: '1rem', borderRadius: '16px' }}>
+          <div style={{ backgroundColor: '#fcf9f2', padding: '1rem', borderRadius: '16px' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.65rem' }}>
               <div>
-                <label style={{ fontSize: '0.85rem', fontWeight: 800, color: '#ffffff' }}>
+                <label style={{ fontSize: '0.85rem', fontWeight: 800, color: '#1f1e1c' }}>
                   Galería de Fotos ({formData.images.length})
                 </label>
-                <span style={{ display: 'block', fontSize: '0.72rem', color: '#9ca3af' }}>
+                <span style={{ display: 'block', fontSize: '0.72rem', color: '#6b635b' }}>
                   Sube múltiples fotos. La foto con estrella es la portada principal.
                 </span>
               </div>
@@ -371,54 +443,55 @@ export function AdminDishModal({
                 style={{
                   backgroundColor: 'var(--rojo, #d91c2b)',
                   color: '#ffffff',
-                  fontWeight: 800,
                   fontSize: '0.78rem',
-                  padding: '0.5rem 0.85rem',
-                  borderRadius: '10px',
+                  fontWeight: 800,
+                  padding: '0.45rem 0.85rem',
+                  borderRadius: '9999px',
+                  border: 'none !important',
+                  cursor: isUploading ? 'not-allowed' : 'pointer',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '0.4rem',
-                  cursor: 'pointer',
-                  border: 'none !important'
+                  gap: '0.35rem'
                 }}
               >
-                {isUploading ? <Loader2 size={14} className="spin-icon" /> : <Upload size={14} />}
-                <span>{isUploading ? 'Subiendo...' : '+ Agregar Fotos'}</span>
+                <Upload size={14} />
+                <span>{isUploading ? 'Subiendo...' : 'Subir Fotos'}</span>
               </button>
             </div>
 
-            {/* Cuadrícula de Galería */}
-            {formData.images.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: '1.5rem', color: '#6b7280', fontSize: '0.82rem' }}>
-                <ImageIcon size={28} style={{ margin: '0 auto 0.4rem', opacity: 0.4 }} />
-                <span>Aún no hay fotos en este plato. Puedes subir una o varias imágenes.</span>
-              </div>
-            ) : (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(80px, 1fr))', gap: '0.65rem' }}>
+            {/* Cuadrícula de Previsualización de Imágenes */}
+            {formData.images.length > 0 ? (
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fill, minmax(80px, 1fr))',
+                  gap: '0.5rem',
+                  maxHeight: '180px',
+                  overflowY: 'auto'
+                }}
+              >
                 {formData.images.map((imgUrl, idx) => {
-                  const isMain = formData.platos_image === imgUrl;
+                  const isMain = (formData.platos_image === imgUrl) || (!formData.platos_image && idx === 0);
                   return (
                     <div
                       key={idx}
                       style={{
                         position: 'relative',
                         width: '100%',
-                        aspectRatio: '1',
-                        borderRadius: '12px',
+                        height: '75px',
+                        borderRadius: '10px',
                         overflow: 'hidden',
-                        backgroundColor: '#111215',
-                        boxShadow: isMain ? '0 0 0 2px var(--naranja, #f97316)' : 'none'
+                        backgroundColor: '#f5efe4',
+                        boxShadow: isMain ? '0 0 0 2px var(--rojo, #d91c2b)' : 'none'
                       }}
                     >
                       <img
                         src={imgUrl}
                         alt={`Foto ${idx + 1}`}
-                        style={{ width: '100%', height: '100%', objectFit: 'cover', cursor: 'pointer' }}
-                        onClick={() => handleSetMainImage(imgUrl)}
-                        title="Toca para seleccionar como foto principal"
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                       />
 
-                      {/* Botón Estrella Portada */}
+                      {/* Botón Estrella: Establecer como Principal */}
                       <button
                         type="button"
                         onClick={() => handleSetMainImage(imgUrl)}
@@ -426,21 +499,19 @@ export function AdminDishModal({
                           position: 'absolute',
                           top: '4px',
                           left: '4px',
-                          backgroundColor: isMain ? 'var(--naranja, #f97316)' : 'rgba(0,0,0,0.6)',
+                          backgroundColor: isMain ? 'var(--rojo, #d91c2b)' : 'rgba(0,0,0,0.5)',
                           color: '#ffffff',
-                          border: 'none !important',
-                          borderRadius: '6px',
+                          borderRadius: '9999px',
                           padding: '0.2rem',
-                          cursor: 'pointer',
-                          display: 'flex',
-                          alignItems: 'center'
+                          border: 'none !important',
+                          cursor: 'pointer'
                         }}
-                        title={isMain ? 'Foto Principal' : 'Hacer foto principal'}
+                        title={isMain ? 'Foto Principal' : 'Establecer como Principal'}
                       >
-                        <Star size={11} fill={isMain ? '#ffffff' : 'none'} />
+                        <Star size={12} fill={isMain ? '#ffffff' : 'none'} />
                       </button>
 
-                      {/* Botón Eliminar de la Galería */}
+                      {/* Botón Borrar Foto */}
                       <button
                         type="button"
                         onClick={() => handleRemoveImage(imgUrl)}
@@ -450,138 +521,99 @@ export function AdminDishModal({
                           right: '4px',
                           backgroundColor: 'rgba(239, 68, 68, 0.85)',
                           color: '#ffffff',
-                          border: 'none !important',
-                          borderRadius: '6px',
+                          borderRadius: '9999px',
                           padding: '0.2rem',
-                          cursor: 'pointer',
-                          display: 'flex',
-                          alignItems: 'center'
+                          border: 'none !important',
+                          cursor: 'pointer'
                         }}
-                        title="Quitar foto de la galería"
+                        title="Eliminar esta foto"
                       >
-                        <Trash2 size={11} />
+                        <Trash2 size={12} />
                       </button>
                     </div>
                   );
                 })}
               </div>
+            ) : (
+              <div
+                style={{
+                  textAlign: 'center',
+                  padding: '1.5rem',
+                  color: '#6b635b',
+                  fontSize: '0.8rem',
+                  fontStyle: 'italic'
+                }}
+              >
+                No hay fotos en la galería todavía.
+              </div>
             )}
           </div>
 
-          {/* Badge */}
-          <div>
-            <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#9ca3af', marginBottom: '0.35rem' }}>
-              Etiqueta Promocional / Badge
-            </label>
-            <input
-              type="text"
-              value={formData.badge}
-              onChange={(e) => handleChange('badge', e.target.value)}
-              placeholder="Ej: Recomendado, Más Pedido, Especial..."
-              style={{
-                width: '100%',
-                padding: '0.55rem 0.85rem',
-                backgroundColor: 'rgba(255, 255, 255, 0.06)',
-                color: '#ffffff',
-                borderRadius: '12px',
-                fontSize: '0.85rem',
-                border: 'none !important'
-              }}
-            />
-          </div>
-
-          {/* Dos Switches: Disponibilidad (Agotado) y Visibilidad (Ocultar) */}
+          {/* Opciones de Disponibilidad y Visibilidad */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
-            {/* Switch Disponible */}
+            {/* Disponibilidad */}
             <div
               onClick={() => handleChange('is_available', !formData.is_available)}
               style={{
+                backgroundColor: formData.is_available ? '#eff6ff' : '#fef2f2',
+                padding: '0.85rem',
+                borderRadius: '12px',
+                cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.65rem',
-                backgroundColor: formData.is_available ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.15)',
-                padding: '0.75rem 0.85rem',
-                borderRadius: '12px',
-                cursor: 'pointer'
+                justifyContent: 'space-between',
+                transition: 'all 0.2s'
               }}
             >
-              <div
-                style={{
-                  width: '20px',
-                  height: '20px',
-                  borderRadius: '6px',
-                  backgroundColor: formData.is_available ? '#10b981' : '#ef4444',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: '#ffffff',
-                  flexShrink: 0
-                }}
-              >
-                {formData.is_available && <Check size={14} strokeWidth={3} />}
-              </div>
               <div>
-                <span style={{ fontSize: '0.8rem', fontWeight: 800, color: formData.is_available ? '#10b981' : '#ef4444', display: 'block' }}>
+                <span style={{ fontSize: '0.82rem', fontWeight: 800, color: formData.is_available ? '#2563eb' : '#b91c1c' }}>
                   {formData.is_available ? 'Disponible' : 'Agotado'}
                 </span>
-                <span style={{ fontSize: '0.68rem', color: '#9ca3af' }}>
-                  {formData.is_available ? 'En cocina hoy' : 'Pausar pedidos'}
+                <span style={{ display: 'block', fontSize: '0.7rem', color: '#6b635b' }}>
+                  {formData.is_available ? 'Comensales pueden pedir' : 'Marcado como no disponible'}
                 </span>
               </div>
+              <Check size={16} color={formData.is_available ? '#2563eb' : 'transparent'} />
             </div>
 
-            {/* Switch Ocultar / Mostrar */}
+            {/* Visibilidad */}
             <div
               onClick={() => handleChange('is_active', !formData.is_active)}
               style={{
+                backgroundColor: formData.is_active ? '#ecfdf5' : '#fef3c7',
+                padding: '0.85rem',
+                borderRadius: '12px',
+                cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.65rem',
-                backgroundColor: formData.is_active ? 'rgba(59, 130, 246, 0.15)' : 'rgba(156, 163, 175, 0.15)',
-                padding: '0.75rem 0.85rem',
-                borderRadius: '12px',
-                cursor: 'pointer'
+                justifyContent: 'space-between',
+                transition: 'all 0.2s'
               }}
             >
-              <div
-                style={{
-                  width: '20px',
-                  height: '20px',
-                  borderRadius: '6px',
-                  backgroundColor: formData.is_active ? '#3b82f6' : '#6b7280',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: '#ffffff',
-                  flexShrink: 0
-                }}
-              >
-                {formData.is_active ? <Eye size={13} /> : <EyeOff size={13} />}
-              </div>
               <div>
-                <span style={{ fontSize: '0.8rem', fontWeight: 800, color: formData.is_active ? '#3b82f6' : '#9ca3af', display: 'block' }}>
-                  {formData.is_active ? 'Visible en Menú' : 'Oculto'}
+                <span style={{ fontSize: '0.82rem', fontWeight: 800, color: formData.is_active ? '#059669' : '#b45309' }}>
+                  {formData.is_active ? 'Visible' : 'Oculto'}
                 </span>
-                <span style={{ fontSize: '0.68rem', color: '#9ca3af' }}>
-                  {formData.is_active ? 'Público en carta' : 'Oculto de carta'}
+                <span style={{ display: 'block', fontSize: '0.7rem', color: '#6b635b' }}>
+                  {formData.is_active ? 'Se muestra en la carta' : 'Oculto al público'}
                 </span>
               </div>
+              {formData.is_active ? <Eye size={16} color="#059669" /> : <EyeOff size={16} color="#b45309" />}
             </div>
           </div>
 
-          {/* Botones de Guardar */}
-          <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.5rem' }}>
+          {/* Botones de Pie */}
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', marginTop: '0.5rem' }}>
             <button
               type="button"
               onClick={onClose}
               style={{
-                flex: 1,
-                backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                color: '#ffffff',
+                backgroundColor: '#f5efe4',
+                color: '#1f1e1c',
+                padding: '0.7rem 1.25rem',
+                borderRadius: '12px',
                 fontWeight: 700,
-                fontSize: '0.88rem',
-                padding: '0.85rem',
-                borderRadius: '14px',
+                fontSize: '0.85rem',
                 cursor: 'pointer',
                 border: 'none !important'
               }}
@@ -593,24 +625,18 @@ export function AdminDishModal({
               type="submit"
               disabled={isSubmitting}
               style={{
-                flex: 2,
                 backgroundColor: 'var(--rojo, #d91c2b)',
                 color: '#ffffff',
+                padding: '0.7rem 1.5rem',
+                borderRadius: '12px',
                 fontWeight: 800,
-                fontSize: '0.88rem',
-                padding: '0.85rem',
-                borderRadius: '14px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '0.5rem',
-                cursor: 'pointer',
+                fontSize: '0.85rem',
+                cursor: isSubmitting ? 'not-allowed' : 'pointer',
                 border: 'none !important',
-                boxShadow: '0 4px 15px rgba(217, 28, 43, 0.4)'
+                boxShadow: '0 4px 15px rgba(217, 28, 43, 0.3)'
               }}
             >
-              {isSubmitting ? <Loader2 size={16} className="spin-icon" /> : <Check size={16} />}
-              <span>{dish ? 'Guardar Cambios' : 'Crear Plato'}</span>
+              {isSubmitting ? 'Guardando...' : 'Guardar Plato'}
             </button>
           </div>
         </form>

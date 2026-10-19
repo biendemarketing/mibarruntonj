@@ -90,31 +90,31 @@ export function AdminPrintableTab() {
           alignItems: 'center',
           justifyContent: 'space-between',
           gap: '1rem',
-          backgroundColor: 'var(--bg-card, #1c1d22)',
-          padding: '1.25rem',
-          borderRadius: '16px',
-          boxShadow: '0 4px 20px rgba(0,0,0,0.18)',
+          backgroundColor: '#ffffff',
+          padding: '1.25rem 1.35rem',
+          borderRadius: '20px',
+          boxShadow: '0 4px 20px rgba(0,0,0,0.04)',
           border: 'none !important'
         }}
       >
         <div>
-          <h2 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#ffffff', margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Printer size={20} color="var(--rojo, #d91c2b)" />
+          <h2 style={{ fontSize: '1.2rem', fontWeight: 900, color: '#1f1e1c', margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <Printer size={22} color="var(--rojo, #d91c2b)" />
             Personalización del Menú Imprimible (11x8.5)
           </h2>
-          <span style={{ fontSize: '0.8rem', color: '#9ca3af' }}>
+          <span style={{ fontSize: '0.82rem', color: '#78716c' }}>
             Modifica títulos, horarios, teléfonos, leyendas y nota de servicio del 18% reflejados en la carta PDF e imprimible.
           </span>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
           <button
             type="button"
             onClick={loadConfig}
             disabled={isLoading}
             style={{
-              backgroundColor: 'rgba(255, 255, 255, 0.08)',
-              color: '#ffffff',
+              backgroundColor: '#f5efe4',
+              color: '#1f1e1c',
               padding: '0.65rem 0.95rem',
               borderRadius: '9999px',
               fontSize: '0.82rem',
@@ -134,8 +134,8 @@ export function AdminPrintableTab() {
             type="button"
             onClick={() => openPrintableMenu('light')}
             style={{
-              backgroundColor: 'rgba(255, 255, 255, 0.08)',
-              color: '#ffffff',
+              backgroundColor: '#f5efe4',
+              color: '#1f1e1c',
               padding: '0.65rem 1.15rem',
               borderRadius: '9999px',
               fontSize: '0.82rem',
@@ -166,23 +166,23 @@ export function AdminPrintableTab() {
           {/* Bloque 1: Identidad y Portada */}
           <div
             style={{
-              backgroundColor: 'var(--bg-card, #1c1d22)',
-              borderRadius: '16px',
-              padding: '1.25rem',
-              boxShadow: '0 4px 20px rgba(0,0,0,0.18)',
+              backgroundColor: '#ffffff',
+              borderRadius: '20px',
+              padding: '1.35rem',
+              boxShadow: '0 4px 16px rgba(0,0,0,0.04)',
               border: 'none !important',
               display: 'flex',
               flexDirection: 'column',
-              gap: '1rem'
+              gap: '1.1rem'
             }}
           >
-            <h3 style={{ fontSize: '0.95rem', fontWeight: 800, color: 'var(--rojo, #d91c2b)', margin: 0, display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-              <FileText size={16} />
+            <h3 style={{ fontSize: '1rem', fontWeight: 900, color: 'var(--rojo, #d91c2b)', margin: 0, display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+              <FileText size={18} />
               Cabecera y Títulos de Portada
             </h3>
 
             <div>
-              <label style={{ display: 'block', fontSize: '0.78rem', color: '#9ca3af', fontWeight: 700, marginBottom: '0.35rem' }}>
+              <label style={{ display: 'block', fontSize: '0.8rem', color: '#1f1e1c', fontWeight: 800, marginBottom: '0.35rem' }}>
                 Nombre / Título Principal
               </label>
               <input
@@ -191,12 +191,12 @@ export function AdminPrintableTab() {
                 onChange={(e) => handleChange('title', e.target.value)}
                 style={{
                   width: '100%',
-                  padding: '0.7rem 0.9rem',
-                  backgroundColor: 'rgba(255, 255, 255, 0.06)',
-                  color: '#ffffff',
-                  borderRadius: '10px',
+                  padding: '0.75rem 0.95rem',
+                  backgroundColor: '#f5efe4',
+                  color: '#1f1e1c',
+                  borderRadius: '12px',
                   border: 'none !important',
-                  fontSize: '0.88rem',
+                  fontSize: '0.9rem',
                   fontWeight: 600,
                   outline: 'none'
                 }}
@@ -204,7 +204,7 @@ export function AdminPrintableTab() {
             </div>
 
             <div>
-              <label style={{ display: 'block', fontSize: '0.78rem', color: '#9ca3af', fontWeight: 700, marginBottom: '0.35rem' }}>
+              <label style={{ display: 'block', fontSize: '0.8rem', color: '#1f1e1c', fontWeight: 800, marginBottom: '0.35rem' }}>
                 Subtítulo (Ej: Restaurant & Grocery)
               </label>
               <input
@@ -213,12 +213,12 @@ export function AdminPrintableTab() {
                 onChange={(e) => handleChange('subtitle', e.target.value)}
                 style={{
                   width: '100%',
-                  padding: '0.7rem 0.9rem',
-                  backgroundColor: 'rgba(255, 255, 255, 0.06)',
-                  color: '#ffffff',
-                  borderRadius: '10px',
+                  padding: '0.75rem 0.95rem',
+                  backgroundColor: '#f5efe4',
+                  color: '#1f1e1c',
+                  borderRadius: '12px',
                   border: 'none !important',
-                  fontSize: '0.88rem',
+                  fontSize: '0.9rem',
                   fontWeight: 600,
                   outline: 'none'
                 }}
@@ -226,7 +226,7 @@ export function AdminPrintableTab() {
             </div>
 
             <div>
-              <label style={{ display: 'block', fontSize: '0.78rem', color: '#9ca3af', fontWeight: 700, marginBottom: '0.35rem' }}>
+              <label style={{ display: 'block', fontSize: '0.8rem', color: '#1f1e1c', fontWeight: 800, marginBottom: '0.35rem' }}>
                 Slogan / Especialidad (Ej: Comida criolla peruana)
               </label>
               <input
@@ -235,12 +235,12 @@ export function AdminPrintableTab() {
                 onChange={(e) => handleChange('tagline', e.target.value)}
                 style={{
                   width: '100%',
-                  padding: '0.7rem 0.9rem',
-                  backgroundColor: 'rgba(255, 255, 255, 0.06)',
-                  color: '#ffffff',
-                  borderRadius: '10px',
+                  padding: '0.75rem 0.95rem',
+                  backgroundColor: '#f5efe4',
+                  color: '#1f1e1c',
+                  borderRadius: '12px',
                   border: 'none !important',
-                  fontSize: '0.88rem',
+                  fontSize: '0.9rem',
                   fontWeight: 600,
                   outline: 'none'
                 }}
@@ -248,7 +248,7 @@ export function AdminPrintableTab() {
             </div>
 
             <div>
-              <label style={{ display: 'block', fontSize: '0.78rem', color: '#9ca3af', fontWeight: 700, marginBottom: '0.35rem' }}>
+              <label style={{ display: 'block', fontSize: '0.8rem', color: '#1f1e1c', fontWeight: 800, marginBottom: '0.35rem' }}>
                 Cinta / Medallón Destacado
               </label>
               <input
@@ -257,12 +257,12 @@ export function AdminPrintableTab() {
                 onChange={(e) => handleChange('bannerText', e.target.value)}
                 style={{
                   width: '100%',
-                  padding: '0.7rem 0.9rem',
-                  backgroundColor: 'rgba(255, 255, 255, 0.06)',
-                  color: '#ffffff',
-                  borderRadius: '10px',
+                  padding: '0.75rem 0.95rem',
+                  backgroundColor: '#f5efe4',
+                  color: '#1f1e1c',
+                  borderRadius: '12px',
                   border: 'none !important',
-                  fontSize: '0.88rem',
+                  fontSize: '0.9rem',
                   fontWeight: 600,
                   outline: 'none'
                 }}
@@ -273,23 +273,23 @@ export function AdminPrintableTab() {
           {/* Bloque 2: Información de Contacto, Horario y Propina */}
           <div
             style={{
-              backgroundColor: 'var(--bg-card, #1c1d22)',
-              borderRadius: '16px',
-              padding: '1.25rem',
-              boxShadow: '0 4px 20px rgba(0,0,0,0.18)',
+              backgroundColor: '#ffffff',
+              borderRadius: '20px',
+              padding: '1.35rem',
+              boxShadow: '0 4px 16px rgba(0,0,0,0.04)',
               border: 'none !important',
               display: 'flex',
               flexDirection: 'column',
-              gap: '1rem'
+              gap: '1.1rem'
             }}
           >
-            <h3 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#f59e0b', margin: 0, display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-              <Clock size={16} />
+            <h3 style={{ fontSize: '1rem', fontWeight: 900, color: '#d97706', margin: 0, display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+              <Clock size={18} />
               Horarios, Contacto y Leyenda del 18%
             </h3>
 
             <div>
-              <label style={{ display: 'block', fontSize: '0.78rem', color: '#9ca3af', fontWeight: 700, marginBottom: '0.35rem' }}>
+              <label style={{ display: 'block', fontSize: '0.8rem', color: '#1f1e1c', fontWeight: 800, marginBottom: '0.35rem' }}>
                 Horario de Atención (Ej: Atención 24 Horas)
               </label>
               <input
@@ -298,12 +298,12 @@ export function AdminPrintableTab() {
                 onChange={(e) => handleChange('schedule', e.target.value)}
                 style={{
                   width: '100%',
-                  padding: '0.7rem 0.9rem',
-                  backgroundColor: 'rgba(255, 255, 255, 0.06)',
-                  color: '#ffffff',
-                  borderRadius: '10px',
+                  padding: '0.75rem 0.95rem',
+                  backgroundColor: '#f5efe4',
+                  color: '#1f1e1c',
+                  borderRadius: '12px',
                   border: 'none !important',
-                  fontSize: '0.88rem',
+                  fontSize: '0.9rem',
                   fontWeight: 600,
                   outline: 'none'
                 }}
@@ -311,7 +311,7 @@ export function AdminPrintableTab() {
             </div>
 
             <div>
-              <label style={{ display: 'block', fontSize: '0.78rem', color: '#9ca3af', fontWeight: 700, marginBottom: '0.35rem' }}>
+              <label style={{ display: 'block', fontSize: '0.8rem', color: '#1f1e1c', fontWeight: 800, marginBottom: '0.35rem' }}>
                 Teléfono de Contacto & Pedidos
               </label>
               <input
@@ -320,12 +320,12 @@ export function AdminPrintableTab() {
                 onChange={(e) => handleChange('phone', e.target.value)}
                 style={{
                   width: '100%',
-                  padding: '0.7rem 0.9rem',
-                  backgroundColor: 'rgba(255, 255, 255, 0.06)',
-                  color: '#ffffff',
-                  borderRadius: '10px',
+                  padding: '0.75rem 0.95rem',
+                  backgroundColor: '#f5efe4',
+                  color: '#1f1e1c',
+                  borderRadius: '12px',
                   border: 'none !important',
-                  fontSize: '0.88rem',
+                  fontSize: '0.9rem',
                   fontWeight: 600,
                   outline: 'none'
                 }}
@@ -333,7 +333,7 @@ export function AdminPrintableTab() {
             </div>
 
             <div>
-              <label style={{ display: 'block', fontSize: '0.78rem', color: '#9ca3af', fontWeight: 700, marginBottom: '0.35rem' }}>
+              <label style={{ display: 'block', fontSize: '0.8rem', color: '#1f1e1c', fontWeight: 800, marginBottom: '0.35rem' }}>
                 Dirección Física
               </label>
               <input
@@ -342,12 +342,12 @@ export function AdminPrintableTab() {
                 onChange={(e) => handleChange('address', e.target.value)}
                 style={{
                   width: '100%',
-                  padding: '0.7rem 0.9rem',
-                  backgroundColor: 'rgba(255, 255, 255, 0.06)',
-                  color: '#ffffff',
-                  borderRadius: '10px',
+                  padding: '0.75rem 0.95rem',
+                  backgroundColor: '#f5efe4',
+                  color: '#1f1e1c',
+                  borderRadius: '12px',
                   border: 'none !important',
-                  fontSize: '0.88rem',
+                  fontSize: '0.9rem',
                   fontWeight: 600,
                   outline: 'none'
                 }}
@@ -355,7 +355,7 @@ export function AdminPrintableTab() {
             </div>
 
             <div>
-              <label style={{ display: 'block', fontSize: '0.78rem', color: '#9ca3af', fontWeight: 700, marginBottom: '0.35rem' }}>
+              <label style={{ display: 'block', fontSize: '0.8rem', color: '#1f1e1c', fontWeight: 800, marginBottom: '0.35rem' }}>
                 Aviso de Gratitud del 18% (Español)
               </label>
               <input
@@ -364,12 +364,12 @@ export function AdminPrintableTab() {
                 onChange={(e) => handleChange('gratitudeTextEs', e.target.value)}
                 style={{
                   width: '100%',
-                  padding: '0.7rem 0.9rem',
-                  backgroundColor: 'rgba(255, 255, 255, 0.06)',
-                  color: '#ffffff',
-                  borderRadius: '10px',
+                  padding: '0.75rem 0.95rem',
+                  backgroundColor: '#f5efe4',
+                  color: '#1f1e1c',
+                  borderRadius: '12px',
                   border: 'none !important',
-                  fontSize: '0.88rem',
+                  fontSize: '0.9rem',
                   fontWeight: 600,
                   outline: 'none'
                 }}
@@ -377,7 +377,7 @@ export function AdminPrintableTab() {
             </div>
 
             <div>
-              <label style={{ display: 'block', fontSize: '0.78rem', color: '#9ca3af', fontWeight: 700, marginBottom: '0.35rem' }}>
+              <label style={{ display: 'block', fontSize: '0.8rem', color: '#1f1e1c', fontWeight: 800, marginBottom: '0.35rem' }}>
                 Aviso de Gratitud del 18% (Inglés)
               </label>
               <input
@@ -386,12 +386,12 @@ export function AdminPrintableTab() {
                 onChange={(e) => handleChange('gratitudeTextEn', e.target.value)}
                 style={{
                   width: '100%',
-                  padding: '0.7rem 0.9rem',
-                  backgroundColor: 'rgba(255, 255, 255, 0.06)',
-                  color: '#ffffff',
-                  borderRadius: '10px',
+                  padding: '0.75rem 0.95rem',
+                  backgroundColor: '#f5efe4',
+                  color: '#1f1e1c',
+                  borderRadius: '12px',
                   border: 'none !important',
-                  fontSize: '0.88rem',
+                  fontSize: '0.9rem',
                   fontWeight: 600,
                   outline: 'none'
                 }}
@@ -417,7 +417,7 @@ export function AdminPrintableTab() {
               display: 'flex',
               alignItems: 'center',
               gap: '0.55rem',
-              boxShadow: '0 4px 20px rgba(217, 28, 43, 0.4)',
+              boxShadow: '0 4px 20px rgba(217, 28, 43, 0.35)',
               transition: 'all 0.25s ease'
             }}
           >

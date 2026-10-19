@@ -112,39 +112,45 @@ export function AdminWaitersTab({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          backgroundColor: 'var(--bg-card, #1c1d22)',
-          padding: '1rem',
-          borderRadius: '16px',
-          boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
-          border: 'none !important'
+          backgroundColor: '#ffffff',
+          padding: '1.15rem 1.35rem',
+          borderRadius: '20px',
+          boxShadow: '0 4px 20px rgba(0,0,0,0.04)',
+          border: 'none !important',
+          flexWrap: 'wrap',
+          gap: '1rem'
         }}
       >
         <div>
-          <h2 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+          <h2 style={{ fontSize: '1.2rem', fontWeight: 900, color: '#1f1e1c', margin: 0 }}>
             Equipo y Meseros
           </h2>
-          <span style={{ fontSize: '0.8rem', color: '#9ca3af' }}>
+          <span style={{ fontSize: '0.82rem', color: '#78716c' }}>
             {waiters.length} colaboradores registrados para atención de mesas
           </span>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
           <button
             type="button"
             onClick={onRefresh}
             disabled={isLoading}
             style={{
-              backgroundColor: 'rgba(255, 255, 255, 0.08)',
-              color: '#ffffff',
-              padding: '0.65rem 0.85rem',
+              backgroundColor: '#f5efe4',
+              color: '#1f1e1c',
+              padding: '0.65rem 0.95rem',
               borderRadius: '9999px',
               fontSize: '0.82rem',
               fontWeight: 700,
               cursor: 'pointer',
-              border: 'none !important'
+              border: 'none !important',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.4rem'
             }}
           >
             <RefreshCw size={15} className={isLoading ? 'spin-icon' : ''} />
+            <span>Refrescar</span>
           </button>
 
           <button
@@ -162,7 +168,7 @@ export function AdminWaitersTab({
               display: 'flex',
               alignItems: 'center',
               gap: '0.45rem',
-              boxShadow: '0 4px 15px rgba(217, 28, 43, 0.4)'
+              boxShadow: '0 4px 15px rgba(217, 28, 43, 0.3)'
             }}
           >
             <Plus size={18} />
@@ -185,25 +191,26 @@ export function AdminWaitersTab({
             <div
               key={waiter.id}
               style={{
-                backgroundColor: 'var(--bg-card, #1c1d22)',
-                borderRadius: '16px',
+                backgroundColor: '#ffffff',
+                borderRadius: '18px',
                 padding: '1.25rem',
-                boxShadow: '0 4px 20px rgba(0,0,0,0.18)',
+                boxShadow: '0 4px 16px rgba(0,0,0,0.04)',
                 border: 'none !important',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '0.75rem'
+                gap: '0.85rem',
+                transition: 'transform 0.15s ease, box-shadow 0.15s ease'
               }}
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                   <div
                     style={{
-                      width: '40px',
-                      height: '40px',
-                      borderRadius: '12px',
-                      backgroundColor: 'rgba(59, 130, 246, 0.15)',
-                      color: '#3b82f6',
+                      width: '42px',
+                      height: '42px',
+                      borderRadius: '14px',
+                      backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                      color: '#2563eb',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -213,26 +220,26 @@ export function AdminWaitersTab({
                     <UserCheck size={20} />
                   </div>
                   <div>
-                    <h3 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+                    <h3 style={{ fontSize: '0.98rem', fontWeight: 800, color: '#1f1e1c', margin: 0 }}>
                       {waiter.name}
                     </h3>
-                    <span style={{ fontSize: '0.72rem', color: '#9ca3af', fontWeight: 600 }}>
+                    <span style={{ fontSize: '0.75rem', color: '#78716c', fontWeight: 600 }}>
                       {roleLabels[waiter.role] || waiter.role}
                     </span>
                   </div>
                 </div>
 
                 {/* Acciones */}
-                <div style={{ display: 'flex', gap: '0.3rem' }}>
+                <div style={{ display: 'flex', gap: '0.35rem' }}>
                   <button
                     type="button"
                     onClick={() => handleOpenEdit(waiter)}
                     style={{
-                      backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                      color: '#ffffff',
+                      backgroundColor: '#f5efe4',
+                      color: '#1f1e1c',
                       border: 'none !important',
-                      borderRadius: '8px',
-                      padding: '0.35rem',
+                      borderRadius: '10px',
+                      padding: '0.45rem',
                       cursor: 'pointer'
                     }}
                     title="Editar"
@@ -247,8 +254,8 @@ export function AdminWaitersTab({
                       backgroundColor: 'rgba(239, 68, 68, 0.1)',
                       color: '#ef4444',
                       border: 'none !important',
-                      borderRadius: '8px',
-                      padding: '0.35rem',
+                      borderRadius: '10px',
+                      padding: '0.45rem',
                       cursor: 'pointer'
                     }}
                     title="Eliminar"
@@ -261,21 +268,21 @@ export function AdminWaitersTab({
               {/* Datos de contacto y PIN */}
               <div
                 style={{
-                  backgroundColor: 'rgba(0,0,0,0.25)',
-                  borderRadius: '10px',
-                  padding: '0.6rem 0.75rem',
+                  backgroundColor: '#f8f4ec',
+                  borderRadius: '12px',
+                  padding: '0.65rem 0.85rem',
                   display: 'flex',
                   justifyContent: 'space-between',
                   alignItems: 'center',
-                  fontSize: '0.78rem'
+                  fontSize: '0.8rem'
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: '#9ca3af' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#78716c' }}>
                   <Phone size={13} />
                   <span>{waiter.phone || 'Sin teléfono'}</span>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: 'var(--naranja, #f97316)', fontWeight: 700 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#d97706', fontWeight: 800 }}>
                   <KeyRound size={13} />
                   <span>PIN: {waiter.pin || '----'}</span>
                 </div>
@@ -294,9 +301,9 @@ export function AdminWaitersTab({
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundColor: 'rgba(0,0,0,0.75)',
-            backdropFilter: 'blur(10px)',
-            WebkitBackdropFilter: 'blur(10px)',
+            backgroundColor: 'rgba(15, 23, 42, 0.45)',
+            backdropFilter: 'blur(8px)',
+            WebkitBackdropFilter: 'blur(8px)',
             zIndex: 1000,
             display: 'flex',
             alignItems: 'center',
@@ -309,41 +316,46 @@ export function AdminWaitersTab({
             style={{
               width: '100%',
               maxWidth: '440px',
-              backgroundColor: 'var(--bg-card, #1c1d22)',
-              color: '#ffffff',
-              borderRadius: '20px',
-              boxShadow: '0 25px 60px rgba(0,0,0,0.65)',
+              backgroundColor: '#ffffff',
+              color: '#1f1e1c',
+              borderRadius: '24px',
+              boxShadow: '0 25px 60px rgba(0,0,0,0.2)',
               border: 'none !important',
-              padding: '1.5rem',
+              padding: '1.75rem',
               display: 'flex',
               flexDirection: 'column',
-              gap: '1rem'
+              gap: '1.25rem'
             }}
             onClick={(e) => e.stopPropagation()}
           >
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <h3 style={{ fontSize: '1.15rem', fontWeight: 800, margin: 0 }}>
-                {editingWaiter ? 'Editar Personal' : 'Nuevo Colaborador'}
-              </h3>
+              <div>
+                <h3 style={{ fontSize: '1.2rem', fontWeight: 900, color: '#1f1e1c', margin: 0 }}>
+                  {editingWaiter ? 'Editar Colaborador' : 'Nuevo Colaborador'}
+                </h3>
+                <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.8rem', color: '#78716c' }}>
+                  Asignación a comandas y control de servicio
+                </p>
+              </div>
               <button
                 type="button"
                 onClick={() => setIsModalOpen(false)}
                 style={{
-                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                  backgroundColor: '#f5efe4',
                   border: 'none !important',
                   borderRadius: '9999px',
-                  padding: '0.4rem',
-                  color: '#ffffff',
+                  padding: '0.45rem',
+                  color: '#1f1e1c',
                   cursor: 'pointer'
                 }}
               >
-                <X size={16} />
+                <X size={18} />
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <div>
-                <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#9ca3af', marginBottom: '0.35rem' }}>
+                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 800, color: '#1f1e1c', marginBottom: '0.35rem' }}>
                   Nombre Completo *
                 </label>
                 <input
@@ -354,19 +366,20 @@ export function AdminWaitersTab({
                   placeholder="Ej: Juan Perez"
                   style={{
                     width: '100%',
-                    padding: '0.65rem 0.85rem',
-                    backgroundColor: 'rgba(255, 255, 255, 0.06)',
-                    color: '#ffffff',
-                    borderRadius: '12px',
-                    fontSize: '0.88rem',
-                    border: 'none !important'
+                    padding: '0.75rem 0.95rem',
+                    backgroundColor: '#f5efe4',
+                    color: '#1f1e1c',
+                    borderRadius: '14px',
+                    fontSize: '0.9rem',
+                    border: 'none !important',
+                    outline: 'none'
                   }}
                 />
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1.3fr 1fr', gap: '0.75rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1.3fr 1fr', gap: '0.85rem' }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#9ca3af', marginBottom: '0.35rem' }}>
+                  <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 800, color: '#1f1e1c', marginBottom: '0.35rem' }}>
                     Teléfono
                   </label>
                   <input
@@ -376,18 +389,19 @@ export function AdminWaitersTab({
                     placeholder="Ej: (973) 555-0101"
                     style={{
                       width: '100%',
-                      padding: '0.65rem 0.85rem',
-                      backgroundColor: 'rgba(255, 255, 255, 0.06)',
-                      color: '#ffffff',
-                      borderRadius: '12px',
-                      fontSize: '0.88rem',
-                      border: 'none !important'
+                      padding: '0.75rem 0.95rem',
+                      backgroundColor: '#f5efe4',
+                      color: '#1f1e1c',
+                      borderRadius: '14px',
+                      fontSize: '0.9rem',
+                      border: 'none !important',
+                      outline: 'none'
                     }}
                   />
                 </div>
 
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#9ca3af', marginBottom: '0.35rem' }}>
+                  <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 800, color: '#1f1e1c', marginBottom: '0.35rem' }}>
                     PIN de Acceso
                   </label>
                   <input
@@ -398,19 +412,20 @@ export function AdminWaitersTab({
                     placeholder="4 dígitos"
                     style={{
                       width: '100%',
-                      padding: '0.65rem 0.85rem',
-                      backgroundColor: 'rgba(255, 255, 255, 0.06)',
-                      color: '#ffffff',
-                      borderRadius: '12px',
-                      fontSize: '0.88rem',
-                      border: 'none !important'
+                      padding: '0.75rem 0.95rem',
+                      backgroundColor: '#f5efe4',
+                      color: '#1f1e1c',
+                      borderRadius: '14px',
+                      fontSize: '0.9rem',
+                      border: 'none !important',
+                      outline: 'none'
                     }}
                   />
                 </div>
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#9ca3af', marginBottom: '0.35rem' }}>
+                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 800, color: '#1f1e1c', marginBottom: '0.35rem' }}>
                   Rol en el Restaurante
                 </label>
                 <select
@@ -418,19 +433,20 @@ export function AdminWaitersTab({
                   onChange={(e) => setFormData(p => ({ ...p, role: e.target.value }))}
                   style={{
                     width: '100%',
-                    padding: '0.65rem 0.85rem',
-                    backgroundColor: 'rgba(255, 255, 255, 0.06)',
-                    color: '#ffffff',
-                    borderRadius: '12px',
-                    fontSize: '0.88rem',
+                    padding: '0.75rem 0.95rem',
+                    backgroundColor: '#f5efe4',
+                    color: '#1f1e1c',
+                    borderRadius: '14px',
+                    fontSize: '0.9rem',
                     border: 'none !important',
+                    outline: 'none',
                     cursor: 'pointer'
                   }}
                 >
-                  <option value="mesero" style={{ backgroundColor: '#1c1d22' }}>Mesero / Salonero</option>
-                  <option value="capitan" style={{ backgroundColor: '#1c1d22' }}>Capitán de Sala</option>
-                  <option value="cocina" style={{ backgroundColor: '#1c1d22' }}>Cocina / Chef</option>
-                  <option value="cajero" style={{ backgroundColor: '#1c1d22' }}>Cajero / Recepción</option>
+                  <option value="mesero">Mesero / Salonero</option>
+                  <option value="capitan">Capitán de Sala</option>
+                  <option value="cocina">Cocina / Chef</option>
+                  <option value="cajero">Cajero / Recepción</option>
                 </select>
               </div>
 
@@ -440,11 +456,11 @@ export function AdminWaitersTab({
                   onClick={() => setIsModalOpen(false)}
                   style={{
                     flex: 1,
-                    backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                    color: '#ffffff',
-                    fontWeight: 700,
-                    padding: '0.75rem',
-                    borderRadius: '12px',
+                    backgroundColor: '#f5efe4',
+                    color: '#1f1e1c',
+                    fontWeight: 800,
+                    padding: '0.85rem',
+                    borderRadius: '14px',
                     border: 'none !important',
                     cursor: 'pointer'
                   }}
@@ -458,12 +474,12 @@ export function AdminWaitersTab({
                     flex: 1.5,
                     backgroundColor: 'var(--rojo, #d91c2b)',
                     color: '#ffffff',
-                    fontWeight: 800,
-                    padding: '0.75rem',
-                    borderRadius: '12px',
+                    fontWeight: 900,
+                    padding: '0.85rem',
+                    borderRadius: '14px',
                     border: 'none !important',
                     cursor: 'pointer',
-                    boxShadow: '0 4px 15px rgba(217, 28, 43, 0.4)'
+                    boxShadow: '0 4px 15px rgba(217, 28, 43, 0.35)'
                   }}
                 >
                   {editingWaiter ? 'Guardar Cambios' : 'Registrar'}

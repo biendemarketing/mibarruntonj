@@ -23,6 +23,7 @@ import {
   checkOrderRateLimit, 
   recordOrderTimestamp 
 } from '../utils/clientIdentity';
+import { sanitizeCustomerName, sanitizePhone, sanitizeNotes } from '../utils/sanitizer';
 import { useAlertConfirm } from '../context/AlertConfirmContext';
 import { triggerHaptic } from '../utils/haptics';
 
@@ -125,11 +126,16 @@ export function CartDrawer({
       setIsSubmitting(true);
       triggerHaptic(12);
 
+      const cleanName = sanitizeCustomerName(customer.name);
+      const cleanPhone = sanitizePhone(customer.phone);
+      const cleanTable = customer.orderType === 'mesa' ? customer.table.trim().slice(0, 15) : '';
+      const cleanNotes = sanitizeNotes(customer.generalNotes);
+
       const clientUuid = getClientUuid();
       saveCustomerInfo({
-        name: customer.name,
-        phone: customer.phone,
-        tableNumber: customer.table
+        name: cleanName,
+        phone: cleanPhone,
+        tableNumber: cleanTable
       });
 
       const items = cart.getItems().map(item => ({
@@ -138,22 +144,23 @@ export function CartDrawer({
         dishPrice: item.dish.price,
         quantity: item.quantity,
         subtotal: item.getSubtotal(),
-        notes: item.note || ''
+        notes: sanitizeNotes(item.note || '')
       }));
 
-      const tableNumberStr = customer.orderType === 'mesa' ? customer.table : `Llevar (${customer.orderType})`;
+      const tableNumberStr = customer.orderType === 'mesa' ? cleanTable : `Llevar (${customer.orderType})`;
 
       const order = await ordersService.createOrder({
         clientUuid,
-        customerName: customer.name,
-        customerPhone: customer.phone || '',
+        customerName: cleanName,
+        customerPhone: cleanPhone,
         tableNumber: tableNumberStr,
         items,
         subtotal: cart.getSubtotal(),
         tipAmount: cart.getTipAmount(),
         totalAmount: cart.getTotal(),
         paymentMethod: customer.paymentMethod || 'efectivo',
-        notes: customer.generalNotes || ''
+        dinerCount: Number(customer.dinerCount) || 2,
+        notes: cleanNotes
       });
 
       // Registrar timestamp de orden para Rate Limiting
@@ -423,12 +430,29 @@ export function CartDrawer({
                   </div>
                 )}
 
+                {/* Cantidad de personas / comensales */}
+                <div className="cart-field-group">
+                  <label className="cart-field-label">¿Cuántas personas son en la mesa?</label>
+                  <select
+                    className="cart-select-input"
+                    value={customer.dinerCount || 2}
+                    onChange={(e) => onUpdateCustomerField('dinerCount', parseInt(e.target.value, 10))}
+                  >
+                    <option value={1}>1 persona (Individual)</option>
+                    <option value={2}>2 personas</option>
+                    <option value={3}>3 personas</option>
+                    <option value={4}>4 personas (Mesa estándar)</option>
+                    <option value={5}>5 personas</option>
+                    <option value={6}>6 personas o más (Grupo)</option>
+                  </select>
+                </div>
+
                 {/* Método de Pago */}
                 <div className="cart-field-group">
                   <label className="cart-field-label">Forma de Pago:</label>
                   <select
                     className="cart-select-input"
-                    value={customer.paymentMethod}
+                    value={customer.paymentMethod || 'efectivo'}
                     onChange={(e) => onUpdateCustomerField('paymentMethod', e.target.value)}
                   >
                     <option value="efectivo">Efectivo al recibir</option>

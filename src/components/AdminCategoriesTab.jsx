@@ -125,31 +125,33 @@ export function AdminCategoriesTab({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          backgroundColor: 'var(--bg-card, #1c1d22)',
-          padding: '1rem',
-          borderRadius: '16px',
-          boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
-          border: 'none !important'
+          backgroundColor: '#ffffff',
+          padding: '1.15rem 1.35rem',
+          borderRadius: '20px',
+          boxShadow: '0 4px 20px rgba(0,0,0,0.04)',
+          border: 'none !important',
+          flexWrap: 'wrap',
+          gap: '1rem'
         }}
       >
         <div>
-          <h2 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+          <h2 style={{ fontSize: '1.2rem', fontWeight: 900, color: '#1f1e1c', margin: 0 }}>
             Categorías del Menú
           </h2>
-          <span style={{ fontSize: '0.8rem', color: '#9ca3af' }}>
+          <span style={{ fontSize: '0.82rem', color: '#78716c' }}>
             {categories.length} categorías configuradas en Supabase
           </span>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
           <button
             type="button"
             onClick={onRefresh}
             disabled={isLoading}
             style={{
-              backgroundColor: 'rgba(255, 255, 255, 0.08)',
-              color: '#ffffff',
-              padding: '0.65rem 0.85rem',
+              backgroundColor: '#f5efe4',
+              color: '#1f1e1c',
+              padding: '0.65rem 0.95rem',
               borderRadius: '9999px',
               fontSize: '0.82rem',
               fontWeight: 700,
@@ -161,6 +163,7 @@ export function AdminCategoriesTab({
             }}
           >
             <RefreshCw size={15} className={isLoading ? 'spin-icon' : ''} />
+            <span>Refrescar</span>
           </button>
 
           <button
@@ -178,7 +181,7 @@ export function AdminCategoriesTab({
               display: 'flex',
               alignItems: 'center',
               gap: '0.45rem',
-              boxShadow: '0 4px 15px rgba(217, 28, 43, 0.4)'
+              boxShadow: '0 4px 15px rgba(217, 28, 43, 0.3)'
             }}
           >
             <Plus size={18} />
@@ -193,24 +196,25 @@ export function AdminCategoriesTab({
           <div
             key={cat.id}
             style={{
-              backgroundColor: 'var(--bg-card, #1c1d22)',
-              borderRadius: '16px',
-              padding: '1.15rem',
-              boxShadow: '0 4px 20px rgba(0,0,0,0.18)',
+              backgroundColor: '#ffffff',
+              borderRadius: '18px',
+              padding: '1.25rem',
+              boxShadow: '0 4px 16px rgba(0,0,0,0.04)',
               border: 'none !important',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              gap: '0.75rem'
+              gap: '0.75rem',
+              transition: 'transform 0.15s ease, box-shadow 0.15s ease'
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', minWidth: 0 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', minWidth: 0 }}>
               <div
                 style={{
-                  width: '42px',
-                  height: '42px',
-                  borderRadius: '12px',
-                  backgroundColor: 'rgba(217, 28, 43, 0.15)',
+                  width: '44px',
+                  height: '44px',
+                  borderRadius: '14px',
+                  backgroundColor: 'rgba(217, 28, 43, 0.08)',
                   color: 'var(--rojo, #d91c2b)',
                   display: 'flex',
                   alignItems: 'center',
@@ -218,15 +222,15 @@ export function AdminCategoriesTab({
                   flexShrink: 0
                 }}
               >
-                <Layers size={20} />
+                <Layers size={22} />
               </div>
 
               <div style={{ minWidth: 0 }}>
                 <h3
                   style={{
-                    fontSize: '0.95rem',
+                    fontSize: '0.98rem',
                     fontWeight: 800,
-                    color: '#ffffff',
+                    color: '#1f1e1c',
                     margin: 0,
                     whiteSpace: 'nowrap',
                     overflow: 'hidden',
@@ -236,27 +240,27 @@ export function AdminCategoriesTab({
                   {cat.name}
                 </h3>
                 {cat.name_en && (
-                  <p style={{ margin: '0.15rem 0 0 0', fontSize: '0.75rem', color: '#9ca3af' }}>
+                  <p style={{ margin: '0.15rem 0 0 0', fontSize: '0.78rem', color: '#78716c' }}>
                     {cat.name_en}
                   </p>
                 )}
-                <span style={{ fontSize: '0.7rem', color: '#6b7280', fontWeight: 600 }}>
-                  Orden: #{cat.sort_order ?? idx} · ID: {cat.id}
+                <span style={{ fontSize: '0.72rem', color: '#a8a29e', fontWeight: 600 }}>
+                  Orden: #{cat.sort_order ?? idx} · Slug: {cat.id}
                 </span>
               </div>
             </div>
 
             {/* Acciones */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', flexShrink: 0 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexShrink: 0 }}>
               <button
                 type="button"
                 onClick={() => handleOpenEdit(cat)}
                 style={{
-                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                  color: '#ffffff',
+                  backgroundColor: '#f5efe4',
+                  color: '#1f1e1c',
                   border: 'none !important',
-                  borderRadius: '8px',
-                  padding: '0.45rem',
+                  borderRadius: '10px',
+                  padding: '0.5rem',
                   cursor: 'pointer'
                 }}
                 title="Editar categoría"
@@ -268,11 +272,11 @@ export function AdminCategoriesTab({
                 type="button"
                 onClick={() => handleDelete(cat)}
                 style={{
-                  backgroundColor: 'rgba(239, 68, 68, 0.12)',
+                  backgroundColor: 'rgba(239, 68, 68, 0.1)',
                   color: '#ef4444',
                   border: 'none !important',
-                  borderRadius: '8px',
-                  padding: '0.45rem',
+                  borderRadius: '10px',
+                  padding: '0.5rem',
                   cursor: 'pointer'
                 }}
                 title="Eliminar categoría"
@@ -293,9 +297,9 @@ export function AdminCategoriesTab({
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundColor: 'rgba(0,0,0,0.75)',
-            backdropFilter: 'blur(10px)',
-            WebkitBackdropFilter: 'blur(10px)',
+            backgroundColor: 'rgba(15, 23, 42, 0.45)',
+            backdropFilter: 'blur(8px)',
+            WebkitBackdropFilter: 'blur(8px)',
             zIndex: 1000,
             display: 'flex',
             alignItems: 'center',
@@ -308,42 +312,47 @@ export function AdminCategoriesTab({
             style={{
               width: '100%',
               maxWidth: '460px',
-              backgroundColor: 'var(--bg-card, #1c1d22)',
-              color: '#ffffff',
-              borderRadius: '20px',
-              boxShadow: '0 25px 60px rgba(0,0,0,0.65)',
+              backgroundColor: '#ffffff',
+              color: '#1f1e1c',
+              borderRadius: '24px',
+              boxShadow: '0 25px 60px rgba(0,0,0,0.2)',
               border: 'none !important',
-              padding: '1.5rem',
+              padding: '1.75rem',
               display: 'flex',
               flexDirection: 'column',
-              gap: '1rem'
+              gap: '1.25rem'
             }}
             onClick={(e) => e.stopPropagation()}
           >
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <h3 style={{ fontSize: '1.15rem', fontWeight: 800, margin: 0 }}>
-                {editingCategory ? 'Editar Categoría' : 'Nueva Categoría'}
-              </h3>
+              <div>
+                <h3 style={{ fontSize: '1.2rem', fontWeight: 900, color: '#1f1e1c', margin: 0 }}>
+                  {editingCategory ? 'Editar Categoría' : 'Nueva Categoría'}
+                </h3>
+                <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.8rem', color: '#78716c' }}>
+                  Aparecerá en el filtro principal y menú web
+                </p>
+              </div>
               <button
                 type="button"
                 onClick={() => setIsModalOpen(false)}
                 style={{
-                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                  backgroundColor: '#f5efe4',
                   border: 'none !important',
                   borderRadius: '9999px',
-                  padding: '0.4rem',
-                  color: '#ffffff',
+                  padding: '0.45rem',
+                  color: '#1f1e1c',
                   cursor: 'pointer'
                 }}
               >
-                <X size={16} />
+                <X size={18} />
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <div>
-                <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#9ca3af', marginBottom: '0.35rem' }}>
-                  Nombre de la Categoría *
+                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 800, color: '#1f1e1c', marginBottom: '0.35rem' }}>
+                  Nombre de la Categoría en Español *
                 </label>
                 <input
                   type="text"
@@ -353,40 +362,42 @@ export function AdminCategoriesTab({
                   placeholder="Ej: Ceviches y Mariscos"
                   style={{
                     width: '100%',
-                    padding: '0.65rem 0.85rem',
-                    backgroundColor: 'rgba(255, 255, 255, 0.06)',
-                    color: '#ffffff',
-                    borderRadius: '12px',
-                    fontSize: '0.88rem',
-                    border: 'none !important'
+                    padding: '0.75rem 0.95rem',
+                    backgroundColor: '#f5efe4',
+                    color: '#1f1e1c',
+                    borderRadius: '14px',
+                    fontSize: '0.9rem',
+                    border: 'none !important',
+                    outline: 'none'
                   }}
                 />
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#9ca3af', marginBottom: '0.35rem' }}>
-                  Subtítulo / Nombre en Inglés
+                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 800, color: '#1f1e1c', marginBottom: '0.35rem' }}>
+                  Subtítulo / Nombre en Inglés (Traducción)
                 </label>
                 <input
                   type="text"
                   value={formData.name_en}
                   onChange={(e) => setFormData(p => ({ ...p, name_en: e.target.value }))}
-                  placeholder="Ej: Traditional Peruvian ceviches"
+                  placeholder="Ej: Traditional Peruvian Ceviches"
                   style={{
                     width: '100%',
-                    padding: '0.65rem 0.85rem',
-                    backgroundColor: 'rgba(255, 255, 255, 0.06)',
-                    color: '#ffffff',
-                    borderRadius: '12px',
-                    fontSize: '0.88rem',
-                    border: 'none !important'
+                    padding: '0.75rem 0.95rem',
+                    backgroundColor: '#f5efe4',
+                    color: '#1f1e1c',
+                    borderRadius: '14px',
+                    fontSize: '0.9rem',
+                    border: 'none !important',
+                    outline: 'none'
                   }}
                 />
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.85rem' }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#9ca3af', marginBottom: '0.35rem' }}>
+                  <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 800, color: '#1f1e1c', marginBottom: '0.35rem' }}>
                     Identificador (Slug)
                   </label>
                   <input
@@ -397,18 +408,19 @@ export function AdminCategoriesTab({
                     placeholder="Auto o ej: mariscos"
                     style={{
                       width: '100%',
-                      padding: '0.65rem 0.85rem',
-                      backgroundColor: 'rgba(255, 255, 255, 0.06)',
-                      color: editingCategory ? '#6b7280' : '#ffffff',
-                      borderRadius: '12px',
-                      fontSize: '0.88rem',
-                      border: 'none !important'
+                      padding: '0.75rem 0.95rem',
+                      backgroundColor: '#f5efe4',
+                      color: editingCategory ? '#a8a29e' : '#1f1e1c',
+                      borderRadius: '14px',
+                      fontSize: '0.9rem',
+                      border: 'none !important',
+                      outline: 'none'
                     }}
                   />
                 </div>
 
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#9ca3af', marginBottom: '0.35rem' }}>
+                  <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 800, color: '#1f1e1c', marginBottom: '0.35rem' }}>
                     Orden de Posición
                   </label>
                   <input
@@ -418,12 +430,13 @@ export function AdminCategoriesTab({
                     onChange={(e) => setFormData(p => ({ ...p, sort_order: e.target.value }))}
                     style={{
                       width: '100%',
-                      padding: '0.65rem 0.85rem',
-                      backgroundColor: 'rgba(255, 255, 255, 0.06)',
-                      color: '#ffffff',
-                      borderRadius: '12px',
-                      fontSize: '0.88rem',
-                      border: 'none !important'
+                      padding: '0.75rem 0.95rem',
+                      backgroundColor: '#f5efe4',
+                      color: '#1f1e1c',
+                      borderRadius: '14px',
+                      fontSize: '0.9rem',
+                      border: 'none !important',
+                      outline: 'none'
                     }}
                   />
                 </div>
@@ -435,11 +448,11 @@ export function AdminCategoriesTab({
                   onClick={() => setIsModalOpen(false)}
                   style={{
                     flex: 1,
-                    backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                    color: '#ffffff',
-                    fontWeight: 700,
-                    padding: '0.75rem',
-                    borderRadius: '12px',
+                    backgroundColor: '#f5efe4',
+                    color: '#1f1e1c',
+                    fontWeight: 800,
+                    padding: '0.85rem',
+                    borderRadius: '14px',
                     border: 'none !important',
                     cursor: 'pointer'
                   }}
@@ -453,12 +466,12 @@ export function AdminCategoriesTab({
                     flex: 1.5,
                     backgroundColor: 'var(--rojo, #d91c2b)',
                     color: '#ffffff',
-                    fontWeight: 800,
-                    padding: '0.75rem',
-                    borderRadius: '12px',
+                    fontWeight: 900,
+                    padding: '0.85rem',
+                    borderRadius: '14px',
                     border: 'none !important',
                     cursor: 'pointer',
-                    boxShadow: '0 4px 15px rgba(217, 28, 43, 0.4)'
+                    boxShadow: '0 4px 15px rgba(217, 28, 43, 0.35)'
                   }}
                 >
                   {editingCategory ? 'Guardar Cambios' : 'Crear Categoría'}
