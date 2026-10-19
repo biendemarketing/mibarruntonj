@@ -273,9 +273,8 @@ export function ProductCard({
               title="Agregar a mi pedido"
               aria-label={`Agregar ${dish.name}`}
             >
-              <Plus size={14} className="btn-add-cart-icon" />
-              <span className="btn-add-cart-text-full">Ordenar</span>
-              <span className="btn-add-cart-text-mobile">Pedir</span>
+              <Plus size={13} className="btn-add-cart-icon" />
+              <span className="btn-add-cart-text">Ordenar</span>
             </button>
           )}
         </div>
