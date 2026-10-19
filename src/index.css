@@ -1261,7 +1261,7 @@ input, textarea, select {
    ========================================================================== */
 .menu-desktop-layout {
   width: 100%;
-  max-width: 1380px;
+  max-width: 1440px;
   margin: 0 auto;
   padding: 0 1rem;
   display: flex;
@@ -1297,7 +1297,7 @@ input, textarea, select {
 
 @media (min-width: 900px) {
   .categories-sidebar-nav {
-    width: 250px;
+    width: 290px;
     flex-shrink: 0;
     position: sticky;
     top: 1.5rem;
@@ -1423,39 +1423,34 @@ input, textarea, select {
   .category-nav-item {
     position: relative;
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
     width: 100%;
-    padding: 0.65rem 0.9rem;
+    padding: 0.72rem 0.95rem;
     border-radius: 12px;
     background: transparent;
     color: var(--text-main);
     text-align: left;
     transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
     cursor: pointer;
-    border: none;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
   }
 
   .category-nav-name {
     font-family: var(--font-primary);
-    font-size: 1rem;
+    font-size: 0.98rem;
     font-weight: 700;
     line-height: 1.2;
     transition: color 0.15s ease;
   }
 
-  .category-nav-sub {
-    font-family: var(--font-secondary);
-    font-size: 0.76rem;
-    font-weight: 400;
-    color: var(--text-light);
-    margin-top: 2px;
-    line-height: 1.2;
-  }
-
   .category-nav-item:hover {
     background: var(--rojo-subtle);
     transform: translateX(4px);
+    box-shadow: none !important;
   }
 
   .category-nav-item:hover .category-nav-name {
@@ -1465,7 +1460,7 @@ input, textarea, select {
   .category-nav-item.active {
     background: var(--rojo);
     color: #ffffff;
-    box-shadow: 0 4px 14px rgba(238, 0, 0, 0.38);
+    box-shadow: none !important;
     transform: translateX(4px);
   }
 
@@ -1473,24 +1468,24 @@ input, textarea, select {
     color: #ffffff;
   }
 
-  .category-nav-item.active .category-nav-sub {
-    color: rgba(255, 255, 255, 0.85);
+  .category-nav-arrow {
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: opacity 0.18s ease, transform 0.18s ease, color 0.18s ease;
+    color: var(--text-light);
+    flex-shrink: 0;
   }
 
-  .category-nav-indicator {
-    position: absolute;
-    right: 0.75rem;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #ffffff;
-    display: none;
+  .category-nav-item:hover .category-nav-arrow {
+    opacity: 0.7;
+    transform: translateX(0);
+    color: var(--rojo);
   }
 
-  .category-nav-item.active .category-nav-indicator {
-    display: block;
+  .category-nav-item.active .category-nav-arrow {
+    opacity: 1;
+    transform: translateX(0);
+    color: #ffffff;
   }
 }
 
@@ -3542,6 +3537,27 @@ input, textarea, select {
   position: relative;
   z-index: 20;
   box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
+}
+
+@media (min-width: 900px) {
+  body {
+    padding-bottom: 0;
+  }
+
+  .footer-compact-black {
+    width: 100%;
+    max-width: 100%;
+    margin: 4.5rem 0 0 0;
+    border-radius: 32px 32px 0 0;
+    padding: 3.5rem 2.5rem 2.5rem;
+    box-shadow: 0 -10px 32px rgba(0, 0, 0, 0.35);
+  }
+
+  .footer-compact-inner {
+    max-width: 1400px;
+    width: 100%;
+    margin: 0 auto;
+  }
 }
 
 .footer-compact-inner {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Utensils, LayoutGrid, Grid2X2, Rows3 } from 'lucide-react';
+import { Utensils, LayoutGrid, Grid2X2, Rows3, ChevronRight } from 'lucide-react';
 
 export function CategoryPills({
   categories,
@@ -98,7 +98,7 @@ export function CategoryPills({
           onClick={() => handleCategoryClick('todos')}
         >
           <span className="category-nav-name">Toda la Carta</span>
-          <span className="category-nav-indicator" />
+          <ChevronRight size={15} className="category-nav-arrow" />
         </button>
 
         {/* Cada una de las categorías */}
@@ -116,8 +116,7 @@ export function CategoryPills({
               onClick={() => handleCategoryClick(cat.id)}
             >
               <span className="category-nav-name">{cat.name}</span>
-              {cat.nameEn && <span className="category-nav-sub">{cat.nameEn}</span>}
-              <span className="category-nav-indicator" />
+              <ChevronRight size={15} className="category-nav-arrow" />
             </button>
           );
         })}
