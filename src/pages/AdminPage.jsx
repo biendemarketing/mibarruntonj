@@ -585,21 +585,24 @@ export function AdminPage() {
         position: 'relative'
       }}
     >
-      {/* SIDEBAR DESKTOP */}
+      {/* SIDEBAR DESKTOP FLOTANTE CON BORDES REDONDEADOS */}
       <aside
         className="admin-sidebar-desktop"
         style={{
           width: '270px',
           backgroundColor: '#ffffff',
-          boxShadow: '4px 0 24px rgba(0, 0, 0, 0.04)',
+          borderRadius: '24px',
+          margin: '1.25rem 0 1.25rem 1.25rem',
+          height: 'calc(100vh - 2.5rem)',
+          boxShadow: '0 12px 35px rgba(0, 0, 0, 0.05)',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
           position: 'sticky',
-          top: 0,
-          height: '100vh',
+          top: '1.25rem',
           zIndex: 800,
-          padding: '1.5rem 1rem'
+          padding: '1.5rem 1rem',
+          border: 'none !important'
         }}
       >
         {/* Parte Superior del Sidebar */}
@@ -628,7 +631,7 @@ export function AdminPage() {
                     backgroundColor: '#10b981',
                     boxShadow: '0 0 8px #10b981'
                   }}
-                  title="Conectado a Supabase en Vivo"
+                  title="Sistema Conectado en Línea"
                 />
               </div>
               <span style={{ fontSize: '0.72rem', color: '#78716c', fontWeight: 600 }}>
@@ -1002,21 +1005,25 @@ export function AdminPage() {
 
       {/* ÁREA DE CONTENIDO PRINCIPAL */}
       <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
-        {/* Topbar Superior */}
+        {/* Topbar Superior Flotante con Bordes Redondeados */}
         <header
+          className="admin-floating-header"
           style={{
             position: 'sticky',
-            top: 0,
+            top: '1.25rem',
             zIndex: 700,
-            backgroundColor: 'rgba(255, 255, 255, 0.92)',
+            backgroundColor: 'rgba(255, 255, 255, 0.94)',
             backdropFilter: 'blur(16px)',
             WebkitBackdropFilter: 'blur(16px)',
+            margin: '1.25rem 1.25rem 0 1.25rem',
+            borderRadius: '20px',
             padding: '0.85rem 1.5rem',
-            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.03)',
+            boxShadow: '0 8px 30px rgba(0, 0, 0, 0.04)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            gap: '1rem'
+            gap: '1rem',
+            border: 'none !important'
           }}
         >
           {/* Botón Hamburguesa en Móvil + Título */}
@@ -1035,7 +1042,7 @@ export function AdminPage() {
                 borderRadius: '10px',
                 border: 'none !important',
                 cursor: 'pointer',
-                display: 'none' // Se muestra en CSS para móviles
+                display: 'none' // Se muestra en CSS para móviles y tablets
               }}
             >
               <Menu size={20} />
@@ -1046,7 +1053,7 @@ export function AdminPage() {
                 {navTabs.find(t => t.id === activeTab)?.label || 'Panel de Administración'}
               </h1>
               <span style={{ fontSize: '0.75rem', color: '#78716c' }}>
-                Sistema Centralizado en Supabase
+                Gestión Integral del Restaurante
               </span>
             </div>
           </div>
@@ -1301,14 +1308,167 @@ export function AdminPage() {
         </main>
       </div>
 
-      {/* Estilos CSS específicos para responsive del sidebar */}
+      {/* BARRA DE NAVEGACIÓN FLOTANTE PARA TABLET Y MÓVIL */}
+      <nav
+        className="admin-floating-bottom-nav"
+        style={{
+          position: 'fixed',
+          bottom: '12px',
+          left: '12px',
+          right: '12px',
+          maxWidth: '520px',
+          margin: '0 auto',
+          backgroundColor: 'rgba(255, 255, 255, 0.96)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          borderRadius: '24px',
+          padding: '0.4rem 0.65rem',
+          boxShadow: '0 16px 45px rgba(0, 0, 0, 0.12)',
+          display: 'none',
+          alignItems: 'center',
+          justifyContent: 'space-around',
+          zIndex: 890,
+          border: 'none !important'
+        }}
+      >
+        {/* Órdenes */}
+        <button
+          type="button"
+          onClick={() => {
+            triggerHaptic(8);
+            setActiveTab('orders');
+          }}
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '0.2rem',
+            padding: '0.5rem 0.85rem',
+            borderRadius: '16px',
+            backgroundColor: activeTab === 'orders' ? 'rgba(217, 28, 43, 0.1)' : 'transparent',
+            color: activeTab === 'orders' ? 'var(--rojo, #d91c2b)' : '#6b635b',
+            cursor: 'pointer',
+            border: 'none !important',
+            position: 'relative'
+          }}
+        >
+          <Bell size={20} />
+          <span style={{ fontSize: '0.72rem', fontWeight: 800 }}>Pedidos</span>
+          {pendingCount > 0 && (
+            <span
+              style={{
+                position: 'absolute',
+                top: '4px',
+                right: '8px',
+                backgroundColor: 'var(--rojo, #d91c2b)',
+                color: '#ffffff',
+                fontSize: '0.62rem',
+                fontWeight: 900,
+                width: '16px',
+                height: '16px',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              {pendingCount}
+            </span>
+          )}
+        </button>
+
+        {/* Mesas & QR */}
+        <button
+          type="button"
+          onClick={() => {
+            triggerHaptic(8);
+            setActiveTab('tables');
+          }}
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '0.2rem',
+            padding: '0.5rem 0.85rem',
+            borderRadius: '16px',
+            backgroundColor: activeTab === 'tables' ? 'rgba(217, 28, 43, 0.1)' : 'transparent',
+            color: activeTab === 'tables' ? 'var(--rojo, #d91c2b)' : '#6b635b',
+            cursor: 'pointer',
+            border: 'none !important'
+          }}
+        >
+          <QrCode size={20} />
+          <span style={{ fontSize: '0.72rem', fontWeight: 800 }}>Mesas</span>
+        </button>
+
+        {/* Platos */}
+        <button
+          type="button"
+          onClick={() => {
+            triggerHaptic(8);
+            setActiveTab('dishes');
+          }}
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '0.2rem',
+            padding: '0.5rem 0.85rem',
+            borderRadius: '16px',
+            backgroundColor: activeTab === 'dishes' ? 'rgba(217, 28, 43, 0.1)' : 'transparent',
+            color: activeTab === 'dishes' ? 'var(--rojo, #d91c2b)' : '#6b635b',
+            cursor: 'pointer',
+            border: 'none !important'
+          }}
+        >
+          <Utensils size={20} />
+          <span style={{ fontSize: '0.72rem', fontWeight: 800 }}>Platos</span>
+        </button>
+
+        {/* Más Opciones (Abre Drawer Lateral Completo) */}
+        <button
+          type="button"
+          onClick={() => {
+            triggerHaptic(8);
+            setIsMobileSidebarOpen(true);
+          }}
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '0.2rem',
+            padding: '0.5rem 0.85rem',
+            borderRadius: '16px',
+            backgroundColor: isMobileSidebarOpen ? 'rgba(217, 28, 43, 0.1)' : 'transparent',
+            color: isMobileSidebarOpen ? 'var(--rojo, #d91c2b)' : '#6b635b',
+            cursor: 'pointer',
+            border: 'none !important'
+          }}
+        >
+          <Menu size={20} />
+          <span style={{ fontSize: '0.72rem', fontWeight: 800 }}>Más</span>
+        </button>
+      </nav>
+
+      {/* Estilos CSS específicos para responsive Tablet y Móvil */}
       <style>{`
-        @media (max-width: 900px) {
+        @media (max-width: 1024px) {
           .admin-sidebar-desktop {
             display: none !important;
           }
           .admin-hamburger-btn {
             display: flex !important;
+          }
+          .admin-floating-bottom-nav {
+            display: flex !important;
+          }
+          main {
+            padding-bottom: 90px !important;
+          }
+          .admin-floating-header {
+            margin: 0.75rem 0.75rem 0 0.75rem !important;
+            top: 0.75rem !important;
+            padding: 0.75rem 1rem !important;
           }
         }
       `}</style>

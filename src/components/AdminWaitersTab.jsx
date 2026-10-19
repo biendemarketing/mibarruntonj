@@ -59,7 +59,7 @@ export function AdminWaitersTab({
       await onDeleteWaiter(waiter.id);
       showAlert({
         title: 'Personal Eliminado',
-        message: 'El registro fue eliminado de Supabase.',
+        message: 'El registro fue eliminado exitosamente.',
         type: 'success'
       });
     }

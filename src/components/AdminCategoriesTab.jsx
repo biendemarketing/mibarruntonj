@@ -63,7 +63,7 @@ export function AdminCategoriesTab({
       await onDeleteCategory(cat.id);
       showAlert({
         title: 'Categoría Eliminada',
-        message: `La categoría "${cat.name}" fue eliminada de Supabase.`,
+        message: `La categoría "${cat.name}" fue eliminada.`,
         type: 'success'
       });
     }
@@ -102,7 +102,7 @@ export function AdminCategoriesTab({
         });
         showAlert({
           title: 'Categoría Creada',
-          message: 'Nueva categoría agregada a Supabase.',
+          message: 'Nueva categoría agregada al menú.',
           type: 'success'
         });
       }
@@ -139,7 +139,7 @@ export function AdminCategoriesTab({
             Categorías del Menú
           </h2>
           <span style={{ fontSize: '0.82rem', color: '#78716c' }}>
-            {categories.length} categorías configuradas en Supabase
+            {categories.length} categorías configuradas en el menú
           </span>
         </div>
 

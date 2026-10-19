@@ -692,6 +692,46 @@ export const restaurantConfigService = {
 
     if (error) throw error;
     return data?.value;
+  },
+
+  async getQrModeConfig() {
+    try {
+      const local = typeof window !== 'undefined' ? localStorage.getItem('mb-qr-mode') : null;
+      const { data, error } = await supabase
+        .from('restaurant_config')
+        .select('value')
+        .eq('key', 'qr_mode')
+        .single();
+
+      if (!error && data?.value) {
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('mb-qr-mode', data.value);
+        }
+        return data.value;
+      }
+      return local || 'single';
+    } catch {
+      return (typeof window !== 'undefined' && localStorage.getItem('mb-qr-mode')) || 'single';
+    }
+  },
+
+  async updateQrModeConfig(mode) {
+    try {
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('mb-qr-mode', mode);
+      }
+      await supabase
+        .from('restaurant_config')
+        .upsert({
+          key: 'qr_mode',
+          value: mode,
+          updated_at: new Date().toISOString()
+        });
+      return mode;
+    } catch (err) {
+      console.warn('Guardado local de modo QR:', err);
+      return mode;
+    }
   }
 };
 

@@ -1,7 +1,12 @@
-import React, { useState } from 'react';
-import { Plus, Trash2, Check, QrCode, Copy, RefreshCw, X, Users, AlertTriangle } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { 
+  Plus, Trash2, Check, QrCode, Copy, RefreshCw, 
+  X, Users, AlertTriangle, Sparkles, Layers, 
+  Download, ExternalLink, Printer 
+} from 'lucide-react';
 import { useAlertConfirm } from '../context/AlertConfirmContext';
 import { triggerHaptic } from '../utils/haptics';
+import { restaurantConfigService } from '../services/supabase';
 
 export function AdminTablesTab({
   tables = [],
@@ -15,6 +20,7 @@ export function AdminTablesTab({
 }) {
   const { showConfirm, showAlert } = useAlertConfirm();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [qrMode, setQrMode] = useState('single'); // 'single' (QR único - default) | 'per_table' (QR por mesa)
   const [formData, setFormData] = useState({
     number: '',
     name: '',
@@ -22,11 +28,31 @@ export function AdminTablesTab({
     status: 'available'
   });
 
+  // Cargar modo de QR configurado
+  useEffect(() => {
+    restaurantConfigService.getQrModeConfig().then(savedMode => {
+      if (savedMode) setQrMode(savedMode);
+    });
+  }, []);
+
+  const handleSwitchQrMode = async (newMode) => {
+    triggerHaptic(10);
+    setQrMode(newMode);
+    await restaurantConfigService.updateQrModeConfig(newMode);
+    showAlert({
+      title: newMode === 'single' ? 'Modo QR Único Activo' : 'Modo QR por Mesa Activo',
+      message: newMode === 'single'
+        ? 'El restaurante opera con un único código QR central para todas las mesas. Los clientes indican o seleccionan su mesa desde la carta.'
+        : 'Cada mesa dispone ahora de su código QR independiente con el número de mesa precargado automáticamente.',
+      type: 'success'
+    });
+  };
+
   const handleCloseTableClick = async (table) => {
     triggerHaptic(14);
     const confirmed = await showConfirm({
       title: `¿Cerrar Mesa #${table.number}?`,
-      message: `¿Deseas cerrar y liberar la Mesa ${table.number}? Sus pedidos activos se marcarán automáticamente como entregados y pagados en Supabase.`,
+      message: `¿Deseas cerrar y liberar la Mesa ${table.number}? Sus pedidos activos se marcarán automáticamente como entregados y pagados en el sistema.`,
       confirmText: 'Sí, Cerrar Mesa',
       cancelText: 'Cancelar'
     });
@@ -64,6 +90,28 @@ export function AdminTablesTab({
     });
   };
 
+  const handleCopyCentralLink = () => {
+    triggerHaptic(12);
+    const origin = typeof window !== 'undefined' ? window.location.origin : 'https://mibarrunto.com';
+    const centralUrl = `${origin}/`;
+    navigator.clipboard?.writeText(centralUrl);
+    showAlert({
+      title: 'Enlace Central Copiado',
+      message: `Enlace de la carta central copiado al portapapeles:\n${centralUrl}`,
+      type: 'success'
+    });
+  };
+
+  const handleDownloadQr = (dataUrl, filename) => {
+    triggerHaptic(10);
+    const a = document.createElement('a');
+    a.href = dataUrl;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
+
   const handleStatusChange = async (table, newStatus) => {
     triggerHaptic(8);
     await onUpdateTable(table.id, { status: newStatus });
@@ -82,7 +130,7 @@ export function AdminTablesTab({
       await onDeleteTable(table.id);
       showAlert({
         title: 'Mesa Eliminada',
-        message: 'La mesa fue eliminada de Supabase.',
+        message: 'La mesa fue eliminada del sistema.',
         type: 'success'
       });
     }
@@ -186,6 +234,248 @@ export function AdminTablesTab({
           </button>
         </div>
       </div>
+
+      {/* SELECTOR DE MODALIDAD QR: ÚNICO (DEFAULT) VS POR MESA */}
+      <div
+        style={{
+          backgroundColor: '#ffffff',
+          borderRadius: '16px',
+          padding: '0.85rem 1.25rem',
+          boxShadow: '0 4px 20px rgba(0,0,0,0.04)',
+          border: 'none !important',
+          display: 'flex',
+          flexWrap: 'wrap',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: '0.75rem'
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+          <div
+            style={{
+              backgroundColor: '#fef3c7',
+              color: '#b45309',
+              padding: '0.55rem',
+              borderRadius: '12px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            <QrCode size={20} />
+          </div>
+          <div>
+            <span style={{ fontSize: '0.88rem', fontWeight: 800, color: '#1f1e1c', display: 'block' }}>
+              Modalidad de Códigos QR
+            </span>
+            <span style={{ fontSize: '0.75rem', color: '#6b635b' }}>
+              Elige cómo interactúan los clientes con la carta digital
+            </span>
+          </div>
+        </div>
+
+        {/* Botones de Selección de Modo */}
+        <div style={{ display: 'flex', gap: '0.4rem', backgroundColor: '#f5efe4', padding: '0.25rem', borderRadius: '12px' }}>
+          <button
+            type="button"
+            onClick={() => handleSwitchQrMode('single')}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              backgroundColor: qrMode === 'single' ? 'var(--rojo, #d91c2b)' : 'transparent',
+              color: qrMode === 'single' ? '#ffffff' : '#6b635b',
+              padding: '0.55rem 0.95rem',
+              borderRadius: '10px',
+              fontSize: '0.82rem',
+              fontWeight: 800,
+              cursor: 'pointer',
+              border: 'none !important',
+              boxShadow: qrMode === 'single' ? '0 4px 12px rgba(217, 28, 43, 0.25)' : 'none',
+              transition: 'all 0.2s ease'
+            }}
+          >
+            <Sparkles size={15} />
+            <span>QR Único (Predeterminado)</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => handleSwitchQrMode('per_table')}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              backgroundColor: qrMode === 'per_table' ? 'var(--rojo, #d91c2b)' : 'transparent',
+              color: qrMode === 'per_table' ? '#ffffff' : '#6b635b',
+              padding: '0.55rem 0.95rem',
+              borderRadius: '10px',
+              fontSize: '0.82rem',
+              fontWeight: 800,
+              cursor: 'pointer',
+              border: 'none !important',
+              boxShadow: qrMode === 'per_table' ? '0 4px 12px rgba(217, 28, 43, 0.25)' : 'none',
+              transition: 'all 0.2s ease'
+            }}
+          >
+            <Layers size={15} />
+            <span>QR Dinámico por Mesa</span>
+          </button>
+        </div>
+      </div>
+
+      {/* TARJETA DESTACADA: MODO QR ÚNICO CENTRAL */}
+      {qrMode === 'single' && (
+        <div
+          style={{
+            backgroundColor: '#ffffff',
+            borderRadius: '20px',
+            padding: '1.5rem',
+            boxShadow: '0 8px 30px rgba(0, 0, 0, 0.05)',
+            border: 'none !important',
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '1.5rem'
+          }}
+        >
+          <div style={{ flex: 1, minWidth: '260px' }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', backgroundColor: '#ecfdf5', color: '#059669', padding: '0.2rem 0.65rem', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 800, marginBottom: '0.65rem' }}>
+              <Check size={14} />
+              <span>Modo Recomendado Activo</span>
+            </div>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 900, color: '#1f1e1c', margin: '0 0 0.4rem 0' }}>
+              Código QR Central del Restaurante
+            </h3>
+            <p style={{ fontSize: '0.86rem', color: '#6b635b', lineHeight: 1.5, margin: '0 0 1rem 0' }}>
+              Un único código para imprimir en servilleteros, barras o manteles. El comensal escanea el QR, visualiza la carta con fotos en alta definición y, al enviar su comanda, selecciona o confirma su número de mesa.
+            </p>
+
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.65rem' }}>
+              <button
+                type="button"
+                onClick={handleCopyCentralLink}
+                style={{
+                  backgroundColor: 'var(--rojo, #d91c2b)',
+                  color: '#ffffff',
+                  fontWeight: 800,
+                  fontSize: '0.82rem',
+                  padding: '0.65rem 1rem',
+                  borderRadius: '12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.45rem',
+                  cursor: 'pointer',
+                  border: 'none !important',
+                  boxShadow: '0 4px 15px rgba(217, 28, 43, 0.25)'
+                }}
+              >
+                <Copy size={15} />
+                <span>Copiar Enlace Central</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  const origin = typeof window !== 'undefined' ? window.location.origin : 'https://mibarrunto.com';
+                  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=${encodeURIComponent(origin + '/')}&margin=15`;
+                  handleDownloadQr(qrUrl, 'qr_central_mibarrunto.png');
+                }}
+                style={{
+                  backgroundColor: '#f5efe4',
+                  color: '#1f1e1c',
+                  fontWeight: 800,
+                  fontSize: '0.82rem',
+                  padding: '0.65rem 1rem',
+                  borderRadius: '12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.45rem',
+                  cursor: 'pointer',
+                  border: 'none !important'
+                }}
+              >
+                <Download size={15} />
+                <span>Descargar QR (PNG)</span>
+              </button>
+
+              <a
+                href="/"
+                target="_blank"
+                rel="noreferrer"
+                style={{
+                  backgroundColor: '#f5efe4',
+                  color: '#6b635b',
+                  fontWeight: 800,
+                  fontSize: '0.82rem',
+                  padding: '0.65rem 1rem',
+                  borderRadius: '12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.45rem',
+                  textDecoration: 'none',
+                  border: 'none !important'
+                }}
+              >
+                <ExternalLink size={15} />
+                <span>Probar Enlace</span>
+              </a>
+            </div>
+          </div>
+
+          {/* Gráfico Visual del QR Central */}
+          <div
+            style={{
+              backgroundColor: '#fcf9f2',
+              padding: '1rem',
+              borderRadius: '20px',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.04)'
+            }}
+          >
+            <img
+              src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(typeof window !== 'undefined' ? window.location.origin + '/' : 'https://mibarrunto.com/')}&margin=10`}
+              alt="QR Central Mi Barrunto"
+              style={{
+                width: '160px',
+                height: '160px',
+                borderRadius: '12px',
+                backgroundColor: '#ffffff'
+              }}
+            />
+            <span style={{ fontSize: '0.74rem', fontWeight: 800, color: '#1f1e1c', marginTop: '0.5rem' }}>
+              Carta Digital Oficial
+            </span>
+          </div>
+        </div>
+      )}
+
+      {/* INFORMACIÓN DEL MODO DINÁMICO POR MESA */}
+      {qrMode === 'per_table' && (
+        <div
+          style={{
+            backgroundColor: '#eff6ff',
+            borderRadius: '16px',
+            padding: '1rem 1.25rem',
+            color: '#1d4ed8',
+            fontSize: '0.85rem',
+            fontWeight: 700,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.75rem',
+            border: 'none !important'
+          }}
+        >
+          <Layers size={22} style={{ flexShrink: 0 }} />
+          <span>
+            <strong>Modo QR por Mesa activado:</strong> Cada tarjeta de mesa inferior cuenta con su enlace específico (<code>/?mesa=X</code>). Al escanearlo, el sistema detecta de forma automática la mesa del cliente sin pedirle ingresarla.
+          </span>
+        </div>
+      )}
 
       {/* Grid de Mesas */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '1rem' }}>

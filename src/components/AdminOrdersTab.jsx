@@ -1670,7 +1670,7 @@ export function AdminOrdersTab({
                 Registro Histórico de Pedidos
               </h3>
               <span style={{ fontSize: '0.8rem', color: '#6b635b' }}>
-                Mostrando {filteredOrders.length} pedidos registrados en Supabase
+                Mostrando {filteredOrders.length} pedidos registrados en el sistema
               </span>
             </div>
 

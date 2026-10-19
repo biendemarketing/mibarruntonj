@@ -63,7 +63,7 @@ export function AdminDishesTab({
       await onDeleteDish(dish.id);
       showAlert({
         title: 'Plato Eliminado',
-        message: `El plato "${dish.name}" fue removido de Supabase.`,
+        message: `El plato "${dish.name}" fue removido de la carta.`,
         type: 'success'
       });
     }
@@ -81,7 +81,7 @@ export function AdminDishesTab({
       await onCreateDish(formData);
       showAlert({
         title: 'Plato Creado',
-        message: `"${formData.name}" ha sido agregado a la carta en Supabase.`,
+        message: `"${formData.name}" ha sido agregado a la carta exitosamente.`,
         type: 'success'
       });
     }
@@ -247,17 +247,22 @@ export function AdminDishesTab({
               {/* Encabezado: Foto en miniatura + Info básica */}
               <div style={{ display: 'flex', gap: '0.85rem', alignItems: 'center' }}>
                 <div
+                  onClick={() => handleOpenEdit(dish)}
                   style={{
-                    width: '64px',
-                    height: '64px',
-                    borderRadius: '12px',
+                    width: '74px',
+                    height: '74px',
+                    borderRadius: '14px',
                     backgroundColor: '#f5efe4',
                     overflow: 'hidden',
                     flexShrink: 0,
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'center'
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    position: 'relative',
+                    boxShadow: '0 4px 14px rgba(0,0,0,0.06)'
                   }}
+                  title="Click para ver o cambiar imagen del plato"
                 >
                   {imgUrl ? (
                     <img
@@ -272,8 +277,28 @@ export function AdminDishesTab({
                       }}
                     />
                   ) : (
-                    <ImageIcon size={24} color="#6b635b" />
+                    <ImageIcon size={26} color="#6b635b" />
                   )}
+                  <div
+                    style={{
+                      position: 'absolute',
+                      bottom: '3px',
+                      right: '3px',
+                      backgroundColor: 'rgba(15, 23, 42, 0.75)',
+                      backdropFilter: 'blur(4px)',
+                      color: '#ffffff',
+                      borderRadius: '6px',
+                      padding: '2px 4px',
+                      fontSize: '0.62rem',
+                      fontWeight: 800,
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '2px'
+                    }}
+                  >
+                    <Edit2 size={9} />
+                    <span>Foto</span>
+                  </div>
                 </div>
 
                 <div style={{ flex: 1, minWidth: 0 }}>

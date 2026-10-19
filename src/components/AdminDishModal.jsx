@@ -1,7 +1,8 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { 
   X, Upload, Plus, Trash2, Check, Star, 
-  Sparkles, AlertCircle, Eye, EyeOff 
+  Sparkles, AlertCircle, Eye, EyeOff, Image as ImageIcon,
+  RefreshCw, Link as LinkIcon
 } from 'lucide-react';
 import { menuService } from '../services/supabase';
 import { useAlertConfirm } from '../context/AlertConfirmContext';
@@ -16,11 +17,14 @@ export function AdminDishModal({
 }) {
   const { showAlert } = useAlertConfirm();
   const fileInputRef = useRef(null);
+  const singleFileInputRef = useRef(null);
 
-  // Imágenes existentes o array inicial
-  const initialImages = Array.isArray(dish?.images) && dish.images.length > 0 
-    ? dish.images 
-    : (dish?.platos_image ? [dish.platos_image] : dish?.image_url ? [dish.image_url] : []);
+  const getInitialImages = (d) => {
+    if (!d) return [];
+    if (Array.isArray(d.images) && d.images.length > 0) return d.images;
+    const fallback = d.platos_image || d.platosImage || d.image_url || d.image;
+    return fallback ? [fallback] : [];
+  };
 
   const [formData, setFormData] = useState({
     id: dish?.id || '',
@@ -32,12 +36,57 @@ export function AdminDishModal({
     price: dish ? Number(dish.price) : 15.00,
     category_id: dish?.category_id || (categories[0]?.id || 'sandwiches'),
     image_url: dish?.image_url || dish?.image || '',
-    platos_image: dish?.platos_image || dish?.platosImage || initialImages[0] || '',
-    images: initialImages,
+    platos_image: dish?.platos_image || dish?.platosImage || '',
+    images: getInitialImages(dish),
     badge: dish?.badge || '',
     is_available: dish ? dish.is_available !== false : true,
     is_active: dish ? dish.is_active !== false : true
   });
+
+  // Sincronizar formData cuando cambia el plato o se abre el modal
+  useEffect(() => {
+    if (!isOpen) return;
+
+    if (!dish) {
+      setFormData({
+        id: '',
+        name: '',
+        name_en: '',
+        code: '',
+        description: '',
+        description_en: '',
+        price: 15.00,
+        category_id: categories[0]?.id || 'sandwiches',
+        image_url: '',
+        platos_image: '',
+        images: [],
+        badge: '',
+        is_available: true,
+        is_active: true
+      });
+      return;
+    }
+
+    const imgs = getInitialImages(dish);
+    const mainImg = dish.platos_image || dish.platosImage || dish.image_url || dish.image || imgs[0] || '';
+
+    setFormData({
+      id: dish.id || '',
+      name: dish.name || '',
+      name_en: dish.name_en || dish.nameEn || '',
+      code: dish.code || '',
+      description: dish.description || '',
+      description_en: dish.description_en || dish.descriptionEn || '',
+      price: Number(dish.price) || 0,
+      category_id: dish.category_id || (categories[0]?.id || 'sandwiches'),
+      image_url: mainImg,
+      platos_image: mainImg,
+      images: imgs.length > 0 ? imgs : (mainImg ? [mainImg] : []),
+      badge: dish.badge || '',
+      is_available: dish.is_available !== false,
+      is_active: dish.is_active !== false
+    });
+  }, [dish, isOpen, categories]);
 
   const [isUploading, setIsUploading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -46,6 +95,44 @@ export function AdminDishModal({
 
   const handleChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  // Reemplazar de inmediato la foto principal del plato
+  const handleSingleImageReplace = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      setIsUploading(true);
+      triggerHaptic(10);
+
+      const publicUrl = await menuService.uploadImage(file);
+      setFormData(prev => {
+        const remainingImages = (prev.images || []).filter(img => img !== prev.platos_image);
+        return {
+          ...prev,
+          platos_image: publicUrl,
+          image_url: publicUrl,
+          images: [publicUrl, ...remainingImages]
+        };
+      });
+
+      showAlert({
+        title: 'Imagen Reemplazada',
+        message: 'La imagen principal del plato fue actualizada con éxito.',
+        type: 'success'
+      });
+    } catch (err) {
+      console.error('Error reemplazando imagen:', err);
+      showAlert({
+        title: 'Error de carga',
+        message: err.message || 'No se pudo subir la imagen.',
+        type: 'error'
+      });
+    } finally {
+      setIsUploading(false);
+      if (singleFileInputRef.current) singleFileInputRef.current.value = '';
+    }
   };
 
   // Subir múltiples fotos al Bucket CDN de Supabase Storage
@@ -415,15 +502,197 @@ export function AdminDishModal({
             />
           </div>
 
-          {/* Galería Múltiple de Imágenes */}
+          {/* SECCIÓN DESTACADA: IMAGEN ACTUAL DEL PLATO (PORTADA DE LA CARTA) */}
+          <div
+            style={{
+              backgroundColor: '#fcf9f2',
+              padding: '1.15rem',
+              borderRadius: '18px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.85rem',
+              boxShadow: '0 4px 15px rgba(0,0,0,0.03)'
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
+              <div>
+                <label style={{ fontSize: '0.88rem', fontWeight: 900, color: '#1f1e1c', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                  <ImageIcon size={17} color="var(--rojo, #d91c2b)" />
+                  <span>Imagen Actual del Plato (Visible en la Carta)</span>
+                </label>
+                <span style={{ fontSize: '0.74rem', color: '#6b635b' }}>
+                  Esta es la imagen principal que ven los clientes al entrar al menú
+                </span>
+              </div>
+
+              {/* Input oculto para reemplazo directo */}
+              <input
+                type="file"
+                ref={singleFileInputRef}
+                accept="image/*"
+                onChange={handleSingleImageReplace}
+                style={{ display: 'none' }}
+              />
+
+              <button
+                type="button"
+                onClick={() => singleFileInputRef.current?.click()}
+                disabled={isUploading}
+                style={{
+                  backgroundColor: 'var(--rojo, #d91c2b)',
+                  color: '#ffffff',
+                  fontSize: '0.8rem',
+                  fontWeight: 800,
+                  padding: '0.55rem 1rem',
+                  borderRadius: '9999px',
+                  border: 'none !important',
+                  cursor: isUploading ? 'not-allowed' : 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.4rem',
+                  boxShadow: '0 4px 15px rgba(217, 28, 43, 0.25)'
+                }}
+              >
+                <Upload size={14} />
+                <span>{isUploading ? 'Subiendo...' : 'Cambiar Imagen Actual'}</span>
+              </button>
+            </div>
+
+            {/* Previsualización en Vivo de la Imagen Actual */}
+            {(() => {
+              const currentImg = formData.platos_image || formData.image_url || '';
+              const CDN_BASE = 'https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes';
+              let resolvedCurrent = currentImg;
+              let currentFallback = '';
+
+              if (currentImg) {
+                if (currentImg.startsWith('http://') || currentImg.startsWith('https://')) {
+                  const filename = currentImg.split('/').pop();
+                  currentFallback = `/platos_webp/${filename}`;
+                } else {
+                  const clean = currentImg.replace(/^(\.\/|\/)+/, '');
+                  const filename = clean.split('/').pop();
+                  currentFallback = `/${clean}`;
+                  resolvedCurrent = (filename && filename.toLowerCase().endsWith('.webp'))
+                    ? `${CDN_BASE}/platos_webp/${filename}`
+                    : `${CDN_BASE}/${clean}`;
+                }
+              }
+
+              return (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                  <div
+                    style={{
+                      width: '100%',
+                      height: '170px',
+                      borderRadius: '16px',
+                      overflow: 'hidden',
+                      backgroundColor: '#f5efe4',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      position: 'relative',
+                      boxShadow: '0 6px 20px rgba(0, 0, 0, 0.08)'
+                    }}
+                  >
+                    {currentImg ? (
+                      <>
+                        <img
+                          src={resolvedCurrent}
+                          alt={formData.name || 'Plato'}
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover'
+                          }}
+                          onError={(e) => {
+                            if (currentFallback && e.currentTarget.src !== currentFallback) {
+                              e.currentTarget.src = currentFallback;
+                            }
+                          }}
+                        />
+                        <div
+                          style={{
+                            position: 'absolute',
+                            bottom: '8px',
+                            left: '8px',
+                            backgroundColor: 'rgba(15, 23, 42, 0.8)',
+                            backdropFilter: 'blur(8px)',
+                            color: '#ffffff',
+                            padding: '0.25rem 0.65rem',
+                            borderRadius: '9999px',
+                            fontSize: '0.72rem',
+                            fontWeight: 800,
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.35rem'
+                          }}
+                        >
+                          <Star size={12} fill="#fbbf24" color="#fbbf24" />
+                          <span>Portada Activa</span>
+                        </div>
+                      </>
+                    ) : (
+                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.35rem', color: '#9ca3af' }}>
+                        <ImageIcon size={32} />
+                        <span style={{ fontSize: '0.8rem', fontWeight: 700 }}>Sin imagen principal asignada</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Campo de URL Directa / Ruta de Imagen */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.45rem',
+                        backgroundColor: '#ffffff',
+                        padding: '0.55rem 0.85rem',
+                        borderRadius: '10px',
+                        flex: 1
+                      }}
+                    >
+                      <LinkIcon size={14} color="#6b635b" />
+                      <input
+                        type="text"
+                        value={formData.platos_image || ''}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setFormData(prev => ({
+                            ...prev,
+                            platos_image: val,
+                            image_url: val,
+                            images: val ? [val, ...(prev.images || []).filter(u => u !== val)] : prev.images
+                          }));
+                        }}
+                        placeholder="Ruta o URL directa de la imagen (ej: /platos_webp/ceviche.webp)"
+                        style={{
+                          width: '100%',
+                          backgroundColor: 'transparent',
+                          border: 'none !important',
+                          outline: 'none',
+                          fontSize: '0.8rem',
+                          color: '#1f1e1c',
+                          fontWeight: 600
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
+          </div>
+
+          {/* Galería Adicional de Fotografías */}
           <div style={{ backgroundColor: '#fcf9f2', padding: '1rem', borderRadius: '16px' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.65rem' }}>
               <div>
                 <label style={{ fontSize: '0.85rem', fontWeight: 800, color: '#1f1e1c' }}>
-                  Galería de Fotos ({formData.images.length})
+                  Galería Secundaria ({formData.images.length})
                 </label>
                 <span style={{ display: 'block', fontSize: '0.72rem', color: '#6b635b' }}>
-                  Sube múltiples fotos. La foto con estrella es la portada principal.
+                  Fotos adicionales del plato. Pulsa la estrella para convertirla en portada.
                 </span>
               </div>
 
@@ -441,8 +710,8 @@ export function AdminDishModal({
                 onClick={() => fileInputRef.current?.click()}
                 disabled={isUploading}
                 style={{
-                  backgroundColor: 'var(--rojo, #d91c2b)',
-                  color: '#ffffff',
+                  backgroundColor: '#f5efe4',
+                  color: '#1f1e1c',
                   fontSize: '0.78rem',
                   fontWeight: 800,
                   padding: '0.45rem 0.85rem',
@@ -454,8 +723,8 @@ export function AdminDishModal({
                   gap: '0.35rem'
                 }}
               >
-                <Upload size={14} />
-                <span>{isUploading ? 'Subiendo...' : 'Subir Fotos'}</span>
+                <Plus size={14} />
+                <span>{isUploading ? 'Subiendo...' : 'Agregar Fotos'}</span>
               </button>
             </div>
 
@@ -466,12 +735,13 @@ export function AdminDishModal({
                   display: 'grid',
                   gridTemplateColumns: 'repeat(auto-fill, minmax(80px, 1fr))',
                   gap: '0.5rem',
-                  maxHeight: '180px',
+                  maxHeight: '160px',
                   overflowY: 'auto'
                 }}
               >
                 {formData.images.map((imgUrl, idx) => {
                     const SUPABASE_CDN_BASE = 'https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes';
+                    const isMain = imgUrl === formData.platos_image || imgUrl === formData.image_url;
                     let resolvedSrc = imgUrl;
                     let localFallback = '';
                     if (imgUrl) {
@@ -498,7 +768,7 @@ export function AdminDishModal({
                           borderRadius: '10px',
                           overflow: 'hidden',
                           backgroundColor: '#f5efe4',
-                          boxShadow: isMain ? '0 0 0 2px var(--rojo, #d91c2b)' : 'none'
+                          boxShadow: isMain ? '0 0 12px rgba(217, 28, 43, 0.45)' : 'none'
                         }}
                       >
                         <img

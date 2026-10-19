@@ -58,7 +58,7 @@ export function AdminPrintableTab() {
       setTimeout(() => setSavedSuccess(false), 3000);
       showAlert({
         title: 'Configuración Guardada',
-        message: 'Los textos del menú imprimible han sido actualizados en Supabase y se sincronizarán con la carta.',
+        message: 'Los textos del menú imprimible han sido actualizados exitosamente y se sincronizarán con la carta.',
         type: 'success'
       });
     } catch (err) {
@@ -429,7 +429,7 @@ export function AdminPrintableTab() {
             ) : (
               <>
                 <Save size={18} />
-                <span>{isSaving ? 'Guardando en Supabase...' : 'Guardar Cambios del Menú Imprimible'}</span>
+                <span>{isSaving ? 'Guardando Cambios...' : 'Guardar Cambios del Menú Imprimible'}</span>
               </>
             )}
           </button>
