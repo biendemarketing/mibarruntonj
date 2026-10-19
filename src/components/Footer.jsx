@@ -2,7 +2,7 @@ import React from 'react';
 import { InstagramIcon, FacebookIcon, WhatsAppIcon, DoorDashIcon, UberEatsIcon } from './Icons';
 import { Phone, MapPin, Printer, Download, Images, Tv, Clock } from 'lucide-react';
 
-export function Footer({ photoMode = 'curated', onTogglePhotoMode, onOpenTvMode }) {
+export function Footer({ photoMode = 'complete', onTogglePhotoMode, onOpenTvMode }) {
   return (
     <footer className="footer-compact-black">
       <div className="footer-compact-inner">

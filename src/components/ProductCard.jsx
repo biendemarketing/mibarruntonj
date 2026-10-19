@@ -4,7 +4,7 @@ import { PlateIcon } from './Icons';
 
 export function ProductCard({
   dish,
-  photoMode = 'curated',
+  photoMode = 'complete',
   quantity = 0,
   onAddToCart,
   onUpdateQuantity,

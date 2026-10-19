@@ -107,7 +107,7 @@ export class MenuRepository {
     categoryId = 'todos',
     query = '',
     onlyWithPhoto = false,
-    photoMode = 'curated',
+    photoMode = 'complete',
     priceSort = 'none',
     priceRange = 'all'
   } = {}) {

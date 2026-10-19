@@ -10,7 +10,7 @@ import { triggerHaptic } from '../utils/haptics';
 
 export function ProductDetailPage({
   dish: propDish,
-  photoMode = 'curated',
+  photoMode = 'complete',
   cart,
   onAddToCart,
   onUpdateQuantity,

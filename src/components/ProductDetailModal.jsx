@@ -6,7 +6,7 @@ import { triggerHaptic } from '../utils/haptics';
 
 export function ProductDetailModal({
   dish,
-  photoMode = 'curated',
+  photoMode = 'complete',
   initialQuantity = 1,
   initialNote = '',
   onClose,

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Play, Pause, Maximize, Minimize, X, Tv } from 'lucide-react';
 import { PlateIcon } from './Icons';
 
-export function TvMenuModal({ isOpen, onClose, dishes = [], photoMode = 'curated' }) {
+export function TvMenuModal({ isOpen, onClose, dishes = [], photoMode = 'complete' }) {
   // Filtrar platos que tengan imagen en alta calidad para la TV
   const tvDishes = React.useMemo(() => {
     const list = dishes.filter((d) => d.hasImage && d.hasImage(photoMode));

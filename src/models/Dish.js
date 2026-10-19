@@ -27,33 +27,33 @@ export class Dish {
     this.glosa = glosa || '';
     this.image = image;
     this.platosImage = platosImage || null;
-    this.hasPhoto = Boolean(image) || hasPhoto;
+    this.hasPhoto = Boolean(this.getImage('complete')) || Boolean(image) || hasPhoto;
     this.categoryName = categoryName || '';
     this.categoryNameEn = categoryNameEn || '';
   }
 
   /**
-   * Indica si el plato tiene fotografía según el modo activo ('curated' o 'complete')
+   * Indica si el plato tiene fotografía según el modo activo ('complete' v2 o 'curated')
    * @param {'curated'|'complete'} photoMode
    * @returns {boolean}
    */
-  hasImage(photoMode = 'curated') {
-    if (photoMode === 'complete') {
-      return Boolean(this.platosImage || this.image);
+  hasImage(photoMode = 'complete') {
+    if (photoMode === 'curated') {
+      return Boolean(this.image);
     }
-    return Boolean(this.image);
+    return Boolean(this.platosImage || this.image);
   }
 
   /**
-   * Obtiene la ruta de la fotografía según el modo activo ('curated' o 'complete')
+   * Obtiene la ruta de la fotografía según el modo activo ('complete' v2 o 'curated')
    * @param {'curated'|'complete'} photoMode
    * @returns {string|null}
    */
-  getImage(photoMode = 'curated') {
-    if (photoMode === 'complete') {
-      return this.platosImage || this.image;
+  getImage(photoMode = 'complete') {
+    if (photoMode === 'curated') {
+      return this.image || this.platosImage;
     }
-    return this.image;
+    return this.platosImage || this.image;
   }
 
   /**
@@ -61,7 +61,7 @@ export class Dish {
    * @param {'curated'|'complete'} photoMode
    * @returns {string|null}
    */
-  getResolvedImage(photoMode = 'curated') {
+  getResolvedImage(photoMode = 'complete') {
     const raw = this.getImage(photoMode);
     if (!raw) return null;
     if (raw.startsWith('http://') || raw.startsWith('https://')) {

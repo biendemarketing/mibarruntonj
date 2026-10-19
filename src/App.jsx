@@ -341,12 +341,13 @@ export function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Modo de Fotos: 'curated' (fotos seleccionadas actuales) vs 'complete' (fotos de la carpeta platos para todos los platos)
+  // Modo de Fotos: Siempre 'complete' (Modo v2 con 100% de fotos para todos los platos) activo para siempre
   const [photoMode, setPhotoMode] = useState(() => {
     try {
-      return localStorage.getItem('mb-photo-mode') || 'curated';
+      localStorage.setItem('mb-photo-mode', 'complete');
+      return 'complete';
     } catch {
-      return 'curated';
+      return 'complete';
     }
   });
 
@@ -354,13 +355,13 @@ export function App() {
 
   const handleTogglePhotoMode = () => {
     setPhotoMode((prev) => {
-      const next = prev === 'curated' ? 'complete' : 'curated';
+      const next = prev === 'complete' ? 'curated' : 'complete';
       try {
         localStorage.setItem('mb-photo-mode', next);
       } catch {}
       setToastMessage(
         next === 'complete'
-          ? 'Galería Completa: Mostrando fotos de la carpeta Platos'
+          ? 'Modo V2 Activo: Galería completa de fotos al 100%'
           : 'Mostrando versión de fotos seleccionadas'
       );
       setTimeout(() => setToastMessage(''), 3200);

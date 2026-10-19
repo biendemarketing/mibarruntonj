@@ -22,7 +22,7 @@ export function CartDrawer({
   onRemoveItem,
   onUpdateCustomerField,
   onClearCart,
-  photoMode = 'curated'
+  photoMode = 'complete'
 }) {
   const [showPreview, setShowPreview] = useState(false);
   const [phoneInput, setPhoneInput] = useState('19736533749'); // WhatsApp oficial: (973) 653-3749

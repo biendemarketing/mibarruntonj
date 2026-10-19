@@ -30,7 +30,7 @@ export function Header({
   onToggleFavorites,
   allDishes = [],
   onOpenDetail,
-  photoMode = 'curated'
+  photoMode = 'complete'
 }) {
   const totalCount = cart.getTotalCount();
   const formattedTotal = cart.getFormattedTotal();
