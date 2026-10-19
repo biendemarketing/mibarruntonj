@@ -288,8 +288,16 @@ input, textarea, select {
 }
 
 @media (min-width: 769px) {
+  .brand-header {
+    min-height: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
   .brand-header-inner {
-    padding: 0.95rem 1.5rem;
+    padding: 2.25rem 2rem 2rem;
+    flex: 1;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -297,6 +305,17 @@ input, textarea, select {
     text-align: left;
     gap: 1.5rem;
     max-width: 1400px;
+    width: 100%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .brand-header {
+    min-height: 310px;
+  }
+
+  .brand-header-inner {
+    padding: 3rem 2.5rem 2.75rem;
   }
 }
 
