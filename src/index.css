@@ -233,6 +233,21 @@ input, textarea, select {
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
 }
 
+.header-top-hours {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-system);
+  color: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+}
+
+.header-hours-short {
+  display: none;
+}
+
 .header-top-address-link:hover,
 .header-top-phone-link:hover {
   opacity: 0.88;
@@ -293,6 +308,19 @@ input, textarea, select {
 
   .header-address-short {
     display: inline !important;
+  }
+
+  .header-hours-full {
+    display: none !important;
+  }
+
+  .header-hours-short {
+    display: inline !important;
+  }
+
+  .header-top-hours {
+    font-size: 0.73rem !important;
+    white-space: nowrap !important;
   }
 
   .header-top-bar-inner {

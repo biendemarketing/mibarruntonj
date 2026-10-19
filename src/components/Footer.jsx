@@ -1,6 +1,6 @@
 import React from 'react';
 import { InstagramIcon, FacebookIcon, WhatsAppIcon, DoorDashIcon, UberEatsIcon } from './Icons';
-import { Phone, MapPin, Printer, Download, Images, Tv } from 'lucide-react';
+import { Phone, MapPin, Printer, Download, Images, Tv, Clock } from 'lucide-react';
 
 export function Footer({ photoMode = 'curated', onTogglePhotoMode, onOpenTvMode }) {
   return (
@@ -8,6 +8,15 @@ export function Footer({ photoMode = 'curated', onTogglePhotoMode, onOpenTvMode 
       <div className="footer-compact-inner">
         {/* Fila Central de Información Compacta — Perfectamente Centrada */}
         <div className="footer-compact-grid">
+          {/* Horario de Atención */}
+          <div className="footer-compact-card">
+            <span className="footer-compact-label">Horario</span>
+            <p className="footer-compact-text">
+              <strong style={{ color: 'var(--rojo)', fontWeight: 800 }}>Atención 24 Horas</strong><br />
+              Abierto todos los días
+            </p>
+          </div>
+
           {/* Servicios */}
           <div className="footer-compact-card">
             <span className="footer-compact-label">Servicios</span>

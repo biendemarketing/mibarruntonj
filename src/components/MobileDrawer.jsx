@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { X, ChevronRight, Utensils, MapPin, Phone, Printer } from 'lucide-react';
+import { X, ChevronRight, Utensils, MapPin, Phone, Printer, Clock } from 'lucide-react';
 
 export function MobileDrawer({
   isOpen,
@@ -121,20 +121,27 @@ export function MobileDrawer({
 
         {/* Pie de navegación rápida */}
         <div className="mobile-drawer-footer">
-          <div className="mobile-drawer-footer-inner">
-            <a
-              href="https://maps.google.com/?q=21+Mill+St+%239,+Paterson,+NJ"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mobile-drawer-info-link"
-            >
-              <MapPin size={13} color="var(--naranja)" />
-              <span>21 Mill St, #9, Paterson</span>
-            </a>
-            <a href="tel:9736533749" className="mobile-drawer-info-link">
-              <Phone size={13} color="var(--naranja)" />
-              <span>(973) 653-3749</span>
-            </a>
+          <div className="mobile-drawer-footer-inner" style={{ flexDirection: 'column', gap: '0.45rem', alignItems: 'center' }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.78rem', color: 'var(--rojo)', fontWeight: 800 }}>
+              <Clock size={13} color="var(--rojo)" />
+              <span>Atención 24 Horas</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+              <a
+                href="https://maps.google.com/?q=21+Mill+St+%239,+Paterson,+NJ"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mobile-drawer-info-link"
+              >
+                <MapPin size={13} color="var(--naranja)" />
+                <span>21 Mill St, Paterson</span>
+              </a>
+              <span style={{ opacity: 0.4 }}>·</span>
+              <a href="tel:9736533749" className="mobile-drawer-info-link">
+                <Phone size={13} color="var(--naranja)" />
+                <span>(973) 653-3749</span>
+              </a>
+            </div>
           </div>
         </div>
       </div>

@@ -770,9 +770,9 @@ function renderPage10() {
             <span class="bcard-icon">${SVG_ICONS.clock}</span>
             <span class="bcard-title">HORARIOS DE ATENCIÓN</span>
           </div>
-          <div class="bcard-line"><strong>Lunes a Jueves:</strong> 9:00 AM – 9:00 PM</div>
-          <div class="bcard-line"><strong>Viernes y Sábados:</strong> 9:00 AM – 10:00 PM</div>
-          <div class="bcard-line"><strong>Domingos:</strong> 9:00 AM – 9:00 PM</div>
+          <div class="bcard-line" style="font-size: 11pt; font-weight: 900; color: #ee0000; letter-spacing: 0.02em;">ATENCIÓN 24 HORAS</div>
+          <div class="bcard-line"><strong>Lunes a Domingo:</strong> Abierto las 24 Horas</div>
+          <div class="bcard-line">Servicio ininterrumpido día y noche</div>
         </div>
 
         <!-- Tarjeta Contacto & Delivery (TELÉFONO APARECE UNA SOLA VEZ) -->

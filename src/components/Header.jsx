@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { Search, ShoppingCart, Moon, Sun, Menu, LayoutGrid, Grid2X2, Rows3, MapPin, Phone, SlidersHorizontal, Heart } from 'lucide-react';
+import { Search, ShoppingCart, Moon, Sun, Menu, LayoutGrid, Grid2X2, Rows3, MapPin, Phone, SlidersHorizontal, Heart, Clock } from 'lucide-react';
 import { FacebookIcon, InstagramIcon, WhatsAppIcon, PlateIcon } from './Icons';
 
 const POPULAR_SEARCHES = [
@@ -110,6 +110,12 @@ export function Header({
               <span className="header-address-full">21 Mill St, #9, Paterson, NJ</span>
               <span className="header-address-short">21 Mill St, NJ</span>
             </a>
+            <span className="header-top-divider">·</span>
+            <span className="header-top-hours" title="Horario de atención continuo">
+              <Clock size={12} color="var(--naranja)" />
+              <span className="header-hours-full">Atención 24 Horas</span>
+              <span className="header-hours-short">24 Horas</span>
+            </span>
             <span className="header-top-divider">·</span>
             <a href="tel:9736533749" className="header-top-phone-link" title="Llamar a Mi Barrunto">
               <Phone size={12} color="var(--naranja)" />
