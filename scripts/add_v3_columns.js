@@ -1,7 +1,8 @@
 import https from 'node:https';
+import './env_loader.js';
 
-const token = process.env.SUPABASE_ACCESS_TOKEN || '';
-const projectRef = 'scvlxcgmhbwjmvycrttf';
+const token = process.env.SUPABASE_ACCESS_TOKEN || process.env.SUPABASE_MANAGEMENT_TOKEN || '';
+const projectRef = process.env.SUPABASE_PROJECT_REF || '';
 
 const sql = `
   ALTER TABLE public.dishes ADD COLUMN IF NOT EXISTS name_en TEXT DEFAULT '';
