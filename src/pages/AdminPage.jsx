@@ -41,7 +41,7 @@ export function AdminPage() {
   const [currentWaiter, setCurrentWaiter] = useState(() => adminAuthService.getCurrentWaiter());
 
   const [loginMode, setLoginMode] = useState('admin'); // 'admin' | 'waiter'
-  const [loginUser, setLoginUser] = useState('admin@mibarrunto.com');
+  const [loginUser, setLoginUser] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
   const [waiterUsername, setWaiterUsername] = useState('');
   const [waiterPin, setWaiterPin] = useState('');
@@ -610,9 +610,10 @@ export function AdminPage() {
                   <input
                     type="text"
                     required
+                    autoFocus
                     value={loginUser}
                     onChange={(e) => setLoginUser(e.target.value)}
-                    placeholder="admin@mibarrunto.com"
+                    placeholder="ej: usuario o correo"
                     style={{
                       width: '100%',
                       padding: '0.85rem 1rem 0.85rem 2.85rem',
@@ -640,7 +641,6 @@ export function AdminPage() {
                   <input
                     type="password"
                     required
-                    autoFocus
                     value={loginPassword}
                     onChange={(e) => setLoginPassword(e.target.value)}
                     placeholder="••••••••"
