@@ -307,19 +307,12 @@ export function AdminDishesTab({
           const isActive = dish.is_active !== false;
           const SUPABASE_CDN_BASE = 'https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes';
           let imgUrl = dish.platos_image || dish.image_url || '';
-          let fallbackUrl = '';
-          if (imgUrl) {
-            if (imgUrl.startsWith('http://') || imgUrl.startsWith('https://')) {
-              const filename = imgUrl.split('/').pop();
-              fallbackUrl = `/platos_webp/${filename}`;
-            } else {
-              const clean = imgUrl.replace(/^(\.\/|\/)+/, '');
-              const filename = clean.split('/').pop();
-              fallbackUrl = `/${clean}`;
-              imgUrl = filename && filename.toLowerCase().endsWith('.webp')
-                ? `${SUPABASE_CDN_BASE}/platos_webp/${filename}`
-                : `${SUPABASE_CDN_BASE}/${clean}`;
-            }
+          if (imgUrl && !imgUrl.startsWith('http://') && !imgUrl.startsWith('https://')) {
+            const clean = imgUrl.replace(/^(\.\/|\/)+/, '');
+            const filename = clean.split('/').pop();
+            imgUrl = filename && filename.toLowerCase().endsWith('.webp')
+              ? `${SUPABASE_CDN_BASE}/platos_webp/${filename}`
+              : `${SUPABASE_CDN_BASE}/${clean}`;
           }
 
           return (
@@ -365,9 +358,7 @@ export function AdminDishesTab({
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                       loading="lazy"
                       onError={(e) => {
-                        if (fallbackUrl && e.currentTarget.src !== fallbackUrl) {
-                          e.currentTarget.src = fallbackUrl;
-                        }
+                        e.currentTarget.style.display = 'none';
                       }}
                     />
                   ) : (

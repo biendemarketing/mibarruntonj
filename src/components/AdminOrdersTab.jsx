@@ -250,6 +250,8 @@ export function AdminOrdersTab({
       }
     } else if (targetColId === 'completed') {
       await handleFreeTable(order);
+    } else if (targetColId === 'cancelled') {
+      await onUpdateStatus(order.id, 'cancelled');
     }
   };
 
@@ -339,6 +341,17 @@ export function AdminOrdersTab({
       };
     }
 
+    if (status === 'cancelled') {
+      return {
+        prev: null,
+        next: {
+          label: 'Restaurar a Pendiente',
+          color: '#d97706',
+          handler: () => onUpdateStatus(order.id, 'pending')
+        }
+      };
+    }
+
     return { prev: null, next: null };
   };
 
@@ -349,6 +362,7 @@ export function AdminOrdersTab({
   const countDelivered = orders.filter(o => o.status === 'delivered' && !o.is_paid && o.payment_status !== 'paid').length;
   const countPaid = orders.filter(o => o.status === 'paid' || (o.status === 'delivered' && (o.is_paid || o.payment_status === 'paid'))).length;
   const countCompleted = orders.filter(o => o.status === 'completed').length;
+  const countCancelled = orders.filter(o => o.status === 'cancelled').length;
 
   // Filtrado de pedidos según término de búsqueda y filtro de estado
   const filteredOrders = useMemo(() => {
@@ -382,7 +396,7 @@ export function AdminOrdersTab({
     });
   }, [orders, filterStatus, searchQuery]);
 
-  // Columnas para el Pipeline / Kanban: Entregados y Pagados claramente separados
+  // Columnas para el Pipeline / Kanban: Entregados, Pagados y Cancelados claramente separados
   const pipelineColumns = [
     {
       id: 'pending',
@@ -437,6 +451,15 @@ export function AdminOrdersTab({
       color: '#4b5563',
       bgLight: '#f3f4f6',
       orders: orders.filter(o => o.status === 'completed')
+    },
+    {
+      id: 'cancelled',
+      title: 'Cancelados',
+      subtitle: 'Órdenes Anuladas',
+      icon: AlertCircle,
+      color: '#dc2626',
+      bgLight: '#fee2e2',
+      orders: orders.filter(o => o.status === 'cancelled')
     }
   ];
 
@@ -448,10 +471,13 @@ export function AdminOrdersTab({
     const isDelivered = order.status === 'delivered';
     const isPaidOrder = order.status === 'paid' || Boolean(order.is_paid || order.payment_status === 'paid');
     const isCompleted = order.status === 'completed';
+    const isCancelled = order.status === 'cancelled';
     const stepActions = getOrderStepActions(order);
     const isDragging = draggedOrderId === order.id;
 
-    const cardColor = isPending
+    const cardColor = isCancelled
+      ? '#dc2626'
+      : isPending
       ? '#d97706'
       : isKitchen
       ? '#2563eb'
@@ -1235,6 +1261,55 @@ export function AdminOrdersTab({
                         Mesa {order.table_number} Desocupada · Completada
                       </div>
                     )}
+
+                    {isCancelled && (
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', width: '100%' }}>
+                        <div
+                          style={{
+                            width: '100%',
+                            textAlign: 'center',
+                            fontSize: '0.78rem',
+                            color: '#b91c1c',
+                            fontWeight: 800,
+                            padding: '0.5rem',
+                            backgroundColor: '#fee2e2',
+                            borderRadius: '8px'
+                          }}
+                        >
+                          Orden Cancelada / Anulada
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            triggerHaptic(10);
+                            onUpdateStatus(order.id, 'pending');
+                            showAlert({
+                              title: 'Pedido Restaurado',
+                              message: `La orden #${order.order_number} ha vuelto a estado Pendiente.`,
+                              type: 'success'
+                            });
+                          }}
+                          style={{
+                            width: '100%',
+                            backgroundColor: '#f5efe4',
+                            color: '#1f1e1c',
+                            fontWeight: 800,
+                            fontSize: '0.78rem',
+                            padding: '0.5rem',
+                            borderRadius: '8px',
+                            cursor: 'pointer',
+                            border: 'none !important',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '0.35rem'
+                          }}
+                        >
+                          <RefreshCw size={13} />
+                          <span>Restaurar Pedido a Pendiente</span>
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
@@ -1484,6 +1559,31 @@ export function AdminOrdersTab({
           </div>
           <div style={{ fontSize: '1.65rem', fontWeight: 900, color: '#1f1e1c', marginTop: '0.35rem' }}>
             {countCompleted}
+          </div>
+        </div>
+
+        {/* Métrica: Cancelados */}
+        <div
+          onClick={() => {
+            triggerHaptic(8);
+            setFilterStatus('cancelled');
+          }}
+          style={{
+            backgroundColor: filterStatus === 'cancelled' ? '#fee2e2' : '#ffffff',
+            padding: '1rem',
+            borderRadius: '16px',
+            boxShadow: '0 4px 20px rgba(0,0,0,0.06)',
+            cursor: 'pointer',
+            transition: 'all 0.2s',
+            border: 'none !important'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: '#dc2626' }}>
+            <span style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase' }}>Cancelados</span>
+            <AlertCircle size={16} />
+          </div>
+          <div style={{ fontSize: '1.65rem', fontWeight: 900, color: '#dc2626', marginTop: '0.35rem' }}>
+            {countCancelled}
           </div>
         </div>
       </div>
@@ -1845,7 +1945,8 @@ export function AdminOrdersTab({
               { id: 'ready', label: `Listos (${countReady})` },
               { id: 'delivered', label: 'Entregados' },
               { id: 'paid', label: 'Solo Pagados' },
-              { id: 'unpaid', label: 'Pendientes de Pago' }
+              { id: 'unpaid', label: 'Pendientes de Pago' },
+              { id: 'cancelled', label: `Cancelados (${countCancelled})` }
             ].map(tab => (
               <button
                 key={tab.id}
