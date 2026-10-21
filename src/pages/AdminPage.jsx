@@ -5,13 +5,16 @@ import {
   ExternalLink, Lock, Check, ShieldCheck, KeyRound, 
   Clock, Volume2, VolumeX, ArrowLeft, RefreshCw, Printer,
   Menu, X, Mail, ShieldAlert, Sparkles, ChefHat, User,
-  UserCheck, Eye, EyeOff
+  UserCheck, Eye, EyeOff, ShoppingBag, Receipt
 } from 'lucide-react';
 import { 
   ordersService, menuService, tablesService, 
   waitersService, adminAuthService 
 } from '../services/supabase';
 import { AdminOrdersTab } from '../components/AdminOrdersTab';
+import { AdminPOSTab } from '../components/AdminPOSTab';
+import { AdminInvoicesTab } from '../components/AdminInvoicesTab';
+import { AdminCustomersTab } from '../components/AdminCustomersTab';
 import { AdminDishesTab } from '../components/AdminDishesTab';
 import { AdminCategoriesTab } from '../components/AdminCategoriesTab';
 import { AdminTablesTab } from '../components/AdminTablesTab';
@@ -428,6 +431,9 @@ export function AdminPage() {
   const navTabs = useMemo(() => {
     const allTabs = [
       { id: 'orders', label: 'Pedidos en Vivo', icon: Bell, badge: pendingCount },
+      { id: 'pos', label: 'Punto de Venta (POS)', icon: ShoppingBag },
+      { id: 'invoices', label: 'Facturas & Tickets', icon: Receipt },
+      { id: 'customers', label: 'Clientes', icon: Users },
       { id: 'dishes', label: 'Gestión de Platos', icon: Utensils, badge: dishes.length },
       { id: 'categories', label: 'Categorías', icon: Layers, badge: categories.length },
       { id: 'tables', label: 'Mesas & QR', icon: QrCode, badge: tables.length },
@@ -446,10 +452,10 @@ export function AdminPage() {
         return allTabs;
       }
       if (waiterPermLevel === 'pedidos_y_mesas') {
-        return allTabs.filter(t => t.id === 'orders' || t.id === 'tables');
+        return allTabs.filter(t => t.id === 'orders' || t.id === 'pos' || t.id === 'tables' || t.id === 'invoices');
       }
-      // 'solo_pedidos' (predeterminado para meseros)
-      return allTabs.filter(t => t.id === 'orders');
+      // 'solo_pedidos' (predeterminado para meseros: pueden ver pedidos y operar el POS)
+      return allTabs.filter(t => t.id === 'orders' || t.id === 'pos');
     }
 
     return allTabs;
@@ -1430,15 +1436,39 @@ export function AdminPage() {
               orders={orders}
               waiters={waiters}
               tables={tables}
+              dishes={dishes}
               onUpdateStatus={handleUpdateOrderStatus}
               onAssignWaiter={handleAssignWaiter}
               onMarkOrderPaid={handleMarkOrderPaid}
               onFreeTable={handleFreeTable}
+              onOrderUpdated={(updated) => {
+                setOrders(prev => prev.map(o => o.id === updated.id ? { ...o, ...updated } : o));
+              }}
               soundEnabled={soundEnabled}
               onToggleSound={() => setSoundEnabled(!soundEnabled)}
               onRefresh={loadAllData}
               isLoading={isLoading}
             />
+          )}
+
+          {activeTab === 'pos' && (
+            <AdminPOSTab
+              tables={tables}
+              dishes={dishes}
+              categories={categories}
+              waiters={waiters}
+              currentWaiter={currentWaiter}
+              onOrderCreated={(newOrder) => setOrders(prev => [newOrder, ...prev])}
+              onRefreshData={loadAllData}
+            />
+          )}
+
+          {activeTab === 'invoices' && (
+            <AdminInvoicesTab dishes={dishes} />
+          )}
+
+          {activeTab === 'customers' && (
+            <AdminCustomersTab />
           )}
 
           {activeTab === 'dishes' && (
@@ -1563,6 +1593,58 @@ export function AdminPage() {
                 {pendingCount}
               </span>
             )}
+          </button>
+        )}
+
+        {/* Punto de Venta (POS) */}
+        {navTabs.some(t => t.id === 'pos') && (
+          <button
+            type="button"
+            onClick={() => {
+              triggerHaptic(8);
+              setActiveTab('pos');
+            }}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '0.2rem',
+              padding: '0.5rem 0.85rem',
+              borderRadius: '16px',
+              backgroundColor: activeTab === 'pos' ? 'rgba(217, 28, 43, 0.1)' : 'transparent',
+              color: activeTab === 'pos' ? 'var(--rojo, #d91c2b)' : '#6b635b',
+              cursor: 'pointer',
+              border: 'none !important'
+            }}
+          >
+            <ShoppingBag size={20} />
+            <span style={{ fontSize: '0.72rem', fontWeight: 800 }}>TPV</span>
+          </button>
+        )}
+
+        {/* Facturas */}
+        {navTabs.some(t => t.id === 'invoices') && (
+          <button
+            type="button"
+            onClick={() => {
+              triggerHaptic(8);
+              setActiveTab('invoices');
+            }}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '0.2rem',
+              padding: '0.5rem 0.85rem',
+              borderRadius: '16px',
+              backgroundColor: activeTab === 'invoices' ? 'rgba(217, 28, 43, 0.1)' : 'transparent',
+              color: activeTab === 'invoices' ? 'var(--rojo, #d91c2b)' : '#6b635b',
+              cursor: 'pointer',
+              border: 'none !important'
+            }}
+          >
+            <Receipt size={20} />
+            <span style={{ fontSize: '0.72rem', fontWeight: 800 }}>Facturas</span>
           </button>
         )}
 

@@ -1,28 +1,46 @@
 /**
- * Registro de Service Worker para PWA
- * Activa capacidades sin conexión, velocidad instantánea e instalación en pantalla de inicio.
+ * Registro de Service Worker para PWA con Auto-Recuperación de Chunks
  */
 export function registerServiceWorker() {
   if (typeof window === 'undefined' || !('serviceWorker' in navigator)) {
     return;
   }
 
-  // Registrar después de que la página termine de cargar para no bloquear LCP / First Paint
+  // Si hay un error de carga de bundle o chunk por nueva versión en Vercel, purgar y recargar automáticamente
+  window.addEventListener('error', (e) => {
+    const isChunkError = e.message && (
+      e.message.includes('Loading chunk') ||
+      e.message.includes('Failed to fetch dynamically imported module') ||
+      e.message.includes('Importing a module script failed') ||
+      e.message.includes('Failed to load module script')
+    );
+    if (isChunkError) {
+      console.warn('[PWA] Desincronización de bundle detectada. Purgando caché...');
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then((registrations) => {
+          for (const reg of registrations) reg.unregister();
+        });
+      }
+      if ('caches' in window) {
+        caches.keys().then((keys) => {
+          keys.forEach((k) => caches.delete(k));
+        });
+      }
+      const hasRetried = sessionStorage.getItem('chunk_retry');
+      if (!hasRetried) {
+        sessionStorage.setItem('chunk_retry', '1');
+        setTimeout(() => {
+          window.location.reload();
+        }, 200);
+      }
+    }
+  });
+
   window.addEventListener('load', () => {
     navigator.serviceWorker
       .register('/sw.js')
       .then((registration) => {
-        // Escuchar actualizaciones disponibles
-        registration.addEventListener('updatefound', () => {
-          const installingWorker = registration.installing;
-          if (installingWorker) {
-            installingWorker.addEventListener('statechange', () => {
-              if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                console.info('[PWA] Nueva versión de Mi Barrunto disponible.');
-              }
-            });
-          }
-        });
+        registration.update();
       })
       .catch((error) => {
         console.warn('[PWA] Registro de ServiceWorker falló:', error);

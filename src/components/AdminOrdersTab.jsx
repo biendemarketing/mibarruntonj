@@ -6,20 +6,24 @@ import {
   DollarSign, Kanban, LayoutGrid, CheckCheck, 
   Users, Search, Calendar, FileText, Star, X,
   ArrowLeft, ArrowRight, Sparkles, Move,
-  ChevronDown, ChevronUp
+  ChevronDown, ChevronUp, Edit3, Printer, Receipt
 } from 'lucide-react';
 import { useAlertConfirm } from '../context/AlertConfirmContext';
 import { triggerHaptic } from '../utils/haptics';
 import { getClientShortCode } from '../utils/clientIdentity';
+import { AdminOrderEditModal } from './AdminOrderEditModal';
+import { InvoicePrintModal } from './InvoicePrintModal';
 
 export function AdminOrdersTab({
   orders = [],
   waiters = [],
   tables = [],
+  dishes = [],
   onUpdateStatus,
   onAssignWaiter,
   onMarkOrderPaid,
   onFreeTable,
+  onOrderUpdated,
   soundEnabled,
   onToggleSound,
   onRefresh,
@@ -36,6 +40,10 @@ export function AdminOrdersTab({
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('efectivo');
   const [expandedCardIds, setExpandedCardIds] = useState(new Set());
   const [expandAll, setExpandAll] = useState(false);
+
+  // Modales de Edición de Pedido e Impresión de Facturas
+  const [editingOrderModal, setEditingOrderModal] = useState(null);
+  const [printingOrderModal, setPrintingOrderModal] = useState(null);
 
   const toggleExpandCard = (orderId) => {
     triggerHaptic(6);
@@ -523,18 +531,68 @@ export function AdminOrdersTab({
             </span>
           </div>
 
-          {/* Mesa Destacada */}
-          <div
-            style={{
-              backgroundColor: 'rgba(217, 28, 43, 0.1)',
-              color: 'var(--rojo, #d91c2b)',
-              padding: '0.25rem 0.75rem',
-              borderRadius: '8px',
-              fontSize: '0.85rem',
-              fontWeight: 800
-            }}
-          >
-            Mesa {order.table_number}
+          {/* Mesa Destacada y Accesos Rápidos */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                triggerHaptic(8);
+                setEditingOrderModal(order);
+              }}
+              style={{
+                width: '28px',
+                height: '28px',
+                borderRadius: '8px',
+                backgroundColor: '#f5efe4',
+                color: '#44403c',
+                border: 'none !important',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+              title="Editar platos o datos del pedido"
+            >
+              <Edit3 size={13} />
+            </button>
+
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                triggerHaptic(8);
+                setPrintingOrderModal(order);
+              }}
+              style={{
+                width: '28px',
+                height: '28px',
+                borderRadius: '8px',
+                backgroundColor: '#f5efe4',
+                color: 'var(--rojo, #d91c2b)',
+                border: 'none !important',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+              title="Imprimir ticket o factura"
+            >
+              <Printer size={13} />
+            </button>
+
+            <div
+              style={{
+                backgroundColor: 'rgba(217, 28, 43, 0.1)',
+                color: 'var(--rojo, #d91c2b)',
+                padding: '0.25rem 0.65rem',
+                borderRadius: '8px',
+                fontSize: '0.85rem',
+                fontWeight: 800
+              }}
+            >
+              Mesa {order.table_number}
+            </div>
           </div>
         </div>
 
@@ -851,6 +909,61 @@ export function AdminOrdersTab({
                         <span>Pendiente de Pago (${Number(order.total_amount || 0).toFixed(2)}) · Cobrar</span>
                       </button>
                     )}
+                  </div>
+
+                  {/* Acciones de Edición de Pedido e Impresión de Facturas */}
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.45rem' }}>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        triggerHaptic(8);
+                        setEditingOrderModal(order);
+                      }}
+                      style={{
+                        padding: '0.5rem 0.65rem',
+                        borderRadius: '8px',
+                        backgroundColor: '#f5efe4',
+                        color: '#1f1e1c',
+                        fontSize: '0.75rem',
+                        fontWeight: 800,
+                        border: 'none !important',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '0.35rem'
+                      }}
+                    >
+                      <Edit3 size={13} />
+                      <span>Editar Pedido</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        triggerHaptic(8);
+                        setPrintingOrderModal(order);
+                      }}
+                      style={{
+                        padding: '0.5rem 0.65rem',
+                        borderRadius: '8px',
+                        backgroundColor: 'rgba(217, 28, 43, 0.1)',
+                        color: 'var(--rojo, #d91c2b)',
+                        fontSize: '0.75rem',
+                        fontWeight: 800,
+                        border: 'none !important',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '0.35rem'
+                      }}
+                    >
+                      <Printer size={13} />
+                      <span>Factura / Ticket</span>
+                    </button>
                   </div>
 
                   {/* Control de Tiempo de Espera (para pendientes o en cocina) */}
@@ -2117,6 +2230,56 @@ export function AdminOrdersTab({
             </div>
           </div>
         </div>
+      )}
+
+      {/* Modal de Edición Integral de Pedido */}
+      {editingOrderModal && (
+        <AdminOrderEditModal
+          isOpen={Boolean(editingOrderModal)}
+          onClose={() => setEditingOrderModal(null)}
+          order={editingOrderModal}
+          dishes={dishes}
+          tables={tables}
+          onOrderUpdated={(updated) => {
+            if (onOrderUpdated) {
+              onOrderUpdated(updated);
+            }
+            if (onRefresh) {
+              onRefresh();
+            }
+          }}
+        />
+      )}
+
+      {/* Modal de Impresión de Facturas / Tickets */}
+      {printingOrderModal && (
+        <InvoicePrintModal
+          isOpen={Boolean(printingOrderModal)}
+          onClose={() => setPrintingOrderModal(null)}
+          initialData={{
+            invoice_number: `INV-${printingOrderModal.order_number || printingOrderModal.id?.slice(0, 6)}`,
+            customer_name: printingOrderModal.customer_name,
+            customer_phone: printingOrderModal.customer_phone,
+            table_number: printingOrderModal.table_number,
+            waiter_name: waiters.find(w => w.id === printingOrderModal.waiter_id)?.name || 'Servicio de Sala',
+            payment_method: printingOrderModal.payment_method || 'efectivo',
+            subtotal: Number(printingOrderModal.subtotal || printingOrderModal.total_amount || 0),
+            tax_enabled: Boolean(printingOrderModal.tax_enabled),
+            tax_amount: Number(printingOrderModal.tax_amount || 0),
+            delivery_enabled: Boolean(printingOrderModal.delivery_enabled),
+            delivery_amount: Number(printingOrderModal.delivery_amount || 0),
+            tip_enabled: Boolean(printingOrderModal.tip_amount > 0),
+            tip_amount: Number(printingOrderModal.tip_amount || 0),
+            total_amount: Number(printingOrderModal.total_amount || 0),
+            notes: printingOrderModal.notes || '',
+            items: (printingOrderModal.order_items || []).map(it => ({
+              name: it.dish_name || it.name,
+              quantity: it.quantity,
+              unit_price: it.dish_price || it.unit_price,
+              notes: it.notes
+            }))
+          }}
+        />
       )}
     </div>
   );

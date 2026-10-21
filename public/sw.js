@@ -1,31 +1,31 @@
-const CACHE_NAME = 'mibarrunto-pwa-v1';
-const CORE_ASSETS = [
-  '/',
-  '/index.html',
+const CACHE_NAME = 'mibarrunto-pwa-v3';
+const STATIC_ASSETS = [
   '/manifest.webmanifest',
   '/LogoPWA/icon-192x192.png',
   '/LogoPWA/icon-512x512.png',
   '/LogoPWA/apple-touch-icon.png'
 ];
 
-// Instalación: Pre-cacheados de recursos base
+// Instalación: Pre-cachear solo iconos estáticos (NUNCA index.html para evitar bundles obsoletos)
 self.addEventListener('install', (event) => {
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(CORE_ASSETS).catch((err) => {
-        console.warn('[SW] Fallback al pre-cachear:', err);
+      return cache.addAll(STATIC_ASSETS).catch((err) => {
+        console.warn('[SW] Pre-caching parcial:', err);
       });
-    }).then(() => self.skipWaiting())
+    })
   );
 });
 
-// Activación: Limpieza de versiones antiguas de caché
+// Activación: Purgar automáticamente TODAS las versiones anteriores de caché
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => {
       return Promise.all(
         keys.map((key) => {
           if (key !== CACHE_NAME) {
+            console.info('[SW] Purgando caché obsoleta:', key);
             return caches.delete(key);
           }
         })
@@ -34,36 +34,32 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Estrategia de Fetch inteligente:
-// 1. Ignorar solicitudes a Supabase (REST, WebSockets, Auth) -> Siempre red directa
-// 2. Navegación HTML -> Network-First (prioriza datos frescos, fallback a cache)
-// 3. Estáticos (JS, CSS, Imágenes) -> Stale-While-Revalidate (rapidez instantánea)
+// Estrategia de Fetch:
+// 1. Navegación HTML -> SIEMPRE Network-First directo con fallback solo si offline absoluto.
+// 2. Supabase, WebSockets, APIs -> BYPASS TOTAL (nunca cachear).
+// 3. Estáticos versionados (assets/index-HASH.js) -> Cache-First con fallback a red.
 self.addEventListener('fetch', (event) => {
   const request = event.request;
   const url = new URL(request.url);
 
-  // Solo manejar solicitudes GET HTTP/HTTPS
   if (request.method !== 'GET' || !url.protocol.startsWith('http')) {
     return;
   }
 
-  // Ignorar peticiones a Supabase / APIs externas para no interferir en tiempo real
+  // Ignorar llamadas a Supabase y APIs en tiempo real
   if (url.hostname.includes('supabase.co') || url.pathname.includes('/rest/v1/') || url.pathname.includes('/realtime/')) {
     return;
   }
 
-  // Navegación (HTML de páginas)
+  // Solicitudes de Navegación (HTML de páginas): NETWORK-FIRST SIEMPRE
   if (request.mode === 'navigate') {
     event.respondWith(
-      fetch(request)
+      fetch(request, { cache: 'no-cache' })
         .then((networkResponse) => {
-          if (networkResponse && networkResponse.status === 200) {
-            const responseClone = networkResponse.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(request, responseClone));
-          }
           return networkResponse;
         })
         .catch(async () => {
+          // Si está completamente desconectado sin internet, intentar responder con caché guardada
           const cached = await caches.match(request);
           if (cached) return cached;
           return caches.match('/index.html');
@@ -72,24 +68,39 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Recursos estáticos locales
-  if (
-    url.origin === self.location.origin &&
-    (url.pathname.startsWith('/assets/') ||
-     url.pathname.startsWith('/LogoPWA/') ||
-     url.pathname.match(/\.(js|css|webp|png|jpg|jpeg|svg|woff2|woff|ttf)$/i))
-  ) {
+  // Assets estáticos con hash de Vite (/assets/*)
+  if (url.origin === self.location.origin && url.pathname.startsWith('/assets/')) {
     event.respondWith(
       caches.match(request).then((cachedResponse) => {
-        const fetchPromise = fetch(request).then((networkResponse) => {
+        if (cachedResponse) {
+          return cachedResponse;
+        }
+        return fetch(request).then((networkResponse) => {
           if (networkResponse && networkResponse.status === 200) {
             const clone = networkResponse.clone();
             caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
           }
           return networkResponse;
-        }).catch(() => cachedResponse);
+        }).catch((err) => {
+          console.warn('[SW] Error cargando asset:', url.pathname, err);
+          throw err;
+        });
+      })
+    );
+    return;
+  }
 
-        return cachedResponse || fetchPromise;
+  // Iconos PWA
+  if (url.origin === self.location.origin && url.pathname.startsWith('/LogoPWA/')) {
+    event.respondWith(
+      caches.match(request).then((cachedResponse) => {
+        return cachedResponse || fetch(request).then((networkResponse) => {
+          if (networkResponse && networkResponse.status === 200) {
+            const clone = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+          }
+          return networkResponse;
+        });
       })
     );
   }

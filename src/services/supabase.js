@@ -170,6 +170,66 @@ export const ordersService = {
     return data;
   },
 
+  // Actualizar completamente una orden (edición integral de platos, mesa, cliente, notas, etc.)
+  async updateOrderFull(orderId, orderData, items = []) {
+    const updatePayload = {
+      customer_name: orderData.customer_name || 'Cliente de Consumo',
+      customer_phone: orderData.customer_phone || null,
+      table_number: String(orderData.table_number || '1'),
+      status: orderData.status || 'pending',
+      subtotal: Number(orderData.subtotal) || 0,
+      tax_enabled: Boolean(orderData.tax_enabled),
+      tax_amount: Number(orderData.tax_amount) || 0,
+      delivery_enabled: Boolean(orderData.delivery_enabled),
+      delivery_amount: Number(orderData.delivery_amount) || 0,
+      tip_amount: Number(orderData.tip_amount) || 0,
+      total_amount: Number(orderData.total_amount) || 0,
+      payment_method: orderData.payment_method || 'efectivo',
+      notes: orderData.notes || '',
+      updated_at: new Date().toISOString()
+    };
+
+    if (orderData.waiter_id) updatePayload.waiter_id = orderData.waiter_id;
+    if (orderData.table_id) updatePayload.table_id = orderData.table_id;
+    if (orderData.customer_id) updatePayload.customer_id = orderData.customer_id;
+
+    const { data: updatedOrder, error: orderError } = await supabase
+      .from('orders')
+      .update(updatePayload)
+      .eq('id', orderId)
+      .select()
+      .single();
+
+    if (orderError) throw orderError;
+
+    // Si se enviaron items, reemplazar los items existentes
+    if (Array.isArray(items) && items.length > 0) {
+      await supabase.from('order_items').delete().eq('order_id', orderId);
+
+      const itemsToInsert = items.map(item => ({
+        order_id: orderId,
+        dish_id: String(item.dish_id || item.dishId || item.id || ''),
+        dish_name: item.dish_name || item.dishName || item.name || '',
+        dish_price: Number(item.dish_price || item.price || 0),
+        quantity: Number(item.quantity) || 1,
+        subtotal: Number(item.subtotal || ((Number(item.dish_price || item.price || 0)) * (Number(item.quantity) || 1))),
+        notes: item.notes || item.note || ''
+      }));
+
+      const { error: itemsErr } = await supabase.from('order_items').insert(itemsToInsert);
+      if (itemsErr) console.error('Error actualizando items:', itemsErr);
+    }
+
+    return updatedOrder;
+  },
+
+  // Eliminar orden
+  async deleteOrder(orderId) {
+    const { error } = await supabase.from('orders').delete().eq('id', orderId);
+    if (error) throw error;
+    return true;
+  },
+
   // Asignar mesero a un pedido
   async assignWaiter(orderId, waiterId) {
     const { data, error } = await supabase
@@ -877,6 +937,364 @@ export const restaurantConfigService = {
     } catch (err) {
       console.warn('Guardado local de modo QR:', err);
       return mode;
+    }
+  }
+};
+
+// ============================================================================
+// SERVICIO DE CLIENTES (DIRECTORIO, POS Y FACTURACIÓN)
+// ============================================================================
+export const customersService = {
+  async getCustomers(search = '') {
+    try {
+      let query = supabase
+        .from('customers')
+        .select('*')
+        .eq('is_active', true)
+        .order('name', { ascending: true });
+
+      if (search && search.trim()) {
+        const s = search.trim();
+        query = query.or(`name.ilike.%${s}%,phone.ilike.%${s}%,email.ilike.%${s}%`);
+      }
+
+      const { data, error } = await query;
+      if (error) throw error;
+      return data || [];
+    } catch (err) {
+      console.warn('Fallback local para clientes:', err);
+      const local = localStorage.getItem('mb_customers_local');
+      let list = local ? JSON.parse(local) : [
+        { id: 'walkin-default', name: 'Cliente de Consumo', phone: '', notes: 'Mostrador / General' }
+      ];
+      if (search && search.trim()) {
+        const q = search.toLowerCase();
+        list = list.filter(c => c.name.toLowerCase().includes(q) || (c.phone && c.phone.includes(q)));
+      }
+      return list;
+    }
+  },
+
+  async createCustomer(customerData) {
+    try {
+      const payload = {
+        name: customerData.name.trim(),
+        phone: customerData.phone?.trim() || null,
+        email: customerData.email?.trim() || null,
+        address: customerData.address?.trim() || null,
+        notes: customerData.notes?.trim() || null,
+        is_active: true,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+
+      const { data, error } = await supabase
+        .from('customers')
+        .insert(payload)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    } catch (err) {
+      console.warn('Creando cliente en almacenamiento local:', err);
+      const newCust = {
+        id: `local-cust-${Date.now()}`,
+        name: customerData.name.trim(),
+        phone: customerData.phone?.trim() || '',
+        email: customerData.email?.trim() || '',
+        address: customerData.address?.trim() || '',
+        notes: customerData.notes?.trim() || '',
+        is_active: true,
+        created_at: new Date().toISOString()
+      };
+      const existing = JSON.parse(localStorage.getItem('mb_customers_local') || '[]');
+      existing.push(newCust);
+      localStorage.setItem('mb_customers_local', JSON.stringify(existing));
+      return newCust;
+    }
+  },
+
+  async updateCustomer(id, updates) {
+    try {
+      const { data, error } = await supabase
+        .from('customers')
+        .update({
+          ...updates,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    } catch (err) {
+      console.warn('Actualizando cliente localmente:', err);
+      const existing = JSON.parse(localStorage.getItem('mb_customers_local') || '[]');
+      const updated = existing.map(c => c.id === id ? { ...c, ...updates } : c);
+      localStorage.setItem('mb_customers_local', JSON.stringify(updated));
+      return { id, ...updates };
+    }
+  },
+
+  async deleteCustomer(id) {
+    try {
+      const { error } = await supabase
+        .from('customers')
+        .update({ is_active: false, updated_at: new Date().toISOString() })
+        .eq('id', id);
+
+      if (error) throw error;
+      return true;
+    } catch {
+      const existing = JSON.parse(localStorage.getItem('mb_customers_local') || '[]');
+      const filtered = existing.filter(c => c.id !== id);
+      localStorage.setItem('mb_customers_local', JSON.stringify(filtered));
+      return true;
+    }
+  }
+};
+
+// ============================================================================
+// SERVICIO DE FACTURACIÓN, TICKETS Y RECIBOS TERMALES (EE.UU. / NJ)
+// ============================================================================
+export const invoicesService = {
+  async getInvoices(filters = {}) {
+    try {
+      let query = supabase
+        .from('invoices')
+        .select(`
+          *,
+          invoice_items (*)
+        `)
+        .order('created_at', { ascending: false });
+
+      if (filters.status && filters.status !== 'all') {
+        query = query.eq('status', filters.status);
+      }
+      if (filters.search) {
+        const s = filters.search.trim();
+        query = query.or(`invoice_number.ilike.%${s}%,customer_name.ilike.%${s}%,table_number.ilike.%${s}%`);
+      }
+
+      const { data, error } = await query;
+      if (error) throw error;
+      return data || [];
+    } catch (err) {
+      console.warn('Fallback local para facturas:', err);
+      const local = localStorage.getItem('mb_invoices_local');
+      return local ? JSON.parse(local) : [];
+    }
+  },
+
+  async getInvoiceById(id) {
+    const { data, error } = await supabase
+      .from('invoices')
+      .select(`
+        *,
+        invoice_items (*)
+      `)
+      .eq('id', id)
+      .single();
+
+    if (error) throw error;
+    return data;
+  },
+
+  async getNextInvoiceNumber() {
+    try {
+      const { data } = await supabase
+        .from('invoices')
+        .select('invoice_number')
+        .order('created_at', { ascending: false })
+        .limit(1);
+
+      const year = new Date().getFullYear();
+      if (!data || data.length === 0) {
+        return `FAC-${year}-0001`;
+      }
+
+      const lastNum = data[0].invoice_number;
+      const match = lastNum.match(/(\d+)$/);
+      if (match) {
+        const nextSeq = String(parseInt(match[1], 10) + 1).padStart(4, '0');
+        return `FAC-${year}-${nextSeq}`;
+      }
+      return `FAC-${year}-${Date.now().toString().slice(-4)}`;
+    } catch {
+      return `FAC-${new Date().getFullYear()}-${Date.now().toString().slice(-4)}`;
+    }
+  },
+
+  async createInvoice(invoiceData, items = []) {
+    let invoiceNumber = invoiceData.invoice_number;
+    if (!invoiceNumber) {
+      invoiceNumber = await this.getNextInvoiceNumber();
+    }
+
+    const invoicePayload = {
+      invoice_number: invoiceNumber,
+      order_id: invoiceData.order_id || null,
+      customer_id: invoiceData.customer_id || null,
+      customer_name: invoiceData.customer_name?.trim() || 'Cliente de Consumo',
+      customer_phone: invoiceData.customer_phone?.trim() || null,
+      customer_email: invoiceData.customer_email?.trim() || null,
+      table_number: String(invoiceData.table_number || 'Mostrador'),
+      subtotal: Number(invoiceData.subtotal) || 0,
+      tax_enabled: Boolean(invoiceData.tax_enabled),
+      tax_rate: Number(invoiceData.tax_rate) || 6.625,
+      tax_amount: Boolean(invoiceData.tax_enabled) ? (Number(invoiceData.tax_amount) || 0) : 0,
+      delivery_enabled: Boolean(invoiceData.delivery_enabled),
+      delivery_amount: Boolean(invoiceData.delivery_enabled) ? (Number(invoiceData.delivery_amount) || 0) : 0,
+      tip_enabled: Boolean(invoiceData.tip_enabled),
+      tip_amount: Boolean(invoiceData.tip_enabled) ? (Number(invoiceData.tip_amount) || 0) : 0,
+      discount_amount: Number(invoiceData.discount_amount) || 0,
+      total_amount: Number(invoiceData.total_amount) || 0,
+      payment_method: invoiceData.payment_method || 'efectivo',
+      status: invoiceData.status || 'paid',
+      template_type: invoiceData.template_type || 'thermal_80mm',
+      notes: invoiceData.notes || '',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    };
+
+    try {
+      const { data: newInvoice, error: invErr } = await supabase
+        .from('invoices')
+        .insert(invoicePayload)
+        .select()
+        .single();
+
+      if (invErr) throw invErr;
+
+      let insertedItems = [];
+      if (items && items.length > 0) {
+        const itemsToInsert = items.map(item => ({
+          invoice_id: newInvoice.id,
+          dish_id: String(item.dish_id || item.dishId || item.id || ''),
+          name: item.name || item.dish_name || item.dishName || 'Platillo',
+          price: Number(item.price || item.dish_price || 0),
+          quantity: Number(item.quantity) || 1,
+          subtotal: Number(item.subtotal || ((Number(item.price || item.dish_price || 0)) * (Number(item.quantity) || 1))),
+          notes: item.notes || item.note || ''
+        }));
+
+        const { data: itemsData, error: itemsErr } = await supabase
+          .from('invoice_items')
+          .insert(itemsToInsert)
+          .select();
+
+        if (itemsErr) console.error('Error insertando items de factura:', itemsErr);
+        insertedItems = itemsData || itemsToInsert;
+      }
+
+      // Si está vinculada a una orden, actualizar su estado en orders
+      if (invoiceData.order_id) {
+        await supabase
+          .from('orders')
+          .update({
+            invoice_id: newInvoice.id,
+            is_paid: true,
+            payment_status: 'paid',
+            tax_enabled: Boolean(invoiceData.tax_enabled),
+            tax_amount: Number(invoiceData.tax_amount) || 0,
+            delivery_enabled: Boolean(invoiceData.delivery_enabled),
+            delivery_amount: Number(invoiceData.delivery_amount) || 0,
+            tip_amount: Number(invoiceData.tip_amount) || 0,
+            total_amount: Number(invoiceData.total_amount) || 0
+          })
+          .eq('id', invoiceData.order_id);
+      }
+
+      return { ...newInvoice, invoice_items: insertedItems };
+    } catch (err) {
+      console.warn('Creando factura localmente por fallback:', err);
+      const localInvoice = {
+        ...invoicePayload,
+        id: `local-inv-${Date.now()}`,
+        invoice_items: items
+      };
+      const existing = JSON.parse(localStorage.getItem('mb_invoices_local') || '[]');
+      existing.unshift(localInvoice);
+      localStorage.setItem('mb_invoices_local', JSON.stringify(existing));
+      return localInvoice;
+    }
+  },
+
+  async updateInvoice(id, invoiceData, items = null) {
+    const updatePayload = {
+      customer_name: invoiceData.customer_name?.trim() || 'Cliente de Consumo',
+      customer_phone: invoiceData.customer_phone?.trim() || null,
+      customer_email: invoiceData.customer_email?.trim() || null,
+      table_number: String(invoiceData.table_number || 'Mostrador'),
+      subtotal: Number(invoiceData.subtotal) || 0,
+      tax_enabled: Boolean(invoiceData.tax_enabled),
+      tax_rate: Number(invoiceData.tax_rate) || 6.625,
+      tax_amount: Boolean(invoiceData.tax_enabled) ? (Number(invoiceData.tax_amount) || 0) : 0,
+      delivery_enabled: Boolean(invoiceData.delivery_enabled),
+      delivery_amount: Boolean(invoiceData.delivery_enabled) ? (Number(invoiceData.delivery_amount) || 0) : 0,
+      tip_enabled: Boolean(invoiceData.tip_enabled),
+      tip_amount: Boolean(invoiceData.tip_enabled) ? (Number(invoiceData.tip_amount) || 0) : 0,
+      discount_amount: Number(invoiceData.discount_amount) || 0,
+      total_amount: Number(invoiceData.total_amount) || 0,
+      payment_method: invoiceData.payment_method || 'efectivo',
+      status: invoiceData.status || 'paid',
+      template_type: invoiceData.template_type || 'thermal_80mm',
+      notes: invoiceData.notes || '',
+      updated_at: new Date().toISOString()
+    };
+
+    if (invoiceData.customer_id) updatePayload.customer_id = invoiceData.customer_id;
+
+    try {
+      const { data: updatedInvoice, error: invErr } = await supabase
+        .from('invoices')
+        .update(updatePayload)
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (invErr) throw invErr;
+
+      let currentItems = items;
+      if (items !== null && Array.isArray(items)) {
+        await supabase.from('invoice_items').delete().eq('invoice_id', id);
+        if (items.length > 0) {
+          const itemsToInsert = items.map(item => ({
+            invoice_id: id,
+            dish_id: String(item.dish_id || item.dishId || item.id || ''),
+            name: item.name || item.dish_name || item.dishName || 'Platillo',
+            price: Number(item.price || item.dish_price || 0),
+            quantity: Number(item.quantity) || 1,
+            subtotal: Number(item.subtotal || ((Number(item.price || item.dish_price || 0)) * (Number(item.quantity) || 1))),
+            notes: item.notes || item.note || ''
+          }));
+          const { data: inserted } = await supabase.from('invoice_items').insert(itemsToInsert).select();
+          currentItems = inserted || itemsToInsert;
+        }
+      }
+
+      return { ...updatedInvoice, invoice_items: currentItems };
+    } catch (err) {
+      console.warn('Actualizando factura localmente:', err);
+      const existing = JSON.parse(localStorage.getItem('mb_invoices_local') || '[]');
+      const updated = existing.map(inv => inv.id === id ? { ...inv, ...updatePayload, invoice_items: items || inv.invoice_items } : inv);
+      localStorage.setItem('mb_invoices_local', JSON.stringify(updated));
+      return { id, ...updatePayload, invoice_items: items };
+    }
+  },
+
+  async deleteInvoice(id) {
+    try {
+      const { error } = await supabase.from('invoices').delete().eq('id', id);
+      if (error) throw error;
+      return true;
+    } catch {
+      const existing = JSON.parse(localStorage.getItem('mb_invoices_local') || '[]');
+      const filtered = existing.filter(inv => inv.id !== id);
+      localStorage.setItem('mb_invoices_local', JSON.stringify(filtered));
+      return true;
     }
   }
 };
