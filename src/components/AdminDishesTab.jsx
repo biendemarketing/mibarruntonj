@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { 
   Plus, Search, Edit2, Trash2, Check, AlertCircle, 
-  Image as ImageIcon, RefreshCw, Eye, EyeOff 
+  Image as ImageIcon, RefreshCw, Eye, EyeOff,
+  Layers, Utensils
 } from 'lucide-react';
 import { AdminDishModal } from './AdminDishModal';
+import { AdminCategoriesTab } from './AdminCategoriesTab';
 import { useAlertConfirm } from '../context/AlertConfirmContext';
 import { triggerHaptic } from '../utils/haptics';
 
@@ -15,10 +17,14 @@ export function AdminDishesTab({
   onDeleteDish,
   onToggleAvailability,
   onToggleVisibility,
+  onCreateCategory,
+  onUpdateCategory,
+  onDeleteCategory,
   onRefresh,
   isLoading
 }) {
   const { showConfirm, showAlert } = useAlertConfirm();
+  const [activeSubTab, setActiveSubTab] = useState('dishes'); // 'dishes' | 'categories'
   const [search, setSearch] = useState('');
   const [selectedCat, setSelectedCat] = useState('all');
   const [editingDish, setEditingDish] = useState(null);
@@ -90,21 +96,109 @@ export function AdminDishesTab({
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-      {/* Barra de Búsqueda y Botón Crear */}
+      {/* Sub-navegación: Platos vs Categorías del Menú */}
       <div
         style={{
           display: 'flex',
-          flexWrap: 'wrap',
           alignItems: 'center',
           justifyContent: 'space-between',
-          gap: '1rem',
+          flexWrap: 'wrap',
+          gap: '0.75rem',
           backgroundColor: '#ffffff',
-          padding: '1rem',
-          borderRadius: '16px',
-          boxShadow: '0 4px 20px rgba(0,0,0,0.06)',
+          padding: '0.75rem 1rem',
+          borderRadius: '20px',
+          boxShadow: '0 4px 20px rgba(0,0,0,0.04)',
           border: 'none !important'
         }}
       >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', backgroundColor: '#f5efe4', padding: '0.3rem', borderRadius: '14px' }}>
+          <button
+            type="button"
+            onClick={() => {
+              triggerHaptic(6);
+              setActiveSubTab('dishes');
+            }}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.45rem',
+              padding: '0.55rem 1.1rem',
+              borderRadius: '11px',
+              backgroundColor: activeSubTab === 'dishes' ? '#ffffff' : 'transparent',
+              color: activeSubTab === 'dishes' ? 'var(--rojo, #d91c2b)' : '#6b635b',
+              fontWeight: 800,
+              fontSize: '0.86rem',
+              cursor: 'pointer',
+              border: 'none !important',
+              boxShadow: activeSubTab === 'dishes' ? '0 3px 10px rgba(0,0,0,0.06)' : 'none',
+              transition: 'all 0.15s ease'
+            }}
+          >
+            <Utensils size={16} />
+            <span>Carta de Platos ({dishes.length})</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              triggerHaptic(6);
+              setActiveSubTab('categories');
+            }}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.45rem',
+              padding: '0.55rem 1.1rem',
+              borderRadius: '11px',
+              backgroundColor: activeSubTab === 'categories' ? '#ffffff' : 'transparent',
+              color: activeSubTab === 'categories' ? 'var(--rojo, #d91c2b)' : '#6b635b',
+              fontWeight: 800,
+              fontSize: '0.86rem',
+              cursor: 'pointer',
+              border: 'none !important',
+              boxShadow: activeSubTab === 'categories' ? '0 3px 10px rgba(0,0,0,0.06)' : 'none',
+              transition: 'all 0.15s ease'
+            }}
+          >
+            <Layers size={16} />
+            <span>Categorías del Menú ({categories.length})</span>
+          </button>
+        </div>
+
+        <span style={{ fontSize: '0.78rem', color: '#78716c', fontWeight: 600 }}>
+          {activeSubTab === 'dishes' 
+            ? 'Administra precios, descripciones y disponibilidad de platillos' 
+            : 'Organiza las secciones y orden de visualización de la carta'}
+        </span>
+      </div>
+
+      {/* Si está activa la pestaña de Categorías, renderizamos el módulo de categorías */}
+      {activeSubTab === 'categories' ? (
+        <AdminCategoriesTab
+          categories={categories}
+          onCreateCategory={onCreateCategory}
+          onUpdateCategory={onUpdateCategory}
+          onDeleteCategory={onDeleteCategory}
+          onRefresh={onRefresh}
+          isLoading={isLoading}
+        />
+      ) : (
+        <>
+          {/* Barra de Búsqueda y Botón Crear */}
+          <div
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: '1rem',
+              backgroundColor: '#ffffff',
+              padding: '1rem',
+              borderRadius: '16px',
+              boxShadow: '0 4px 20px rgba(0,0,0,0.06)',
+              border: 'none !important'
+            }}
+          >
         {/* Buscador */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flex: 1, minWidth: '240px' }}>
           <div
@@ -485,6 +579,8 @@ export function AdminDishesTab({
         categories={categories}
         onSave={handleSaveModal}
       />
+        </>
+      )}
     </div>
   );
 }

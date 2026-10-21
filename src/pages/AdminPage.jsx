@@ -440,7 +440,6 @@ export function AdminPage() {
       { id: 'invoices', label: 'Facturas & Tickets', icon: Receipt },
       { id: 'customers', label: 'Clientes', icon: Users },
       { id: 'dishes', label: 'Gestión de Platos', icon: Utensils, badge: dishes.length },
-      { id: 'categories', label: 'Categorías', icon: Layers, badge: categories.length },
       { id: 'tables', label: 'Mesas & QR', icon: QrCode, badge: tables.length },
       { id: 'waiters', label: 'Personal & Meseros', icon: Users, badge: waiters.length },
       { id: 'printable', label: 'Menú Imprimible', icon: Printer }
@@ -893,7 +892,16 @@ export function AdminPage() {
           </div>
 
           {/* Menú de Navegación Lateral */}
-          <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+          <nav
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.35rem',
+              overflowY: 'auto',
+              maxHeight: 'calc(100vh - 310px)',
+              paddingRight: '0.2rem'
+            }}
+          >
             {navTabs.map(tab => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.id;
@@ -947,8 +955,101 @@ export function AdminPage() {
           </nav>
         </div>
 
-        {/* Parte Inferior del Sidebar */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', paddingTop: '1rem' }}>
+        {/* Parte Inferior del Sidebar: Barra Compacta de Utilidades */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', paddingTop: '0.5rem' }}>
+          {/* Fila agrupada de 3 utilidades: Probar Sonido, Campana y Carta */}
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(3, 1fr)',
+              gap: '0.35rem',
+              backgroundColor: '#f8f4ec',
+              padding: '0.35rem',
+              borderRadius: '14px'
+            }}
+          >
+            {/* Probar Sonido */}
+            <button
+              type="button"
+              onClick={handleTestChime}
+              title="Probar sonido de campana y notificación"
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.2rem',
+                padding: '0.45rem 0.25rem',
+                borderRadius: '10px',
+                backgroundColor: '#ffffff',
+                color: '#1f1e1c',
+                fontSize: '0.68rem',
+                fontWeight: 800,
+                cursor: 'pointer',
+                border: 'none !important',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.03)'
+              }}
+            >
+              <Bell size={14} color="var(--rojo, #d91c2b)" />
+              <span>Probar</span>
+            </button>
+
+            {/* Toggle Sonido */}
+            <button
+              type="button"
+              onClick={() => {
+                triggerHaptic(8);
+                setSoundEnabled(!soundEnabled);
+              }}
+              title={soundEnabled ? 'Campana sonora activa' : 'Campana silenciada'}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.2rem',
+                padding: '0.45rem 0.25rem',
+                borderRadius: '10px',
+                backgroundColor: soundEnabled ? 'rgba(21, 128, 61, 0.1)' : '#ffffff',
+                color: soundEnabled ? '#15803d' : '#78716c',
+                fontSize: '0.68rem',
+                fontWeight: 800,
+                cursor: 'pointer',
+                border: 'none !important',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.03)'
+              }}
+            >
+              {soundEnabled ? <Volume2 size={14} /> : <VolumeX size={14} />}
+              <span>{soundEnabled ? 'Sonido' : 'Mudo'}</span>
+            </button>
+
+            {/* Enlace al Menú Público */}
+            <button
+              type="button"
+              onClick={() => navigate('/')}
+              title="Abrir la carta pública del menú"
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.2rem',
+                padding: '0.45rem 0.25rem',
+                borderRadius: '10px',
+                backgroundColor: '#ffffff',
+                color: '#1f1e1c',
+                fontSize: '0.68rem',
+                fontWeight: 800,
+                cursor: 'pointer',
+                border: 'none !important',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.03)'
+              }}
+            >
+              <ExternalLink size={14} />
+              <span>Carta</span>
+            </button>
+          </div>
+
           {/* Activar Notificaciones Web Push si no están concedidas */}
           {notificationPermission !== 'granted' && (
             <button
@@ -957,92 +1058,23 @@ export function AdminPage() {
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.55rem',
-                padding: '0.65rem 0.85rem',
+                justifyContent: 'center',
+                gap: '0.45rem',
+                padding: '0.5rem 0.75rem',
                 borderRadius: '12px',
                 backgroundColor: 'rgba(217, 28, 43, 0.08)',
                 color: 'var(--rojo, #d91c2b)',
-                fontSize: '0.8rem',
+                fontSize: '0.74rem',
                 fontWeight: 800,
                 cursor: 'pointer',
                 border: 'none !important'
               }}
               title="Recibir avisos en pantalla incluso fuera del navegador"
             >
-              <BellRing size={16} />
+              <BellRing size={14} />
               <span>Activar Notificaciones Push</span>
             </button>
           )}
-
-          {/* Botón para Probar Campana y Alerta */}
-          <button
-            type="button"
-            onClick={handleTestChime}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.55rem',
-              padding: '0.65rem 0.85rem',
-              borderRadius: '12px',
-              backgroundColor: '#f5efe4',
-              color: '#1f1e1c',
-              fontSize: '0.8rem',
-              fontWeight: 700,
-              cursor: 'pointer',
-              border: 'none !important'
-            }}
-            title="Probar sonido de campana y notificación en este dispositivo"
-          >
-            <Bell size={15} />
-            <span>Probar Sonido & Alerta</span>
-          </button>
-
-          {/* Toggle Sonido de Pedidos */}
-          <button
-            type="button"
-            onClick={() => {
-              triggerHaptic(8);
-              setSoundEnabled(!soundEnabled);
-            }}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.55rem',
-              padding: '0.65rem 0.85rem',
-              borderRadius: '12px',
-              backgroundColor: '#f8f4ec',
-              color: soundEnabled ? '#15803d' : '#78716c',
-              fontSize: '0.8rem',
-              fontWeight: 700,
-              cursor: 'pointer',
-              border: 'none !important'
-            }}
-          >
-            {soundEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
-            <span>{soundEnabled ? 'Campana Sonora Activa' : 'Campana Silenciada'}</span>
-          </button>
-
-          {/* Enlace al Menú Público */}
-          <button
-            type="button"
-            onClick={() => navigate('/')}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.55rem',
-              padding: '0.65rem 0.85rem',
-              borderRadius: '12px',
-              backgroundColor: '#f5efe4',
-              color: '#1f1e1c',
-              fontSize: '0.82rem',
-              fontWeight: 700,
-              cursor: 'pointer',
-              border: 'none !important'
-            }}
-          >
-            <ExternalLink size={15} />
-            <span>Ver Carta del Menú</span>
-          </button>
 
           {/* Usuario y Logout */}
           <div
@@ -1471,7 +1503,11 @@ export function AdminPage() {
           )}
 
           {activeTab === 'invoices' && (
-            <AdminInvoicesTab dishes={dishes} />
+            <AdminInvoicesTab
+              dishes={dishes}
+              tables={tables}
+              categories={categories}
+            />
           )}
 
           {activeTab === 'customers' && (
@@ -1494,14 +1530,6 @@ export function AdminPage() {
               onUpdateDish={handleUpdateDish}
               onDeleteDish={handleDeleteDish}
               onToggleAvailability={handleToggleAvailability}
-              onRefresh={loadAllData}
-              isLoading={isLoading}
-            />
-          )}
-
-          {activeTab === 'categories' && (
-            <AdminCategoriesTab
-              categories={categories}
               onCreateCategory={handleCreateCategory}
               onUpdateCategory={handleUpdateCategory}
               onDeleteCategory={handleDeleteCategory}

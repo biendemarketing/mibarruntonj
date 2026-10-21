@@ -2,9 +2,10 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { 
   Users, UserPlus, Search, Edit2, Trash2, Phone, 
   Mail, MapPin, FileText, Check, X, RefreshCw, 
-  UserCheck, DollarSign, Calendar
+  UserCheck, DollarSign, Calendar, Receipt, Printer, ArrowRight
 } from 'lucide-react';
-import { customersService } from '../services/supabase';
+import { customersService, invoicesService } from '../services/supabase';
+import { InvoicePrintModal } from './InvoicePrintModal';
 import { useAlertConfirm } from '../context/AlertConfirmContext';
 import { triggerHaptic } from '../utils/haptics';
 
@@ -13,6 +14,15 @@ export function AdminCustomersTab() {
   const [customers, setCustomers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+
+  // Modal de Historial de Facturas del Cliente
+  const [selectedCustomerForInvoices, setSelectedCustomerForInvoices] = useState(null);
+  const [customerInvoices, setCustomerInvoices] = useState([]);
+  const [isLoadingCustomerInvoices, setIsLoadingCustomerInvoices] = useState(false);
+
+  // Modal de Impresión
+  const [printModalOpen, setPrintModalOpen] = useState(false);
+  const [printModalData, setPrintModalData] = useState(null);
 
   // Modal de Crear / Editar Cliente
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -131,6 +141,62 @@ export function AdminCustomersTab() {
         });
       }
     }
+  };
+
+  // Cargar y mostrar lista de facturas de un cliente al hacer click
+  const handleViewCustomerInvoices = async (customer) => {
+    triggerHaptic(8);
+    setSelectedCustomerForInvoices(customer);
+    setIsLoadingCustomerInvoices(true);
+    try {
+      const allInvoices = await invoicesService.getInvoices();
+      const cName = (customer.name || '').toLowerCase().trim();
+      const cPhone = customer.phone ? customer.phone.replace(/[^0-9]/g, '') : '';
+
+      const matched = (allInvoices || []).filter(inv => {
+        const matchId = inv.customer_id && inv.customer_id === customer.id;
+        const invName = (inv.customer_name || '').toLowerCase().trim();
+        const matchName = invName && (invName === cName || invName.includes(cName));
+        const invPhone = inv.customer_phone ? inv.customer_phone.replace(/[^0-9]/g, '') : '';
+        const matchPhone = cPhone && invPhone && (invPhone === cPhone || invPhone.includes(cPhone));
+        return matchId || matchName || matchPhone;
+      });
+
+      setCustomerInvoices(matched);
+    } catch (err) {
+      console.error('Error cargando facturas de cliente:', err);
+    } finally {
+      setIsLoadingCustomerInvoices(false);
+    }
+  };
+
+  const handlePrintCustomerInvoice = (inv) => {
+    triggerHaptic(8);
+    const items = inv.items || inv.invoice_items;
+    setPrintModalData({
+      invoice_number: inv.invoice_number,
+      customer_name: inv.customer_name || selectedCustomerForInvoices?.name,
+      customer_phone: inv.customer_phone || selectedCustomerForInvoices?.phone,
+      table_number: inv.table_number,
+      waiter_name: inv.waiter_name || 'Servicio de Sala',
+      payment_method: inv.payment_method,
+      tax_enabled: inv.tax_enabled,
+      tax_rate: inv.tax_rate,
+      delivery_enabled: inv.delivery_enabled,
+      delivery_amount: inv.delivery_amount,
+      tip_enabled: inv.tip_enabled,
+      tip_amount: inv.tip_amount,
+      notes: inv.notes,
+      items: Array.isArray(items) && items.length > 0 
+        ? items.map(it => ({
+            name: it.dish_name || it.name,
+            quantity: it.quantity,
+            unit_price: it.unit_price || it.price,
+            notes: it.notes
+          }))
+        : [{ name: 'Consumo General', quantity: 1, unit_price: Number(inv.subtotal || inv.total_amount) }]
+    });
+    setPrintModalOpen(true);
   };
 
   return (
@@ -255,6 +321,7 @@ export function AdminCustomersTab() {
           return (
             <div
               key={customer.id}
+              onClick={() => handleViewCustomerInvoices(customer)}
               style={{
                 backgroundColor: '#ffffff',
                 borderRadius: '20px',
@@ -265,7 +332,9 @@ export function AdminCustomersTab() {
                 flexDirection: 'column',
                 justifyContent: 'space-between',
                 gap: '0.85rem',
-                position: 'relative'
+                position: 'relative',
+                cursor: 'pointer',
+                transition: 'all 0.15s ease'
               }}
             >
               <div>
@@ -307,7 +376,10 @@ export function AdminCustomersTab() {
                   <div style={{ display: 'flex', gap: '0.25rem' }}>
                     <button
                       type="button"
-                      onClick={() => handleOpenEdit(customer)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleOpenEdit(customer);
+                      }}
                       style={{
                         padding: '0.4rem',
                         borderRadius: '8px',
@@ -316,14 +388,17 @@ export function AdminCustomersTab() {
                         border: 'none !important',
                         cursor: 'pointer'
                       }}
-                      title="Editar cliente"
+                      title="Editar datos del cliente"
                     >
                       <Edit2 size={14} />
                     </button>
                     {!isDefault && (
                       <button
                         type="button"
-                        onClick={() => handleDeleteCustomer(customer)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteCustomer(customer);
+                        }}
                         style={{
                           padding: '0.4rem',
                           borderRadius: '8px',
@@ -372,7 +447,7 @@ export function AdminCustomersTab() {
                 </div>
               </div>
 
-              {/* Pie de Tarjeta con Estadísticas */}
+              {/* Pie de Tarjeta con Botón para Ver Facturas */}
               <div
                 style={{
                   display: 'flex',
@@ -387,12 +462,36 @@ export function AdminCustomersTab() {
                   fontSize: '0.75rem'
                 }}
               >
-                <span style={{ color: '#78716c' }}>
-                  Pedidos: <strong style={{ color: '#1f1e1c' }}>{customer.total_orders || 0}</strong>
-                </span>
-                <span style={{ color: '#78716c' }}>
-                  Consumo: <strong style={{ color: 'var(--rojo, #d91c2b)' }}>${Number(customer.total_spent || 0).toFixed(2)}</strong>
-                </span>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <span style={{ color: '#78716c', fontSize: '0.72rem' }}>
+                    Consumo: <strong style={{ color: 'var(--rojo, #d91c2b)', fontSize: '0.85rem' }}>${Number(customer.total_spent || 0).toFixed(2)}</strong>
+                  </span>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleViewCustomerInvoices(customer);
+                  }}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.35rem',
+                    padding: '0.35rem 0.75rem',
+                    borderRadius: '8px',
+                    backgroundColor: 'var(--rojo, #d91c2b)',
+                    color: '#ffffff',
+                    fontSize: '0.74rem',
+                    fontWeight: 800,
+                    border: 'none !important',
+                    cursor: 'pointer',
+                    boxShadow: '0 2px 8px rgba(217, 28, 43, 0.25)'
+                  }}
+                >
+                  <Receipt size={13} />
+                  <span>Ver Facturas ({customer.total_orders || 0})</span>
+                </button>
               </div>
             </div>
           );
@@ -645,6 +744,259 @@ export function AdminCustomersTab() {
           </div>
         </div>
       )}
+
+      {/* Modal Historial de Facturas del Cliente */}
+      {selectedCustomerForInvoices && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 2600,
+            backgroundColor: 'rgba(15, 23, 42, 0.65)',
+            backdropFilter: 'blur(12px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '1rem'
+          }}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setSelectedCustomerForInvoices(null);
+          }}
+        >
+          <div
+            style={{
+              width: '100%',
+              maxWidth: '680px',
+              maxHeight: '88vh',
+              backgroundColor: '#ffffff',
+              borderRadius: '28px',
+              padding: '1.75rem',
+              boxShadow: '0 25px 60px rgba(0, 0, 0, 0.25)',
+              border: 'none !important',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '1.25rem',
+              overflowY: 'auto'
+            }}
+          >
+            {/* Cabecera del Historial */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <div
+                  style={{
+                    width: '44px',
+                    height: '44px',
+                    borderRadius: '14px',
+                    backgroundColor: 'rgba(217, 28, 43, 0.1)',
+                    color: 'var(--rojo, #d91c2b)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontWeight: 900,
+                    fontSize: '1.1rem'
+                  }}
+                >
+                  {selectedCustomerForInvoices.name?.charAt(0)?.toUpperCase() || 'C'}
+                </div>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 900, color: '#1f1e1c' }}>
+                    {selectedCustomerForInvoices.name}
+                  </h3>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', fontSize: '0.76rem', color: '#78716c' }}>
+                    {selectedCustomerForInvoices.phone && <span>Tel: {selectedCustomerForInvoices.phone}</span>}
+                    {selectedCustomerForInvoices.phone && selectedCustomerForInvoices.email && <span>·</span>}
+                    {selectedCustomerForInvoices.email && <span>{selectedCustomerForInvoices.email}</span>}
+                  </div>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setSelectedCustomerForInvoices(null)}
+                style={{
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '10px',
+                  backgroundColor: '#f5efe4',
+                  color: '#78716c',
+                  border: 'none !important',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            {/* Resumen de Compras del Cliente */}
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(3, 1fr)',
+                gap: '0.65rem',
+                backgroundColor: '#faf7f2',
+                padding: '0.85rem 1rem',
+                borderRadius: '16px'
+              }}
+            >
+              <div>
+                <span style={{ fontSize: '0.7rem', color: '#78716c', fontWeight: 700 }}>Total Facturas:</span>
+                <span style={{ display: 'block', fontSize: '1.1rem', fontWeight: 900, color: '#1f1e1c' }}>
+                  {customerInvoices.length}
+                </span>
+              </div>
+              <div>
+                <span style={{ fontSize: '0.7rem', color: '#78716c', fontWeight: 700 }}>Total Consumido:</span>
+                <span style={{ display: 'block', fontSize: '1.1rem', fontWeight: 900, color: 'var(--rojo, #d91c2b)' }}>
+                  ${customerInvoices.reduce((acc, inv) => acc + Number(inv.total_amount || 0), 0).toFixed(2)}
+                </span>
+              </div>
+              <div>
+                <span style={{ fontSize: '0.7rem', color: '#78716c', fontWeight: 700 }}>Estado Cuenta:</span>
+                <span style={{ display: 'block', fontSize: '0.82rem', fontWeight: 800, color: '#10b981', marginTop: '0.2rem' }}>
+                  Al Día
+                </span>
+              </div>
+            </div>
+
+            {/* Listado de Facturas */}
+            <div>
+              <h4 style={{ margin: '0 0 0.65rem 0', fontSize: '0.88rem', fontWeight: 900, color: '#1f1e1c' }}>
+                Historial de Facturas y Tickets Emitidos
+              </h4>
+
+              {isLoadingCustomerInvoices ? (
+                <div style={{ textAlign: 'center', padding: '2rem', color: '#78716c', fontSize: '0.85rem' }}>
+                  <RefreshCw size={22} className="animate-spin" style={{ margin: '0 auto 0.5rem auto' }} />
+                  <span>Buscando facturas del cliente...</span>
+                </div>
+              ) : customerInvoices.length === 0 ? (
+                <div
+                  style={{
+                    backgroundColor: '#faf7f2',
+                    borderRadius: '16px',
+                    padding: '2rem 1rem',
+                    textAlign: 'center'
+                  }}
+                >
+                  <Receipt size={32} color="#a8a29e" style={{ margin: '0 auto 0.5rem auto' }} />
+                  <p style={{ margin: 0, fontSize: '0.85rem', fontWeight: 800, color: '#44403c' }}>
+                    No hay facturas registradas para este cliente aún
+                  </p>
+                  <span style={{ fontSize: '0.75rem', color: '#78716c' }}>
+                    Las facturas manuales o ventas del POS asociadas aparecerán aquí.
+                  </span>
+                </div>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+                  {customerInvoices.map(inv => {
+                    const isPaid = inv.payment_status === 'paid';
+                    const items = inv.items || inv.invoice_items;
+                    return (
+                      <div
+                        key={inv.id}
+                        style={{
+                          backgroundColor: '#faf7f2',
+                          borderRadius: '16px',
+                          padding: '0.85rem 1rem',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          flexWrap: 'wrap',
+                          gap: '0.75rem'
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                          <div
+                            style={{
+                              width: '38px',
+                              height: '38px',
+                              borderRadius: '10px',
+                              backgroundColor: isPaid ? 'rgba(16, 185, 129, 0.12)' : 'rgba(234, 179, 8, 0.15)',
+                              color: isPaid ? '#10b981' : '#b45309',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center'
+                            }}
+                          >
+                            <Receipt size={18} />
+                          </div>
+                          <div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                              <span style={{ fontSize: '0.88rem', fontWeight: 900, color: '#1f1e1c' }}>
+                                {inv.invoice_number}
+                              </span>
+                              <span
+                                style={{
+                                  fontSize: '0.65rem',
+                                  fontWeight: 800,
+                                  padding: '0.1rem 0.4rem',
+                                  borderRadius: '5px',
+                                  backgroundColor: isPaid ? 'rgba(16, 185, 129, 0.15)' : 'rgba(234, 179, 8, 0.15)',
+                                  color: isPaid ? '#059669' : '#b45309'
+                                }}
+                              >
+                                {isPaid ? 'PAGADO' : 'PENDIENTE'}
+                              </span>
+                              <span style={{ fontSize: '0.72rem', color: '#78716c', fontWeight: 700 }}>
+                                Mesa {inv.table_number || '1'}
+                              </span>
+                            </div>
+                            <span style={{ fontSize: '0.7rem', color: '#a8a29e' }}>
+                              {new Date(inv.created_at).toLocaleString('es-US', { dateStyle: 'medium', timeStyle: 'short' })}
+                            </span>
+                            {Array.isArray(items) && items.length > 0 && (
+                              <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.72rem', color: '#78716c', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '320px' }}>
+                                {items.map(it => `${it.quantity || 1}x ${it.name || it.dish_name}`).join(', ')}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                          <span style={{ fontSize: '1.1rem', fontWeight: 900, color: 'var(--rojo, #d91c2b)' }}>
+                            ${Number(inv.total_amount || 0).toFixed(2)} USD
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => handlePrintCustomerInvoice(inv)}
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '0.35rem',
+                              padding: '0.5rem 0.85rem',
+                              borderRadius: '10px',
+                              backgroundColor: 'var(--rojo, #d91c2b)',
+                              color: '#ffffff',
+                              fontSize: '0.75rem',
+                              fontWeight: 800,
+                              border: 'none !important',
+                              cursor: 'pointer',
+                              boxShadow: '0 3px 10px rgba(217, 28, 43, 0.25)'
+                            }}
+                          >
+                            <Printer size={14} />
+                            <span>Imprimir</span>
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Impresión */}
+      <InvoicePrintModal
+        isOpen={printModalOpen}
+        onClose={() => setPrintModalOpen(false)}
+        initialData={printModalData}
+      />
     </div>
   );
 }

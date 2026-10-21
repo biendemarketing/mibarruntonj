@@ -3,7 +3,7 @@ import {
   ShoppingBag, Plus, Minus, Trash2, Printer, 
   Send, DollarSign, Check, X, Search, User, 
   Utensils, Layers, RefreshCw, ChefHat, CreditCard, 
-  Receipt, Percent, Truck, UserPlus, Sparkles
+  Receipt, Percent, Truck, UserPlus, Sparkles, ChevronDown
 } from 'lucide-react';
 import { ordersService, invoicesService, tablesService, customersService } from '../services/supabase';
 import { InvoicePrintModal } from './InvoicePrintModal';
@@ -123,6 +123,81 @@ export function AdminPOSTab({
   const totalAmount = useMemo(() => {
     return Number((subtotal + taxAmount + deliveryFee + tipAmount).toFixed(2));
   }, [subtotal, taxAmount, deliveryFee, tipAmount]);
+
+  // Cálculo de estado en tiempo real de cada mesa con colores diferenciados
+  const getTableLiveStatus = (tblNumber) => {
+    if (tblNumber === 'Llevar') {
+      return { label: 'Llevar', color: '#f5efe4', textColor: '#1f1e1c', dot: '#78716c', isSpecial: true };
+    }
+    if (tblNumber === 'Barra') {
+      return { label: 'Barra', color: '#f5efe4', textColor: '#1f1e1c', dot: '#78716c', isSpecial: true };
+    }
+
+    const activeOrders = orders.filter(o => 
+      String(o.table_number) === String(tblNumber) && 
+      o.status !== 'completed' && o.status !== 'cancelled'
+    );
+
+    // 1. Nueva Orden / Pendiente (Ámbar suave con pulso)
+    if (activeOrders.some(o => o.status === 'pending')) {
+      return {
+        label: 'Nueva',
+        color: '#fef3c7',
+        textColor: '#92400e',
+        dot: '#f59e0b',
+        isPulsing: true
+      };
+    }
+
+    // 2. En Cocina / Preparando (Azul suave)
+    if (activeOrders.some(o => o.status === 'in_kitchen')) {
+      return {
+        label: 'Cocina',
+        color: '#dbeafe',
+        textColor: '#1e40af',
+        dot: '#3b82f6'
+      };
+    }
+
+    // 3. Lista para Servir (Púrpura suave)
+    if (activeOrders.some(o => o.status === 'ready')) {
+      return {
+        label: 'Lista',
+        color: '#ede9fe',
+        textColor: '#6d28d9',
+        dot: '#8b5cf6'
+      };
+    }
+
+    // 4. En Mesa / Servida / Cuenta Abierta (Naranja / Coral suave)
+    if (activeOrders.some(o => o.status === 'delivered')) {
+      return {
+        label: 'En Mesa',
+        color: '#ffedd5',
+        textColor: '#c2410c',
+        dot: '#ea580c'
+      };
+    }
+
+    // 5. Mesa ocupada en la base de datos
+    const tblObj = tables.find(t => String(t.number) === String(tblNumber));
+    if (tblObj && tblObj.status === 'occupied') {
+      return {
+        label: 'Ocupada',
+        color: '#ffedd5',
+        textColor: '#c2410c',
+        dot: '#ea580c'
+      };
+    }
+
+    // 6. Libre / Disponible (Verde esmeralda suave)
+    return {
+      label: 'Libre',
+      color: '#dcfce7',
+      textColor: '#166534',
+      dot: '#10b981'
+    };
+  };
 
   // Manejadores de Ítems en el Carrito POS
   const handleAddDish = (dish) => {
@@ -499,34 +574,63 @@ export function AdminPOSTab({
           {/* Selector de Mesero Operador */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <span style={{ fontSize: '0.78rem', fontWeight: 700, color: '#78716c' }}>Atiende:</span>
-            <select
-              value={selectedWaiterId}
-              onChange={(e) => setSelectedWaiterId(e.target.value)}
-              style={{
-                padding: '0.45rem 0.75rem',
-                borderRadius: '10px',
-                backgroundColor: '#f5efe4',
-                border: 'none !important',
-                fontSize: '0.82rem',
-                fontWeight: 800,
-                color: '#1f1e1c',
-                outline: 'none'
-              }}
-            >
-              <option value="">Seleccionar Mesero...</option>
-              {waiters.map(w => (
-                <option key={w.id} value={w.id}>{w.name} ({w.role || 'Mesero'})</option>
-              ))}
-            </select>
+            <div style={{ position: 'relative' }}>
+              <select
+                value={selectedWaiterId}
+                onChange={(e) => setSelectedWaiterId(e.target.value)}
+                style={{
+                  padding: '0.45rem 1.85rem 0.45rem 0.75rem',
+                  borderRadius: '10px',
+                  backgroundColor: '#f5efe4',
+                  border: 'none !important',
+                  fontSize: '0.82rem',
+                  fontWeight: 800,
+                  color: '#1f1e1c',
+                  outline: 'none',
+                  appearance: 'none',
+                  cursor: 'pointer'
+                }}
+              >
+                <option value="">Seleccionar Mesero...</option>
+                {waiters.map(w => (
+                  <option key={w.id} value={w.id}>{w.name} ({w.role || 'Mesero'})</option>
+                ))}
+              </select>
+              <ChevronDown size={14} color="#78716c" style={{ position: 'absolute', right: '8px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
+            </div>
           </div>
         </div>
 
-        {/* Píldoras de Mesas Disponibles y Ocupadas */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', overflowX: 'auto', paddingBottom: '0.25rem' }}>
+        {/* Barra de Leyenda de Estados en Tiempo Real */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', flexWrap: 'wrap', padding: '0.2rem 0', fontSize: '0.72rem', fontWeight: 800 }}>
+          <span style={{ color: '#78716c' }}>Estados en Tiempo Real:</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: '#166534', backgroundColor: '#dcfce7', padding: '0.2rem 0.55rem', borderRadius: '8px' }}>
+            <span style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#10b981' }} />
+            <span>Libre</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: '#92400e', backgroundColor: '#fef3c7', padding: '0.2rem 0.55rem', borderRadius: '8px' }}>
+            <span style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#f59e0b', animation: 'statusPulse 1.5s infinite' }} />
+            <span>Nueva Orden</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: '#1e40af', backgroundColor: '#dbeafe', padding: '0.2rem 0.55rem', borderRadius: '8px' }}>
+            <span style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#3b82f6' }} />
+            <span>En Cocina</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: '#6d28d9', backgroundColor: '#ede9fe', padding: '0.2rem 0.55rem', borderRadius: '8px' }}>
+            <span style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#8b5cf6' }} />
+            <span>Lista</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: '#c2410c', backgroundColor: '#ffedd5', padding: '0.2rem 0.55rem', borderRadius: '8px' }}>
+            <span style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#ea580c' }} />
+            <span>En Mesa / Ocupada</span>
+          </div>
+        </div>
+
+        {/* Píldoras de Mesas con Estado en Tiempo Real y Colores Diferenciados */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', overflowX: 'auto', paddingBottom: '0.35rem' }}>
           {['Llevar', 'Barra', ...tables.map(t => String(t.number))].map((tbl) => {
             const isSelected = String(selectedTable) === String(tbl);
-            const tableObj = tables.find(t => String(t.number) === String(tbl));
-            const isOccupied = tableObj && tableObj.status === 'occupied';
+            const statusInfo = getTableLiveStatus(tbl);
 
             return (
               <button
@@ -537,33 +641,50 @@ export function AdminPOSTab({
                   setSelectedTable(tbl);
                 }}
                 style={{
-                  padding: '0.65rem 1.15rem',
+                  padding: '0.6rem 0.95rem',
                   borderRadius: '14px',
                   backgroundColor: isSelected 
                     ? 'var(--rojo, #d91c2b)' 
-                    : isOccupied 
-                    ? '#fef3c7' 
-                    : '#f5efe4',
+                    : statusInfo.color,
                   color: isSelected 
                     ? '#ffffff' 
-                    : isOccupied 
-                    ? '#92400e' 
-                    : '#1f1e1c',
+                    : statusInfo.textColor,
                   fontWeight: 900,
-                  fontSize: '0.88rem',
+                  fontSize: '0.84rem',
                   border: 'none !important',
                   cursor: 'pointer',
                   whiteSpace: 'nowrap',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.45rem',
-                  boxShadow: isSelected ? '0 6px 16px rgba(217, 28, 43, 0.3)' : 'none',
+                  boxShadow: isSelected ? '0 6px 16px rgba(217, 28, 43, 0.3)' : '0 2px 6px rgba(0,0,0,0.03)',
                   transition: 'all 0.15s ease'
                 }}
               >
-                <span>Mesa {tbl}</span>
-                {isOccupied && !isSelected && (
-                  <span style={{ width: '8px', height: '8px', borderRadius: '4px', backgroundColor: '#f59e0b' }} />
+                {/* Indicador de estado */}
+                <span
+                  style={{
+                    width: '8px',
+                    height: '8px',
+                    borderRadius: '50%',
+                    backgroundColor: isSelected ? '#ffffff' : statusInfo.dot,
+                    animation: statusInfo.isPulsing ? 'statusPulse 1.5s infinite' : 'none'
+                  }}
+                />
+                <span>{tbl === 'Llevar' || tbl === 'Barra' ? tbl : `Mesa ${tbl}`}</span>
+                {!statusInfo.isSpecial && (
+                  <span
+                    style={{
+                      fontSize: '0.68rem',
+                      fontWeight: 800,
+                      opacity: isSelected ? 0.9 : 0.85,
+                      backgroundColor: isSelected ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.06)',
+                      padding: '0.1rem 0.35rem',
+                      borderRadius: '6px'
+                    }}
+                  >
+                    {statusInfo.label}
+                  </span>
                 )}
               </button>
             );
@@ -571,15 +692,30 @@ export function AdminPOSTab({
         </div>
       </div>
 
+      {/* Regla CSS interna para evitar desbordamiento en POS */}
+      <style>{`
+        @keyframes statusPulse {
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50% { opacity: 0.45; transform: scale(1.35); }
+        }
+        .pos-responsive-grid {
+          display: grid;
+          grid-template-columns: minmax(0, 1.35fr) minmax(320px, 430px);
+          gap: 1.25rem;
+          align-items: start;
+          width: 100%;
+          max-width: 100%;
+          box-sizing: border-box;
+        }
+        @media (max-width: 1120px) {
+          .pos-responsive-grid {
+            grid-template-columns: minmax(0, 1fr) !important;
+          }
+        }
+      `}</style>
+
       {/* Grid Central del POS: Catálogo de Platos a la Izquierda, Comanda / Carrito a la Derecha */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr minmax(360px, 440px)',
-          gap: '1.25rem',
-          alignItems: 'start'
-        }}
-      >
+      <div className="pos-responsive-grid">
         {/* PANEL IZQUIERDO: CATÁLOGO DE PLATOS DEL RESTAURANTE */}
         <div
           style={{
@@ -687,8 +823,8 @@ export function AdminPOSTab({
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
-              gap: '0.75rem',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
+              gap: '0.65rem',
               maxHeight: '520px',
               overflowY: 'auto',
               paddingRight: '0.25rem'
@@ -828,29 +964,34 @@ export function AdminPOSTab({
               </button>
             </div>
 
-            <select
-              value={selectedCustomerId || ''}
-              onChange={(e) => {
-                const found = customersList.find(c => c.id === e.target.value);
-                handleSelectCustomer(found || null);
-              }}
-              style={{
-                width: '100%',
-                padding: '0.45rem 0.65rem',
-                borderRadius: '8px',
-                backgroundColor: '#ffffff',
-                border: 'none !important',
-                fontSize: '0.8rem',
-                fontWeight: 700,
-                color: '#1f1e1c',
-                outline: 'none'
-              }}
-            >
-              <option value="">Cliente de Consumo (Por Defecto)</option>
-              {customersList.map(c => (
-                <option key={c.id} value={c.id}>{c.name} {c.phone ? `(${c.phone})` : ''}</option>
-              ))}
-            </select>
+            <div style={{ position: 'relative' }}>
+              <select
+                value={selectedCustomerId || ''}
+                onChange={(e) => {
+                  const found = customersList.find(c => c.id === e.target.value);
+                  handleSelectCustomer(found || null);
+                }}
+                style={{
+                  width: '100%',
+                  padding: '0.5rem 1.85rem 0.5rem 0.65rem',
+                  borderRadius: '10px',
+                  backgroundColor: '#ffffff',
+                  border: 'none !important',
+                  fontSize: '0.8rem',
+                  fontWeight: 700,
+                  color: '#1f1e1c',
+                  outline: 'none',
+                  appearance: 'none',
+                  cursor: 'pointer'
+                }}
+              >
+                <option value="">Cliente de Consumo (Por Defecto)</option>
+                {customersList.map(c => (
+                  <option key={c.id} value={c.id}>{c.name} {c.phone ? `(${c.phone})` : ''}</option>
+                ))}
+              </select>
+              <ChevronDown size={14} color="#78716c" style={{ position: 'absolute', right: '8px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
+            </div>
           </div>
 
           {/* Lista de Ítems en la Comanda */}
