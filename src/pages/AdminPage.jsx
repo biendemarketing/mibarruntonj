@@ -486,7 +486,7 @@ export function AdminPage() {
           alignItems: 'center',
           justifyContent: 'center',
           padding: '1.5rem',
-          fontFamily: 'var(--font-admin-primary, "DM Sans", -apple-system, sans-serif)'
+          fontFamily: 'var(--font-admin-primary, "Roboto", -apple-system, sans-serif)'
         }}
       >
         <div
@@ -830,7 +830,7 @@ export function AdminPage() {
         minHeight: '100vh',
         backgroundColor: '#fbf7ee',
         color: '#1f1e1c',
-        fontFamily: 'var(--font-admin-primary, "DM Sans", -apple-system, sans-serif)',
+        fontFamily: 'var(--font-admin-primary, "Roboto", -apple-system, sans-serif)',
         display: 'flex',
         flexDirection: 'row',
         position: 'relative'
@@ -1507,11 +1507,16 @@ export function AdminPage() {
               dishes={dishes}
               tables={tables}
               categories={categories}
+              waiters={waiters}
+              orders={orders}
+              onRefreshData={loadAllData}
             />
           )}
 
           {activeTab === 'customers' && (
-            <AdminCustomersTab />
+            <AdminCustomersTab 
+              onRefreshData={loadAllData}
+            />
           )}
 
           {activeTab === 'tasks' && (

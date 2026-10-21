@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Plus, Trash2, Edit2, UserCheck, Phone, KeyRound, RefreshCw, X, Shield, Eye, EyeOff, User, ShieldCheck } from 'lucide-react';
 import { useAlertConfirm } from '../context/AlertConfirmContext';
 import { triggerHaptic } from '../utils/haptics';
+import { CustomSelect } from './CustomSelect';
 
 export function AdminWaitersTab({
   waiters = [],
@@ -610,26 +611,21 @@ export function AdminWaitersTab({
                   <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 800, color: '#1f1e1c', marginBottom: '0.35rem' }}>
                     Puesto
                   </label>
-                  <select
+                  <CustomSelect
                     value={formData.role}
-                    onChange={(e) => setFormData(p => ({ ...p, role: e.target.value }))}
-                    style={{
-                      width: '100%',
+                    onChange={(val) => setFormData(p => ({ ...p, role: val }))}
+                    options={[
+                      { value: 'mesero', label: 'Mesero / Mozo' },
+                      { value: 'capitan', label: 'Capitán de Sala' },
+                      { value: 'cocina', label: 'Cocina / Pase' },
+                      { value: 'cajero', label: 'Cajero / Bar' }
+                    ]}
+                    buttonStyle={{
                       padding: '0.75rem 0.95rem',
-                      backgroundColor: '#f5efe4',
-                      color: '#1f1e1c',
                       borderRadius: '14px',
-                      fontSize: '0.9rem',
-                      border: 'none !important',
-                      outline: 'none',
-                      cursor: 'pointer'
+                      fontSize: '0.9rem'
                     }}
-                  >
-                    <option value="mesero">Mesero / Mozo</option>
-                    <option value="capitan">Capitán de Sala</option>
-                    <option value="cocina">Cocina / Pase</option>
-                    <option value="cajero">Cajero / Bar</option>
-                  </select>
+                  />
                 </div>
               </div>
 
@@ -638,26 +634,21 @@ export function AdminWaitersTab({
                 <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 800, color: '#1f1e1c', marginBottom: '0.35rem' }}>
                   Nivel de Permisos en el Panel
                 </label>
-                <select
+                <CustomSelect
                   value={formData.permission_level}
-                  onChange={(e) => setFormData(p => ({ ...p, permission_level: e.target.value }))}
-                  style={{
-                    width: '100%',
+                  onChange={(val) => setFormData(p => ({ ...p, permission_level: val }))}
+                  options={[
+                    { value: 'solo_pedidos', label: 'Solo Pedidos (Comandas, tiempos y entregas)' },
+                    { value: 'pedidos_y_mesas', label: 'Pedidos y Mesas & QR (Gestión de comandas + liberar mesas)' },
+                    { value: 'admin_completo', label: 'Acceso Total (Permite platos, categorías y meseros)' }
+                  ]}
+                  buttonStyle={{
                     padding: '0.75rem 0.95rem',
-                    backgroundColor: '#f5efe4',
-                    color: '#1f1e1c',
                     borderRadius: '14px',
                     fontSize: '0.9rem',
-                    border: 'none !important',
-                    outline: 'none',
-                    cursor: 'pointer',
                     fontWeight: 700
                   }}
-                >
-                  <option value="solo_pedidos">Solo Pedidos (Comandas, tiempos y entregas)</option>
-                  <option value="pedidos_y_mesas">Pedidos y Mesas & QR (Gestión de comandas + liberar mesas)</option>
-                  <option value="admin_completo">Acceso Total (Permite platos, categorías y meseros)</option>
-                </select>
+                />
                 <span style={{ fontSize: '0.72rem', color: '#78716c', display: 'block', marginTop: '0.3rem' }}>
                   Al seleccionar "Solo Pedidos", el mesero no podrá editar platos, categorías ni crear otros meseros.
                 </span>

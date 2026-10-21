@@ -8,6 +8,7 @@ import {
 import { tasksService } from '../services/supabase';
 import { useAlertConfirm } from '../context/AlertConfirmContext';
 import { triggerHaptic } from '../utils/haptics';
+import { CustomSelect } from './CustomSelect';
 
 export function AdminTasksTab({
   waiters = [],
@@ -517,72 +518,48 @@ export function AdminTasksTab({
             </div>
 
             {/* REQUERIMIENTO: Filtro por Empleado que dejó la nota/tarea */}
-            <select
-              value={selectedCreator}
-              onChange={(e) => setSelectedCreator(e.target.value)}
-              style={{
-                padding: '0.55rem 0.75rem',
-                borderRadius: '12px',
-                backgroundColor: '#f5efe4',
-                border: 'none !important',
-                fontSize: '0.8rem',
-                fontWeight: 800,
-                color: '#1f1e1c',
-                outline: 'none'
-              }}
-              title="Filtrar por empleado que creó la tarea"
-            >
-              <option value="all">Dejada por: Todos</option>
-              {creatorsList.map(name => (
-                <option key={name} value={name}>Dejada por: {name}</option>
-              ))}
-            </select>
+            <div style={{ width: '170px' }}>
+              <CustomSelect
+                value={selectedCreator}
+                onChange={setSelectedCreator}
+                options={[
+                  { value: 'all', label: 'Dejada por: Todos' },
+                  ...creatorsList.map(name => ({ value: name, label: `Dejada por: ${name}` }))
+                ]}
+              />
+            </div>
 
             {/* Filtro por Área */}
-            <select
-              value={selectedArea}
-              onChange={(e) => setSelectedArea(e.target.value)}
-              style={{
-                padding: '0.55rem 0.75rem',
-                borderRadius: '12px',
-                backgroundColor: '#f5efe4',
-                border: 'none !important',
-                fontSize: '0.8rem',
-                fontWeight: 800,
-                color: '#1f1e1c',
-                outline: 'none'
-              }}
-            >
-              <option value="all">Área: Todas</option>
-              <option value="salon">Salón / Mesas</option>
-              <option value="cocina">Cocina</option>
-              <option value="barra">Barra</option>
-              <option value="caja">Caja</option>
-              <option value="compras_inventario">Compras / Stock</option>
-              <option value="general">General</option>
-            </select>
+            <div style={{ width: '150px' }}>
+              <CustomSelect
+                value={selectedArea}
+                onChange={setSelectedArea}
+                options={[
+                  { value: 'all', label: 'Área: Todas' },
+                  { value: 'salon', label: 'Salón / Mesas' },
+                  { value: 'cocina', label: 'Cocina' },
+                  { value: 'barra', label: 'Barra' },
+                  { value: 'caja', label: 'Caja' },
+                  { value: 'compras_inventario', label: 'Compras / Stock' },
+                  { value: 'general', label: 'General' }
+                ]}
+              />
+            </div>
 
             {/* Filtro por Prioridad */}
-            <select
-              value={selectedPriority}
-              onChange={(e) => setSelectedPriority(e.target.value)}
-              style={{
-                padding: '0.55rem 0.75rem',
-                borderRadius: '12px',
-                backgroundColor: '#f5efe4',
-                border: 'none !important',
-                fontSize: '0.8rem',
-                fontWeight: 800,
-                color: '#1f1e1c',
-                outline: 'none'
-              }}
-            >
-              <option value="all">Prioridad: Todas</option>
-              <option value="urgente">Urgente</option>
-              <option value="alta">Alta</option>
-              <option value="media">Media</option>
-              <option value="baja">Baja</option>
-            </select>
+            <div style={{ width: '150px' }}>
+              <CustomSelect
+                value={selectedPriority}
+                onChange={setSelectedPriority}
+                options={[
+                  { value: 'all', label: 'Prioridad: Todas' },
+                  { value: 'urgente', label: 'Urgente' },
+                  { value: 'alta', label: 'Alta' },
+                  { value: 'media', label: 'Media' },
+                  { value: 'baja', label: 'Baja' }
+                ]}
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -895,52 +872,34 @@ export function AdminTasksTab({
                   <label style={{ fontSize: '0.72rem', fontWeight: 800, color: '#44403c', display: 'block', marginBottom: '0.25rem' }}>
                     Área Operativa
                   </label>
-                  <select
+                  <CustomSelect
                     value={formData.area}
-                    onChange={(e) => setFormData(prev => ({ ...prev, area: e.target.value }))}
-                    style={{
-                      width: '100%',
-                      padding: '0.6rem 0.75rem',
-                      borderRadius: '10px',
-                      backgroundColor: '#f5efe4',
-                      border: 'none !important',
-                      fontSize: '0.82rem',
-                      fontWeight: 700,
-                      boxSizing: 'border-box'
-                    }}
-                  >
-                    <option value="general">General</option>
-                    <option value="salon">Salón / Mesas</option>
-                    <option value="cocina">Cocina</option>
-                    <option value="barra">Barra / Bebidas</option>
-                    <option value="caja">Caja / Cobros</option>
-                    <option value="compras_inventario">Compras / Stock</option>
-                  </select>
+                    onChange={(val) => setFormData(prev => ({ ...prev, area: val }))}
+                    options={[
+                      { value: 'general', label: 'General' },
+                      { value: 'salon', label: 'Salón / Mesas' },
+                      { value: 'cocina', label: 'Cocina' },
+                      { value: 'barra', label: 'Barra / Bebidas' },
+                      { value: 'caja', label: 'Caja / Cobros' },
+                      { value: 'compras_inventario', label: 'Compras / Stock' }
+                    ]}
+                  />
                 </div>
 
                 <div>
                   <label style={{ fontSize: '0.72rem', fontWeight: 800, color: '#44403c', display: 'block', marginBottom: '0.25rem' }}>
                     Prioridad
                   </label>
-                  <select
+                  <CustomSelect
                     value={formData.priority}
-                    onChange={(e) => setFormData(prev => ({ ...prev, priority: e.target.value }))}
-                    style={{
-                      width: '100%',
-                      padding: '0.6rem 0.75rem',
-                      borderRadius: '10px',
-                      backgroundColor: '#f5efe4',
-                      border: 'none !important',
-                      fontSize: '0.82rem',
-                      fontWeight: 700,
-                      boxSizing: 'border-box'
-                    }}
-                  >
-                    <option value="baja">Baja</option>
-                    <option value="media">Media</option>
-                    <option value="alta">Alta</option>
-                    <option value="urgente">Urgente</option>
-                  </select>
+                    onChange={(val) => setFormData(prev => ({ ...prev, priority: val }))}
+                    options={[
+                      { value: 'baja', label: 'Baja' },
+                      { value: 'media', label: 'Media' },
+                      { value: 'alta', label: 'Alta' },
+                      { value: 'urgente', label: 'Urgente' }
+                    ]}
+                  />
                 </div>
               </div>
 
@@ -949,10 +908,9 @@ export function AdminTasksTab({
                 <label style={{ fontSize: '0.72rem', fontWeight: 800, color: '#44403c', display: 'block', marginBottom: '0.25rem' }}>
                   Asignar a Empleado
                 </label>
-                <select
+                <CustomSelect
                   value={formData.assigned_to_id}
-                  onChange={(e) => {
-                    const wid = e.target.value;
+                  onChange={(wid) => {
                     const w = waiters.find(item => item.id === wid);
                     setFormData(prev => ({
                       ...prev,
@@ -960,22 +918,12 @@ export function AdminTasksTab({
                       assigned_to_name: w ? w.name : 'Equipo General'
                     }));
                   }}
-                  style={{
-                    width: '100%',
-                    padding: '0.6rem 0.75rem',
-                    borderRadius: '10px',
-                    backgroundColor: '#f5efe4',
-                    border: 'none !important',
-                    fontSize: '0.82rem',
-                    fontWeight: 700,
-                    boxSizing: 'border-box'
-                  }}
-                >
-                  <option value="">Equipo General (Cualquier mesero o cocinero)</option>
-                  {waiters.map(w => (
-                    <option key={w.id} value={w.id}>{w.name} ({w.role || 'Mesero'})</option>
-                  ))}
-                </select>
+                  placeholder="Equipo General (Cualquier mesero o cocinero)"
+                  options={[
+                    { value: '', label: 'Equipo General (Cualquier mesero o cocinero)' },
+                    ...waiters.map(w => ({ value: w.id, label: `${w.name} (${w.role || 'Mesero'})` }))
+                  ]}
+                />
               </div>
 
               {/* Pie con autor actual */}

@@ -7,6 +7,7 @@ import {
 import { ordersService } from '../services/supabase';
 import { useAlertConfirm } from '../context/AlertConfirmContext';
 import { triggerHaptic } from '../utils/haptics';
+import { CustomSelect } from './CustomSelect';
 
 export function AdminOrderEditModal({
   isOpen,
@@ -22,7 +23,7 @@ export function AdminOrderEditModal({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Form states
-  const [customerName, setCustomerName] = useState(order.customer_name || 'Cliente de Consumo');
+  const [customerName, setCustomerName] = useState(order.customer_name || 'Walk-in Customer');
   const [customerPhone, setCustomerPhone] = useState(order.customer_phone || '');
   const [tableNumber, setTableNumber] = useState(order.table_number || '1');
   const [status, setStatus] = useState(order.status || 'pending');
@@ -391,29 +392,23 @@ export function AdminOrderEditModal({
               <label style={{ fontSize: '0.72rem', fontWeight: 800, color: '#78716c', display: 'block', marginBottom: '0.25rem' }}>
                 Estado del Pedido
               </label>
-              <select
+              <CustomSelect
                 value={status}
-                onChange={(e) => setStatus(e.target.value)}
-                style={{
-                  width: '100%',
+                onChange={(val) => setStatus(val)}
+                options={[
+                  { value: 'pending', label: 'Pendiente' },
+                  { value: 'in_kitchen', label: 'En Cocina' },
+                  { value: 'ready', label: 'Listo para Servir' },
+                  { value: 'delivered', label: 'Entregado' },
+                  { value: 'paid', label: 'Pagado' },
+                  { value: 'cancelled', label: 'Cancelado' }
+                ]}
+                buttonStyle={{
                   padding: '0.55rem 0.75rem',
                   borderRadius: '10px',
-                  backgroundColor: '#f5efe4',
-                  border: 'none !important',
-                  fontSize: '0.82rem',
-                  fontWeight: 800,
-                  color: '#1f1e1c',
-                  outline: 'none',
-                  boxSizing: 'border-box'
+                  fontSize: '0.82rem'
                 }}
-              >
-                <option value="pending">Pendiente</option>
-                <option value="in_kitchen">En Cocina</option>
-                <option value="ready">Listo</option>
-                <option value="delivered">Entregado</option>
-                <option value="paid">Pagado</option>
-                <option value="cancelled">Cancelado</option>
-              </select>
+              />
             </div>
           </div>
 

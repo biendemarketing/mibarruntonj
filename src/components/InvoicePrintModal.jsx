@@ -4,6 +4,7 @@ import {
   Receipt, ChefHat, FileText, Settings, Copy, Share2
 } from 'lucide-react';
 import { triggerHaptic } from '../utils/haptics';
+import { CustomSelect } from './CustomSelect';
 
 export function InvoicePrintModal({
   isOpen,
@@ -21,7 +22,7 @@ export function InvoicePrintModal({
     initialData?.invoice_number || `INV-${Date.now().toString().slice(-6)}`
   );
   const [customerName, setCustomerName] = useState(
-    initialData?.customer_name || 'Cliente de Consumo'
+    initialData?.customer_name || 'Walk-in Customer'
   );
   const [customerPhone, setCustomerPhone] = useState(initialData?.customer_phone || '');
   const [customerAddress, setCustomerAddress] = useState(initialData?.customer_address || '');
@@ -570,7 +571,7 @@ export function InvoicePrintModal({
                   type="button"
                   onClick={() => {
                     triggerHaptic(6);
-                    setCustomerName('Cliente de Consumo');
+                    setCustomerName('Walk-in Customer');
                   }}
                   style={{
                     backgroundColor: '#f5efe4',
@@ -583,7 +584,7 @@ export function InvoicePrintModal({
                     cursor: 'pointer'
                   }}
                 >
-                  Consumo General
+                  Walk-in Customer
                 </button>
               </div>
 
@@ -637,27 +638,21 @@ export function InvoicePrintModal({
                   <label style={{ fontSize: '0.7rem', color: '#78716c', fontWeight: 700, display: 'block', marginBottom: '0.2rem' }}>
                     Método de Pago
                   </label>
-                  <select
+                  <CustomSelect
                     value={paymentMethod}
-                    onChange={(e) => setPaymentMethod(e.target.value)}
-                    style={{
-                      width: '100%',
+                    onChange={(val) => setPaymentMethod(val)}
+                    options={[
+                      { value: 'efectivo', label: 'Efectivo ($ USD)' },
+                      { value: 'tarjeta', label: 'Tarjeta Crédito / Débito' },
+                      { value: 'zelle', label: 'Zelle / Transferencia' },
+                      { value: 'apple_pay', label: 'Apple Pay / Contactless' }
+                    ]}
+                    buttonStyle={{
                       padding: '0.5rem 0.75rem',
                       borderRadius: '10px',
-                      backgroundColor: '#f5efe4',
-                      border: 'none !important',
-                      fontSize: '0.82rem',
-                      fontWeight: 700,
-                      color: '#1f1e1c',
-                      outline: 'none',
-                      boxSizing: 'border-box'
+                      fontSize: '0.82rem'
                     }}
-                  >
-                    <option value="efectivo">Efectivo ($)</option>
-                    <option value="tarjeta">Tarjeta Crédito / Débito</option>
-                    <option value="zelle">Zelle / Transferencia</option>
-                    <option value="apple_pay">Apple Pay / Contactless</option>
-                  </select>
+                  />
                 </div>
               </div>
             </div>
@@ -720,7 +715,7 @@ export function InvoicePrintModal({
                 fontFamily: template === 'kitchen' 
                   ? 'monospace, Courier, sans-serif'
                   : template === 'formal'
-                  ? 'var(--font-admin-primary, "DM Sans", sans-serif)'
+                  ? 'var(--font-admin-primary, "Roboto", sans-serif)'
                   : '"Courier New", Courier, monospace',
                 fontSize: template === 'thermal58' ? '11px' : '12px',
                 lineHeight: 1.4,

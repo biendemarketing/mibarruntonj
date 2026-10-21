@@ -10,6 +10,7 @@ import { ordersService, invoicesService, tablesService, customersService } from 
 import { InvoicePrintModal } from './InvoicePrintModal';
 import { useAlertConfirm } from '../context/AlertConfirmContext';
 import { triggerHaptic } from '../utils/haptics';
+import { CustomSelect } from './CustomSelect';
 
 export function AdminPOSTab({
   tables = [],
@@ -35,14 +36,16 @@ export function AdminPOSTab({
   const [selectedTable, setSelectedTable] = useState('1');
   const [dinersCount, setDinersCount] = useState(2);
   const [selectedCustomerId, setSelectedCustomerId] = useState(null);
-  const [customerName, setCustomerName] = useState('Cliente de Consumo');
+  const [customerName, setCustomerName] = useState('Walk-in Customer');
   const [customerPhone, setCustomerPhone] = useState('');
   const [deliveryAddress, setDeliveryAddress] = useState('');
   const [customersList, setCustomersList] = useState([]);
   const [selectedWaiterId, setSelectedWaiterId] = useState(currentWaiter?.id || '');
 
-  // Filtros en Plano de Mesas
+  // Filtros en Plano de Mesas (Estado, Zona, Capacidad y Búsqueda)
   const [tableFilter, setTableFilter] = useState('all'); // 'all' | 'free' | 'occupied' | 'kitchen' | 'ready'
+  const [tableZoneFilter, setTableZoneFilter] = useState('all'); // 'all' | 'salon' | 'barra' | 'terraza'
+  const [tableCapacityFilter, setTableCapacityFilter] = useState('all'); // 'all' | '2' | '4' | '6+'
   const [tableSearchQuery, setTableSearchQuery] = useState('');
 
   // Modal para Abrir Cuenta / Asignar Comensales en Mesa Libre
@@ -107,7 +110,7 @@ export function AdminPOSTab({
 
   // Si la mesa seleccionada tiene orden activa y el cliente está como genérico, auto-completar nombre
   useEffect(() => {
-    if (activeTableOrder && activeTableOrder.customer_name && customerName === 'Cliente de Consumo') {
+    if (activeTableOrder && activeTableOrder.customer_name && customerName === 'Walk-in Customer') {
       setCustomerName(activeTableOrder.customer_name);
       if (activeTableOrder.customer_phone) {
         setCustomerPhone(activeTableOrder.customer_phone);
@@ -206,21 +209,44 @@ export function AdminPOSTab({
     };
   };
 
-  // Filtrado de mesas en el plano visual
+  // Filtrado de mesas en el plano visual (Estado, Zona, Capacidad y Búsqueda)
   const filteredTablesList = useMemo(() => {
     return tables.filter(t => {
       const tblNum = String(t.number);
-      const matchSearch = !tableSearchQuery.trim() || tblNum.includes(tableSearchQuery.trim());
-      if (!matchSearch) return false;
-
       const statusInfo = getTableLiveStatus(tblNum);
+      const activeOrder = statusInfo.order;
+
+      // Búsqueda por número de mesa, nombre de cliente o nombre de mesero
+      if (tableSearchQuery.trim()) {
+        const query = tableSearchQuery.toLowerCase().trim();
+        const matchNum = tblNum.includes(query);
+        const matchCust = activeOrder?.customer_name && activeOrder.customer_name.toLowerCase().includes(query);
+        const matchLoc = t.location && t.location.toLowerCase().includes(query);
+        if (!matchNum && !matchCust && !matchLoc) return false;
+      }
+
+      // Filtro por Zona / Ubicación
+      if (tableZoneFilter !== 'all') {
+        const loc = (t.location || 'Salón Principal').toLowerCase();
+        if (tableZoneFilter === 'salon' && (!loc.includes('salón') && !loc.includes('salon'))) return false;
+        if (tableZoneFilter === 'barra' && (!loc.includes('barra') && !loc.includes('counter'))) return false;
+        if (tableZoneFilter === 'terraza' && (!loc.includes('terraza') && !loc.includes('patio') && !loc.includes('afuera'))) return false;
+      }
+
+      // Filtro por Capacidad de Comensales
+      const cap = Number(t.capacity || 2);
+      if (tableCapacityFilter === '2' && cap > 2) return false;
+      if (tableCapacityFilter === '4' && (cap < 3 || cap > 4)) return false;
+      if (tableCapacityFilter === '6+' && cap < 5) return false;
+
+      // Filtro por Estado
       if (tableFilter === 'free') return statusInfo.label === 'Libre';
       if (tableFilter === 'occupied') return statusInfo.label !== 'Libre';
       if (tableFilter === 'kitchen') return statusInfo.label === 'En Cocina' || statusInfo.label === 'Nueva Orden';
       if (tableFilter === 'ready') return statusInfo.label === 'Lista para Servir';
       return true;
     });
-  }, [tables, orders, tableFilter, tableSearchQuery]);
+  }, [tables, orders, tableFilter, tableSearchQuery, tableZoneFilter, tableCapacityFilter]);
 
   // Métricas del plano de mesas
   const tableMetrics = useMemo(() => {
@@ -453,7 +479,7 @@ export function AdminPOSTab({
       const tableObj = tables.find(t => String(t.number) === String(selectedTable));
 
       const newOrder = await ordersService.createOrder({
-        customer_name: customerName || 'Cliente de Consumo',
+        customer_name: customerName || 'Walk-in Customer',
         customer_phone: customerPhone || null,
         customer_id: selectedCustomerId,
         table_number: String(selectedTable),
@@ -732,30 +758,22 @@ export function AdminPOSTab({
           {/* Selector de Mesero de Turno */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#78716c' }}>Atiende:</span>
-            <div style={{ position: 'relative' }}>
-              <select
-                value={selectedWaiterId}
-                onChange={(e) => setSelectedWaiterId(e.target.value)}
-                style={{
-                  padding: '0.5rem 2rem 0.5rem 0.85rem',
-                  borderRadius: '12px',
-                  backgroundColor: '#f5efe4',
-                  border: 'none !important',
-                  fontSize: '0.82rem',
-                  fontWeight: 800,
-                  color: '#1f1e1c',
-                  outline: 'none',
-                  appearance: 'none',
-                  cursor: 'pointer'
-                }}
-              >
-                <option value="">Seleccionar Mesero...</option>
-                {waiters.map(w => (
-                  <option key={w.id} value={w.id}>{w.name} ({w.role || 'Mesero'})</option>
-                ))}
-              </select>
-              <ChevronDown size={14} color="#78716c" style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
-            </div>
+            <CustomSelect
+              value={selectedWaiterId}
+              onChange={(val) => setSelectedWaiterId(val)}
+              options={[
+                { value: '', label: 'Seleccionar Mesero...' },
+                ...waiters.map(w => ({ value: w.id, label: `${w.name} (${w.role || 'Mesero'})` }))
+              ]}
+              width="210px"
+              placeholder="Seleccionar Mesero..."
+              buttonStyle={{
+                padding: '0.5rem 0.85rem',
+                borderRadius: '12px',
+                fontSize: '0.82rem',
+                fontWeight: 800
+              }}
+            />
           </div>
         </div>
 
@@ -1038,6 +1056,81 @@ export function AdminPOSTab({
                 <span style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#8b5cf6' }} />
                 <span>Listas para Servir ({tableMetrics.listas})</span>
               </button>
+            </div>
+
+            {/* Fila 2: Filtros de Zona / Sector y Capacidad */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.65rem', borderTop: 'none', paddingTop: '0.4rem' }}>
+              {/* Filtro por Zona */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', overflowX: 'auto' }}>
+                <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#78716c', textTransform: 'uppercase', letterSpacing: '0.3px', marginRight: '0.2rem' }}>
+                  Zona:
+                </span>
+                {[
+                  { id: 'all', label: 'Todas las Zonas' },
+                  { id: 'salon', label: 'Salón Principal' },
+                  { id: 'barra', label: 'Barra / Counter' },
+                  { id: 'terraza', label: 'Terraza' }
+                ].map(z => (
+                  <button
+                    key={z.id}
+                    type="button"
+                    onClick={() => {
+                      triggerHaptic(5);
+                      setTableZoneFilter(z.id);
+                    }}
+                    style={{
+                      padding: '0.3rem 0.65rem',
+                      borderRadius: '8px',
+                      backgroundColor: tableZoneFilter === z.id ? '#1f1e1c' : '#f5efe4',
+                      color: tableZoneFilter === z.id ? '#ffffff' : '#44403c',
+                      fontSize: '0.74rem',
+                      fontWeight: 800,
+                      border: 'none !important',
+                      cursor: 'pointer',
+                      whiteSpace: 'nowrap',
+                      transition: 'all 0.1s ease'
+                    }}
+                  >
+                    {z.label}
+                  </button>
+                ))}
+              </div>
+
+              {/* Filtro por Capacidad */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#78716c', textTransform: 'uppercase', letterSpacing: '0.3px', marginRight: '0.2rem' }}>
+                  Capacidad:
+                </span>
+                {[
+                  { id: 'all', label: 'Todas' },
+                  { id: '2', label: '2 pax' },
+                  { id: '4', label: '4 pax' },
+                  { id: '6+', label: '6+ pax' }
+                ].map(c => (
+                  <button
+                    key={c.id}
+                    type="button"
+                    onClick={() => {
+                      triggerHaptic(5);
+                      setTableCapacityFilter(c.id);
+                    }}
+                    style={{
+                      padding: '0.3rem 0.6rem',
+                      borderRadius: '8px',
+                      backgroundColor: tableCapacityFilter === c.id ? '#c2410c' : '#f5efe4',
+                      color: tableCapacityFilter === c.id ? '#ffffff' : '#44403c',
+                      fontSize: '0.74rem',
+                      fontWeight: 800,
+                      border: 'none !important',
+                      cursor: 'pointer',
+                      whiteSpace: 'nowrap',
+                      transition: 'all 0.1s ease'
+                    }}
+                  >
+                    {c.label}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -1670,38 +1763,31 @@ export function AdminPOSTab({
                       cursor: 'pointer'
                     }}
                   >
-                    Consumo General
+                    Walk-in Customer
                   </button>
                 </div>
 
-                <div style={{ position: 'relative' }}>
-                  <select
-                    value={selectedCustomerId || ''}
-                    onChange={(e) => {
-                      const found = customersList.find(c => c.id === e.target.value);
-                      handleSelectCustomer(found || null);
-                    }}
-                    style={{
-                      width: '100%',
-                      padding: '0.5rem 1.85rem 0.5rem 0.65rem',
-                      borderRadius: '10px',
-                      backgroundColor: '#ffffff',
-                      border: 'none !important',
-                      fontSize: '0.8rem',
-                      fontWeight: 700,
-                      color: '#1f1e1c',
-                      outline: 'none',
-                      appearance: 'none',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    <option value="">Cliente de Consumo (Por Defecto)</option>
-                    {customersList.map(c => (
-                      <option key={c.id} value={c.id}>{c.name} {c.phone ? `(${c.phone})` : ''}</option>
-                    ))}
-                  </select>
-                  <ChevronDown size={14} color="#78716c" style={{ position: 'absolute', right: '8px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
-                </div>
+                <CustomSelect
+                  value={selectedCustomerId || ''}
+                  onChange={(val) => {
+                    const found = customersList.find(c => c.id === val);
+                    handleSelectCustomer(found || null);
+                  }}
+                  options={[
+                    { value: '', label: 'Walk-in Customer (Por Defecto)' },
+                    ...customersList.map(c => ({
+                      value: c.id,
+                      label: `${c.name} ${c.phone ? `(${c.phone})` : ''}`
+                    }))
+                  ]}
+                  placeholder="Walk-in Customer (Por Defecto)"
+                  buttonStyle={{
+                    backgroundColor: '#ffffff',
+                    padding: '0.5rem 0.65rem',
+                    borderRadius: '10px',
+                    fontSize: '0.8rem'
+                  }}
+                />
 
                 {/* Si es Delivery o Para Llevar, campos de contacto */}
                 {serviceMode !== 'salon' && (
@@ -1709,8 +1795,8 @@ export function AdminPOSTab({
                     <input
                       type="text"
                       placeholder="Nombre del Cliente..."
-                      value={customerName === 'Cliente de Consumo' ? '' : customerName}
-                      onChange={(e) => setCustomerName(e.target.value || 'Cliente de Consumo')}
+                      value={customerName === 'Walk-in Customer' ? '' : customerName}
+                      onChange={(e) => setCustomerName(e.target.value || 'Walk-in Customer')}
                       style={{
                         padding: '0.45rem 0.65rem',
                         borderRadius: '8px',
@@ -2189,13 +2275,99 @@ export function AdminPOSTab({
               </button>
             </div>
 
-            {/* Número de Comensales */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <label style={{ fontSize: '0.78rem', fontWeight: 800, color: '#78716c' }}>
-                Número de Comensales:
-              </label>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '0.35rem' }}>
-                {[1, 2, 3, 4, 5, 6].map(num => (
+            {/* Número de Comensales - No limitado a 6, con input numérico y presets */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <label style={{ fontSize: '0.78rem', fontWeight: 800, color: '#78716c' }}>
+                  Número de Comensales:
+                </label>
+                <span style={{ fontSize: '0.75rem', fontWeight: 900, color: 'var(--rojo, #d91c2b)' }}>
+                  {dinersCount} {dinersCount === 1 ? 'persona' : 'personas'}
+                </span>
+              </div>
+
+              {/* Stepper y Entrada Numérica Directa */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', backgroundColor: '#f5efe4', padding: '0.4rem 0.65rem', borderRadius: '14px' }}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    triggerHaptic(6);
+                    setDinersCount(prev => Math.max(1, prev - 1));
+                  }}
+                  style={{
+                    width: '38px',
+                    height: '38px',
+                    borderRadius: '10px',
+                    backgroundColor: '#ffffff',
+                    color: '#1f1e1c',
+                    fontWeight: 900,
+                    fontSize: '1.25rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    border: 'none !important',
+                    cursor: 'pointer',
+                    boxShadow: '0 2px 5px rgba(0,0,0,0.05)'
+                  }}
+                  title="Restar comensal"
+                >
+                  -
+                </button>
+
+                <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem' }}>
+                  <input
+                    type="number"
+                    min="1"
+                    max="99"
+                    value={dinersCount}
+                    onChange={(e) => {
+                      const val = parseInt(e.target.value, 10);
+                      setDinersCount(isNaN(val) ? 1 : Math.max(1, Math.min(99, val)));
+                    }}
+                    style={{
+                      width: '60px',
+                      textAlign: 'center',
+                      fontSize: '1.25rem',
+                      fontWeight: 900,
+                      color: 'var(--rojo, #d91c2b)',
+                      backgroundColor: 'transparent',
+                      border: 'none !important',
+                      outline: 'none'
+                    }}
+                  />
+                  <span style={{ fontSize: '0.82rem', fontWeight: 800, color: '#78716c' }}>comensales</span>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    triggerHaptic(6);
+                    setDinersCount(prev => Math.min(99, prev + 1));
+                  }}
+                  style={{
+                    width: '38px',
+                    height: '38px',
+                    borderRadius: '10px',
+                    backgroundColor: '#ffffff',
+                    color: '#1f1e1c',
+                    fontWeight: 900,
+                    fontSize: '1.25rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    border: 'none !important',
+                    cursor: 'pointer',
+                    boxShadow: '0 2px 5px rgba(0,0,0,0.05)'
+                  }}
+                  title="Sumar comensal"
+                >
+                  +
+                </button>
+              </div>
+
+              {/* Píldoras Rápidas de Comensales Habituales */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(8, 1fr)', gap: '0.3rem' }}>
+                {[1, 2, 3, 4, 6, 8, 10, 12].map(num => (
                   <button
                     key={num}
                     type="button"
@@ -2204,12 +2376,12 @@ export function AdminPOSTab({
                       setDinersCount(num);
                     }}
                     style={{
-                      padding: '0.65rem 0',
+                      padding: '0.55rem 0',
                       borderRadius: '10px',
                       backgroundColor: dinersCount === num ? 'var(--rojo, #d91c2b)' : '#f5efe4',
                       color: dinersCount === num ? '#ffffff' : '#1f1e1c',
                       fontWeight: 900,
-                      fontSize: '0.85rem',
+                      fontSize: '0.82rem',
                       border: 'none !important',
                       cursor: 'pointer',
                       transition: 'all 0.12s ease'
@@ -2226,31 +2398,15 @@ export function AdminPOSTab({
               <label style={{ fontSize: '0.78rem', fontWeight: 800, color: '#78716c' }}>
                 Mesero Responsable de la Mesa:
               </label>
-              <div style={{ position: 'relative' }}>
-                <select
-                  value={selectedWaiterId}
-                  onChange={(e) => setSelectedWaiterId(e.target.value)}
-                  style={{
-                    width: '100%',
-                    padding: '0.65rem 2rem 0.65rem 0.85rem',
-                    borderRadius: '12px',
-                    backgroundColor: '#f5efe4',
-                    border: 'none !important',
-                    fontSize: '0.85rem',
-                    fontWeight: 700,
-                    color: '#1f1e1c',
-                    outline: 'none',
-                    appearance: 'none',
-                    cursor: 'pointer'
-                  }}
-                >
-                  <option value="">Seleccionar Mesero...</option>
-                  {waiters.map(w => (
-                    <option key={w.id} value={w.id}>{w.name} ({w.role || 'Mesero'})</option>
-                  ))}
-                </select>
-                <ChevronDown size={15} color="#78716c" style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
-              </div>
+              <CustomSelect
+                value={selectedWaiterId}
+                onChange={(val) => setSelectedWaiterId(val)}
+                options={[
+                  { value: '', label: 'Seleccionar Mesero...' },
+                  ...waiters.map(w => ({ value: w.id, label: `${w.name} (${w.role || 'Mesero'})` }))
+                ]}
+                placeholder="Seleccionar Mesero..."
+              />
             </div>
 
             {/* Cliente (Opcional) */}
@@ -2260,9 +2416,9 @@ export function AdminPOSTab({
               </label>
               <input
                 type="text"
-                value={customerName === 'Cliente de Consumo' ? '' : customerName}
-                onChange={(e) => setCustomerName(e.target.value || 'Cliente de Consumo')}
-                placeholder="Ej: Familia López o Cliente de Consumo"
+                value={customerName === 'Walk-in Customer' ? '' : customerName}
+                onChange={(e) => setCustomerName(e.target.value || 'Walk-in Customer')}
+                placeholder="Ej: Familia López o Walk-in Customer"
                 style={{
                   padding: '0.65rem 0.85rem',
                   borderRadius: '12px',

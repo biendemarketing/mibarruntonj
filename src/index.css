@@ -5,7 +5,7 @@
    Tipografía Dirección y Redes: 'Inter' / 'Speedee' (sistema limpio)
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Alegreya+Sans:ital,wght@0,300;0,400;0,500;0,700;0,800;0,900;1,400;1,700&family=DM+Sans:ital,opsz,wght@0,9..40,400..900;1,9..40,400..900&family=Grandstander:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400;1,700;1,800&family=Inter:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Alegreya+Sans:ital,wght@0,300;0,400;0,500;0,700;0,800;0,900;1,400;1,700&family=DM+Sans:ital,opsz,wght@0,9..40,400..900;1,9..40,400..900&family=Grandstander:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400;1,700;1,800&family=Inter:wght@400;500;600;700;800;900&family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400;1,700&display=swap');
 
 @font-face {
   font-family: 'Speedee';
@@ -29,8 +29,8 @@
   --font-secondary: 'Alegreya Sans', system-ui, -apple-system, sans-serif;
   --font-system: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   
-  /* Tipografías Oficiales del Panel Administrativo */
-  --font-admin-primary: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  /* Tipografías Oficiales del Panel Administrativo (Roboto Primaria) */
+  --font-admin-primary: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-admin-secondary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
   /* Rojo Peruano Sólido Oficial — Intensísimo */
@@ -95,7 +95,7 @@
    Secundaria: 'Inter' (Textos descriptivos, inputs, tablas, notas de cocina)
    ========================================================================== */
 .admin-theme {
-  font-family: var(--font-admin-primary, 'DM Sans', -apple-system, sans-serif) !important;
+  font-family: var(--font-admin-primary, 'Roboto', -apple-system, sans-serif) !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -109,7 +109,7 @@
 .admin-theme button,
 .admin-theme th,
 .admin-theme .admin-font-primary {
-  font-family: var(--font-admin-primary, 'DM Sans', -apple-system, sans-serif) !important;
+  font-family: var(--font-admin-primary, 'Roboto', -apple-system, sans-serif) !important;
   letter-spacing: -0.015em;
 }
 
@@ -131,6 +131,33 @@
   outline: none;
   scrollbar-width: none !important;
   -ms-overflow-style: none !important;
+}
+
+/* Eliminación total del estilo nativo de dropdowns en el sistema operativo */
+select {
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  background-color: #f5efe4 !important;
+  color: #1f1e1c !important;
+  border: none !important;
+  outline: none !important;
+  border-radius: 12px !important;
+  font-family: inherit !important;
+  cursor: pointer !important;
+}
+
+select option {
+  background-color: #ffffff !important;
+  color: #1f1e1c !important;
+  padding: 8px 12px !important;
+  font-family: inherit !important;
+}
+
+select option:checked {
+  background-color: rgba(217, 28, 43, 0.08) !important;
+  color: var(--rojo, #d91c2b) !important;
+  font-weight: 800 !important;
 }
 
 *::-webkit-scrollbar,

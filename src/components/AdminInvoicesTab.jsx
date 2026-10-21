@@ -10,8 +10,16 @@ import { invoicesService, customersService } from '../services/supabase';
 import { InvoicePrintModal } from './InvoicePrintModal';
 import { useAlertConfirm } from '../context/AlertConfirmContext';
 import { triggerHaptic } from '../utils/haptics';
+import { CustomSelect } from './CustomSelect';
 
-export function AdminInvoicesTab({ dishes = [], tables = [], categories = [] }) {
+export function AdminInvoicesTab({ 
+  dishes = [], 
+  tables = [], 
+  categories = [],
+  waiters = [],
+  orders = [],
+  onRefreshData = null
+}) {
   const { showConfirm, showAlert } = useAlertConfirm();
   const [invoices, setInvoices] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -36,7 +44,7 @@ export function AdminInvoicesTab({ dishes = [], tables = [], categories = [] }) 
 
   // Formulario Factura
   const [selectedCustomerId, setSelectedCustomerId] = useState(null);
-  const [customerName, setCustomerName] = useState('Cliente de Consumo');
+  const [customerName, setCustomerName] = useState('Walk-in Customer');
   const [customerPhone, setCustomerPhone] = useState('');
   const [tableNumber, setTableNumber] = useState('1');
   const [paymentMethod, setPaymentMethod] = useState('efectivo');
@@ -148,7 +156,7 @@ export function AdminInvoicesTab({ dishes = [], tables = [], categories = [] }) 
   const handleOpenCreateManual = async () => {
     triggerHaptic(8);
     setEditingInvoice(null);
-    setCustomerName('Cliente de Consumo');
+    setCustomerName('Walk-in Customer');
     setCustomerPhone('');
     setSelectedCustomerId(null);
     setTableNumber(tables.length > 0 ? String(tables[0].number) : '1');
@@ -177,7 +185,7 @@ export function AdminInvoicesTab({ dishes = [], tables = [], categories = [] }) 
   const handleOpenEdit = (inv) => {
     triggerHaptic(8);
     setEditingInvoice(inv);
-    setCustomerName(inv.customer_name || 'Cliente de Consumo');
+    setCustomerName(inv.customer_name || 'Walk-in Customer');
     setCustomerPhone(inv.customer_phone || '');
     setSelectedCustomerId(inv.customer_id || null);
     setTableNumber(inv.table_number || '1');
@@ -316,6 +324,7 @@ export function AdminInvoicesTab({ dishes = [], tables = [], categories = [] }) 
       }
 
       setIsEditModalOpen(false);
+      if (onRefreshData) onRefreshData();
     } catch (err) {
       console.error('Error guardando factura:', err);
       await showAlert({
@@ -378,6 +387,7 @@ export function AdminInvoicesTab({ dishes = [], tables = [], categories = [] }) 
           message: `La factura ${inv.invoice_number} fue removida.`,
           type: 'success'
         });
+        if (onRefreshData) onRefreshData();
       } catch (err) {
         console.error('Error eliminando factura:', err);
       }
@@ -554,7 +564,7 @@ export function AdminInvoicesTab({ dishes = [], tables = [], categories = [] }) 
                   </div>
 
                   <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.82rem', color: '#44403c', fontWeight: 700 }}>
-                    {inv.customer_name || 'Cliente de Consumo'} · Método: {inv.payment_method?.toUpperCase() || 'EFECTIVO'}
+                    {inv.customer_name || 'Walk-in Customer'} · Método: {inv.payment_method?.toUpperCase() || 'EFECTIVO'}
                   </p>
                   <span style={{ fontSize: '0.7rem', color: '#a8a29e' }}>
                     {new Date(inv.created_at).toLocaleString('es-US', { dateStyle: 'medium', timeStyle: 'short' })}
@@ -780,7 +790,7 @@ export function AdminInvoicesTab({ dishes = [], tables = [], categories = [] }) 
                       type="button"
                       onClick={() => {
                         triggerHaptic(6);
-                        setCustomerName('Cliente de Consumo');
+                        setCustomerName('Walk-in Customer');
                         setCustomerPhone('');
                         setSelectedCustomerId(null);
                       }}
@@ -795,7 +805,7 @@ export function AdminInvoicesTab({ dishes = [], tables = [], categories = [] }) 
                         fontWeight: 700
                       }}
                     >
-                      Consumo Genérico
+                      Walk-in Customer
                     </button>
 
                     <button
@@ -892,50 +902,35 @@ export function AdminInvoicesTab({ dishes = [], tables = [], categories = [] }) 
 
                 {/* Select de Clientes Registrados + Input Libre */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
-                  {/* Dropdown Personalizado con Chevron */}
-                  <div style={{ position: 'relative' }}>
-                    <select
-                      value={selectedCustomerId || ''}
-                      onChange={(e) => {
-                        const val = e.target.value;
-                        if (!val) {
-                          setSelectedCustomerId(null);
-                          setCustomerName('Cliente de Consumo');
-                          setCustomerPhone('');
-                        } else {
-                          const cust = customersList.find(c => c.id === val);
-                          if (cust) {
-                            setSelectedCustomerId(cust.id);
-                            setCustomerName(cust.name);
-                            setCustomerPhone(cust.phone || '');
-                          }
+                  <CustomSelect
+                    value={selectedCustomerId || ''}
+                    onChange={(val) => {
+                      if (!val) {
+                        setSelectedCustomerId(null);
+                        setCustomerName('Walk-in Customer');
+                        setCustomerPhone('');
+                      } else {
+                        const cust = customersList.find(c => c.id === val);
+                        if (cust) {
+                          setSelectedCustomerId(cust.id);
+                          setCustomerName(cust.name);
+                          setCustomerPhone(cust.phone || '');
                         }
-                      }}
-                      style={{
-                        width: '100%',
-                        padding: '0.65rem 2rem 0.65rem 0.85rem',
-                        borderRadius: '12px',
-                        backgroundColor: '#ffffff',
-                        border: 'none !important',
-                        fontSize: '0.84rem',
-                        fontWeight: 700,
-                        color: '#1f1e1c',
-                        outline: 'none',
-                        appearance: 'none',
-                        cursor: 'pointer',
-                        boxShadow: '0 2px 8px rgba(0,0,0,0.03)'
-                      }}
-                    >
-                      <option value="">-- Seleccionar de la lista ({customersList.length}) --</option>
-                      <option value="">Cliente de Consumo General</option>
-                      {customersList.map(c => (
-                        <option key={c.id} value={c.id}>
-                          {c.name} {c.phone ? `(${c.phone})` : ''}
-                        </option>
-                      ))}
-                    </select>
-                    <ChevronDown size={15} color="#78716c" style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
-                  </div>
+                      }
+                    }}
+                    options={[
+                      { value: '', label: 'Walk-in Customer (General)' },
+                      ...customersList.map(c => ({
+                        value: c.id,
+                        label: `${c.name} ${c.phone ? `(${c.phone})` : ''}`
+                      }))
+                    ]}
+                    placeholder={`Seleccionar Cliente (${customersList.length})`}
+                    buttonStyle={{
+                      backgroundColor: '#ffffff',
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.03)'
+                    }}
+                  />
 
                   <input
                     type="text"
@@ -949,7 +944,7 @@ export function AdminInvoicesTab({ dishes = [], tables = [], categories = [] }) 
                       borderRadius: '12px',
                       backgroundColor: '#ffffff',
                       border: 'none !important',
-                      fontSize: '0.85rem',
+                      fontSize: '0.84rem',
                       fontWeight: 700,
                       color: '#1f1e1c',
                       outline: 'none',
@@ -967,34 +962,17 @@ export function AdminInvoicesTab({ dishes = [], tables = [], categories = [] }) 
                   <label style={{ fontSize: '0.72rem', fontWeight: 800, color: '#78716c', display: 'block', marginBottom: '0.25rem' }}>
                     Mesa / Destino
                   </label>
-                  <div style={{ position: 'relative' }}>
-                    <select
-                      value={tableNumber}
-                      onChange={(e) => setTableNumber(e.target.value)}
-                      style={{
-                        width: '100%',
-                        padding: '0.65rem 1.85rem 0.65rem 0.75rem',
-                        borderRadius: '12px',
-                        backgroundColor: '#f5efe4',
-                        border: 'none !important',
-                        fontSize: '0.84rem',
-                        fontWeight: 700,
-                        color: '#1f1e1c',
-                        outline: 'none',
-                        appearance: 'none',
-                        cursor: 'pointer'
-                      }}
-                    >
-                      {tables.map(t => (
-                        <option key={t.id} value={String(t.number)}>Mesa {t.number}</option>
-                      ))}
-                      <option value="Barra">Barra Principal</option>
-                      <option value="Para Llevar">Para Llevar / Takeout</option>
-                      <option value="Delivery">Delivery / Domicilio</option>
-                      <option value="Consumo General">Consumo General</option>
-                    </select>
-                    <ChevronDown size={14} color="#78716c" style={{ position: 'absolute', right: '8px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
-                  </div>
+                  <CustomSelect
+                    value={tableNumber}
+                    onChange={(val) => setTableNumber(val)}
+                    options={[
+                      ...tables.map(t => ({ value: String(t.number), label: `Mesa ${t.number}` })),
+                      { value: 'Barra', label: 'Barra Principal' },
+                      { value: 'Para Llevar', label: 'Para Llevar / Takeout' },
+                      { value: 'Delivery', label: 'Delivery / Domicilio' },
+                      { value: 'Consumo General', label: 'Consumo General' }
+                    ]}
+                  />
                 </div>
 
                 {/* Método de Pago */}
@@ -1002,31 +980,16 @@ export function AdminInvoicesTab({ dishes = [], tables = [], categories = [] }) 
                   <label style={{ fontSize: '0.72rem', fontWeight: 800, color: '#78716c', display: 'block', marginBottom: '0.25rem' }}>
                     Forma de Pago
                   </label>
-                  <div style={{ position: 'relative' }}>
-                    <select
-                      value={paymentMethod}
-                      onChange={(e) => setPaymentMethod(e.target.value)}
-                      style={{
-                        width: '100%',
-                        padding: '0.65rem 1.85rem 0.65rem 0.75rem',
-                        borderRadius: '12px',
-                        backgroundColor: '#f5efe4',
-                        border: 'none !important',
-                        fontSize: '0.84rem',
-                        fontWeight: 700,
-                        color: '#1f1e1c',
-                        outline: 'none',
-                        appearance: 'none',
-                        cursor: 'pointer'
-                      }}
-                    >
-                      <option value="efectivo">Efectivo ($ USD)</option>
-                      <option value="tarjeta">Tarjeta Débito / Crédito</option>
-                      <option value="zelle">Zelle</option>
-                      <option value="apple_pay">Apple Pay</option>
-                    </select>
-                    <ChevronDown size={14} color="#78716c" style={{ position: 'absolute', right: '8px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
-                  </div>
+                  <CustomSelect
+                    value={paymentMethod}
+                    onChange={(val) => setPaymentMethod(val)}
+                    options={[
+                      { value: 'efectivo', label: 'Efectivo ($ USD)' },
+                      { value: 'tarjeta', label: 'Tarjeta Débito / Crédito' },
+                      { value: 'zelle', label: 'Zelle' },
+                      { value: 'apple_pay', label: 'Apple Pay' }
+                    ]}
+                  />
                 </div>
 
                 {/* Estado de Cobro */}
@@ -1034,29 +997,14 @@ export function AdminInvoicesTab({ dishes = [], tables = [], categories = [] }) 
                   <label style={{ fontSize: '0.72rem', fontWeight: 800, color: '#78716c', display: 'block', marginBottom: '0.25rem' }}>
                     Estado del Cobro
                   </label>
-                  <div style={{ position: 'relative' }}>
-                    <select
-                      value={paymentStatus}
-                      onChange={(e) => setPaymentStatus(e.target.value)}
-                      style={{
-                        width: '100%',
-                        padding: '0.65rem 1.85rem 0.65rem 0.75rem',
-                        borderRadius: '12px',
-                        backgroundColor: '#f5efe4',
-                        border: 'none !important',
-                        fontSize: '0.84rem',
-                        fontWeight: 700,
-                        color: '#1f1e1c',
-                        outline: 'none',
-                        appearance: 'none',
-                        cursor: 'pointer'
-                      }}
-                    >
-                      <option value="paid">Pagado (Completado)</option>
-                      <option value="pending">Pendiente de Pago</option>
-                    </select>
-                    <ChevronDown size={14} color="#78716c" style={{ position: 'absolute', right: '8px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
-                  </div>
+                  <CustomSelect
+                    value={paymentStatus}
+                    onChange={(val) => setPaymentStatus(val)}
+                    options={[
+                      { value: 'paid', label: 'Pagado (Completado)' },
+                      { value: 'pending', label: 'Pendiente de Pago' }
+                    ]}
+                  />
                 </div>
               </div>
 
@@ -1340,30 +1288,21 @@ export function AdminInvoicesTab({ dishes = [], tables = [], categories = [] }) 
                       </div>
 
                       {/* Selector de Categoría en el catálogo */}
-                      <div style={{ position: 'relative', width: '160px' }}>
-                        <select
-                          value={catalogCategory}
-                          onChange={(e) => setCatalogCategory(e.target.value)}
-                          style={{
-                            width: '100%',
-                            padding: '0.45rem 1.75rem 0.45rem 0.65rem',
-                            borderRadius: '10px',
-                            backgroundColor: '#ffffff',
-                            border: 'none !important',
-                            fontSize: '0.78rem',
-                            fontWeight: 700,
-                            outline: 'none',
-                            appearance: 'none',
-                            cursor: 'pointer'
-                          }}
-                        >
-                          <option value="all">Todas las Categorías</option>
-                          {categories.map(cat => (
-                            <option key={cat.id} value={cat.id}>{cat.name}</option>
-                          ))}
-                        </select>
-                        <ChevronDown size={13} color="#78716c" style={{ position: 'absolute', right: '6px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
-                      </div>
+                      <CustomSelect
+                        value={catalogCategory}
+                        onChange={(val) => setCatalogCategory(val)}
+                        options={[
+                          { value: 'all', label: 'Todas las Categorías' },
+                          ...categories.map(cat => ({ value: cat.id, label: cat.name }))
+                        ]}
+                        width="180px"
+                        buttonStyle={{
+                          backgroundColor: '#ffffff',
+                          padding: '0.45rem 0.65rem',
+                          borderRadius: '10px',
+                          fontSize: '0.78rem'
+                        }}
+                      />
                     </div>
 
                     {/* Grid de Platos Rápidos */}

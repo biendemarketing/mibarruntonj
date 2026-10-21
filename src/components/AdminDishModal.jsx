@@ -7,6 +7,7 @@ import {
 import { menuService } from '../services/supabase';
 import { useAlertConfirm } from '../context/AlertConfirmContext';
 import { triggerHaptic } from '../utils/haptics';
+import { CustomSelect } from './CustomSelect';
 
 export function AdminDishModal({
   isOpen,
@@ -403,27 +404,12 @@ export function AdminDishModal({
               <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#6b635b', marginBottom: '0.35rem' }}>
                 Categoría *
               </label>
-              <select
+              <CustomSelect
                 value={formData.category_id}
-                onChange={(e) => handleChange('category_id', e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '0.65rem 0.85rem',
-                  backgroundColor: '#f5efe4',
-                  color: '#1f1e1c',
-                  borderRadius: '12px',
-                  fontSize: '0.88rem',
-                  fontWeight: 700,
-                  border: 'none !important',
-                  cursor: 'pointer'
-                }}
-              >
-                {categories.map(cat => (
-                  <option key={cat.id} value={cat.id}>
-                    {cat.name}
-                  </option>
-                ))}
-              </select>
+                onChange={(val) => handleChange('category_id', val)}
+                options={categories.map(cat => ({ value: cat.id, label: cat.name }))}
+                placeholder="Seleccionar Categoría..."
+              />
             </div>
 
             <div>

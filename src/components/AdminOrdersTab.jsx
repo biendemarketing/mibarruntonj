@@ -13,6 +13,7 @@ import { triggerHaptic } from '../utils/haptics';
 import { getClientShortCode } from '../utils/clientIdentity';
 import { AdminOrderEditModal } from './AdminOrderEditModal';
 import { InvoicePrintModal } from './InvoicePrintModal';
+import { CustomSelect } from './CustomSelect';
 
 export function AdminOrdersTab({
   orders = [],
@@ -704,7 +705,7 @@ export function AdminOrdersTab({
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span style={{ fontSize: '1.08rem', fontWeight: 900, color: '#1f1e1c', fontFamily: 'var(--font-admin-primary, "DM Sans", sans-serif)' }}>
+            <span style={{ fontSize: '1.08rem', fontWeight: 900, color: '#1f1e1c', fontFamily: 'var(--font-admin-primary, "Roboto", sans-serif)' }}>
               ${Number(order.total_amount || 0).toFixed(2)}
             </span>
             <span style={{ fontSize: '0.72rem', color: '#6b635b', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
@@ -862,25 +863,21 @@ export function AdminOrdersTab({
                     <span style={{ fontSize: '0.75rem', color: '#6b635b', fontWeight: 700 }}>Mesero a cargo:</span>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
                       <UserCheck size={14} color="#6b635b" />
-                      <select
+                      <CustomSelect
                         value={order.waiter_id || ''}
-                        onChange={(e) => onAssignWaiter(order.id, e.target.value || null)}
-                        style={{
-                          backgroundColor: '#f5efe4',
-                          color: '#1f1e1c',
-                          fontSize: '0.75rem',
-                          fontWeight: 700,
-                          padding: '0.25rem 0.45rem',
+                        onChange={(val) => onAssignWaiter(order.id, val || null)}
+                        options={[
+                          { value: '', label: 'Sin mesero' },
+                          ...waiters.map(w => ({ value: w.id, label: w.name }))
+                        ]}
+                        width="140px"
+                        buttonStyle={{
+                          padding: '0.2rem 0.45rem',
                           borderRadius: '6px',
-                          border: 'none !important',
-                          cursor: 'pointer'
+                          fontSize: '0.74rem',
+                          backgroundColor: '#f5efe4'
                         }}
-                      >
-                        <option value="">Sin mesero</option>
-                        {waiters.map(w => (
-                          <option key={w.id} value={w.id}>{w.name}</option>
-                        ))}
-                      </select>
+                      />
                     </div>
                   </div>
 

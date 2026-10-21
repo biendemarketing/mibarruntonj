@@ -9,7 +9,7 @@ import { InvoicePrintModal } from './InvoicePrintModal';
 import { useAlertConfirm } from '../context/AlertConfirmContext';
 import { triggerHaptic } from '../utils/haptics';
 
-export function AdminCustomersTab() {
+export function AdminCustomersTab({ onRefreshData = null }) {
   const { showConfirm, showAlert } = useAlertConfirm();
   const [customers, setCustomers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -106,6 +106,7 @@ export function AdminCustomersTab() {
       }
 
       setIsModalOpen(false);
+      if (onRefreshData) onRefreshData();
     } catch (err) {
       console.error('Error guardando cliente:', err);
       await showAlert({
@@ -132,6 +133,7 @@ export function AdminCustomersTab() {
       try {
         await customersService.deleteCustomer(customer.id);
         setCustomers(prev => prev.filter(c => c.id !== customer.id));
+        if (onRefreshData) onRefreshData();
       } catch (err) {
         console.error('Error eliminando cliente:', err);
         await showAlert({
@@ -317,7 +319,9 @@ export function AdminCustomersTab() {
         }}
       >
         {filteredCustomers.map(customer => {
-          const isDefault = customer.name?.toLowerCase().includes('consumo');
+          const isDefault = customer.name?.toLowerCase().includes('consumo') || customer.name?.toLowerCase().includes('walk-in');
+          const displayName = (customer.name?.toLowerCase().includes('consumo')) ? 'Walk-in Customer' : customer.name;
+
           return (
             <div
               key={customer.id}
@@ -354,16 +358,16 @@ export function AdminCustomersTab() {
                         fontSize: '0.95rem'
                       }}
                     >
-                      {customer.name?.charAt(0)?.toUpperCase() || 'C'}
+                      {displayName.charAt(0)?.toUpperCase() || 'C'}
                     </div>
 
                     <div>
                       <h4 style={{ margin: 0, fontSize: '0.98rem', fontWeight: 900, color: '#1f1e1c' }}>
-                        {customer.name}
+                        {displayName}
                       </h4>
                       {isDefault ? (
                         <span style={{ fontSize: '0.7rem', fontWeight: 800, color: '#78716c' }}>
-                          Perfil Genérico
+                          Walk-in / Guest (EE.UU.)
                         </span>
                       ) : (
                         <span style={{ fontSize: '0.7rem', color: '#10b981', fontWeight: 700 }}>
@@ -373,7 +377,7 @@ export function AdminCustomersTab() {
                     </div>
                   </div>
 
-                  <div style={{ display: 'flex', gap: '0.25rem' }}>
+                  <div style={{ display: 'flex', gap: '0.35rem' }}>
                     <button
                       type="button"
                       onClick={(e) => {
@@ -381,37 +385,44 @@ export function AdminCustomersTab() {
                         handleOpenEdit(customer);
                       }}
                       style={{
-                        padding: '0.4rem',
-                        borderRadius: '8px',
+                        width: '32px',
+                        height: '32px',
+                        borderRadius: '10px',
                         backgroundColor: '#f5efe4',
                         color: '#44403c',
                         border: 'none !important',
-                        cursor: 'pointer'
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
                       }}
                       title="Editar datos del cliente"
                     >
                       <Edit2 size={14} />
                     </button>
-                    {!isDefault && (
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDeleteCustomer(customer);
-                        }}
-                        style={{
-                          padding: '0.4rem',
-                          borderRadius: '8px',
-                          backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                          color: '#ef4444',
-                          border: 'none !important',
-                          cursor: 'pointer'
-                        }}
-                        title="Eliminar cliente"
-                      >
-                        <Trash2 size={14} />
-                      </button>
-                    )}
+
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteCustomer(customer);
+                      }}
+                      style={{
+                        width: '32px',
+                        height: '32px',
+                        borderRadius: '10px',
+                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                        color: '#ef4444',
+                        border: 'none !important',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                      }}
+                      title="Eliminar cliente del sistema"
+                    >
+                      <Trash2 size={14} />
+                    </button>
                   </div>
                 </div>
 
@@ -704,41 +715,72 @@ export function AdminCustomersTab() {
                 />
               </div>
 
-              <div style={{ display: 'flex', gap: '0.65rem', marginTop: '0.5rem' }}>
-                <button
-                  type="button"
-                  onClick={() => setIsModalOpen(false)}
-                  style={{
-                    flex: 1,
-                    padding: '0.75rem',
-                    borderRadius: '14px',
-                    backgroundColor: '#f5efe4',
-                    color: '#78716c',
-                    fontWeight: 800,
-                    border: 'none !important',
-                    cursor: 'pointer'
-                  }}
-                >
-                  Cancelar
-                </button>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', marginTop: '0.5rem' }}>
+                <div style={{ display: 'flex', gap: '0.65rem' }}>
+                  <button
+                    type="button"
+                    onClick={() => setIsModalOpen(false)}
+                    style={{
+                      flex: 1,
+                      padding: '0.75rem',
+                      borderRadius: '14px',
+                      backgroundColor: '#f5efe4',
+                      color: '#78716c',
+                      fontWeight: 800,
+                      border: 'none !important',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Cancelar
+                  </button>
 
-                <button
-                  type="submit"
-                  disabled={isSaving}
-                  style={{
-                    flex: 1,
-                    padding: '0.75rem',
-                    borderRadius: '14px',
-                    backgroundColor: 'var(--rojo, #d91c2b)',
-                    color: '#ffffff',
-                    fontWeight: 800,
-                    border: 'none !important',
-                    cursor: 'pointer',
-                    boxShadow: '0 6px 18px rgba(217, 28, 43, 0.28)'
-                  }}
-                >
-                  {isSaving ? 'Guardando...' : 'Guardar Cliente'}
-                </button>
+                  <button
+                    type="submit"
+                    disabled={isSaving}
+                    style={{
+                      flex: 1,
+                      padding: '0.75rem',
+                      borderRadius: '14px',
+                      backgroundColor: 'var(--rojo, #d91c2b)',
+                      color: '#ffffff',
+                      fontWeight: 800,
+                      border: 'none !important',
+                      cursor: 'pointer',
+                      boxShadow: '0 6px 18px rgba(217, 28, 43, 0.28)'
+                    }}
+                  >
+                    {isSaving ? 'Guardando...' : 'Guardar Cliente'}
+                  </button>
+                </div>
+
+                {editingCustomer && (
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      const toDelete = editingCustomer;
+                      setIsModalOpen(false);
+                      await handleDeleteCustomer(toDelete);
+                    }}
+                    style={{
+                      width: '100%',
+                      padding: '0.65rem',
+                      borderRadius: '12px',
+                      backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                      color: '#ef4444',
+                      fontWeight: 800,
+                      fontSize: '0.8rem',
+                      border: 'none !important',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '0.35rem'
+                    }}
+                  >
+                    <Trash2 size={14} />
+                    <span>Eliminar este Cliente Definitivamente</span>
+                  </button>
+                )}
               </div>
             </form>
           </div>

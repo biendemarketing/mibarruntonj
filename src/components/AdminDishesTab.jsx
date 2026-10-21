@@ -8,6 +8,7 @@ import { AdminDishModal } from './AdminDishModal';
 import { AdminCategoriesTab } from './AdminCategoriesTab';
 import { useAlertConfirm } from '../context/AlertConfirmContext';
 import { triggerHaptic } from '../utils/haptics';
+import { CustomSelect } from './CustomSelect';
 
 export function AdminDishesTab({
   dishes = [],
@@ -230,25 +231,22 @@ export function AdminDishesTab({
           </div>
 
           {/* Selector de Categoría */}
-          <select
+          <CustomSelect
             value={selectedCat}
-            onChange={(e) => setSelectedCat(e.target.value)}
-            style={{
+            onChange={(val) => setSelectedCat(val)}
+            options={[
+              { value: 'all', label: 'Todas las Categorías' },
+              ...categories.map(c => ({ value: c.id, label: c.name }))
+            ]}
+            width="200px"
+            buttonStyle={{
               backgroundColor: '#f5efe4',
-              color: '#1f1e1c',
-              padding: '0.65rem 0.85rem',
               borderRadius: '9999px',
+              padding: '0.65rem 0.85rem',
               fontSize: '0.82rem',
-              fontWeight: 700,
-              border: 'none !important',
-              cursor: 'pointer'
+              fontWeight: 700
             }}
-          >
-            <option value="all">Todas las Categorías</option>
-            {categories.map(c => (
-              <option key={c.id} value={c.id}>{c.name}</option>
-            ))}
-          </select>
+          />
         </div>
 
         {/* Botón Nuevo Plato y Refresh */}

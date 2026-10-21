@@ -173,7 +173,7 @@ export const ordersService = {
   // Actualizar completamente una orden (edición integral de platos, mesa, cliente, notas, etc.)
   async updateOrderFull(orderId, orderData, items = []) {
     const updatePayload = {
-      customer_name: orderData.customer_name || 'Cliente de Consumo',
+      customer_name: orderData.customer_name || 'Walk-in Customer',
       customer_phone: orderData.customer_phone || null,
       table_number: String(orderData.table_number || '1'),
       status: orderData.status || 'pending',
@@ -965,7 +965,7 @@ export const customersService = {
       console.warn('Fallback local para clientes:', err);
       const local = localStorage.getItem('mb_customers_local');
       let list = local ? JSON.parse(local) : [
-        { id: 'walkin-default', name: 'Cliente de Consumo', phone: '', notes: 'Mostrador / General' }
+        { id: 'walkin-default', name: 'Walk-in Customer', phone: '', notes: 'Mostrador / General' }
       ];
       if (search && search.trim()) {
         const q = search.toLowerCase();
@@ -1137,7 +1137,7 @@ export const invoicesService = {
       invoice_number: invoiceNumber,
       order_id: invoiceData.order_id || null,
       customer_id: invoiceData.customer_id || null,
-      customer_name: invoiceData.customer_name?.trim() || 'Cliente de Consumo',
+      customer_name: invoiceData.customer_name?.trim() || 'Walk-in Customer',
       customer_phone: invoiceData.customer_phone?.trim() || null,
       customer_email: invoiceData.customer_email?.trim() || null,
       table_number: String(invoiceData.table_number || 'Mostrador'),
@@ -1224,7 +1224,7 @@ export const invoicesService = {
 
   async updateInvoice(id, invoiceData, items = null) {
     const updatePayload = {
-      customer_name: invoiceData.customer_name?.trim() || 'Cliente de Consumo',
+      customer_name: invoiceData.customer_name?.trim() || 'Walk-in Customer',
       customer_phone: invoiceData.customer_phone?.trim() || null,
       customer_email: invoiceData.customer_email?.trim() || null,
       table_number: String(invoiceData.table_number || 'Mostrador'),
