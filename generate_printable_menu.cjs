@@ -251,7 +251,7 @@ function renderPage1() {
       <div class="cover-footer-info">
         <div class="cover-info-item">
           ${SVG_ICONS.mapPin}
-          <span>21 Mill St, #9, Paterson, NJ 07501</span>
+          <span>21 Mill st, Paterson, NJ 07011</span>
         </div>
         <div class="cover-info-sep">·</div>
         <div class="cover-info-item">
@@ -783,7 +783,7 @@ function renderPage10() {
           </div>
           <div class="bcard-line">
             <span class="bcard-subicon">${SVG_ICONS.mapPin}</span>
-            <span>21 Mill St, #9, Paterson, NJ 07501</span>
+            <span>21 Mill st, Paterson, NJ 07011</span>
           </div>
           <div class="bcard-line">
             <span class="bcard-subicon">${SVG_ICONS.phone}</span>

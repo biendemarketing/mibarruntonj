@@ -128,13 +128,13 @@ export function MobileDrawer({
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
               <a
-                href="https://maps.google.com/?q=21+Mill+St+%239,+Paterson,+NJ"
+                href="https://maps.google.com/?q=21+Mill+st,+Paterson,+NJ+07011"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mobile-drawer-info-link"
               >
                 <MapPin size={13} color="var(--naranja)" />
-                <span>21 Mill St, Paterson</span>
+                <span>21 Mill st, Paterson, NJ 07011</span>
               </a>
               <span style={{ opacity: 0.4 }}>·</span>
               <a href="tel:9736533749" className="mobile-drawer-info-link">

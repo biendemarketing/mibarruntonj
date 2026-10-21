@@ -29,13 +29,13 @@ export function Footer({ photoMode = 'complete', onTogglePhotoMode, onOpenTvMode
           <div className="footer-compact-card">
             <span className="footer-compact-label">Dirección</span>
             <a
-              href="https://maps.google.com/?q=21+Mill+St+%239,+Paterson,+NJ"
+              href="https://maps.google.com/?q=21+Mill+st,+Paterson,+NJ+07011"
               target="_blank"
               rel="noopener noreferrer"
               className="footer-compact-link"
             >
               <MapPin size={14} color="var(--naranja)" />
-              <span>21 Mill St, #9, Paterson, NJ</span>
+              <span>21 Mill st, Paterson, NJ 07011</span>
             </a>
           </div>
 

@@ -18,7 +18,7 @@ export function AdminPrintableTab() {
     subtitle: 'Restaurant & Grocery',
     tagline: 'Comida criolla peruana',
     bannerText: 'TRADICIÓN & SAZÓN PERUANA',
-    address: '21 Mill St, #9, Paterson, NJ 07501',
+    address: '21 Mill st, Paterson, NJ 07011',
     phone: '(973) 653-3749',
     schedule: 'Atención 24 Horas',
     gratitudeTextEs: 'Agradecimiento del 18% en las mesas con 2 ó más personas',

@@ -1454,7 +1454,7 @@
       <div class="cover-footer-info">
         <div class="cover-info-item">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-          <span>21 Mill St, #9, Paterson, NJ 07501</span>
+          <span>21 Mill st, Paterson, NJ 07011</span>
         </div>
         <div class="cover-info-sep">·</div>
         <div class="cover-info-item">
@@ -4972,7 +4972,7 @@
           </div>
           <div class="bcard-line">
             <span class="bcard-subicon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg></span>
-            <span>21 Mill St, #9, Paterson, NJ 07501</span>
+            <span>21 Mill st, Paterson, NJ 07011</span>
           </div>
           <div class="bcard-line">
             <span class="bcard-subicon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg></span>
@@ -5150,48 +5150,6 @@
           });
         }
       } catch (e) {}
-    })();
-
-    // Carga dinámica de la configuración del restaurante desde Supabase
-    (async function() {
-      try {
-        const res = await fetch('https://scvlxcgmhbwjmvycrttf.supabase.co/rest/v1/restaurant_config?key=eq.printable_menu&select=value', {
-          headers: {
-            'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNjdmx4Y2dtaGJ3am12eWNydHRmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIzNjA2MzAsImV4cCI6MjEwNzkzNjYzMH0.XuSQAMlh6XCYXDSLxwuWsvptluV0kGvUYw0zKuq9kKc',
-            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNjdmx4Y2dtaGJ3am12eWNydHRmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIzNjA2MzAsImV4cCI6MjEwNzkzNjYzMH0.XuSQAMlh6XCYXDSLxwuWsvptluV0kGvUYw0zKuq9kKc'
-          }
-        });
-        if (!res.ok) return;
-        const json = await res.json();
-        const conf = json && json[0] && json[0].value;
-        if (!conf) return;
-
-        if (conf.title) {
-          document.querySelectorAll('.cover-brand-title').forEach(el => el.textContent = conf.title);
-        }
-        if (conf.subtitle) {
-          document.querySelectorAll('.cover-slogan-main').forEach(el => el.textContent = conf.subtitle);
-        }
-        if (conf.tagline) {
-          document.querySelectorAll('.cover-slogan-sub').forEach(el => el.textContent = conf.tagline);
-        }
-        if (conf.gratitudeTextEs) {
-          document.querySelectorAll('.gratitude-es').forEach(el => el.textContent = conf.gratitudeTextEs);
-        }
-        if (conf.gratitudeTextEn) {
-          document.querySelectorAll('.gratitude-en').forEach(el => el.textContent = conf.gratitudeTextEn);
-        }
-        if (conf.phone) {
-          document.querySelectorAll('.cover-footer-info, .backcover-content').forEach(container => {
-            const spans = container.querySelectorAll('span');
-            spans.forEach(s => {
-              if (s.textContent.includes('Teléfono') || s.textContent.includes('(973)')) {
-                s.textContent = `Teléfono & Pedidos: ${conf.phone}`;
-              }
-            });
-          });
-        }
-      } catch (err) {}
     })();
   </script>
 

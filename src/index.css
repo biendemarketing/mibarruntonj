@@ -366,13 +366,19 @@ input, textarea, select {
   transform: scale(1.18);
 }
 
-@media (max-width: 768px) {
-  .header-address-full {
-    display: none !important;
-  }
+/* Dirección del Header siempre completa y sin quiebre de línea */
+.header-address-text {
+  font-family: var(--font-system);
+  font-weight: 600;
+  white-space: nowrap;
+}
 
-  .header-address-short {
-    display: inline !important;
+@media (max-width: 768px) {
+  .header-address-text {
+    font-size: clamp(0.61rem, 2.2vw, 0.72rem) !important;
+    letter-spacing: -0.2px !important;
+    white-space: nowrap !important;
+    display: inline-block !important;
   }
 
   .header-hours-full {
@@ -384,8 +390,9 @@ input, textarea, select {
   }
 
   .header-top-hours {
-    font-size: 0.73rem !important;
+    font-size: 0.69rem !important;
     white-space: nowrap !important;
+    flex-shrink: 0 !important;
   }
 
   .header-top-bar-inner {
@@ -393,27 +400,37 @@ input, textarea, select {
     align-items: center !important;
     justify-content: space-between !important;
     flex-wrap: nowrap !important;
-    padding: 0.5rem 0.85rem 0.2rem !important;
-    gap: 0.4rem !important;
+    padding: 0.4rem 0.65rem 0.15rem !important;
+    gap: 0.35rem !important;
     width: 100% !important;
+    box-sizing: border-box !important;
   }
 
   .header-top-info {
-    flex-shrink: 1;
-    min-width: 0;
-    gap: 0.4rem;
-    font-size: 0.73rem;
+    display: flex !important;
+    align-items: center !important;
+    flex-shrink: 1 !important;
+    min-width: 0 !important;
+    gap: 0.3rem !important;
+    font-size: 0.69rem !important;
+    white-space: nowrap !important;
   }
 
   .header-top-address-link,
   .header-top-phone-link {
-    font-size: 0.73rem;
-    white-space: nowrap;
+    font-size: 0.69rem !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.25rem !important;
   }
 
   .header-top-socials {
-    flex-shrink: 0;
-    gap: 0.65rem;
+    display: flex !important;
+    align-items: center !important;
+    flex-shrink: 0 !important;
+    gap: 0.45rem !important;
     margin: 0 !important;
   }
 
@@ -422,12 +439,52 @@ input, textarea, select {
   }
 
   .header-top-social-circle svg {
-    width: 13px !important;
-    height: 13px !important;
+    width: 12px !important;
+    height: 12px !important;
   }
 
   .brand-header-inner {
     padding-top: 1.25rem !important;
+  }
+}
+
+@media (max-width: 440px) {
+  .header-top-bar-inner {
+    padding: 0.35rem 0.5rem 0.15rem !important;
+    gap: 0.25rem !important;
+  }
+
+  .header-top-info {
+    gap: 0.22rem !important;
+  }
+
+  .header-address-text {
+    font-size: 0.62rem !important;
+    letter-spacing: -0.3px !important;
+  }
+
+  .header-top-hours,
+  .header-top-phone-link {
+    font-size: 0.64rem !important;
+  }
+
+  .header-top-socials {
+    gap: 0.35rem !important;
+  }
+}
+
+@media (max-width: 370px) {
+  .header-address-text {
+    font-size: 0.58rem !important;
+    letter-spacing: -0.35px !important;
+  }
+
+  .header-top-hours {
+    display: none !important;
+  }
+
+  .header-top-divider:first-of-type {
+    display: none !important;
   }
 }
 

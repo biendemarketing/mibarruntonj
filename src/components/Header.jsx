@@ -102,15 +102,14 @@ export function Header({
         <div className="header-top-bar-inner">
           <div className="header-top-info">
             <a
-              href="https://maps.google.com/?q=21+Mill+St+%239,+Paterson,+NJ"
+              href="https://maps.google.com/?q=21+Mill+st,+Paterson,+NJ+07011"
               target="_blank"
               rel="noopener noreferrer"
               className="header-top-address-link"
               title="Abrir ubicación en Google Maps"
             >
               <MapPin size={12} color="var(--naranja)" />
-              <span className="header-address-full">21 Mill St, #9, Paterson, NJ</span>
-              <span className="header-address-short">21 Mill St, NJ</span>
+              <span className="header-address-text">21 Mill st, Paterson, NJ 07011</span>
             </a>
             <span className="header-top-divider">·</span>
             <span className="header-top-hours" title="Horario de atención continuo">

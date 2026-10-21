@@ -436,7 +436,7 @@ export function AdminPOSTab({
     triggerHaptic(6);
     if (!cust) {
       setSelectedCustomerId(null);
-      setCustomerName('Cliente de Consumo');
+      setCustomerName('Walk-in Guest');
       setCustomerPhone('');
       return;
     }

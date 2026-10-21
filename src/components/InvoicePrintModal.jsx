@@ -784,8 +784,8 @@ export function InvoicePrintModal({
                         Cevichería & Cocina Peruana
                       </span>
                       <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.72rem', color: '#6b7280' }}>
-                        New Jersey, United States<br />
-                        Tel: (201) 555-0192 · info@mibarruntonj.com
+                        21 Mill st, Paterson, NJ 07011<br />
+                        Tel: (973) 653-3749 · info@mibarruntonj.com
                       </p>
                     </div>
 
@@ -911,10 +911,10 @@ export function InvoicePrintModal({
                       CEVICHERIA & SABOR PERUANO
                     </span>
                     <span style={{ fontSize: template === 'thermal58' ? '8px' : '9px', color: '#4b5563', display: 'block' }}>
-                      NEW JERSEY · USA
+                      21 Mill st, Paterson, NJ 07011
                     </span>
                     <span style={{ fontSize: template === 'thermal58' ? '8px' : '9px', color: '#4b5563', display: 'block' }}>
-                      TEL: (201) 555-0192
+                      TEL: (973) 653-3749
                     </span>
                   </div>
 
