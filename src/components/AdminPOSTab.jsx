@@ -12,11 +12,13 @@ import { triggerHaptic } from '../utils/haptics';
 
 export function AdminPOSTab({
   tables = [],
+  orders = [],
   dishes = [],
   categories = [],
   waiters = [],
   currentWaiter = null,
   onOrderCreated,
+  onOrderUpdated,
   onRefreshData
 }) {
   const { showAlert, showConfirm } = useAlertConfirm();
@@ -28,6 +30,25 @@ export function AdminPOSTab({
   const [customerPhone, setCustomerPhone] = useState('');
   const [customersList, setCustomersList] = useState([]);
   const [selectedWaiterId, setSelectedWaiterId] = useState(currentWaiter?.id || '');
+
+  // Detección de orden activa en la mesa seleccionada (ej: cliente que pidió por QR)
+  const activeTableOrder = useMemo(() => {
+    if (!selectedTable || selectedTable === 'Llevar' || selectedTable === 'Barra') return null;
+    return orders.find(o => 
+      String(o.table_number) === String(selectedTable) && 
+      (o.status === 'pending' || o.status === 'in_kitchen' || o.status === 'ready' || o.status === 'delivered')
+    );
+  }, [orders, selectedTable]);
+
+  // Si la mesa seleccionada tiene orden activa y el cliente está como genérico, auto-completar nombre
+  useEffect(() => {
+    if (activeTableOrder && activeTableOrder.customer_name && customerName === 'Cliente de Consumo') {
+      setCustomerName(activeTableOrder.customer_name);
+      if (activeTableOrder.customer_phone) {
+        setCustomerPhone(activeTableOrder.customer_phone);
+      }
+    }
+  }, [activeTableOrder]);
 
   // Carrito / Comanda en curso del POS
   const [posItems, setPosItems] = useState([]);
@@ -262,6 +283,58 @@ export function AdminPOSTab({
       await showAlert({
         title: 'Error',
         message: 'No se pudo enviar la orden a cocina. Verifica la conexión.',
+        type: 'error'
+      });
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  // Acción: Unificar y Añadir a la orden activa de la mesa (evita duplicar tickets de la misma mesa)
+  const handleAppendToActiveOrder = async () => {
+    if (!activeTableOrder || posItems.length === 0) return;
+    try {
+      setIsProcessing(true);
+      triggerHaptic(14);
+
+      const existingItems = (activeTableOrder.order_items || []).map(it => ({
+        dish_id: it.dish_id,
+        name: it.dish_name || it.name,
+        quantity: Number(it.quantity || 1),
+        unit_price: Number(it.dish_price || it.unit_price || 0),
+        notes: it.notes || ''
+      }));
+
+      const combinedItems = [...existingItems, ...posItems];
+      const newSubtotal = combinedItems.reduce((acc, it) => acc + (it.quantity * it.unit_price), 0);
+      const newTotal = Number(newSubtotal.toFixed(2));
+
+      const updated = await ordersService.updateOrderFull(activeTableOrder.id, {
+        customer_name: activeTableOrder.customer_name || customerName,
+        customer_phone: activeTableOrder.customer_phone || customerPhone,
+        table_number: String(selectedTable),
+        status: activeTableOrder.status,
+        subtotal: newSubtotal,
+        total_amount: newTotal,
+        notes: activeTableOrder.notes ? `${activeTableOrder.notes}. ${orderNotes}`.trim() : orderNotes
+      }, combinedItems);
+
+      await showAlert({
+        title: '¡Platos Añadidos a la Cuenta!',
+        message: `Se agregaron ${posItems.length} platos al pedido activo #${activeTableOrder.order_number} de Mesa ${selectedTable}. Cuenta unificada con éxito.`,
+        type: 'success'
+      });
+
+      if (onOrderUpdated) onOrderUpdated(updated);
+      if (onRefreshData) onRefreshData();
+
+      setPosItems([]);
+      setOrderNotes('');
+    } catch (err) {
+      console.error('Error unificando platos en la orden:', err);
+      await showAlert({
+        title: 'Error',
+        message: 'No se pudieron añadir los platos a la orden existente.',
         type: 'error'
       });
     } finally {
@@ -1001,6 +1074,55 @@ export function AdminPOSTab({
 
           {/* Botones de Acción del POS */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            {activeTableOrder && (
+              <div
+                style={{
+                  backgroundColor: '#fef3c7',
+                  borderRadius: '14px',
+                  padding: '0.75rem 0.85rem',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.45rem'
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <span style={{ fontSize: '0.75rem', fontWeight: 900, color: '#92400e' }}>
+                    Comanda Activa #{activeTableOrder.order_number || activeTableOrder.id?.slice(0, 6)} en Mesa {selectedTable}
+                  </span>
+                  <span style={{ fontSize: '0.75rem', fontWeight: 900, color: '#b45309' }}>
+                    ${Number(activeTableOrder.total_amount || 0).toFixed(2)}
+                  </span>
+                </div>
+                <span style={{ fontSize: '0.7rem', color: '#78350f' }}>
+                  Cliente: <strong>{activeTableOrder.customer_name}</strong> · {(activeTableOrder.order_items || []).length} platos ya en marcha
+                </span>
+
+                <button
+                  type="button"
+                  disabled={isProcessing || posItems.length === 0}
+                  onClick={handleAppendToActiveOrder}
+                  style={{
+                    padding: '0.65rem',
+                    borderRadius: '10px',
+                    backgroundColor: '#d97706',
+                    color: '#ffffff',
+                    fontSize: '0.8rem',
+                    fontWeight: 900,
+                    border: 'none !important',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.4rem',
+                    boxShadow: '0 4px 12px rgba(217, 119, 6, 0.25)'
+                  }}
+                >
+                  <Plus size={15} />
+                  <span>Unificar y Añadir a Esta Cuenta Activa</span>
+                </button>
+              </div>
+            )}
+
             <button
               type="button"
               disabled={isProcessing || posItems.length === 0}
@@ -1023,7 +1145,7 @@ export function AdminPOSTab({
               }}
             >
               <Send size={17} />
-              <span>Enviar a Cocina</span>
+              <span>{activeTableOrder ? 'Crear Comanda Nueva Separada' : 'Enviar a Cocina'}</span>
             </button>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>

@@ -1299,3 +1299,136 @@ export const invoicesService = {
   }
 };
 
+// ============================================================================
+// 8. SERVICIO DE TAREAS OPERATIVAS (TASKS & CHECKLIST)
+// ============================================================================
+export const tasksService = {
+  async getTasks() {
+    try {
+      const { data, error } = await supabase
+        .from('restaurant_tasks')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      return data || [];
+    } catch (err) {
+      console.warn('Error cargando tareas de Supabase, usando respaldo local:', err);
+      return JSON.parse(localStorage.getItem('mb_tasks_local') || '[]');
+    }
+  },
+
+  async createTask(taskData) {
+    const payload = {
+      title: taskData.title?.trim(),
+      description: taskData.description?.trim() || '',
+      status: taskData.status || 'pending',
+      priority: taskData.priority || 'media',
+      area: taskData.area || 'general',
+      created_by_id: taskData.created_by_id || null,
+      created_by_name: taskData.created_by_name || 'Administración',
+      assigned_to_id: taskData.assigned_to_id || null,
+      assigned_to_name: taskData.assigned_to_name || 'Equipo General',
+      due_date: taskData.due_date || null,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    };
+
+    try {
+      const { data, error } = await supabase
+        .from('restaurant_tasks')
+        .insert([payload])
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    } catch (err) {
+      console.warn('Guardando tarea localmente:', err);
+      const newTask = { id: `local-${Date.now()}`, ...payload };
+      const existing = JSON.parse(localStorage.getItem('mb_tasks_local') || '[]');
+      localStorage.setItem('mb_tasks_local', JSON.stringify([newTask, ...existing]));
+      return newTask;
+    }
+  },
+
+  async updateTask(id, updates) {
+    const payload = {
+      ...updates,
+      updated_at: new Date().toISOString()
+    };
+
+    try {
+      const { data, error } = await supabase
+        .from('restaurant_tasks')
+        .update(payload)
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    } catch (err) {
+      console.warn('Actualizando tarea localmente:', err);
+      const existing = JSON.parse(localStorage.getItem('mb_tasks_local') || '[]');
+      const updated = existing.map(t => t.id === id ? { ...t, ...payload } : t);
+      localStorage.setItem('mb_tasks_local', JSON.stringify(updated));
+      return { id, ...payload };
+    }
+  },
+
+  async toggleTaskStatus(id, currentStatus, employeeName = 'Personal') {
+    const isCompleted = currentStatus === 'completed';
+    const newStatus = isCompleted ? 'pending' : 'completed';
+    const payload = {
+      status: newStatus,
+      completed_at: isCompleted ? null : new Date().toISOString(),
+      completed_by_name: isCompleted ? null : employeeName,
+      updated_at: new Date().toISOString()
+    };
+
+    try {
+      const { data, error } = await supabase
+        .from('restaurant_tasks')
+        .update(payload)
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    } catch (err) {
+      console.warn('Toggle tarea localmente:', err);
+      const existing = JSON.parse(localStorage.getItem('mb_tasks_local') || '[]');
+      const updated = existing.map(t => t.id === id ? { ...t, ...payload } : t);
+      localStorage.setItem('mb_tasks_local', JSON.stringify(updated));
+      return { id, ...payload };
+    }
+  },
+
+  async deleteTask(id) {
+    try {
+      const { error } = await supabase.from('restaurant_tasks').delete().eq('id', id);
+      if (error) throw error;
+      return true;
+    } catch {
+      const existing = JSON.parse(localStorage.getItem('mb_tasks_local') || '[]');
+      const filtered = existing.filter(t => t.id !== id);
+      localStorage.setItem('mb_tasks_local', JSON.stringify(filtered));
+      return true;
+    }
+  },
+
+  subscribeToTasks(onUpdate) {
+    return supabase
+      .channel('public:restaurant_tasks')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'restaurant_tasks' }, (payload) => {
+        if (typeof onUpdate === 'function') {
+          onUpdate(payload);
+        }
+      })
+      .subscribe();
+  }
+};
+
+

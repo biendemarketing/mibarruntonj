@@ -5,16 +5,17 @@ import {
   ExternalLink, Lock, Check, ShieldCheck, KeyRound, 
   Clock, Volume2, VolumeX, ArrowLeft, RefreshCw, Printer,
   Menu, X, Mail, ShieldAlert, Sparkles, ChefHat, User,
-  UserCheck, Eye, EyeOff, ShoppingBag, Receipt
+  UserCheck, Eye, EyeOff, ShoppingBag, Receipt, CheckSquare
 } from 'lucide-react';
 import { 
   ordersService, menuService, tablesService, 
-  waitersService, adminAuthService 
+  waitersService, adminAuthService, tasksService 
 } from '../services/supabase';
 import { AdminOrdersTab } from '../components/AdminOrdersTab';
 import { AdminPOSTab } from '../components/AdminPOSTab';
 import { AdminInvoicesTab } from '../components/AdminInvoicesTab';
 import { AdminCustomersTab } from '../components/AdminCustomersTab';
+import { AdminTasksTab } from '../components/AdminTasksTab';
 import { AdminDishesTab } from '../components/AdminDishesTab';
 import { AdminCategoriesTab } from '../components/AdminCategoriesTab';
 import { AdminTablesTab } from '../components/AdminTablesTab';
@@ -64,6 +65,7 @@ export function AdminPage() {
   const [categories, setCategories] = useState([]);
   const [tables, setTables] = useState([]);
   const [waiters, setWaiters] = useState([]);
+  const [pendingTasksCount, setPendingTasksCount] = useState(0);
 
   // Estados de carga, sonido y notificaciones
   const [isLoading, setIsLoading] = useState(false);
@@ -99,12 +101,13 @@ export function AdminPage() {
   const loadAllData = useCallback(async () => {
     try {
       setIsLoading(true);
-      const [fetchedOrders, fetchedDishes, fetchedCategories, fetchedTables, fetchedWaiters] = await Promise.all([
+      const [fetchedOrders, fetchedDishes, fetchedCategories, fetchedTables, fetchedWaiters, fetchedTasks] = await Promise.all([
         ordersService.getAllOrders().catch(() => []),
         menuService.getDishes().catch(() => []),
         menuService.getCategories().catch(() => []),
         tablesService.getTables().catch(() => []),
-        waitersService.getWaiters().catch(() => [])
+        waitersService.getWaiters().catch(() => []),
+        tasksService.getTasks().catch(() => [])
       ]);
 
       setOrders(fetchedOrders);
@@ -112,6 +115,7 @@ export function AdminPage() {
       setCategories(fetchedCategories);
       setTables(fetchedTables);
       setWaiters(fetchedWaiters);
+      setPendingTasksCount((fetchedTasks || []).filter(t => t.status === 'pending').length);
     } catch (err) {
       console.error('Error cargando datos de Supabase:', err);
     } finally {
@@ -432,6 +436,7 @@ export function AdminPage() {
     const allTabs = [
       { id: 'orders', label: 'Pedidos en Vivo', icon: Bell, badge: pendingCount },
       { id: 'pos', label: 'Punto de Venta (POS)', icon: ShoppingBag },
+      { id: 'tasks', label: 'Tareas del Equipo', icon: CheckSquare, badge: pendingTasksCount },
       { id: 'invoices', label: 'Facturas & Tickets', icon: Receipt },
       { id: 'customers', label: 'Clientes', icon: Users },
       { id: 'dishes', label: 'Gestión de Platos', icon: Utensils, badge: dishes.length },
@@ -452,14 +457,14 @@ export function AdminPage() {
         return allTabs;
       }
       if (waiterPermLevel === 'pedidos_y_mesas') {
-        return allTabs.filter(t => t.id === 'orders' || t.id === 'pos' || t.id === 'tables' || t.id === 'invoices');
+        return allTabs.filter(t => t.id === 'orders' || t.id === 'pos' || t.id === 'tasks' || t.id === 'tables' || t.id === 'invoices');
       }
-      // 'solo_pedidos' (predeterminado para meseros: pueden ver pedidos y operar el POS)
-      return allTabs.filter(t => t.id === 'orders' || t.id === 'pos');
+      // 'solo_pedidos' (predeterminado para meseros: pedidos, POS y tareas del equipo)
+      return allTabs.filter(t => t.id === 'orders' || t.id === 'pos' || t.id === 'tasks');
     }
 
     return allTabs;
-  }, [authRole, waiterPermLevel, pendingCount, dishes.length, categories.length, tables.length, waiters.length]);
+  }, [authRole, waiterPermLevel, pendingCount, pendingTasksCount, dishes.length, categories.length, tables.length, waiters.length]);
 
   // Si la pestaña activa no está permitida para el rol actual, redirigir a 'orders'
   useEffect(() => {
@@ -1454,11 +1459,13 @@ export function AdminPage() {
           {activeTab === 'pos' && (
             <AdminPOSTab
               tables={tables}
+              orders={orders}
               dishes={dishes}
               categories={categories}
               waiters={waiters}
               currentWaiter={currentWaiter}
               onOrderCreated={(newOrder) => setOrders(prev => [newOrder, ...prev])}
+              onOrderUpdated={(updated) => setOrders(prev => prev.map(o => o.id === updated.id ? { ...o, ...updated } : o))}
               onRefreshData={loadAllData}
             />
           )}
@@ -1469,6 +1476,14 @@ export function AdminPage() {
 
           {activeTab === 'customers' && (
             <AdminCustomersTab />
+          )}
+
+          {activeTab === 'tasks' && (
+            <AdminTasksTab
+              waiters={waiters}
+              currentWaiter={currentWaiter}
+              onTasksCountChange={setPendingTasksCount}
+            />
           )}
 
           {activeTab === 'dishes' && (
