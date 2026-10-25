@@ -23,7 +23,7 @@ async function prerenderOpenGraph() {
     platosMap = JSON.parse(mapContent);
   } catch (e) {}
 
-  const baseUrl = 'https://biendemarketing.github.io/mibarruntonj';
+  const baseUrl = 'https://mibarruntonj.vercel.app';
   let generatedCount = 0;
 
   for (const dish of DISHES_DATA) {

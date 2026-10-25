@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   
-  <!-- Restaurador de URLs SPA para Enlaces Compartidos (GitHub Pages & Vercel) -->
+  <!-- Restaurador de URLs SPA para Enlaces Compartidos -->
   <script>
     (function() {
       try {
@@ -12,9 +12,7 @@
         var p = params.get('p');
         if (p) {
           var target = decodeURIComponent(p);
-          var isGh = window.location.pathname.startsWith('/mibarruntonj');
-          var basePath = isGh ? '/mibarruntonj' : '';
-          window.history.replaceState(null, null, basePath + (target.startsWith('/') ? target : '/' + target));
+          window.history.replaceState(null, null, target.startsWith('/') ? target : '/' + target);
         }
       } catch (e) {}
     })();
@@ -31,7 +29,7 @@
   <meta name="author" content="Mi Barrunto Restaurant &amp; Grocery" />
   <meta name="publisher" content="Mi Barrunto" />
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-  <link rel="canonical" href="https://biendemarketing.github.io/mibarruntonj/" />
+  <link rel="canonical" href="https://mibarruntonj.vercel.app/" />
 
   <!-- Geoposicionamiento y SEO Local (Paterson, New Jersey) -->
   <meta name="geo.region" content="US-NJ" />
@@ -44,9 +42,9 @@
   <meta property="og:site_name" content="Mi Barrunto" />
   <meta property="og:title" content="Mi Barrunto — Auténtica Comida Criolla &amp; Marina | Paterson, NJ (24 Horas)" />
   <meta property="og:description" content="Carta completa oficial de Mi Barrunto. Ceviches, lomo saltado, brasas al carbón, sopas criollas y delicias peruanas. Atención 24 horas en 21 Mill st, Paterson, NJ 07011." />
-  <meta property="og:url" content="https://biendemarketing.github.io/mibarruntonj/" />
-  <meta property="og:image" content="https://biendemarketing.github.io/mibarruntonj/bg-restaurant.jpg" />
-  <meta property="og:image:secure_url" content="https://biendemarketing.github.io/mibarruntonj/bg-restaurant.jpg" />
+  <meta property="og:url" content="https://mibarruntonj.vercel.app/" />
+  <meta property="og:image" content="https://mibarruntonj.vercel.app/bg-restaurant.jpg" />
+  <meta property="og:image:secure_url" content="https://mibarruntonj.vercel.app/bg-restaurant.jpg" />
   <meta property="og:image:type" content="image/jpeg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
@@ -58,7 +56,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Mi Barrunto — Comida Criolla &amp; Marina en Paterson, NJ" />
   <meta name="twitter:description" content="Ceviches, lomo saltado flameado, parrillas y delicias peruanas. Pide fácil y rápido por WhatsApp." />
-  <meta name="twitter:image" content="https://biendemarketing.github.io/mibarruntonj/bg-restaurant.jpg" />
+  <meta name="twitter:image" content="https://mibarruntonj.vercel.app/bg-restaurant.jpg" />
   <meta name="twitter:image:alt" content="Mi Barrunto Restaurant &amp; Grocery Paterson NJ" />
 
   <!-- Metadatos para Dispositivos Móviles y PWA -->
@@ -85,11 +83,11 @@
     "@type": "Restaurant",
     "name": "Mi Barrunto Restaurant & Grocery",
     "image": [
-      "https://biendemarketing.github.io/mibarruntonj/bg-restaurant.jpg",
-      "https://biendemarketing.github.io/mibarruntonj/logo/logo.png"
+      "https://mibarruntonj.vercel.app/bg-restaurant.jpg",
+      "https://mibarruntonj.vercel.app/logo/logo.png"
     ],
-    "@id": "https://biendemarketing.github.io/mibarruntonj/#restaurant",
-    "url": "https://biendemarketing.github.io/mibarruntonj/",
+    "@id": "https://mibarruntonj.vercel.app/#restaurant",
+    "url": "https://mibarruntonj.vercel.app/",
     "telephone": "+1-973-653-3749",
     "priceRange": "$$",
     "servesCuisine": [
@@ -127,8 +125,8 @@
         "closes": "23:59"
       }
     ],
-    "menu": "https://biendemarketing.github.io/mibarruntonj/menu_imprimible.html",
-    "hasMenu": "https://biendemarketing.github.io/mibarruntonj/menu_imprimible.html",
+    "menu": "https://mibarruntonj.vercel.app/menu_imprimible.html",
+    "hasMenu": "https://mibarruntonj.vercel.app/menu_imprimible.html",
     "acceptsReservations": "True"
   }
   </script>

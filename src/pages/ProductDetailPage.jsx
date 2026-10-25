@@ -198,9 +198,7 @@ export function ProductDetailPage({
   const handleShare = async () => {
     triggerHaptic(15);
     const origin = window.location.origin;
-    const isGhPages = window.location.pathname.startsWith('/mibarruntonj');
-    const basePath = isGhPages ? '/mibarruntonj' : '';
-    const shareUrl = `${origin}${basePath}/plato/${dish ? dish.id : ''}`;
+    const shareUrl = `${origin}/plato/${dish ? dish.id : ''}`;
     const shareText = dish 
       ? `¡Mira este delicioso plato en Mi Barrunto! ${dish.name} (${dish.getFormattedPrice()}) - ${dish.nameEn || ''}`
       : '¡Explora la carta oficial de Mi Barrunto!';

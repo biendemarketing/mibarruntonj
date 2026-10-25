@@ -46,9 +46,7 @@ export function ProductDetailModal({
   const handleShare = async () => {
     triggerHaptic(15);
     const origin = window.location.origin;
-    const isGhPages = window.location.pathname.startsWith('/mibarruntonj');
-    const basePath = isGhPages ? '/mibarruntonj' : '';
-    const shareUrl = `${origin}${basePath}/plato/${dish.id}`;
+    const shareUrl = `${origin}/plato/${dish.id}`;
     if (navigator.share) {
       try {
         await navigator.share({
