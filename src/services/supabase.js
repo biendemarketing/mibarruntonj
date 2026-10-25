@@ -39,6 +39,8 @@ export const ordersService = {
     waiterId = null,
     items = [],
     subtotal = 0,
+    taxAmount = 0,
+    cardFeeAmount = 0,
     tipAmount = 0,
     totalAmount = 0,
     paymentMethod = 'efectivo',
@@ -48,6 +50,12 @@ export const ordersService = {
     // Generar número de pedido amigable: MB-XXXX
     const randomSuffix = Math.floor(1000 + Math.random() * 9000);
     const orderNumber = `MB-${randomSuffix}`;
+
+    const numSubtotal = Number(subtotal) || 0;
+    const numTax = Number(taxAmount) || 0;
+    const numCardFee = Number(cardFeeAmount) || 0;
+    const numTip = Number(tipAmount) || 0;
+    const numTotal = Number(totalAmount) || (numSubtotal + numTax + numCardFee + numTip);
 
     const { data: order, error: orderError } = await supabase
       .from('orders')
@@ -61,9 +69,12 @@ export const ordersService = {
         waiter_id: waiterId,
         status: 'pending',
         estimated_time: '15-20 min',
-        subtotal: Number(subtotal) || 0,
-        tip_amount: Number(tipAmount) || 0,
-        total_amount: Number(totalAmount) || 0,
+        subtotal: numSubtotal,
+        tax_enabled: numTax > 0,
+        tax_amount: numTax,
+        card_fee_amount: numCardFee,
+        tip_amount: numTip,
+        total_amount: numTotal,
         payment_method: paymentMethod,
         diner_count: Number(dinerCount) || 1,
         notes: notes || ''
@@ -180,6 +191,7 @@ export const ordersService = {
       subtotal: Number(orderData.subtotal) || 0,
       tax_enabled: Boolean(orderData.tax_enabled),
       tax_amount: Number(orderData.tax_amount) || 0,
+      card_fee_amount: Number(orderData.card_fee_amount) || 0,
       delivery_enabled: Boolean(orderData.delivery_enabled),
       delivery_amount: Number(orderData.delivery_amount) || 0,
       tip_amount: Number(orderData.tip_amount) || 0,

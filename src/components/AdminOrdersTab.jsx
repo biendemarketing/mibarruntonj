@@ -839,6 +839,60 @@ export function AdminOrdersTab({
                     ))}
                   </div>
 
+                  {/* Desglose Fiscal & Totales de Cocina/Caja */}
+                  <div
+                    style={{
+                      backgroundColor: '#fcf9f2',
+                      borderRadius: '10px',
+                      padding: '0.5rem 0.75rem',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '0.25rem',
+                      fontSize: '0.74rem'
+                    }}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', color: '#6b635b' }}>
+                      <span>Subtotal platos:</span>
+                      <span style={{ fontWeight: 700, color: '#1f1e1c' }}>
+                        ${Number(order.subtotal || 0).toFixed(2)}
+                      </span>
+                    </div>
+
+                    {(Number(order.tax_amount) > 0 || order.tax_enabled) && (
+                      <div style={{ display: 'flex', justifyContent: 'space-between', color: '#6b635b' }}>
+                        <span>Sales Tax NJ (6.625%):</span>
+                        <span style={{ fontWeight: 700, color: '#1f1e1c' }}>
+                          +${Number(order.tax_amount || (Number(order.subtotal || 0) * 0.06625)).toFixed(2)}
+                        </span>
+                      </div>
+                    )}
+
+                    {(Number(order.card_fee_amount) > 0 || order.payment_method === 'tarjeta') && (
+                      <div style={{ display: 'flex', justifyContent: 'space-between', color: '#2563eb' }}>
+                        <span>Recargo Tarjeta (4%):</span>
+                        <span style={{ fontWeight: 700 }}>
+                          +${Number(order.card_fee_amount || (order.payment_method === 'tarjeta' ? Number(order.subtotal || 0) * 0.04 : 0)).toFixed(2)}
+                        </span>
+                      </div>
+                    )}
+
+                    {Number(order.tip_amount) > 0 && (
+                      <div style={{ display: 'flex', justifyContent: 'space-between', color: '#059669' }}>
+                        <span>Gratuity Servicio (16%):</span>
+                        <span style={{ fontWeight: 700 }}>
+                          +${Number(order.tip_amount).toFixed(2)}
+                        </span>
+                      </div>
+                    )}
+
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '0.25rem', borderTop: '1px solid #e7e2d7', fontWeight: 900, fontSize: '0.82rem' }}>
+                      <span style={{ color: '#1f1e1c' }}>Total Orden:</span>
+                      <span style={{ color: 'var(--rojo, #d91c2b)' }}>
+                        ${Number(order.total_amount || 0).toFixed(2)}
+                      </span>
+                    </div>
+                  </div>
+
                   {/* Indicaciones Generales */}
                   {order.notes && (
                     <div

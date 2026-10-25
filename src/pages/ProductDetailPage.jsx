@@ -27,8 +27,12 @@ export function ProductDetailPage({
     if (paramId) return paramId;
     if (propDish && propDish.id) return String(propDish.id);
     if (typeof window !== 'undefined') {
-      const match = window.location.pathname.match(/\/plato\/([^/?#]+)/);
-      if (match && match[1]) return match[1];
+      const pathname = window.location.pathname;
+      const cleanPath = pathname.split('?')[0].split('#')[0];
+      const match = cleanPath.match(/\/plato\/([^/?#]+)/);
+      if (match && match[1]) {
+        return decodeURIComponent(match[1]).replace(/\/$/, '').trim();
+      }
     }
     return null;
   }, [paramId, propDish]);
@@ -193,8 +197,13 @@ export function ProductDetailPage({
 
   const handleShare = async () => {
     triggerHaptic(15);
-    const shareUrl = window.location.href;
-    const shareText = `¡Mira este delicioso plato en Mi Barrunto! ${dish.name} (${dish.getFormattedPrice()}) - ${dish.nameEn || ''}`;
+    const origin = window.location.origin;
+    const isGhPages = window.location.pathname.startsWith('/mibarruntonj');
+    const basePath = isGhPages ? '/mibarruntonj' : '';
+    const shareUrl = `${origin}${basePath}/plato/${dish ? dish.id : ''}`;
+    const shareText = dish 
+      ? `¡Mira este delicioso plato en Mi Barrunto! ${dish.name} (${dish.getFormattedPrice()}) - ${dish.nameEn || ''}`
+      : '¡Explora la carta oficial de Mi Barrunto!';
     if (navigator.share) {
       try {
         await navigator.share({
@@ -309,6 +318,39 @@ export function ProductDetailPage({
     }
     return list;
   }, [dish, currentImage]);
+
+  if (!dish) {
+    return (
+      <div className="product-page-container" style={{ minHeight: '80vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '2rem', textAlign: 'center' }}>
+        <div style={{ width: '64px', height: '64px', borderRadius: '50%', backgroundColor: 'rgba(217, 28, 43, 0.12)', display: 'grid', placeItems: 'center', marginBottom: '1.25rem', color: 'var(--rojo)' }}>
+          <Utensils size={32} />
+        </div>
+        <h2 style={{ fontSize: '1.35rem', fontWeight: 900, marginBottom: '0.6rem', color: '#1f1e1c', letterSpacing: '-0.3px' }}>
+          Plato no encontrado
+        </h2>
+        <p style={{ color: '#78716c', fontSize: '0.92rem', maxWidth: '380px', marginBottom: '1.75rem', lineHeight: 1.5 }}>
+          El plato que buscas no se encuentra disponible o el enlace ha cambiado. Te invitamos a explorar nuestra carta oficial completa.
+        </p>
+        <button
+          type="button"
+          onClick={handleBackToHome}
+          style={{
+            backgroundColor: 'var(--rojo, #d91c2b)',
+            color: '#ffffff',
+            fontWeight: 800,
+            fontSize: '0.95rem',
+            padding: '0.9rem 1.8rem',
+            borderRadius: '16px',
+            border: 'none !important',
+            cursor: 'pointer',
+            boxShadow: '0 8px 25px rgba(217, 28, 43, 0.35)'
+          }}
+        >
+          Explorar Carta Completa
+        </button>
+      </div>
+    );
+  }
 
   const displayImage = galleryImages[selectedImageIndex] || currentImage;
   const isDishInCart = cart && cart.getItem(dish.id);

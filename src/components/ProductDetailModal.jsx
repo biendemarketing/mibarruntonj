@@ -45,7 +45,10 @@ export function ProductDetailModal({
   // Compartir plato mediante Web Share API o copiar URL directa
   const handleShare = async () => {
     triggerHaptic(15);
-    const shareUrl = `${window.location.origin}/plato/${dish.id}`;
+    const origin = window.location.origin;
+    const isGhPages = window.location.pathname.startsWith('/mibarruntonj');
+    const basePath = isGhPages ? '/mibarruntonj' : '';
+    const shareUrl = `${origin}${basePath}/plato/${dish.id}`;
     if (navigator.share) {
       try {
         await navigator.share({

@@ -63,7 +63,15 @@ export function AdminPOSTab({
   const [deliveryAmount, setDeliveryAmount] = useState(5.00);
 
   const [tipEnabled, setTipEnabled] = useState(false);
-  const [tipPercent, setTipPercent] = useState(15);
+  const [tipPercent, setTipPercent] = useState(16); // 16% Gratuity estándar cuando >2 personas
+
+  // Auto-activar propina sugerida (gratuity 16%) si son más de 2 comensales
+  useEffect(() => {
+    if (dinersCount > 2) {
+      setTipEnabled(true);
+      setTipPercent(16);
+    }
+  }, [dinersCount]);
 
   // Filtros del catálogo de platos
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -493,6 +501,7 @@ export function AdminPOSTab({
         delivery_amount: deliveryFee,
         tip_amount: tipAmount,
         total_amount: totalAmount,
+        diner_count: dinersCount,
         payment_method: 'efectivo',
         notes: orderNotes ? `[${dinersCount} Comensales] ${orderNotes}` : `[${dinersCount} Comensales]`
       }, posItems);

@@ -133,7 +133,25 @@ export class MenuRepository {
    * @returns {Dish|undefined}
    */
   getDishById(id) {
-    return this.dishesMap.get(Number(id));
+    if (!id && id !== 0) return undefined;
+    const num = Number(id);
+    if (!isNaN(num) && this.dishesMap.has(num)) {
+      return this.dishesMap.get(num);
+    }
+    const strId = String(id).trim();
+    // Búsqueda directa por id exacto como string
+    const direct = this.dishes.find(d => String(d.id) === strId);
+    if (direct) return direct;
+
+    // Búsqueda por slug amigable (ej: "arroz-con-mariscos", "ceviche-clasico")
+    const cleanId = strId.toLowerCase().replace(/^[0-9]+-/, '');
+    return this.dishes.find(d => {
+      const slug = (d.name || '').toLowerCase()
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+      return slug === cleanId || slug.includes(cleanId) || cleanId.includes(slug);
+    });
   }
 
   /**

@@ -2,8 +2,23 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <base href="/" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  
+  <!-- Restaurador de URLs SPA para Enlaces Compartidos (GitHub Pages & Vercel) -->
+  <script>
+    (function() {
+      try {
+        var params = new URLSearchParams(window.location.search);
+        var p = params.get('p');
+        if (p) {
+          var target = decodeURIComponent(p);
+          var isGh = window.location.pathname.startsWith('/mibarruntonj');
+          var basePath = isGh ? '/mibarruntonj' : '';
+          window.history.replaceState(null, null, basePath + (target.startsWith('/') ? target : '/' + target));
+        }
+      } catch (e) {}
+    })();
+  </script>
   
   <!-- Seguridad & Anti-Clickjacking -->
   <meta http-equiv="X-Frame-Options" content="SAMEORIGIN" />

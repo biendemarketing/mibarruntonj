@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>Mi Barrunto — Cargando...</title>
+    <script>
+      // Single Page Application Router Fallback para GitHub Pages y Vercel
+      // Redirige rutas profundas (/plato/10, /categoria/ceviches, /admin) a index.html preservando la URL
+      (function() {
+        var pathSegmentsToKeep = 1; // Para /mibarruntonj/
+        var l = window.location;
+        var repoName = '/mibarruntonj';
+        var isGh = l.pathname.startsWith(repoName);
+
+        var path = isGh ? l.pathname.slice(repoName.length) : l.pathname;
+        var targetQuery = (path + l.search + l.hash);
+
+        // Guardar la URL original en sessionStorage como garantía de restauración
+        sessionStorage.setItem('mb_spa_redirect', l.href);
+
+        var destination = (isGh ? repoName : '') + '/?p=' + encodeURIComponent(targetQuery);
+        l.replace(l.protocol + '//' + l.host + destination);
+      })();
+    </script>
+  </head>
+  <body style="margin: 0; background-color: #0c0d10; color: #ffffff; display: flex; align-items: center; justify-content: center; height: 100vh; font-family: system-ui, -apple-system, sans-serif;">
+    <p style="font-weight: 700; font-size: 1rem;">Cargando Mi Barrunto...</p>
+  </body>
+</html>

@@ -69,9 +69,30 @@ export function AdminOrderEditModal({
     return items.reduce((acc, it) => acc + (Number(it.quantity || 1) * Number(it.unit_price || 0)), 0);
   }, [items]);
 
+  // Cálculos fiscales y adicionales
+  const hasTax = order.tax_enabled !== false && (Number(order.tax_amount) > 0 || order.tax_enabled);
+  const taxAmount = useMemo(() => {
+    if (!hasTax) return 0;
+    return Number((subtotal * 0.06625).toFixed(2));
+  }, [subtotal, hasTax]);
+
+  const isCard = order.payment_method === 'tarjeta' || Number(order.card_fee_amount) > 0;
+  const cardFeeAmount = useMemo(() => {
+    if (!isCard) return 0;
+    return Number((subtotal * 0.04).toFixed(2));
+  }, [subtotal, isCard]);
+
+  const hasTip = Number(order.tip_amount) > 0 || Number(order.diner_count) > 2;
+  const tipAmount = useMemo(() => {
+    if (!hasTip) return 0;
+    return Number((subtotal * 0.16).toFixed(2));
+  }, [subtotal, hasTip]);
+
+  const deliveryAmount = Number(order.delivery_amount) || 0;
+
   const totalAmount = useMemo(() => {
-    return Number(subtotal.toFixed(2));
-  }, [subtotal]);
+    return Number((subtotal + taxAmount + cardFeeAmount + tipAmount + deliveryAmount).toFixed(2));
+  }, [subtotal, taxAmount, cardFeeAmount, tipAmount, deliveryAmount]);
 
   // Manejadores de ítems
   const handleUpdateItemQty = (idx, delta) => {
@@ -170,6 +191,13 @@ export function AdminOrderEditModal({
         table_number: tableNumber,
         status,
         subtotal,
+        tax_enabled: hasTax,
+        tax_amount: taxAmount,
+        card_fee_amount: cardFeeAmount,
+        tip_amount: tipAmount,
+        delivery_enabled: Boolean(order.delivery_enabled),
+        delivery_amount: deliveryAmount,
+        payment_method: order.payment_method || 'efectivo',
         total_amount: totalAmount,
         notes
       };
@@ -812,9 +840,12 @@ export function AdminOrderEditModal({
           }}
         >
           <div>
-            <span style={{ fontSize: '0.75rem', color: '#78716c', fontWeight: 700, display: 'block' }}>
-              Subtotal Modificado
-            </span>
+            <div style={{ display: 'flex', gap: '0.75rem', fontSize: '0.75rem', color: '#78716c', fontWeight: 700, marginBottom: '0.2rem' }}>
+              <span>Subtotal: ${subtotal.toFixed(2)}</span>
+              {hasTax && <span>+ Tax (6.625%): ${taxAmount.toFixed(2)}</span>}
+              {isCard && <span>+ Tarjeta (4%): ${cardFeeAmount.toFixed(2)}</span>}
+              {hasTip && <span>+ Gratuity (16%): ${tipAmount.toFixed(2)}</span>}
+            </div>
             <span style={{ fontSize: '1.35rem', fontWeight: 900, color: 'var(--rojo, #d91c2b)' }}>
               ${totalAmount.toFixed(2)} USD
             </span>

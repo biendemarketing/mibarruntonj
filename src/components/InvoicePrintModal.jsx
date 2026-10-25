@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { 
   Printer, X, Check, DollarSign, Percent, Truck, 
-  Receipt, ChefHat, FileText, Settings, Copy, Share2
+  Receipt, ChefHat, FileText, Settings, Copy, Share2, CreditCard
 } from 'lucide-react';
 import { triggerHaptic } from '../utils/haptics';
 import { CustomSelect } from './CustomSelect';
@@ -36,16 +36,24 @@ export function InvoicePrintModal({
       : [{ name: 'Consumo General', quantity: 1, unit_price: 0, subtotal: 0 }]
   );
 
-  // REGLA: Toggles de Impuesto, Envío y Propina APAGADOS POR DEFECTO (false)
-  const [taxEnabled, setTaxEnabled] = useState(initialData?.tax_enabled ?? false);
+  // REGLA: Toggles de Impuesto, Envío, Tarjeta y Propina
+  const [taxEnabled, setTaxEnabled] = useState(
+    initialData?.tax_enabled ?? (Number(initialData?.tax_amount) > 0)
+  );
   const [taxRate, setTaxRate] = useState(initialData?.tax_rate ?? 6.625); // New Jersey Sales Tax estándar
 
   const [deliveryEnabled, setDeliveryEnabled] = useState(initialData?.delivery_enabled ?? false);
   const [deliveryAmount, setDeliveryAmount] = useState(initialData?.delivery_amount ?? 5.00);
 
-  const [tipEnabled, setTipEnabled] = useState(initialData?.tip_enabled ?? false);
+  const [cardFeeEnabled, setCardFeeEnabled] = useState(
+    (Number(initialData?.card_fee_amount) > 0) || (initialData?.payment_method === 'tarjeta')
+  );
+
+  const [tipEnabled, setTipEnabled] = useState(
+    initialData?.tip_enabled ?? (Number(initialData?.tip_amount) > 0)
+  );
   const [tipType, setTipType] = useState('percent'); // 'percent' | 'fixed'
-  const [tipPercent, setTipPercent] = useState(15);
+  const [tipPercent, setTipPercent] = useState(16); // 16% gratuity estándar
   const [tipFixedAmount, setTipFixedAmount] = useState(initialData?.tip_amount ?? 5.00);
 
   // Cálculos matemáticos en vivo
@@ -57,6 +65,11 @@ export function InvoicePrintModal({
     if (!taxEnabled) return 0;
     return Number(((subtotal * Number(taxRate || 0)) / 100).toFixed(2));
   }, [subtotal, taxEnabled, taxRate]);
+
+  const cardFeeAmount = useMemo(() => {
+    if (!cardFeeEnabled) return 0;
+    return Number(((subtotal * 0.04)).toFixed(2));
+  }, [subtotal, cardFeeEnabled]);
 
   const deliveryFee = useMemo(() => {
     if (!deliveryEnabled) return 0;
@@ -72,8 +85,8 @@ export function InvoicePrintModal({
   }, [subtotal, tipEnabled, tipType, tipPercent, tipFixedAmount]);
 
   const totalAmount = useMemo(() => {
-    return Number((subtotal + taxAmount + deliveryFee + tipAmount).toFixed(2));
-  }, [subtotal, taxAmount, deliveryFee, tipAmount]);
+    return Number((subtotal + taxAmount + cardFeeAmount + deliveryFee + tipAmount).toFixed(2));
+  }, [subtotal, taxAmount, cardFeeAmount, deliveryFee, tipAmount]);
 
   const currentDateStr = useMemo(() => {
     const d = new Date();
@@ -102,6 +115,7 @@ export function InvoicePrintModal({
         tax_enabled: taxEnabled,
         tax_rate: taxRate,
         tax_amount: taxAmount,
+        card_fee_amount: cardFeeAmount,
         delivery_enabled: deliveryEnabled,
         delivery_amount: deliveryFee,
         tip_enabled: tipEnabled,
@@ -393,7 +407,64 @@ export function InvoicePrintModal({
                 )}
               </div>
 
-              {/* TOGGLE 2: COSTO DE ENVÍO / DELIVERY */}
+              {/* TOGGLE 2: RECARGO POR PAGO CON TARJETA (4%) */}
+              <div style={{ paddingTop: '0.5rem', borderTop: 'none' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <CreditCard size={16} color="#78716c" />
+                    <div>
+                      <span style={{ fontSize: '0.82rem', fontWeight: 800, color: '#1f1e1c', display: 'block' }}>
+                        Tarifa Tarjeta (4%)
+                      </span>
+                      <span style={{ fontSize: '0.68rem', color: '#78716c' }}>
+                        Procesamiento débito / crédito
+                      </span>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      triggerHaptic(8);
+                      setCardFeeEnabled(!cardFeeEnabled);
+                    }}
+                    style={{
+                      width: '46px',
+                      height: '26px',
+                      borderRadius: '14px',
+                      backgroundColor: cardFeeEnabled ? '#10b981' : '#e7e5e4',
+                      border: 'none !important',
+                      cursor: 'pointer',
+                      position: 'relative',
+                      transition: 'background-color 0.2s ease',
+                      padding: '2px'
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: '22px',
+                        height: '22px',
+                        borderRadius: '11px',
+                        backgroundColor: '#ffffff',
+                        transform: cardFeeEnabled ? 'translateX(20px)' : 'translateX(0)',
+                        transition: 'transform 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                        boxShadow: '0 2px 5px rgba(0,0,0,0.15)'
+                      }}
+                    />
+                  </button>
+                </div>
+                {cardFeeEnabled && (
+                  <div style={{ marginTop: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <span style={{ fontSize: '0.72rem', color: '#78716c' }}>
+                      Cargo 4% sobre subtotal:
+                    </span>
+                    <span style={{ fontSize: '0.82rem', fontWeight: 800, color: '#10b981' }}>
+                      +${cardFeeAmount.toFixed(2)}
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {/* TOGGLE 3: COSTO DE ENVÍO / DELIVERY */}
               <div style={{ paddingTop: '0.5rem', borderTop: 'none' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -465,7 +536,7 @@ export function InvoicePrintModal({
                 )}
               </div>
 
-              {/* TOGGLE 3: PROPINA / GRATUITY */}
+              {/* TOGGLE 4: PROPINA / GRATUITY */}
               <div style={{ paddingTop: '0.5rem', borderTop: 'none' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -475,7 +546,7 @@ export function InvoicePrintModal({
                         Propina / Gratuity
                       </span>
                       <span style={{ fontSize: '0.68rem', color: '#78716c' }}>
-                        Servicio opcional de sala
+                        16% sugerido (más de 2 personas)
                       </span>
                     </div>
                   </div>
@@ -513,7 +584,7 @@ export function InvoicePrintModal({
                 {tipEnabled && (
                   <div style={{ marginTop: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
                     <div style={{ display: 'flex', gap: '0.35rem' }}>
-                      {[15, 18, 20].map(pct => (
+                      {[16, 18, 20].map(pct => (
                         <button
                           key={pct}
                           type="button"
@@ -640,10 +711,15 @@ export function InvoicePrintModal({
                   </label>
                   <CustomSelect
                     value={paymentMethod}
-                    onChange={(val) => setPaymentMethod(val)}
+                    onChange={(val) => {
+                      setPaymentMethod(val);
+                      if (val === 'tarjeta') {
+                        setCardFeeEnabled(true);
+                      }
+                    }}
                     options={[
                       { value: 'efectivo', label: 'Efectivo ($ USD)' },
-                      { value: 'tarjeta', label: 'Tarjeta Crédito / Débito' },
+                      { value: 'tarjeta', label: 'Tarjeta Crédito / Débito (4%)' },
                       { value: 'zelle', label: 'Zelle / Transferencia' },
                       { value: 'apple_pay', label: 'Apple Pay / Contactless' }
                     ]}
@@ -866,6 +942,13 @@ export function InvoicePrintModal({
                         </div>
                       )}
 
+                      {cardFeeEnabled && cardFeeAmount > 0 && (
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem' }}>
+                          <span style={{ color: '#6b7280' }}>Tarifa Tarjeta (4%):</span>
+                          <span style={{ fontWeight: 800 }}>${cardFeeAmount.toFixed(2)}</span>
+                        </div>
+                      )}
+
                       {deliveryEnabled && (
                         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem' }}>
                           <span style={{ color: '#6b7280' }}>Delivery / Envío:</span>
@@ -971,6 +1054,13 @@ export function InvoicePrintModal({
                       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                         <span>TAX ({taxRate}%):</span>
                         <span>${taxAmount.toFixed(2)}</span>
+                      </div>
+                    )}
+
+                    {cardFeeEnabled && cardFeeAmount > 0 && (
+                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <span>TARJETA (4%):</span>
+                        <span>${cardFeeAmount.toFixed(2)}</span>
                       </div>
                     )}
 

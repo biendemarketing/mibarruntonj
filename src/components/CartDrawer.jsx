@@ -88,8 +88,35 @@ export function CartDrawer({
   const items = (typeof cart?.getItems === 'function' ? cart.getItems() : cart?.items) || [];
   const isCartEmpty = typeof cart?.isEmpty === 'function' ? cart.isEmpty() : items.length === 0;
   const totalCount = typeof cart?.getTotalCount === 'function' ? cart.getTotalCount() : items.reduce((s, i) => s + (i.quantity || 1), 0);
-  const totalPrice = typeof cart?.getFormattedTotal === 'function' ? cart.getFormattedTotal() : `$${items.reduce((s, i) => s + (typeof i.getSubtotal === 'function' ? i.getSubtotal() : ((i.dish?.price || 0) * (i.quantity || 1))), 0).toFixed(2)}`;
   const customer = cart?.customer || {};
+
+  // 1. Subtotal de platos (precios limpios sin sobrecargos en producto)
+  const subtotal = items.reduce(
+    (s, i) => s + (typeof i.getSubtotal === 'function' ? i.getSubtotal() : ((i.dish?.price || 0) * (i.quantity || 1))), 
+    0
+  );
+
+  // 2. Impuesto Sales Tax New Jersey (6.625%)
+  const TAX_RATE = 0.06625;
+  const taxAmount = Number((subtotal * TAX_RATE).toFixed(2));
+
+  // 3. Recargo por pago con tarjeta (4%)
+  const isCard = customer.paymentMethod === 'tarjeta';
+  const CARD_FEE_RATE = 0.04;
+  const cardFeeAmount = isCard ? Number((subtotal * CARD_FEE_RATE).toFixed(2)) : 0;
+
+  // 4. Gratuity (16% opcional, activado automáticamente para más de 2 personas)
+  const dinerCount = Number(customer.dinerCount) || 2;
+  const [gratuityManualOverride, setGratuityManualOverride] = useState(null);
+  const isGratuityActive = gratuityManualOverride !== null 
+    ? gratuityManualOverride 
+    : (dinerCount > 2);
+  const GRATUITY_RATE = 0.16;
+  const gratuityAmount = isGratuityActive ? Number((subtotal * GRATUITY_RATE).toFixed(2)) : 0;
+
+  // 5. Total Final a pagar
+  const finalTotal = Number((subtotal + taxAmount + cardFeeAmount + gratuityAmount).toFixed(2));
+  const totalPrice = `$${finalTotal.toFixed(2)}`;
 
   // Enviar pedido en vivo a Supabase (Cocina & Panel Administrativo)
   const handleConfirmOrder = async () => {
@@ -152,21 +179,19 @@ export function CartDrawer({
 
       const tableNumberStr = customer.orderType === 'mesa' ? cleanTable : `Llevar (${customer.orderType})`;
 
-      const calculatedSubtotal = typeof cart?.getSubtotal === 'function' ? cart.getSubtotal() : (typeof cart?.getTotalPrice === 'function' ? cart.getTotalPrice() : 0);
-      const calculatedTotal = typeof cart?.getTotal === 'function' ? cart.getTotal() : (typeof cart?.getTotalPrice === 'function' ? cart.getTotalPrice() : 0);
-      const calculatedTip = typeof cart?.getTipAmount === 'function' ? cart.getTipAmount() : 0;
-
       const order = await ordersService.createOrder({
         clientUuid,
         customerName: cleanName,
         customerPhone: cleanPhone,
         tableNumber: tableNumberStr,
         items: orderItems,
-        subtotal: calculatedSubtotal,
-        tipAmount: calculatedTip,
-        totalAmount: calculatedTotal,
+        subtotal: subtotal,
+        taxAmount: taxAmount,
+        cardFeeAmount: cardFeeAmount,
+        tipAmount: gratuityAmount,
+        totalAmount: finalTotal,
         paymentMethod: customer.paymentMethod || 'efectivo',
-        dinerCount: Number(customer.dinerCount) || 2,
+        dinerCount: dinerCount,
         notes: cleanNotes
       });
 
@@ -503,9 +528,118 @@ export function CartDrawer({
         {!isCartEmpty && (
           <div className="cart-drawer-footer">
             <div className="cart-drawer-footer-inner" style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
-              <div className="cart-summary-row">
-                <span className="cart-summary-label">Total a Pagar:</span>
-                <span className="cart-summary-total">{totalPrice}</span>
+              {/* Desglose Transparente de Totales y Porcentajes al Final */}
+              <div
+                style={{
+                  backgroundColor: '#fbf8f2',
+                  borderRadius: '16px',
+                  padding: '0.85rem 1rem',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.45rem',
+                  fontSize: '0.82rem',
+                  boxShadow: '0 4px 16px rgba(0,0,0,0.05)',
+                  border: 'none !important'
+                }}
+              >
+                {/* 1. Subtotal de productos */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#6b635b' }}>
+                  <span>Subtotal:</span>
+                  <span style={{ fontWeight: 700, color: '#1f1e1c' }}>${subtotal.toFixed(2)}</span>
+                </div>
+
+                {/* 2. Sales Tax 6.625% */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#6b635b' }}>
+                  <span>Sales Tax NJ (6.625%):</span>
+                  <span style={{ fontWeight: 700, color: '#1f1e1c' }}>+${taxAmount.toFixed(2)}</span>
+                </div>
+
+                {/* 3. Recargo por tarjeta 4% */}
+                {isCard && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#2563eb' }}>
+                    <span>Recargo por Pago con Tarjeta (4%):</span>
+                    <span style={{ fontWeight: 700 }}>+${cardFeeAmount.toFixed(2)}</span>
+                  </div>
+                )}
+
+                {/* 4. Gratuity 16% (Opcional, auto para >2 personas) */}
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    paddingTop: '0.35rem',
+                    borderTop: '1px dashed #e2dbce'
+                  }}
+                >
+                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                      <span style={{ fontWeight: 700, color: isGratuityActive ? '#059669' : '#6b635b' }}>
+                        Gratuity (16%):
+                      </span>
+                      {dinerCount > 2 && (
+                        <span
+                          style={{
+                            fontSize: '0.66rem',
+                            fontWeight: 800,
+                            color: '#059669',
+                            backgroundColor: '#ecfdf5',
+                            padding: '0.1rem 0.4rem',
+                            borderRadius: '9999px'
+                          }}
+                        >
+                          Auto +2 pers.
+                        </span>
+                      )}
+                    </div>
+                    <span style={{ fontSize: '0.68rem', color: '#8c827a' }}>
+                      {isGratuityActive ? 'Opcional (puedes quitarlo)' : 'Opcional (puedes incluirlo)'}
+                    </span>
+                  </div>
+
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                    <span style={{ fontWeight: 800, color: isGratuityActive ? '#059669' : '#8c827a' }}>
+                      {isGratuityActive ? `+$${gratuityAmount.toFixed(2)}` : '$0.00'}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        triggerHaptic(8);
+                        setGratuityManualOverride(!isGratuityActive);
+                      }}
+                      style={{
+                        fontSize: '0.7rem',
+                        fontWeight: 800,
+                        padding: '0.2rem 0.5rem',
+                        borderRadius: '8px',
+                        backgroundColor: isGratuityActive ? '#fee2e2' : '#ecfdf5',
+                        color: isGratuityActive ? '#dc2626' : '#059669',
+                        border: 'none !important',
+                        cursor: 'pointer',
+                        transition: 'all 0.15s ease'
+                      }}
+                    >
+                      {isGratuityActive ? 'Quitar' : 'Incluir (16%)'}
+                    </button>
+                  </div>
+                </div>
+
+                {/* 5. Total Final a Pagar */}
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    paddingTop: '0.45rem',
+                    borderTop: '2px solid #1f1e1c',
+                    marginTop: '0.15rem'
+                  }}
+                >
+                  <span style={{ fontSize: '0.95rem', fontWeight: 900, color: '#1f1e1c' }}>Total a Pagar:</span>
+                  <span style={{ fontSize: '1.22rem', fontWeight: 900, color: 'var(--rojo, #d91c2b)' }}>
+                    ${finalTotal.toFixed(2)}
+                  </span>
+                </div>
               </div>
 
               {/* Botón Principal Único: Confirmar y Enviar a Cocina (Supabase en Vivo) */}

@@ -40,8 +40,15 @@ export function App() {
   const { showAlert, showConfirm } = useAlertConfirm();
   const location = useLocation();
   const navigate = useNavigate();
-  const isAdminPage = location.pathname.startsWith('/admin');
-  const isDishDetailPage = location.pathname.startsWith('/plato/');
+
+  // Normalizar ruta para soportar tanto raíz (Vercel / Local) como subdirectorios (GitHub Pages /mibarruntonj)
+  const normalizedPath = useMemo(() => {
+    const raw = location.pathname || '/';
+    return raw.replace(/^\/mibarruntonj/, '') || '/';
+  }, [location.pathname]);
+
+  const isAdminPage = normalizedPath.startsWith('/admin');
+  const isDishDetailPage = normalizedPath.startsWith('/plato/');
   const categories = useMemo(() => menuRepository.getAllCategories(), []);
   const allDishes = useMemo(() => menuRepository.getAllDishes(), []);
   const [isTvModeOpen, setIsTvModeOpen] = useState(false);
@@ -243,9 +250,13 @@ export function App() {
   };
 
   const [selectedDishForDetail, setSelectedDishForDetail] = useState(() => {
-    if (typeof window !== 'undefined' && window.location.pathname.startsWith('/plato/')) {
-      const dishId = window.location.pathname.replace('/plato/', '').split('/')[0].split('?')[0].trim();
-      return menuRepository.getDishById(dishId) || null;
+    if (typeof window !== 'undefined') {
+      const raw = window.location.pathname || '/';
+      const path = raw.replace(/^\/mibarruntonj/, '') || '/';
+      if (path.startsWith('/plato/')) {
+        const dishId = path.replace('/plato/', '').split('/')[0].split('?')[0].split('#')[0].trim();
+        return menuRepository.getDishById(dishId) || null;
+      }
     }
     return null;
   });
@@ -292,11 +303,12 @@ export function App() {
 
   // Sincronización de rutas del navegador (Browser Routing con URLs reales)
   useEffect(() => {
-    const path = location.pathname;
+    const path = normalizedPath;
+    const cleanPath = path.split('?')[0].split('#')[0];
 
     // 1. Ruta /plato/:id
-    if (path.startsWith('/plato/')) {
-      const dishId = path.replace('/plato/', '').trim();
+    if (cleanPath.startsWith('/plato/')) {
+      const dishId = cleanPath.replace('/plato/', '').replace(/\/$/, '').trim();
       const foundDish = menuRepository.getDishById(dishId);
       if (foundDish) {
         setSelectedDishForDetail(foundDish);
@@ -307,25 +319,25 @@ export function App() {
     }
 
     // 2. Ruta /pedido o /carrito
-    if (path === '/pedido' || path === '/carrito') {
+    if (cleanPath === '/pedido' || cleanPath === '/carrito') {
       setIsCartOpen(true);
       setSelectedDishForDetail(null);
-    } else if (!path.startsWith('/plato/')) {
+    } else if (!cleanPath.startsWith('/plato/')) {
       setIsCartOpen(false);
     }
 
     // 3. Ruta /categoria/:slug
-    if (path.startsWith('/categoria/')) {
-      const catSlug = path.replace('/categoria/', '').trim();
+    if (cleanPath.startsWith('/categoria/')) {
+      const catSlug = cleanPath.replace('/categoria/', '').replace(/\/$/, '').trim();
       if (catSlug) {
         setSelectedCategory(catSlug);
       }
-    } else if (path === '/' && !searchQuery.trim()) {
+    } else if (cleanPath === '/' && !searchQuery.trim()) {
       if (selectedCategory !== 'todos') {
         setSelectedCategory('todos');
       }
     }
-  }, [location.pathname]);
+  }, [normalizedPath, searchQuery]);
 
   const handleUpdateFilter = (key, value) => {
     setFilters((prev) => ({ ...prev, [key]: value }));

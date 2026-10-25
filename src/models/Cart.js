@@ -167,19 +167,54 @@ export class Cart {
   }
 
   /**
-   * Total general
+   * Sales Tax New Jersey (6.625%)
    * @returns {number}
    */
-  getTotal() {
-    return this.getTotalPrice();
+  getTaxAmount() {
+    return Number((this.getSubtotal() * 0.06625).toFixed(2));
+  }
+
+  /**
+   * Recargo por procesamiento con tarjeta (4%)
+   * @param {boolean} isCard 
+   * @returns {number}
+   */
+  getCardFeeAmount(isCard = false) {
+    return isCard ? Number((this.getSubtotal() * 0.04).toFixed(2)) : 0;
+  }
+
+  /**
+   * Gratuity / Propina (16%)
+   * @param {boolean} enabled 
+   * @returns {number}
+   */
+  getGratuityAmount(enabled = false) {
+    return enabled ? Number((this.getSubtotal() * 0.16).toFixed(2)) : 0;
+  }
+
+  /**
+   * Total general calculado con desglose al final
+   * @param {Object} options
+   * @param {boolean} [options.isCard]
+   * @param {boolean} [options.gratuityEnabled]
+   * @returns {number}
+   */
+  getCalculatedTotal({ isCard = false, gratuityEnabled = false } = {}) {
+    return Number((
+      this.getSubtotal() + 
+      this.getTaxAmount() + 
+      this.getCardFeeAmount(isCard) + 
+      this.getGratuityAmount(gratuityEnabled)
+    ).toFixed(2));
   }
 
   /**
    * Total formateado
+   * @param {Object} options
    * @returns {string}
    */
-  getFormattedTotal() {
-    return `$${this.getTotalPrice().toFixed(2)}`;
+  getFormattedTotal(options = {}) {
+    return `$${this.getCalculatedTotal(options).toFixed(2)}`;
   }
 
   /**
