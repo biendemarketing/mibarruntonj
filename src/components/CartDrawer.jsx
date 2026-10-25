@@ -42,6 +42,13 @@ export function CartDrawer({
   const { showAlert } = useAlertConfirm();
   const [isClosing, setIsClosing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  // Override manual de gratuity (null = automático según comensales). Debe declararse ANTES de cualquier return temprano.
+  const [gratuityManualOverride, setGratuityManualOverride] = useState(null);
+
+  // Al cerrar el carrito, volver al comportamiento automático de la propina
+  useEffect(() => {
+    if (!isOpen) setGratuityManualOverride(null);
+  }, [isOpen]);
 
   // Auto-cargar datos recordados del cliente (o mesa desde la URL ?mesa=X)
   useEffect(() => {
@@ -107,7 +114,6 @@ export function CartDrawer({
 
   // 4. Gratuity (16% opcional, activado automáticamente para más de 2 personas)
   const dinerCount = Number(customer.dinerCount) || 2;
-  const [gratuityManualOverride, setGratuityManualOverride] = useState(null);
   const isGratuityActive = gratuityManualOverride !== null 
     ? gratuityManualOverride 
     : (dinerCount > 2);

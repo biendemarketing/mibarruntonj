@@ -1,5 +1,10 @@
 import React from 'react';
 import { RotateCcw, AlertTriangle, Home } from 'lucide-react';
+import {
+  isChunkLoadError,
+  recoverFromChunkError,
+  purgeCachesAndServiceWorkers
+} from '../utils/chunkRecovery';
 
 export class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -13,15 +18,22 @@ export class ErrorBoundary extends React.Component {
 
   componentDidCatch(error, errorInfo) {
     console.error('[ErrorBoundary] Error no capturado en la aplicación:', error, errorInfo);
+    try {
+      localStorage.setItem(
+        'mb_last_error',
+        JSON.stringify({ message: String(error?.message || error), at: new Date().toISOString() })
+      );
+    } catch {}
+    // Si es una desincronización de bundle (nuevo deploy), recuperar automáticamente una vez
+    if (isChunkLoadError(error)) {
+      recoverFromChunkError();
+    }
   }
 
-  handleReload = () => {
+  handleReload = async () => {
     try {
-      // Limpiar estados potencialmente corruptos pero preservar datos esenciales
       sessionStorage.clear();
-      if ('caches' in window) {
-        caches.keys().then((keys) => keys.forEach((k) => caches.delete(k)));
-      }
+      await purgeCachesAndServiceWorkers();
     } catch {}
     window.location.href = '/';
   };
@@ -83,6 +95,18 @@ export class ErrorBoundary extends React.Component {
             }}>
               Se ha detectado una actualización en la carta interactiva o un refresco de conexión. Pulsa el botón inferior para recargar la versión más reciente.
             </p>
+
+            {this.state.error && (
+              <p style={{
+                fontSize: '0.68rem',
+                color: 'rgba(255, 255, 255, 0.35)',
+                marginTop: '-1.1rem',
+                marginBottom: '1.4rem',
+                wordBreak: 'break-word'
+              }}>
+                Código: {String(this.state.error?.message || this.state.error).slice(0, 80)}
+              </p>
+            )}
 
             <div style={{
               display: 'flex',

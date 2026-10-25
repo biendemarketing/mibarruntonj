@@ -6,13 +6,18 @@ import {
 import { triggerHaptic } from '../utils/haptics';
 import { CustomSelect } from './CustomSelect';
 
-export function InvoicePrintModal({
+export function InvoicePrintModal(props) {
+  // Wrapper: monta el contenido (con todos sus hooks) solo cuando el modal está abierto.
+  if (!props.isOpen) return null;
+  return <InvoicePrintModalContent {...props} />;
+}
+
+function InvoicePrintModalContent({
   isOpen,
   onClose,
   initialData = null,
   onSaveInvoice = null
 }) {
-  if (!isOpen) return null;
 
   // Formatos: 'thermal80' (80mm), 'thermal58' (58mm), 'formal' (Letter/A4), 'kitchen' (Comanda Cocina)
   const [template, setTemplate] = useState('thermal80');

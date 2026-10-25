@@ -9,7 +9,13 @@ import { useAlertConfirm } from '../context/AlertConfirmContext';
 import { triggerHaptic } from '../utils/haptics';
 import { CustomSelect } from './CustomSelect';
 
-export function AdminOrderEditModal({
+export function AdminOrderEditModal(props) {
+  // Wrapper: monta el contenido (con todos sus hooks) solo cuando hay pedido y el modal está abierto.
+  if (!props.isOpen || !props.order) return null;
+  return <AdminOrderEditModalContent {...props} />;
+}
+
+function AdminOrderEditModalContent({
   isOpen,
   onClose,
   order,
@@ -17,7 +23,6 @@ export function AdminOrderEditModal({
   tables = [],
   onOrderUpdated
 }) {
-  if (!isOpen || !order) return null;
 
   const { showAlert } = useAlertConfirm();
   const [isSubmitting, setIsSubmitting] = useState(false);
