@@ -1341,7 +1341,32 @@
       color: #f7a044 !important;
     }
   
-  </style>
+  
+  /* Precision styles for Pages 8 & 9 */
+  #page-8 .menu-dish-item, #page-9 .menu-dish-item {
+    margin-bottom: 2px !important;
+  }
+  #page-8 .dish-desc, #page-9 .dish-desc {
+    font-size: 6.9pt !important;
+    line-height: 1.1 !important;
+    margin-top: 1px !important;
+  }
+  #page-8 .dish-main-row, #page-9 .dish-main-row {
+    line-height: 1.15 !important;
+  }
+  #page-9 .batidos-sub-legend {
+    font-size: 7.2pt;
+    color: #88130e;
+    font-weight: 800;
+    margin: 2px 0 4px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+  body.dark-theme #page-9 .batidos-sub-legend {
+    color: #f7a044 !important;
+  }
+
+</style>
 </head>
 <body class="dark-theme">
 
@@ -3968,235 +3993,106 @@
   </section>
   </div>
     <div class="menu-page-wrapper page-wrapper">
-  <section class="menu-page page-content-3col page" id="page-8">
-    
+  <section class="menu-page page-content-3col" id="page-8">
   <div class="textile-banner-wrap">
     <svg class="textile-banner" viewBox="0 0 1056 22" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <pattern id="incaWeave" width="88" height="22" patternUnits="userSpaceOnUse">
-          <rect width="88" height="22" fill="#88130e" />
-          <rect x="0" y="0" width="6" height="22" fill="#380906" />
-          <rect x="6" y="0" width="8" height="22" fill="#c35016" />
-          <rect x="14" y="0" width="4" height="22" fill="#e7a627" />
-          <rect x="18" y="0" width="12" height="22" fill="#75100c" />
-          <rect x="30" y="0" width="6" height="22" fill="#f5cf6d" />
-          <rect x="36" y="0" width="16" height="22" fill="#ba3c10" />
-          <rect x="52" y="0" width="6" height="22" fill="#380906" />
-          <rect x="58" y="0" width="10" height="22" fill="#e7a627" />
-          <rect x="68" y="0" width="4" height="22" fill="#75100c" />
-          <rect x="72" y="0" width="8" height="22" fill="#c35016" />
-          <rect x="80" y="0" width="8" height="22" fill="#250604" />
-
-          <polygon points="10,3 13,6 10,9 7,6" fill="#fff3d1" />
-          <polygon points="10,13 13,16 10,19 7,16" fill="#fff3d1" />
-          
-          <polygon points="44,2 49,6 44,10 39,6" fill="#fff8e7" />
-          <polygon points="44,12 49,16 44,20 39,16" fill="#f5cf6d" />
-          
-          <rect x="2" y="2" width="2" height="3" fill="#e7a627" />
-          <rect x="2" y="8" width="2" height="3" fill="#e7a627" />
-          <rect x="2" y="14" width="2" height="3" fill="#e7a627" />
-
-          <rect x="83" y="2" width="2" height="3" fill="#fff3d1" />
-          <rect x="83" y="8" width="2" height="3" fill="#fff3d1" />
-          <rect x="83" y="14" width="2" height="3" fill="#fff3d1" />
+          <rect width="88" height="22" fill="#88130e"></rect>
+          <rect x="0" y="0" width="6" height="22" fill="#380906"></rect>
+          <rect x="6" y="0" width="8" height="22" fill="#c35016"></rect>
+          <rect x="14" y="0" width="4" height="22" fill="#e7a627"></rect>
+          <rect x="18" y="0" width="12" height="22" fill="#75100c"></rect>
+          <rect x="30" y="0" width="6" height="22" fill="#f5cf6d"></rect>
+          <rect x="36" y="0" width="16" height="22" fill="#ba3c10"></rect>
+          <rect x="52" y="0" width="6" height="22" fill="#380906"></rect>
+          <rect x="58" y="0" width="10" height="22" fill="#e7a627"></rect>
+          <rect x="68" y="0" width="4" height="22" fill="#75100c"></rect>
+          <rect x="72" y="0" width="8" height="22" fill="#c35016"></rect>
+          <rect x="80" y="0" width="8" height="22" fill="#250604"></rect>
+          <polygon points="10,3 13,6 10,9 7,6" fill="#fff3d1"></polygon>
+          <polygon points="10,13 13,16 10,19 7,16" fill="#fff3d1"></polygon>
+          <polygon points="44,2 49,6 44,10 39,6" fill="#fff8e7"></polygon>
+          <polygon points="44,12 49,16 44,20 39,16" fill="#f5cf6d"></polygon>
+          <rect x="2" y="2" width="2" height="3" fill="#e7a627"></rect>
+          <rect x="2" y="8" width="2" height="3" fill="#e7a627"></rect>
+          <rect x="2" y="14" width="2" height="3" fill="#e7a627"></rect>
+          <rect x="83" y="2" width="2" height="3" fill="#fff3d1"></rect>
+          <rect x="83" y="8" width="2" height="3" fill="#fff3d1"></rect>
+          <rect x="83" y="14" width="2" height="3" fill="#fff3d1"></rect>
         </pattern>
       </defs>
-      <rect width="100%" height="22" fill="url(#incaWeave)" />
+      <rect width="100%" height="22" fill="url(#incaWeave)"></rect>
     </svg>
   </div>
   
-
-    <div class="page-body-grid">
-      <!-- Columna 1: Cevichería Tradicional (15 platos) -->
-      <div class="menu-col">
-        
+  <div class="page-body-grid">
+    <!-- Columna 1: Ceviches Tradicionales & Leches de Tigre (17 platos) -->
+    <div class="menu-col">
       <div class="category-header-badge-wrap">
         <div class="category-header-badge">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M6.5 12c.94-3.46 4.94-6 8.5-6 3.56 0 6.06 2.54 7 6-.94 3.46-3.44 6-7 6s-7.56-2.54-8.5-6Z"></path><path d="M18 12v.5"></path><path d="M16 17.93a9.77 9.77 0 0 1 0-11.86"></path><path d="M7 10.67C7 8 5.58 5.97 2.73 4 3.75 8.5 3.75 15.5 2.73 20 5.58 18.03 7 16 7 13.33"></path><path d="M10.46 7.26C10.2 5.88 9.17 4.24 8 3"></path><path d="M10.46 16.74c-.26 1.38-1.29 3.02-2.46 4.26"></path></svg>
           <span>CEVICHERÍA TRADICIONAL</span>
         </div>
       </div>
-    
-        <div class="dishes-list">
-          
-    <div class="menu-dish-item">
+      <div class="dishes-list">
+        <div class="menu-dish-item">
       <div class="dish-main-row">
         <span class="dish-name">Ceviche de pescado</span>
         <span class="dish-dots"></span>
         <span class="dish-price-pill">$18.99</span>
       </div>
       <div class="dish-desc">Fish cured in lime juice</div>
-    </div>
-  
-    <div class="menu-dish-item">
+    </div><div class="menu-dish-item">
       <div class="dish-main-row">
         <span class="dish-name">Ceviche Carretillero con Huancaína</span>
         <span class="dish-dots"></span>
         <span class="dish-price-pill">$25.99</span>
       </div>
       <div class="dish-desc">Street-style ceviche with huancaína sauce</div>
-    </div>
-  
-    <div class="menu-dish-item">
+    </div><div class="menu-dish-item">
       <div class="dish-main-row">
         <span class="dish-name">Ceviche Mixto</span>
         <span class="dish-dots"></span>
         <span class="dish-price-pill">$24.99</span>
       </div>
       <div class="dish-desc">Mixed seafood cured in lime juice</div>
-    </div>
-  
-    <div class="menu-dish-item">
+    </div><div class="menu-dish-item">
       <div class="dish-main-row">
         <span class="dish-name">Ceviche Mixto + chorito a la chalaca</span>
         <span class="dish-dots"></span>
         <span class="dish-price-pill">$34.99</span>
       </div>
       <div class="dish-desc">Mixed ceviche with peruvian-style mussels</div>
-    </div>
-  
-    <div class="menu-dish-item">
+    </div><div class="menu-dish-item">
       <div class="dish-main-row">
         <span class="dish-name">Ceviche de camarones</span>
         <span class="dish-dots"></span>
         <span class="dish-price-pill">$23.99</span>
       </div>
       <div class="dish-desc">Shrimp cured in lime juice</div>
-    </div>
-  
-    <div class="menu-dish-item">
+    </div><div class="menu-dish-item">
       <div class="dish-main-row">
         <span class="dish-name">Ceviche de mariscos</span>
         <span class="dish-dots"></span>
         <span class="dish-price-pill">$24.99</span>
       </div>
       <div class="dish-desc">Seafood cured in lime juice</div>
-    </div>
-  
-    <div class="menu-dish-item">
+    </div><div class="menu-dish-item">
       <div class="dish-main-row">
         <span class="dish-name">Ceviche de pulpo</span>
         <span class="dish-dots"></span>
         <span class="dish-price-pill">$24.99</span>
       </div>
       <div class="dish-desc">Octopus cured in lime juice</div>
-    </div>
-  
-    <div class="menu-dish-item">
+    </div><div class="menu-dish-item">
       <div class="dish-main-row">
         <span class="dish-name">Ceviche de conchas negras</span>
         <span class="dish-dots"></span>
         <span class="dish-price-pill">$27.99</span>
       </div>
       <div class="dish-desc">Black clam cured in lime juice</div>
-    </div>
-  
-    <div class="menu-dish-item">
-      <div class="dish-main-row">
-        <span class="dish-name">Choritos a la chalaca (12)</span>
-        <span class="dish-dots"></span>
-        <span class="dish-price-pill">$21.99</span>
-      </div>
-      <div class="dish-desc">Dozen mussels in chalaca salsa</div>
-    </div>
-  
-    <div class="menu-dish-item">
-      <div class="dish-main-row">
-        <span class="dish-name">Choritos a la chalaca (6)</span>
-        <span class="dish-dots"></span>
-        <span class="dish-price-pill">$13.99</span>
-      </div>
-      <div class="dish-desc">Half-dozen mussels in chalaca salsa</div>
-    </div>
-  
-    <div class="menu-dish-item">
-      <div class="dish-main-row">
-        <span class="dish-name">Leche de tigre</span>
-        <span class="dish-dots"></span>
-        <span class="dish-price-pill">$15.99</span>
-      </div>
-      <div class="dish-desc">Minced fish in lime juice with onion, corn and cilantro</div>
-    </div>
-  
-    <div class="menu-dish-item">
-      <div class="dish-main-row">
-        <span class="dish-name">Leche de tigre Mi Barrunto</span>
-        <span class="dish-dots"></span>
-        <span class="dish-price-pill">$22.99</span>
-      </div>
-      <div class="dish-desc">Minced fish in lime juice with fried calamari</div>
-    </div>
-  
-    <div class="menu-dish-item">
-      <div class="dish-main-row">
-        <span class="dish-name">Leche de tigre de pulpo</span>
-        <span class="dish-dots"></span>
-        <span class="dish-price-pill">$22.99</span>
-      </div>
-      <div class="dish-desc">Minced octopus in lime juice</div>
-    </div>
-  
-    <div class="menu-dish-item">
-      <div class="dish-main-row">
-        <span class="dish-name">Leche de tigre de pulpo Mi Barrunto</span>
-        <span class="dish-dots"></span>
-        <span class="dish-price-pill">$29.99</span>
-      </div>
-      <div class="dish-desc">Minced octopus in lime juice with fried calamari</div>
-    </div>
-  
-    <div class="menu-dish-item">
-      <div class="dish-main-row">
-        <span class="dish-name">Leche de tigre de camarones</span>
-        <span class="dish-dots"></span>
-        <span class="dish-price-pill">$22.99</span>
-      </div>
-      <div class="dish-desc">Minced shrimp in lime juice</div>
-    </div>
-  
-        </div>
-      </div>
-
-      <!-- Columna 2: Ceviches Especiales & Frituras (15 platos) -->
-      <div class="menu-col">
-        
-    <div class="category-header-line">
-      <span class="cat-icon-wrap"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M6.5 12c.94-3.46 4.94-6 8.5-6 3.56 0 6.06 2.54 7 6-.94 3.46-3.44 6-7 6s-7.56-2.54-8.5-6Z"></path><path d="M18 12v.5"></path><path d="M16 17.93a9.77 9.77 0 0 1 0-11.86"></path><path d="M7 10.67C7 8 5.58 5.97 2.73 4 3.75 8.5 3.75 15.5 2.73 20 5.58 18.03 7 16 7 13.33"></path><path d="M10.46 7.26C10.2 5.88 9.17 4.24 8 3"></path><path d="M10.46 16.74c-.26 1.38-1.29 3.02-2.46 4.26"></path></svg></span>
-      <span class="cat-title-text">CEVICHES &amp; MARISCOS</span>
-      <span class="cat-line"></span>
-    </div>
-  
-        <div class="dishes-list">
-          
-    <div class="menu-dish-item">
-      <div class="dish-main-row">
-        <span class="dish-name">Leche de tigre de camarones Mi Barrunto</span>
-        <span class="dish-dots"></span>
-        <span class="dish-price-pill">$29.99</span>
-      </div>
-      <div class="dish-desc">Minced shrimp in lime juice with fried calamari</div>
-    </div>
-  
-    <div class="menu-dish-item">
-      <div class="dish-main-row">
-        <span class="dish-name">Leche de tigre chalaca</span>
-        <span class="dish-dots"></span>
-        <span class="dish-price-pill">$19.99</span>
-      </div>
-      <div class="dish-desc">Minced mussels in lime juice</div>
-    </div>
-  
-    <div class="menu-dish-item">
-      <div class="dish-main-row">
-        <span class="dish-name">Leche de tigre chalaca Mi Barrunto</span>
-        <span class="dish-dots"></span>
-        <span class="dish-price-pill">$26.99</span>
-      </div>
-      <div class="dish-desc">Minced mussels in lime juice with fried calamari</div>
-    </div>
-  
-    <div class="menu-dish-item">
+    </div><div class="menu-dish-item">
       <div class="dish-main-row">
         <span class="dish-name">Tiradito</span>
         <span class="dish-dots"></span>
@@ -4204,98 +4100,169 @@
       </div>
       <div class="dish-desc">Fish in lime juice with yellow ají sauce</div>
     </div>
-  
-    <div class="menu-dish-item">
+      </div>
+      <div style="margin-top: 5px;">
+        <div class="category-header-line">
+          <span class="cat-icon-wrap"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M6.5 12c.94-3.46 4.94-6 8.5-6 3.56 0 6.06 2.54 7 6-.94 3.46-3.44 6-7 6s-7.56-2.54-8.5-6Z"></path></svg></span>
+          <span class="cat-title-text">LECHES DE TIGRE</span>
+          <span class="cat-line"></span>
+        </div>
+        <div class="dishes-list">
+          <div class="menu-dish-item">
+      <div class="dish-main-row">
+        <span class="dish-name">Leche de tigre</span>
+        <span class="dish-dots"></span>
+        <span class="dish-price-pill">$15.99</span>
+      </div>
+      <div class="dish-desc">Minced fish in lime juice with onion, corn and cilantro</div>
+    </div><div class="menu-dish-item">
+      <div class="dish-main-row">
+        <span class="dish-name">Leche de tigre Mi Barrunto</span>
+        <span class="dish-dots"></span>
+        <span class="dish-price-pill">$22.99</span>
+      </div>
+      <div class="dish-desc">Minced fish in lime juice with fried calamari</div>
+    </div><div class="menu-dish-item">
+      <div class="dish-main-row">
+        <span class="dish-name">Leche de tigre de pulpo</span>
+        <span class="dish-dots"></span>
+        <span class="dish-price-pill">$22.99</span>
+      </div>
+      <div class="dish-desc">Minced octopus in lime juice</div>
+    </div><div class="menu-dish-item">
+      <div class="dish-main-row">
+        <span class="dish-name">Leche de tigre de pulpo Mi Barrunto</span>
+        <span class="dish-dots"></span>
+        <span class="dish-price-pill">$29.99</span>
+      </div>
+      <div class="dish-desc">Minced octopus in lime juice with fried calamari</div>
+    </div><div class="menu-dish-item">
+      <div class="dish-main-row">
+        <span class="dish-name">Leche de tigre de camarones</span>
+        <span class="dish-dots"></span>
+        <span class="dish-price-pill">$22.99</span>
+      </div>
+      <div class="dish-desc">Minced shrimp in lime juice</div>
+    </div><div class="menu-dish-item">
+      <div class="dish-main-row">
+        <span class="dish-name">Leche de tigre de camarones Mi Barrunto</span>
+        <span class="dish-dots"></span>
+        <span class="dish-price-pill">$29.99</span>
+      </div>
+      <div class="dish-desc">Minced shrimp in lime juice with fried calamari</div>
+    </div><div class="menu-dish-item">
+      <div class="dish-main-row">
+        <span class="dish-name">Leche de tigre chalaca</span>
+        <span class="dish-dots"></span>
+        <span class="dish-price-pill">$19.99</span>
+      </div>
+      <div class="dish-desc">Minced mussels in lime juice</div>
+    </div><div class="menu-dish-item">
+      <div class="dish-main-row">
+        <span class="dish-name">Leche de tigre chalaca Mi Barrunto</span>
+        <span class="dish-dots"></span>
+        <span class="dish-price-pill">$26.99</span>
+      </div>
+      <div class="dish-desc">Minced mussels in lime juice with fried calamari</div>
+    </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Columna 2: Especialidades Marinas & Chicharrones (13 platos) -->
+    <div class="menu-col">
+      <div class="category-header-badge-wrap">
+        <div class="category-header-badge">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="m16 2-2.3 2.3a3 3 0 0 0 0 4.2l1.8 1.8a3 3 0 0 0 4.2 0L22 8"></path><path d="M15 15 3.3 3.3a4.2 4.2 0 0 0 0 6l7.3 7.3c.7.7 2 .7 2.8 0L15 15Zm0 0 7 7"></path></svg>
+          <span>CHICHARRONES &amp; ESPECIALIDADES</span>
+        </div>
+      </div>
+      <div class="dishes-list">
+        <div class="menu-dish-item">
+      <div class="dish-main-row">
+        <span class="dish-name">Choritos a la chalaca (12)</span>
+        <span class="dish-dots"></span>
+        <span class="dish-price-pill">$21.99</span>
+      </div>
+      <div class="dish-desc">Dozen mussels in chalaca salsa</div>
+    </div><div class="menu-dish-item">
+      <div class="dish-main-row">
+        <span class="dish-name">Choritos a la chalaca (6)</span>
+        <span class="dish-dots"></span>
+        <span class="dish-price-pill">$13.99</span>
+      </div>
+      <div class="dish-desc">Half-dozen mussels in chalaca salsa</div>
+    </div><div class="menu-dish-item">
       <div class="dish-main-row">
         <span class="dish-name">Jalea con yuca frita</span>
         <span class="dish-dots"></span>
         <span class="dish-price-pill">$24.99</span>
       </div>
       <div class="dish-desc">Fried mixed seafood with fried cassava, salsa criolla</div>
-    </div>
-  
-    <div class="menu-dish-item">
+    </div><div class="menu-dish-item">
       <div class="dish-main-row">
         <span class="dish-name">Chicharrón de calamar</span>
         <span class="dish-dots"></span>
         <span class="dish-price-pill">$29.99</span>
       </div>
       <div class="dish-desc">Fried calamari with fried cassava, salsa criolla</div>
-    </div>
-  
-    <div class="menu-dish-item">
+    </div><div class="menu-dish-item">
       <div class="dish-main-row">
         <span class="dish-name">Chicharrón de pescado</span>
         <span class="dish-dots"></span>
         <span class="dish-price-pill">$17.75</span>
       </div>
       <div class="dish-desc">Breaded fried fish with fried cassava, salsa criolla</div>
-    </div>
-  
-    <div class="menu-dish-item">
+    </div><div class="menu-dish-item">
       <div class="dish-main-row">
         <span class="dish-name">Lomo de pescado</span>
         <span class="dish-dots"></span>
         <span class="dish-price-pill">$19.75</span>
       </div>
       <div class="dish-desc">Sautéed fish with onions and tomato, with french fries</div>
-    </div>
-  
-    <div class="menu-dish-item">
+    </div><div class="menu-dish-item">
       <div class="dish-main-row">
         <span class="dish-name">Tacu Tacu a lo macho</span>
         <span class="dish-dots"></span>
         <span class="dish-price-pill">$34.99</span>
       </div>
       <div class="dish-desc">Rice and bean mash-up with fried fish in seafood cream</div>
-    </div>
-  
-    <div class="menu-dish-item">
+    </div><div class="menu-dish-item">
       <div class="dish-main-row">
         <span class="dish-name">Churrasco en salsa de mariscos</span>
         <span class="dish-dots"></span>
         <span class="dish-price-pill">$38.99</span>
       </div>
       <div class="dish-desc">Bone-in steak with seafood sauce</div>
-    </div>
-  
-    <div class="menu-dish-item">
+    </div><div class="menu-dish-item">
       <div class="dish-main-row">
         <span class="dish-name">Picante de camarón</span>
         <span class="dish-dots"></span>
         <span class="dish-price-pill">$24.99</span>
       </div>
       <div class="dish-desc">Creamy shrimp stew with rice</div>
-    </div>
-  
-    <div class="menu-dish-item">
+    </div><div class="menu-dish-item">
       <div class="dish-main-row">
         <span class="dish-name">Picante de mariscos</span>
         <span class="dish-dots"></span>
         <span class="dish-price-pill">$24.99</span>
       </div>
       <div class="dish-desc">Creamy seafood stew with rice</div>
-    </div>
-  
-    <div class="menu-dish-item">
+    </div><div class="menu-dish-item">
       <div class="dish-main-row">
         <span class="dish-name">Camarón al ajillo</span>
         <span class="dish-dots"></span>
         <span class="dish-price-pill">$24.99</span>
       </div>
       <div class="dish-desc">Shrimp in garlic sauce</div>
-    </div>
-  
-    <div class="menu-dish-item">
+    </div><div class="menu-dish-item">
       <div class="dish-main-row">
         <span class="dish-name">Sudado de mariscos</span>
         <span class="dish-dots"></span>
         <span class="dish-price-pill">$24.99</span>
       </div>
       <div class="dish-desc">Steamed mixed seafood with onions and tomato</div>
-    </div>
-  
-    <div class="menu-dish-item">
+    </div><div class="menu-dish-item">
       <div class="dish-main-row">
         <span class="dish-name">Sudado de pescado (filete)</span>
         <span class="dish-dots"></span>
@@ -4303,11 +4270,10 @@
       </div>
       <div class="dish-desc">Steamed fish fillet with onions, tomato and rice</div>
     </div>
-  
-        </div>
       </div>
+    </div>
 
-      <!-- Columna 3: Jaleas Crocantes & Arroces Marinos (16 platos) -->
+    <!-- Columna 3: Jaleas Crocantes & Arroces Marinos (16 platos) -->
       <div class="menu-col">
         
       <div class="category-header-badge-wrap">
@@ -4466,95 +4432,82 @@
         </div>
       </div>
     </div>
+  </div>
 
-    
     <div class="footer-gratitude-pill">
       <span class="gratitude-es">Agradecimiento del 18% en las mesas con 2 ó más personas</span>
-      <span class="gratitude-bullet">·</span>
+      <span class="gratitude-bullet">•</span>
       <span class="gratitude-en">Gratitude of 18% on table 2 or more people</span>
     </div>
-  
-    
   <div class="textile-banner-wrap">
     <svg class="textile-banner" viewBox="0 0 1056 22" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <pattern id="incaWeave" width="88" height="22" patternUnits="userSpaceOnUse">
-          <rect width="88" height="22" fill="#88130e" />
-          <rect x="0" y="0" width="6" height="22" fill="#380906" />
-          <rect x="6" y="0" width="8" height="22" fill="#c35016" />
-          <rect x="14" y="0" width="4" height="22" fill="#e7a627" />
-          <rect x="18" y="0" width="12" height="22" fill="#75100c" />
-          <rect x="30" y="0" width="6" height="22" fill="#f5cf6d" />
-          <rect x="36" y="0" width="16" height="22" fill="#ba3c10" />
-          <rect x="52" y="0" width="6" height="22" fill="#380906" />
-          <rect x="58" y="0" width="10" height="22" fill="#e7a627" />
-          <rect x="68" y="0" width="4" height="22" fill="#75100c" />
-          <rect x="72" y="0" width="8" height="22" fill="#c35016" />
-          <rect x="80" y="0" width="8" height="22" fill="#250604" />
-
-          <polygon points="10,3 13,6 10,9 7,6" fill="#fff3d1" />
-          <polygon points="10,13 13,16 10,19 7,16" fill="#fff3d1" />
-          
-          <polygon points="44,2 49,6 44,10 39,6" fill="#fff8e7" />
-          <polygon points="44,12 49,16 44,20 39,16" fill="#f5cf6d" />
-          
-          <rect x="2" y="2" width="2" height="3" fill="#e7a627" />
-          <rect x="2" y="8" width="2" height="3" fill="#e7a627" />
-          <rect x="2" y="14" width="2" height="3" fill="#e7a627" />
-
-          <rect x="83" y="2" width="2" height="3" fill="#fff3d1" />
-          <rect x="83" y="8" width="2" height="3" fill="#fff3d1" />
-          <rect x="83" y="14" width="2" height="3" fill="#fff3d1" />
+          <rect width="88" height="22" fill="#88130e"></rect>
+          <rect x="0" y="0" width="6" height="22" fill="#380906"></rect>
+          <rect x="6" y="0" width="8" height="22" fill="#c35016"></rect>
+          <rect x="14" y="0" width="4" height="22" fill="#e7a627"></rect>
+          <rect x="18" y="0" width="12" height="22" fill="#75100c"></rect>
+          <rect x="30" y="0" width="6" height="22" fill="#f5cf6d"></rect>
+          <rect x="36" y="0" width="16" height="22" fill="#ba3c10"></rect>
+          <rect x="52" y="0" width="6" height="22" fill="#380906"></rect>
+          <rect x="58" y="0" width="10" height="22" fill="#e7a627"></rect>
+          <rect x="68" y="0" width="4" height="22" fill="#75100c"></rect>
+          <rect x="72" y="0" width="8" height="22" fill="#c35016"></rect>
+          <rect x="80" y="0" width="8" height="22" fill="#250604"></rect>
+          <polygon points="10,3 13,6 10,9 7,6" fill="#fff3d1"></polygon>
+          <polygon points="10,13 13,16 10,19 7,16" fill="#fff3d1"></polygon>
+          <polygon points="44,2 49,6 44,10 39,6" fill="#fff8e7"></polygon>
+          <polygon points="44,12 49,16 44,20 39,16" fill="#f5cf6d"></polygon>
+          <rect x="2" y="2" width="2" height="3" fill="#e7a627"></rect>
+          <rect x="2" y="8" width="2" height="3" fill="#e7a627"></rect>
+          <rect x="2" y="14" width="2" height="3" fill="#e7a627"></rect>
+          <rect x="83" y="2" width="2" height="3" fill="#fff3d1"></rect>
+          <rect x="83" y="8" width="2" height="3" fill="#fff3d1"></rect>
+          <rect x="83" y="14" width="2" height="3" fill="#fff3d1"></rect>
         </pattern>
       </defs>
-      <rect width="100%" height="22" fill="url(#incaWeave)" />
+      <rect width="100%" height="22" fill="url(#incaWeave)"></rect>
     </svg>
   </div>
-  
-  </section>
+</section>
   </div>
     <div class="menu-page-wrapper page-wrapper">
-  <section class="menu-page page-content-3col page" id="page-9">
-    
+  <section class="menu-page page-content-3col" id="page-9">
   <div class="textile-banner-wrap">
     <svg class="textile-banner" viewBox="0 0 1056 22" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <pattern id="incaWeave" width="88" height="22" patternUnits="userSpaceOnUse">
-          <rect width="88" height="22" fill="#88130e" />
-          <rect x="0" y="0" width="6" height="22" fill="#380906" />
-          <rect x="6" y="0" width="8" height="22" fill="#c35016" />
-          <rect x="14" y="0" width="4" height="22" fill="#e7a627" />
-          <rect x="18" y="0" width="12" height="22" fill="#75100c" />
-          <rect x="30" y="0" width="6" height="22" fill="#f5cf6d" />
-          <rect x="36" y="0" width="16" height="22" fill="#ba3c10" />
-          <rect x="52" y="0" width="6" height="22" fill="#380906" />
-          <rect x="58" y="0" width="10" height="22" fill="#e7a627" />
-          <rect x="68" y="0" width="4" height="22" fill="#75100c" />
-          <rect x="72" y="0" width="8" height="22" fill="#c35016" />
-          <rect x="80" y="0" width="8" height="22" fill="#250604" />
-
-          <polygon points="10,3 13,6 10,9 7,6" fill="#fff3d1" />
-          <polygon points="10,13 13,16 10,19 7,16" fill="#fff3d1" />
-          
-          <polygon points="44,2 49,6 44,10 39,6" fill="#fff8e7" />
-          <polygon points="44,12 49,16 44,20 39,16" fill="#f5cf6d" />
-          
-          <rect x="2" y="2" width="2" height="3" fill="#e7a627" />
-          <rect x="2" y="8" width="2" height="3" fill="#e7a627" />
-          <rect x="2" y="14" width="2" height="3" fill="#e7a627" />
-
-          <rect x="83" y="2" width="2" height="3" fill="#fff3d1" />
-          <rect x="83" y="8" width="2" height="3" fill="#fff3d1" />
-          <rect x="83" y="14" width="2" height="3" fill="#fff3d1" />
+          <rect width="88" height="22" fill="#88130e"></rect>
+          <rect x="0" y="0" width="6" height="22" fill="#380906"></rect>
+          <rect x="6" y="0" width="8" height="22" fill="#c35016"></rect>
+          <rect x="14" y="0" width="4" height="22" fill="#e7a627"></rect>
+          <rect x="18" y="0" width="12" height="22" fill="#75100c"></rect>
+          <rect x="30" y="0" width="6" height="22" fill="#f5cf6d"></rect>
+          <rect x="36" y="0" width="16" height="22" fill="#ba3c10"></rect>
+          <rect x="52" y="0" width="6" height="22" fill="#380906"></rect>
+          <rect x="58" y="0" width="10" height="22" fill="#e7a627"></rect>
+          <rect x="68" y="0" width="4" height="22" fill="#75100c"></rect>
+          <rect x="72" y="0" width="8" height="22" fill="#c35016"></rect>
+          <rect x="80" y="0" width="8" height="22" fill="#250604"></rect>
+          <polygon points="10,3 13,6 10,9 7,6" fill="#fff3d1"></polygon>
+          <polygon points="10,13 13,16 10,19 7,16" fill="#fff3d1"></polygon>
+          <polygon points="44,2 49,6 44,10 39,6" fill="#fff8e7"></polygon>
+          <polygon points="44,12 49,16 44,20 39,16" fill="#f5cf6d"></polygon>
+          <rect x="2" y="2" width="2" height="3" fill="#e7a627"></rect>
+          <rect x="2" y="8" width="2" height="3" fill="#e7a627"></rect>
+          <rect x="2" y="14" width="2" height="3" fill="#e7a627"></rect>
+          <rect x="83" y="2" width="2" height="3" fill="#fff3d1"></rect>
+          <rect x="83" y="8" width="2" height="3" fill="#fff3d1"></rect>
+          <rect x="83" y="14" width="2" height="3" fill="#fff3d1"></rect>
         </pattern>
       </defs>
-      <rect width="100%" height="22" fill="url(#incaWeave)" />
+      <rect width="100%" height="22" fill="url(#incaWeave)"></rect>
     </svg>
   </div>
   
-
-    <div class="page-body-grid">
-      <!-- Columna 1: Guarniciones / Sides (15 platos) -->
+  <div class="page-body-grid">
+    <!-- Columna 1: Guarniciones / Sides (15 platos) -->
       <div class="menu-col">
         
       <div class="category-header-badge-wrap">
@@ -4704,72 +4657,57 @@
         </div>
       </div>
 
-            <!-- Columna 2: Bebidas Típicas (7) + Postres Caseros (9) -->
-      <div class="menu-col">
-        
-    <div class="category-header-line">
-      <span class="cat-icon-wrap"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg></span>
-      <span class="cat-title-text">BEBIDAS TÍPICAS</span>
-      <span class="cat-line"></span>
-    </div>
-  
-        <div class="dishes-list">
-          
-    <div class="menu-dish-item">
+    <!-- Columna 2: Bebidas Típicas (7) + Postres Caseros (9) -->
+    <div class="menu-col">
+      <div class="category-header-line">
+        <span class="cat-icon-wrap"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg></span>
+        <span class="cat-title-text">BEBIDAS TÍPICAS</span>
+        <span class="cat-line"></span>
+      </div>
+      <div class="dishes-list">
+        <div class="menu-dish-item">
       <div class="dish-main-row">
         <span class="dish-name">Chicha morada</span>
         <span class="dish-dots"></span>
         <span class="dish-price-pill">$3.99</span>
       </div>
       <div class="dish-desc">Purple corn drink · glass or pitcher</div>
-    </div>
-  
-    <div class="menu-dish-item">
+    </div><div class="menu-dish-item">
       <div class="dish-main-row">
         <span class="dish-name">Agua de manzana</span>
         <span class="dish-dots"></span>
         <span class="dish-price-pill">$3.99</span>
       </div>
       <div class="dish-desc">Apple water · glass or pitcher</div>
-    </div>
-  
-    <div class="menu-dish-item">
+    </div><div class="menu-dish-item">
       <div class="dish-main-row">
         <span class="dish-name">Agua de maracuyá</span>
         <span class="dish-dots"></span>
         <span class="dish-price-pill">$3.99</span>
       </div>
       <div class="dish-desc">Passion fruit water · glass or pitcher</div>
-    </div>
-  
-    <div class="menu-dish-item">
+    </div><div class="menu-dish-item">
       <div class="dish-main-row">
         <span class="dish-name">Agua de piña</span>
         <span class="dish-dots"></span>
         <span class="dish-price-pill">$3.99</span>
       </div>
       <div class="dish-desc">Pineapple water · glass or pitcher</div>
-    </div>
-  
-    <div class="menu-dish-item">
+    </div><div class="menu-dish-item">
       <div class="dish-main-row">
         <span class="dish-name">Emoliente</span>
         <span class="dish-dots"></span>
         <span class="dish-price-pill">$3.99</span>
       </div>
       <div class="dish-desc">Peruvian warm traditional herb beverage</div>
-    </div>
-  
-    <div class="menu-dish-item">
+    </div><div class="menu-dish-item">
       <div class="dish-main-row">
         <span class="dish-name">Inca Kola 2 Litros</span>
         <span class="dish-dots"></span>
         <span class="dish-price-pill">$6.99</span>
       </div>
       <div class="dish-desc">Peruvian golden kola 2-liter bottle</div>
-    </div>
-  
-    <div class="menu-dish-item">
+    </div><div class="menu-dish-item">
       <div class="dish-main-row">
         <span class="dish-name">Sodas en lata (12 oz)</span>
         <span class="dish-dots"></span>
@@ -4777,82 +4715,72 @@
       </div>
       <div class="dish-desc">Canned assorted soda</div>
     </div>
-  
+      </div>
+
+      <div style="margin-top: 6px;">
+        <div class="category-header-line">
+          <span class="cat-icon-wrap"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"></path><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"></path><path d="M2 21h20"></path><line x1="12" y1="7" x2="12" y2="11"></line></svg></span>
+          <span class="cat-title-text">POSTRES CASEROS</span>
+          <span class="cat-line"></span>
         </div>
-        
-        <!-- Postres Caseros en Columna 2 -->
-        <div style="margin-top: 5px;">
-          <div class="category-header-line">
-            <span class="cat-icon-wrap"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"></path><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"></path><path d="M2 21h20"></path><line x1="12" y1="7" x2="12" y2="11"></line></svg></span>
-            <span class="cat-title-text">POSTRES CASEROS</span>
-            <span class="cat-line"></span>
-          </div>
-          <div class="dishes-list">
-            <div class="menu-dish-item">
+        <div class="dishes-list">
+          <div class="menu-dish-item">
               <div class="dish-main-row">
                 <span class="dish-name">Crema Volteada</span>
                 <span class="dish-dots"></span>
                 <span class="dish-price-pill">$7.99</span>
               </div>
               <div class="dish-desc">Traditional caramel egg custard</div>
-            </div>
-            <div class="menu-dish-item">
+            </div><div class="menu-dish-item">
               <div class="dish-main-row">
                 <span class="dish-name">Tres Leches</span>
                 <span class="dish-dots"></span>
                 <span class="dish-price-pill">$7.99</span>
               </div>
               <div class="dish-desc">Rich sponge cake soaked in three milks</div>
-            </div>
-            <div class="menu-dish-item">
+            </div><div class="menu-dish-item">
               <div class="dish-main-row">
                 <span class="dish-name">Torta de chocolate</span>
                 <span class="dish-dots"></span>
                 <span class="dish-price-pill">$7.99</span>
               </div>
               <div class="dish-desc">Classic Peruvian chocolate cake with fudge</div>
-            </div>
-            <div class="menu-dish-item">
+            </div><div class="menu-dish-item">
               <div class="dish-main-row">
                 <span class="dish-name">Picarones</span>
                 <span class="dish-dots"></span>
                 <span class="dish-price-pill">$8.99</span>
               </div>
               <div class="dish-desc">Crispy sweet potato & squash rings with spiced syrup</div>
-            </div>
-            <div class="menu-dish-item">
+            </div><div class="menu-dish-item">
               <div class="dish-main-row">
                 <span class="dish-name">Tiramisú</span>
                 <span class="dish-dots"></span>
                 <span class="dish-price-pill">$7.99</span>
               </div>
               <div class="dish-desc">Coffee-flavoured Italian-Peruvian dessert</div>
-            </div>
-            <div class="menu-dish-item">
+            </div><div class="menu-dish-item">
               <div class="dish-main-row">
                 <span class="dish-name">Gelatina sola</span>
                 <span class="dish-dots"></span>
                 <span class="dish-price-pill">$4.99</span>
               </div>
               <div class="dish-desc">Fruit gelatin dessert</div>
-            </div>
-            <div class="menu-dish-item">
+            </div><div class="menu-dish-item">
               <div class="dish-main-row">
                 <span class="dish-name">Gelatina con flan</span>
                 <span class="dish-dots"></span>
                 <span class="dish-price-pill">$4.99</span>
               </div>
               <div class="dish-desc">Layered gelatin and vanilla flan</div>
-            </div>
-            <div class="menu-dish-item">
+            </div><div class="menu-dish-item">
               <div class="dish-main-row">
                 <span class="dish-name">Mazamorra morada</span>
                 <span class="dish-dots"></span>
                 <span class="dish-price-pill">$4.99</span>
               </div>
               <div class="dish-desc">Purple corn pudding with dried fruit</div>
-            </div>
-            <div class="menu-dish-item">
+            </div><div class="menu-dish-item">
               <div class="dish-main-row">
                 <span class="dish-name">Arroz con leche</span>
                 <span class="dish-dots"></span>
@@ -4860,129 +4788,114 @@
               </div>
               <div class="dish-desc">Creamy Peruvian rice pudding with cinnamon</div>
             </div>
-          </div>
         </div>
       </div>
+    </div>
 
-      <!-- Columna 3: Batidos Tradicionales, Especiales Peruanos y Jugo Natural (14 items con espacio óptimo) -->
-      <div class="menu-col">
-        <div class="category-header-badge-wrap">
-          <div class="category-header-badge">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>
-            <span>BATIDOS &amp; JUGOS NATURALES</span>
-          </div>
+    <!-- Columna 3: Batidos & Jugos Naturales (14 items) -->
+    <div class="menu-col">
+      <div class="category-header-badge-wrap">
+        <div class="category-header-badge">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>
+          <span>BATIDOS &amp; JUGOS NATURALES</span>
         </div>
-        
-        <div class="batidos-sub-legend" style="font-size: 7.2pt; color: #f7a044; font-weight: 800; margin: 2px 0 4px 0; text-transform: uppercase; letter-spacing: 0.02em;">
-          Agua o leche: $6.99 · Leche Carnation: $7.99
-        </div>
-
-        <div class="dishes-list">
-          <div class="menu-dish-item">
+      </div>
+      <div class="batidos-sub-legend" style="font-size: 7.2pt; color: #f7a044; font-weight: 800; margin: 2px 0 4px 0; text-transform: uppercase; letter-spacing: 0.02em;">
+        Agua o leche: $6.99 • Leche Carnation: $7.99
+      </div>
+      <div class="dishes-list">
+        <div class="menu-dish-item">
             <div class="dish-main-row">
               <span class="dish-name">Batido de Piña</span>
               <span class="dish-dots"></span>
               <span class="dish-price-pill">$6.99 / $7.99</span>
             </div>
             <div class="dish-desc">Pineapple smoothie</div>
-          </div>
-          <div class="menu-dish-item">
+          </div><div class="menu-dish-item">
             <div class="dish-main-row">
               <span class="dish-name">Batido de Fresa</span>
               <span class="dish-dots"></span>
               <span class="dish-price-pill">$6.99 / $7.99</span>
             </div>
             <div class="dish-desc">Strawberry smoothie</div>
-          </div>
-          <div class="menu-dish-item">
+          </div><div class="menu-dish-item">
             <div class="dish-main-row">
               <span class="dish-name">Batido de Papaya</span>
               <span class="dish-dots"></span>
               <span class="dish-price-pill">$6.99 / $7.99</span>
             </div>
             <div class="dish-desc">Papaya smoothie</div>
-          </div>
-          <div class="menu-dish-item">
+          </div><div class="menu-dish-item">
             <div class="dish-main-row">
               <span class="dish-name">Batido de Maracuyá</span>
               <span class="dish-dots"></span>
               <span class="dish-price-pill">$6.99 / $7.99</span>
             </div>
             <div class="dish-desc">Passion fruit smoothie</div>
-          </div>
-          <div class="menu-dish-item">
+          </div><div class="menu-dish-item">
             <div class="dish-main-row">
               <span class="dish-name">Batido de Mango</span>
               <span class="dish-dots"></span>
               <span class="dish-price-pill">$6.99 / $7.99</span>
             </div>
             <div class="dish-desc">Mango smoothie</div>
-          </div>
-          <div class="menu-dish-item">
+          </div><div class="menu-dish-item">
             <div class="dish-main-row">
               <span class="dish-name">Batido de Guanábana</span>
               <span class="dish-dots"></span>
               <span class="dish-price-pill">$6.99 / $7.99</span>
             </div>
             <div class="dish-desc">Soursop exotic smoothie</div>
-          </div>
-          <div class="menu-dish-item">
+          </div><div class="menu-dish-item">
             <div class="dish-main-row">
               <span class="dish-name">Batido de Plátano</span>
               <span class="dish-dots"></span>
               <span class="dish-price-pill">$6.99 / $7.99</span>
             </div>
             <div class="dish-desc">Banana smoothie</div>
-          </div>
-          <div class="menu-dish-item">
+          </div><div class="menu-dish-item">
             <div class="dish-main-row">
               <span class="dish-name">Batido de Chocolate</span>
               <span class="dish-dots"></span>
               <span class="dish-price-pill">$6.99 / $7.99</span>
             </div>
             <div class="dish-desc">Chocolate milk smoothie</div>
-          </div>
-          <div class="menu-dish-item">
+          </div><div class="menu-dish-item">
             <div class="dish-main-row">
               <span class="dish-name">Batido de Vainilla</span>
               <span class="dish-dots"></span>
               <span class="dish-price-pill">$6.99 / $7.99</span>
             </div>
             <div class="dish-desc">Vanilla smoothie</div>
-          </div>
-          <div class="menu-dish-item">
+          </div><div class="menu-dish-item">
             <div class="dish-main-row">
               <span class="dish-name">Batido de Lúcuma</span>
               <span class="dish-dots"></span>
               <span class="dish-price-pill">$6.99 / $7.99</span>
             </div>
             <div class="dish-desc">Traditional Peruvian lucuma smoothie</div>
-          </div>
-          <div class="menu-dish-item">
+          </div><div class="menu-dish-item">
             <div class="dish-main-row">
               <span class="dish-name">Batido de Mora</span>
               <span class="dish-dots"></span>
               <span class="dish-price-pill">$6.99 / $7.99</span>
             </div>
             <div class="dish-desc">Blackberry wild smoothie</div>
-          </div>
-          <div class="menu-dish-item">
+          </div><div class="menu-dish-item">
             <div class="dish-main-row">
               <span class="dish-name">Batido Surtido Peruano</span>
               <span class="dish-dots"></span>
               <span class="dish-price-pill">$6.99 / $7.99</span>
             </div>
             <div class="dish-desc">Papaya, strawberry, pineapple, mango, beet, banana</div>
-          </div>
-          <div class="menu-dish-item">
+          </div><div class="menu-dish-item">
             <div class="dish-main-row">
               <span class="dish-name">Batido Especial Peruano</span>
               <span class="dish-dots"></span>
               <span class="dish-price-pill">$6.99 / $7.99</span>
             </div>
             <div class="dish-desc">Strawberry, pineapple, beet, banana, milk, egg, algarrobina</div>
-          </div>
-          <div class="menu-dish-item">
+          </div><div class="menu-dish-item">
             <div class="dish-main-row">
               <span class="dish-name">Jugo de naranja natural</span>
               <span class="dish-dots"></span>
@@ -4990,54 +4903,47 @@
             </div>
             <div class="dish-desc">Freshly squeezed 100% natural orange juice</div>
           </div>
-        </div>
       </div>
     </div>
-    
-    class="footer-gratitude-pill">
+  </div>
+
+    <div class="footer-gratitude-pill">
       <span class="gratitude-es">Agradecimiento del 18% en las mesas con 2 ó más personas</span>
-      <span class="gratitude-bullet">·</span>
+      <span class="gratitude-bullet">•</span>
       <span class="gratitude-en">Gratitude of 18% on table 2 or more people</span>
     </div>
-  
-    
   <div class="textile-banner-wrap">
     <svg class="textile-banner" viewBox="0 0 1056 22" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <pattern id="incaWeave" width="88" height="22" patternUnits="userSpaceOnUse">
-          <rect width="88" height="22" fill="#88130e" />
-          <rect x="0" y="0" width="6" height="22" fill="#380906" />
-          <rect x="6" y="0" width="8" height="22" fill="#c35016" />
-          <rect x="14" y="0" width="4" height="22" fill="#e7a627" />
-          <rect x="18" y="0" width="12" height="22" fill="#75100c" />
-          <rect x="30" y="0" width="6" height="22" fill="#f5cf6d" />
-          <rect x="36" y="0" width="16" height="22" fill="#ba3c10" />
-          <rect x="52" y="0" width="6" height="22" fill="#380906" />
-          <rect x="58" y="0" width="10" height="22" fill="#e7a627" />
-          <rect x="68" y="0" width="4" height="22" fill="#75100c" />
-          <rect x="72" y="0" width="8" height="22" fill="#c35016" />
-          <rect x="80" y="0" width="8" height="22" fill="#250604" />
-
-          <polygon points="10,3 13,6 10,9 7,6" fill="#fff3d1" />
-          <polygon points="10,13 13,16 10,19 7,16" fill="#fff3d1" />
-          
-          <polygon points="44,2 49,6 44,10 39,6" fill="#fff8e7" />
-          <polygon points="44,12 49,16 44,20 39,16" fill="#f5cf6d" />
-          
-          <rect x="2" y="2" width="2" height="3" fill="#e7a627" />
-          <rect x="2" y="8" width="2" height="3" fill="#e7a627" />
-          <rect x="2" y="14" width="2" height="3" fill="#e7a627" />
-
-          <rect x="83" y="2" width="2" height="3" fill="#fff3d1" />
-          <rect x="83" y="8" width="2" height="3" fill="#fff3d1" />
-          <rect x="83" y="14" width="2" height="3" fill="#fff3d1" />
+          <rect width="88" height="22" fill="#88130e"></rect>
+          <rect x="0" y="0" width="6" height="22" fill="#380906"></rect>
+          <rect x="6" y="0" width="8" height="22" fill="#c35016"></rect>
+          <rect x="14" y="0" width="4" height="22" fill="#e7a627"></rect>
+          <rect x="18" y="0" width="12" height="22" fill="#75100c"></rect>
+          <rect x="30" y="0" width="6" height="22" fill="#f5cf6d"></rect>
+          <rect x="36" y="0" width="16" height="22" fill="#ba3c10"></rect>
+          <rect x="52" y="0" width="6" height="22" fill="#380906"></rect>
+          <rect x="58" y="0" width="10" height="22" fill="#e7a627"></rect>
+          <rect x="68" y="0" width="4" height="22" fill="#75100c"></rect>
+          <rect x="72" y="0" width="8" height="22" fill="#c35016"></rect>
+          <rect x="80" y="0" width="8" height="22" fill="#250604"></rect>
+          <polygon points="10,3 13,6 10,9 7,6" fill="#fff3d1"></polygon>
+          <polygon points="10,13 13,16 10,19 7,16" fill="#fff3d1"></polygon>
+          <polygon points="44,2 49,6 44,10 39,6" fill="#fff8e7"></polygon>
+          <polygon points="44,12 49,16 44,20 39,16" fill="#f5cf6d"></polygon>
+          <rect x="2" y="2" width="2" height="3" fill="#e7a627"></rect>
+          <rect x="2" y="8" width="2" height="3" fill="#e7a627"></rect>
+          <rect x="2" y="14" width="2" height="3" fill="#e7a627"></rect>
+          <rect x="83" y="2" width="2" height="3" fill="#fff3d1"></rect>
+          <rect x="83" y="8" width="2" height="3" fill="#fff3d1"></rect>
+          <rect x="83" y="14" width="2" height="3" fill="#fff3d1"></rect>
         </pattern>
       </defs>
-      <rect width="100%" height="22" fill="url(#incaWeave)" />
+      <rect width="100%" height="22" fill="url(#incaWeave)"></rect>
     </svg>
   </div>
-  
-  </section>
+</section>
   </div>
     <div class="menu-page-wrapper page-wrapper">
   <section class="menu-page page-backcover page" id="page-10">
