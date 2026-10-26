@@ -446,12 +446,18 @@ export function App() {
   };
 
   const handleCloseDishDetail = () => {
+    const dishCategory = selectedDishForDetail?.category;
     setSelectedDishForDetail(null);
     if (location.pathname.startsWith('/plato/')) {
-      if (window.history.length > 1) {
+      if (typeof window !== 'undefined' && (window.history.state?.idx > 0 || window.history.length > 1)) {
         navigate(-1);
+      } else if (selectedCategory && selectedCategory !== 'todos') {
+        navigate(`/categoria/${selectedCategory}`);
+      } else if (dishCategory && dishCategory !== 'todos') {
+        setSelectedCategory(dishCategory);
+        navigate(`/categoria/${dishCategory}`);
       } else {
-        navigate(selectedCategory === 'todos' ? '/' : `/categoria/${selectedCategory}`);
+        navigate('/');
       }
     }
   };
@@ -765,10 +771,15 @@ export function App() {
               isFavorite={selectedDishForDetail ? favorites.includes(selectedDishForDetail.id) : false}
               onToggleFavorite={handleToggleFavorite}
               onBack={() => {
-                if (window.history.length > 1) {
+                if (typeof window !== 'undefined' && (window.history.state?.idx > 0 || window.history.length > 1)) {
                   navigate(-1);
+                } else if (selectedCategory && selectedCategory !== 'todos') {
+                  navigate(`/categoria/${selectedCategory}`);
+                } else if (selectedDishForDetail?.category && selectedDishForDetail.category !== 'todos') {
+                  setSelectedCategory(selectedDishForDetail.category);
+                  navigate(`/categoria/${selectedDishForDetail.category}`);
                 } else {
-                  navigate(selectedCategory === 'todos' ? '/' : `/categoria/${selectedCategory}`);
+                  navigate('/');
                 }
               }}
             />

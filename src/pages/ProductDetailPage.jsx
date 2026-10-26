@@ -348,7 +348,22 @@ export function ProductDetailPage({
     carouselRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
   };
 
-  // Botón volver a la carta conecta directamente al Home (/)
+  // Botón volver: regresa a la categoría previa o al historial
+  const handleBack = () => {
+    triggerHaptic(12);
+    if (typeof onBack === 'function') {
+      onBack();
+      return;
+    }
+    if (typeof window !== 'undefined' && (window.history.state?.idx > 0 || window.history.length > 1)) {
+      navigate(-1);
+    } else if (dish?.category && dish.category !== 'todos') {
+      navigate(`/categoria/${dish.category}`);
+    } else {
+      navigate('/');
+    }
+  };
+
   const handleBackToHome = () => {
     triggerHaptic(12);
     navigate('/');
@@ -364,8 +379,8 @@ export function ProductDetailPage({
           <button
             type="button"
             className="product-page-back-arrow-btn"
-            onClick={handleBackToHome}
-            aria-label="Volver a la carta principal"
+            onClick={handleBack}
+            aria-label="Volver a la carta"
           >
             <ArrowLeft size={22} color="var(--rojo)" strokeWidth={2.6} />
           </button>
@@ -432,13 +447,13 @@ export function ProductDetailPage({
       {/* 1. Barra Superior: Flecha Roja al Home al lado de Mi Pedido (solo iconos, sin texto) */}
       <div className="product-page-top-bar">
         <div className="product-page-top-nav-group">
-          {/* Botón Volver a la Carta: Solo Flecha Roja que conecta directamente a Home */}
+          {/* Botón Volver: Flecha que regresa a la categoría previa o al historial */}
           <button
             type="button"
             className="product-page-back-arrow-btn"
-            onClick={handleBackToHome}
-            aria-label="Volver a la carta principal"
-            title="Volver a la carta principal"
+            onClick={handleBack}
+            aria-label="Volver a la carta"
+            title="Volver a la carta"
           >
             <ArrowLeft size={22} color="var(--rojo)" strokeWidth={2.6} />
           </button>
