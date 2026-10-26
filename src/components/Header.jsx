@@ -93,7 +93,7 @@ export function Header({
           poster="https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/assets/bg-restaurant.jpg"
         >
           <source src="https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/assets/header-bg.mp4" type="video/mp4" />
-          <source src="./header-bg.mp4" type="video/mp4" />
+          <source src="/header-bg.mp4" type="video/mp4" />
         </video>
       </div>
 
@@ -163,9 +163,15 @@ export function Header({
         {/* Logo y Marca (Centrado en Móvil con Logo Grande, Izquierda en Escritorio) */}
         <div className="brand-logo-container">
           <img
-            src="./logo/logo.png"
+            src="/logo/logo.png"
             alt="Mi Barrunto - Restaurante Peruano en Paterson NJ"
             className="brand-logo-img"
+            onError={(e) => {
+              const fallback = 'https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/assets/logo.png';
+              if (e.currentTarget.src !== fallback) {
+                e.currentTarget.src = fallback;
+              }
+            }}
           />
           <div className="brand-titles">
             <h1 className="brand-name">Mi Barrunto</h1>

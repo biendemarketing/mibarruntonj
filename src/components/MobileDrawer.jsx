@@ -36,9 +36,15 @@ export function MobileDrawer({
           <div className="mobile-drawer-header-inner">
             <div className="mobile-drawer-brand">
               <img
-                src="./logo/logo.png"
+                src="/logo/logo.png"
                 alt="Mi Barrunto - Comida Criolla y Marina Paterson NJ"
                 className="mobile-drawer-logo"
+                onError={(e) => {
+                  const fallback = 'https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/assets/logo.png';
+                  if (e.currentTarget.src !== fallback) {
+                    e.currentTarget.src = fallback;
+                  }
+                }}
               />
               <div className="mobile-drawer-brand-text">
                 <span className="mobile-drawer-brand-name">Mi Barrunto</span>
@@ -99,7 +105,7 @@ export function MobileDrawer({
         {/* Enlace directo a Carta Imprimible 11x8.5 */}
         <div style={{ padding: '0.75rem 1.25rem 0' }}>
           <a
-            href="./menu_imprimible.html"
+            href="/menu_imprimible.html"
             target="_blank"
             rel="noopener noreferrer"
             className="mobile-drawer-item"

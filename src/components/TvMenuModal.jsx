@@ -182,9 +182,15 @@ export function TvMenuModal({ isOpen, onClose, dishes = [], photoMode = 'complet
       <header className={`tv-menu-header ${showControls ? 'is-visible' : 'is-hidden'}`}>
         <div className="tv-header-brand">
           <img
-            src="./logo/logo.png"
+            src="/logo/logo.png"
             alt="Mi Barrunto"
             className="tv-header-logo"
+            onError={(e) => {
+              const fallback = 'https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/assets/logo.png';
+              if (e.currentTarget.src !== fallback) {
+                e.currentTarget.src = fallback;
+              }
+            }}
           />
           <div className="tv-header-text">
             <h1 className="tv-header-title">Mi Barrunto</h1>

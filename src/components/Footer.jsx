@@ -85,7 +85,7 @@ export function Footer({ photoMode = 'complete', onTogglePhotoMode, onOpenTvMode
 
             {/* Botón Imprimir (Solo Icono, Sin Fondo) */}
             <a
-              href="./menu_imprimible.html"
+              href="/menu_imprimible.html"
               target="_blank"
               rel="noopener noreferrer"
               className="footer-icon-only-btn"
@@ -97,7 +97,7 @@ export function Footer({ photoMode = 'complete', onTogglePhotoMode, onOpenTvMode
 
             {/* Botón Descargar PDF Directo (Descarga el archivo PDF 11x8.5 real sin pasar por impresión) */}
             <a
-              href="./menu_mi_barrunto.pdf"
+              href="/menu_mi_barrunto.pdf"
               download="Carta_Menu_Mi_Barrunto_11x8.5.pdf"
               className="footer-icon-only-btn"
               title="Descargar Carta Menú en PDF (11x8.5)"

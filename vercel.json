@@ -46,6 +46,26 @@
   ],
   "rewrites": [
     {
+      "source": "/(.*)menu_imprimible.html",
+      "destination": "/menu_imprimible.html"
+    },
+    {
+      "source": "/(.*)menu_imprimible_dark.html",
+      "destination": "/menu_imprimible_dark.html"
+    },
+    {
+      "source": "/(.*)menu_mi_barrunto.pdf",
+      "destination": "/menu_mi_barrunto.pdf"
+    },
+    {
+      "source": "/(.*)menu_mi_barrunto_dark.pdf",
+      "destination": "/menu_mi_barrunto_dark.pdf"
+    },
+    {
+      "source": "/(.*)logo/logo.png",
+      "destination": "/logo/logo.png"
+    },
+    {
       "source": "/((?!assets/|fotos/|logo/|LogoPWA/|platos_webp/|fonts/|.*\\..*).*)",
       "destination": "/index.html"
     }
