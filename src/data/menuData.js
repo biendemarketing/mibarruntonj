@@ -76,12 +76,6 @@ export const CATEGORIES_DATA = [
     "icon": "Layers"
   },
   {
-    "id": "bares",
-    "name": "Bares Mi Barrunto",
-    "nameEn": "Combos mar y parrilla",
-    "icon": "Wine"
-  },
-  {
     "id": "broaster",
     "name": "Broaster",
     "nameEn": "Pollo crujiente, alitas y mostritos",

@@ -34,7 +34,6 @@ const categoryDefinitions = [
   { id: 'ceviches', name: 'Ceviches', nameEn: 'Ceviches, tiraditos y leche de tigre', icon: 'Fish' },
   { id: 'mariscos', name: 'Mariscos', nameEn: 'Jaleas, arroces y pastas marinas', icon: 'Fish' },
   { id: 'rondas', name: 'Rondas criollas', nameEn: 'Combinados para compartir', icon: 'Layers' },
-  { id: 'bares', name: 'Bares Mi Barrunto', nameEn: 'Combos mar y parrilla', icon: 'Wine' },
   { id: 'broaster', name: 'Broaster', nameEn: 'Pollo crujiente, alitas y mostritos', icon: 'Drumstick' },
   { id: 'sides', name: 'Guarniciones', nameEn: 'Porciones y salsas artesanales', icon: 'Utensils' },
   { id: 'bebidas', name: 'Bebidas', nameEn: 'Chicha morada, jugos y sodas', icon: 'Coffee' }
