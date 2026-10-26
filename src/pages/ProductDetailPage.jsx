@@ -2,7 +2,8 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
   ArrowLeft, Plus, Minus, ShoppingCart, Share2, 
-  Check, ChevronLeft, ChevronRight, Utensils, Heart
+  Check, ChevronLeft, ChevronRight, Utensils, Heart,
+  Search, X, Maximize2
 } from 'lucide-react';
 import { PlateIcon } from '../components/Icons';
 import { menuRepository } from '../services/MenuRepository';
@@ -55,6 +56,15 @@ export function ProductDetailPage({
   const [copiedShare, setCopiedShare] = useState(false);
   const [addedToast, setAddedToast] = useState('');
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+
+  // Estados de la Barra de Búsqueda superior
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const searchContainerRef = useRef(null);
+
+  // Estados del Lightbox de imágenes a pantalla completa
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
 
   // Variación seleccionada para platos configurables (ej: batidos)
   const [selectedVariation, setSelectedVariation] = useState(() => {
@@ -370,6 +380,56 @@ export function ProductDetailPage({
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  // Platos disponibles para la barra de búsqueda en vista de producto
+  const allDishes = useMemo(() => {
+    return menuRepository.getAllDishes() || [];
+  }, []);
+
+  const searchResults = useMemo(() => {
+    if (!searchQuery.trim()) return [];
+    const q = searchQuery.toLowerCase().trim();
+    return allDishes
+      .filter((d) => {
+        const nameMatch = d.name && d.name.toLowerCase().includes(q);
+        const nameEnMatch = d.nameEn && d.nameEn.toLowerCase().includes(q);
+        const catMatch = (d.categoryName && d.categoryName.toLowerCase().includes(q)) ||
+                         (d.category && d.category.toLowerCase().includes(q));
+        return nameMatch || nameEnMatch || catMatch;
+      })
+      .slice(0, 8);
+  }, [searchQuery, allDishes]);
+
+  // Cerrar dropdown de búsqueda al hacer clic fuera
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (searchContainerRef.current && !searchContainerRef.current.contains(e.target)) {
+        setIsSearchOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, []);
+
+  const handleSelectSearchResult = (targetDish) => {
+    triggerHaptic(14);
+    setSearchQuery('');
+    setIsSearchOpen(false);
+    navigate(`/plato/${targetDish.id}`);
+  };
+
+  const handleSearchKeyDown = (e) => {
+    if (e.key === 'Enter' && searchResults.length > 0) {
+      e.preventDefault();
+      handleSelectSearchResult(searchResults[0]);
+    } else if (e.key === 'Escape') {
+      setIsSearchOpen(false);
+    }
+  };
+
   if (!dish) {
     return (
       <div className="product-page-container">
@@ -392,7 +452,7 @@ export function ProductDetailPage({
   const hasPhoto = dish.hasImage(photoMode);
   const currentImage = dish.getResolvedImage ? dish.getResolvedImage(photoMode) : dish.getImage(photoMode);
 
-  // Galería de imágenes (soporte para múltiples imágenes por plato)
+  // Galería de imágenes (soporte para múltiples imágenes por plato y variaciones)
   const galleryImages = useMemo(() => {
     if (!dish) return [];
     const list = [];
@@ -402,8 +462,70 @@ export function ProductDetailPage({
         if (img && !list.includes(img)) list.push(img);
       });
     }
+    // Incluir imágenes de variaciones de base si existen
+    if (Array.isArray(dish.variations)) {
+      dish.variations.forEach(v => {
+        const vImg = v.image || v.localImage;
+        if (vImg && !list.includes(vImg)) list.push(vImg);
+      });
+    }
     return list;
   }, [dish, currentImage]);
+
+  // Controladores de Lightbox
+  const openLightbox = (index = 0) => {
+    triggerHaptic(12);
+    setLightboxIndex(index >= 0 && index < galleryImages.length ? index : 0);
+    setIsLightboxOpen(true);
+    if (typeof document !== 'undefined') {
+      document.body.style.overflow = 'hidden';
+    }
+  };
+
+  const closeLightbox = () => {
+    triggerHaptic(10);
+    setIsLightboxOpen(false);
+    if (typeof document !== 'undefined') {
+      document.body.style.overflow = '';
+    }
+  };
+
+  const handlePrevLightboxImage = () => {
+    triggerHaptic(10);
+    setLightboxIndex((prev) => (prev <= 0 ? galleryImages.length - 1 : prev - 1));
+  };
+
+  const handleNextLightboxImage = () => {
+    triggerHaptic(10);
+    setLightboxIndex((prev) => (prev >= galleryImages.length - 1 ? 0 : prev + 1));
+  };
+
+  // Atajos de teclado para el Lightbox (Escape, flecha izquierda, flecha derecha)
+  useEffect(() => {
+    if (!isLightboxOpen) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        closeLightbox();
+      } else if (e.key === 'ArrowLeft' && galleryImages.length > 1) {
+        handlePrevLightboxImage();
+      } else if (e.key === 'ArrowRight' && galleryImages.length > 1) {
+        handleNextLightboxImage();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isLightboxOpen, galleryImages.length]);
+
+  // Asegurar restauración de scroll al desmontar
+  useEffect(() => {
+    return () => {
+      if (typeof document !== 'undefined') {
+        document.body.style.overflow = '';
+      }
+    };
+  }, []);
 
   if (!dish) {
     return (
@@ -444,7 +566,7 @@ export function ProductDetailPage({
 
   return (
     <div className="product-page-container">
-      {/* 1. Barra Superior: Flecha Roja al Home al lado de Mi Pedido (solo iconos, sin texto) */}
+      {/* 1. Barra Superior: Flecha Volver, Barra de Búsqueda y Acciones Rápidas */}
       <div className="product-page-top-bar">
         <div className="product-page-top-nav-group">
           {/* Botón Volver: Flecha que regresa a la categoría previa o al historial */}
@@ -457,8 +579,85 @@ export function ProductDetailPage({
           >
             <ArrowLeft size={22} color="var(--rojo)" strokeWidth={2.6} />
           </button>
+        </div>
 
-          {/* Botón Mi Pedido: Al lado de la flecha roja, solo icono de carrito */}
+        {/* Centro: Barra de Búsqueda Interactiva en la Vista de Plato */}
+        <div className="product-page-search-container" ref={searchContainerRef}>
+          <div className="product-page-search-box">
+            <Search size={16} className="product-page-search-icon" />
+            <input
+              type="text"
+              className="product-page-search-input"
+              placeholder="Buscar otros platos en la carta..."
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setIsSearchOpen(true);
+              }}
+              onFocus={() => setIsSearchOpen(true)}
+              onKeyDown={handleSearchKeyDown}
+              aria-label="Buscar platos en la carta"
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                className="product-page-search-clear-btn"
+                onClick={() => setSearchQuery('')}
+                aria-label="Limpiar búsqueda"
+              >
+                <X size={14} />
+              </button>
+            )}
+          </div>
+
+          {/* Dropdown Flotante de Resultados en Tiempo Real */}
+          {isSearchOpen && searchQuery.trim() && (
+            <div className="product-page-search-dropdown">
+              <div className="product-page-search-dropdown-header">
+                <Search size={13} color="var(--rojo)" />
+                <span>Resultados de la carta ({searchResults.length})</span>
+              </div>
+              {searchResults.length > 0 ? (
+                <div className="product-page-search-results-list">
+                  {searchResults.map((item) => {
+                    const itemImg = item.getResolvedImage ? item.getResolvedImage(photoMode) : item.getImage(photoMode);
+                    return (
+                      <div
+                        key={item.id}
+                        className="product-page-search-item"
+                        onClick={() => handleSelectSearchResult(item)}
+                      >
+                        <div className="product-page-search-item-thumb">
+                          {itemImg ? (
+                            <img src={itemImg} alt={item.name} loading="lazy" />
+                          ) : (
+                            <PlateIcon size={18} />
+                          )}
+                        </div>
+                        <div className="product-page-search-item-info">
+                          <span className="product-page-search-item-name">{item.name}</span>
+                          {item.nameEn && (
+                            <span className="product-page-search-item-sub">{item.nameEn}</span>
+                          )}
+                          <span className="product-page-search-item-cat">{item.categoryName || item.category}</span>
+                        </div>
+                        <span className="product-page-search-item-price">{item.getFormattedPrice()}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="product-page-search-empty">
+                  <span>No se encontraron platos para "{searchQuery}"</span>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Lado Derecho: Acciones de Plato y Navegación Stepper */}
+        <div className="product-page-top-actions-group">
+          {/* Botón Mi Pedido: Solo icono */}
           <button
             type="button"
             className={`product-page-top-cart-icon-btn ${cartTotalCount > 0 ? 'has-items' : ''}`}
@@ -499,32 +698,32 @@ export function ProductDetailPage({
               />
             </button>
           )}
-        </div>
 
-        {/* Flechas de navegación entre platos a la derecha */}
-        <div className="product-page-stepper-nav">
-          {prevDish && (
-            <button
-              type="button"
-              className="product-page-nav-arrow"
-              onClick={() => handleNavigateDish(prevDish)}
-              title={`Anterior: ${prevDish.name}`}
-              aria-label="Plato anterior"
-            >
-              <ChevronLeft size={18} />
-            </button>
-          )}
-          {nextDish && (
-            <button
-              type="button"
-              className="product-page-nav-arrow"
-              onClick={() => handleNavigateDish(nextDish)}
-              title={`Siguiente: ${nextDish.name}`}
-              aria-label="Siguiente plato"
-            >
-              <ChevronRight size={18} />
-            </button>
-          )}
+          {/* Flechas de navegación entre platos a la derecha */}
+          <div className="product-page-stepper-nav">
+            {prevDish && (
+              <button
+                type="button"
+                className="product-page-nav-arrow"
+                onClick={() => handleNavigateDish(prevDish)}
+                title={`Anterior: ${prevDish.name}`}
+                aria-label="Plato anterior"
+              >
+                <ChevronLeft size={18} />
+              </button>
+            )}
+            {nextDish && (
+              <button
+                type="button"
+                className="product-page-nav-arrow"
+                onClick={() => handleNavigateDish(nextDish)}
+                title={`Siguiente: ${nextDish.name}`}
+                aria-label="Siguiente plato"
+              >
+                <ChevronRight size={18} />
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
@@ -533,7 +732,12 @@ export function ProductDetailPage({
         {/* Imagen en Alta Resolución con Badge y Galería */}
         <div className="product-page-media">
           {hasPhoto && displayImage ? (
-            <div className="product-page-image-box">
+            <div
+              className="product-page-image-box"
+              onClick={() => openLightbox(selectedImageIndex)}
+              style={{ cursor: 'zoom-in', position: 'relative' }}
+              title="Haz clic para ampliar la foto"
+            >
               <img
                 src={displayImage}
                 alt={`${dish.name} — Mi Barrunto`}
@@ -549,6 +753,21 @@ export function ProductDetailPage({
               <span className="product-page-category-tag">
                 {dish.categoryName || dish.category}
               </span>
+
+              {/* Botón Flotante para abrir Lightbox */}
+              <button
+                type="button"
+                className="product-page-image-zoom-badge"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  openLightbox(selectedImageIndex);
+                }}
+                title="Ampliar imagen a pantalla completa"
+                aria-label="Ampliar imagen"
+              >
+                <Maximize2 size={14} />
+                <span>Ampliar</span>
+              </button>
             </div>
           ) : (
             <div className="product-page-placeholder-box">
@@ -1016,6 +1235,103 @@ export function ProductDetailPage({
         <div className="product-page-floating-toast">
           <Check size={18} />
           <span>{addedToast}</span>
+        </div>
+      )}
+
+      {/* 5. LIGHTBOX MODAL PARA IMÁGENES A PANTALLA COMPLETA */}
+      {isLightboxOpen && (
+        <div
+          className="product-lightbox-overlay"
+          onClick={closeLightbox}
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Visualizador de fotos de ${dish.name}`}
+        >
+          {/* Header del Lightbox */}
+          <div className="product-lightbox-header" onClick={(e) => e.stopPropagation()}>
+            <div className="product-lightbox-title-group">
+              <h3 className="product-lightbox-title">{dish.name}</h3>
+              {dish.nameEn && (
+                <span className="product-lightbox-subtitle">{dish.nameEn}</span>
+              )}
+            </div>
+
+            <div className="product-lightbox-controls">
+              {galleryImages.length > 1 && (
+                <span className="product-lightbox-counter">
+                  {lightboxIndex + 1} / {galleryImages.length}
+                </span>
+              )}
+              <button
+                type="button"
+                className="product-lightbox-close-btn"
+                onClick={closeLightbox}
+                aria-label="Cerrar visor"
+                title="Cerrar visor (Esc)"
+              >
+                <X size={20} />
+              </button>
+            </div>
+          </div>
+
+          {/* Cuerpo del Lightbox con la foto ampliada y flechas de navegación */}
+          <div className="product-lightbox-body" onClick={(e) => e.stopPropagation()}>
+            {galleryImages.length > 1 && (
+              <button
+                type="button"
+                className="product-lightbox-nav-btn prev"
+                onClick={handlePrevLightboxImage}
+                aria-label="Foto anterior"
+                title="Foto anterior (Flecha izquierda)"
+              >
+                <ChevronLeft size={28} />
+              </button>
+            )}
+
+            <div className="product-lightbox-stage">
+              <img
+                src={galleryImages[lightboxIndex] || displayImage}
+                alt={`${dish.name} foto ${lightboxIndex + 1}`}
+                className="product-lightbox-img"
+                onClick={(e) => e.stopPropagation()}
+              />
+            </div>
+
+            {galleryImages.length > 1 && (
+              <button
+                type="button"
+                className="product-lightbox-nav-btn next"
+                onClick={handleNextLightboxImage}
+                aria-label="Foto siguiente"
+                title="Foto siguiente (Flecha derecha)"
+              >
+                <ChevronRight size={28} />
+              </button>
+            )}
+          </div>
+
+          {/* Miniaturas inferiores si hay más de 1 imagen */}
+          {galleryImages.length > 1 && (
+            <div className="product-lightbox-footer" onClick={(e) => e.stopPropagation()}>
+              <div className="product-lightbox-thumbs-track">
+                {galleryImages.map((thumbUrl, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    className={`product-lightbox-thumb ${idx === lightboxIndex ? 'active' : ''}`}
+                    onClick={() => {
+                      triggerHaptic(8);
+                      setLightboxIndex(idx);
+                      setSelectedImageIndex(idx);
+                    }}
+                    aria-label={`Ver foto ${idx + 1}`}
+                  >
+                    <img src={thumbUrl} alt="" />
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
