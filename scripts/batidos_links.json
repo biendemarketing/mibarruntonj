@@ -1,0 +1,17 @@
+{
+  "pina": "https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/batido_de_pina.webp",
+  "fresa": "https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/batido_de_fresa.webp",
+  "papaya": "https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/batido_de_papaya.webp",
+  "maracuya": "https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/batido_de_maracuya.webp",
+  "mango": "https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/batido_de_mango.webp",
+  "guanabana": "https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/batido_de_guanabana.webp",
+  "platano": "https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/batido_de_platano.webp",
+  "chocolate": "https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/batido_de_chocolate.webp",
+  "vainilla": "https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/batido_de_vainilla.webp",
+  "lucuma": "https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/batido_de_lucuma.webp",
+  "mora": "https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/batido_de_mora.webp",
+  "surtido": "https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/batido_surtido_peruano.webp",
+  "especial": "https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/batido_especial_peruano.webp",
+  "var_agua_leche": "https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/variacion_agua_o_leche_regular.webp",
+  "var_carnation": "https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/variacion_leche_carnation.webp"
+}

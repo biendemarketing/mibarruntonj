@@ -495,13 +495,26 @@ export function App() {
     navigate(`/plato/${next.id}`, { replace: true });
   };
 
-  // Handlers del Carrito (OOP) con animación Fly-To-Cart
-  const handleAddToCart = (dish, quantity = 1, note = '', event = null) => {
+  // Handlers del Carrito (OOP) con animación Fly-To-Cart y soporte de variaciones
+  const handleAddToCart = (dish, quantity = 1, note = '', eventOrVariation = null, maybeVariation = null) => {
     triggerHaptic(15);
+    let variation = null;
+    let event = null;
+
+    if (eventOrVariation && (eventOrVariation.nativeEvent || eventOrVariation.clientX !== undefined || eventOrVariation.target)) {
+      event = eventOrVariation;
+      variation = maybeVariation;
+    } else if (eventOrVariation && eventOrVariation.id && (eventOrVariation.price !== undefined || eventOrVariation.name)) {
+      variation = eventOrVariation;
+      event = maybeVariation;
+    } else {
+      variation = maybeVariation;
+    }
+
     if (event) {
       triggerFlyToCart(event);
     }
-    setCart((prevCart) => prevCart.addItem(dish, quantity, note));
+    setCart((prevCart) => prevCart.addItem(dish, quantity, note, variation));
   };
 
   const handleUpdateQuantity = (dishId, quantity) => {

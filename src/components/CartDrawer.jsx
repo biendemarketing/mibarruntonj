@@ -176,8 +176,8 @@ export function CartDrawer({
 
       const orderItems = items.map(item => ({
         dishId: item.dish.id,
-        dishName: item.dish.name,
-        dishPrice: item.dish.price,
+        dishName: typeof item.getDisplayName === 'function' ? item.getDisplayName() : item.dish.name,
+        dishPrice: typeof item.getUnitPrice === 'function' ? item.getUnitPrice() : item.dish.price,
         quantity: item.quantity,
         subtotal: typeof item.getSubtotal === 'function' ? item.getSubtotal() : ((item.dish?.price || 0) * (item.quantity || 1)),
         notes: sanitizeNotes(item.note || '')
@@ -334,19 +334,36 @@ export function CartDrawer({
                       {/* Información del Ítem */}
                       <div className="cart-item-info">
                         <div className="cart-item-header-row">
-                          <h4 className="cart-item-name">{item.dish.name}</h4>
+                          <h4 className="cart-item-name">
+                            {typeof item.getDisplayName === 'function' ? item.getDisplayName() : item.dish.name}
+                          </h4>
                           <button
                             type="button"
                             className="cart-item-remove-btn"
-                            onClick={() => onRemoveItem(item.dish.id)}
+                            onClick={() => onRemoveItem(item.getCartKey ? item.getCartKey() : item.dish.id)}
                             aria-label={`Eliminar ${item.dish.name}`}
                           >
                             <Trash2 size={13} />
                           </button>
                         </div>
 
+                        {item.variation && (
+                          <span style={{
+                            display: 'inline-block',
+                            fontSize: '0.74rem',
+                            fontWeight: 600,
+                            color: 'var(--rojo, #d91c2b)',
+                            background: 'rgba(217, 28, 43, 0.08)',
+                            padding: '2px 8px',
+                            borderRadius: '6px',
+                            marginBottom: '4px'
+                          }}>
+                            Base: {item.variation.name}
+                          </span>
+                        )}
+
                         <span className="cart-item-unit-price">
-                          ${item.dish.price.toFixed(2)} c/u
+                          ${(typeof item.getUnitPrice === 'function' ? item.getUnitPrice() : item.dish.price).toFixed(2)} c/u
                         </span>
 
                         {/* Controles de Cantidad y Subtotal */}
@@ -355,7 +372,7 @@ export function CartDrawer({
                             <button
                               type="button"
                               className="cart-qty-btn"
-                              onClick={() => onUpdateQuantity(item.dish.id, item.quantity - 1)}
+                              onClick={() => onUpdateQuantity(item.getCartKey ? item.getCartKey() : item.dish.id, item.quantity - 1)}
                               aria-label="Disminuir cantidad"
                             >
                               <Minus size={12} />
@@ -364,7 +381,7 @@ export function CartDrawer({
                             <button
                               type="button"
                               className="cart-qty-btn"
-                              onClick={() => onUpdateQuantity(item.dish.id, item.quantity + 1)}
+                              onClick={() => onUpdateQuantity(item.getCartKey ? item.getCartKey() : item.dish.id, item.quantity + 1)}
                               aria-label="Aumentar cantidad"
                             >
                               <Plus size={12} />
@@ -382,13 +399,14 @@ export function CartDrawer({
                           <input
                             type="text"
                             className="cart-item-note-input"
-                            placeholder="Indicación para este plato (ej: sin cebolla)..."
+                            placeholder="Indicación para este plato (ej: sin azúcar)..."
                             value={item.note || ''}
                             onChange={(e) => {
+                              const itemKey = item.getCartKey ? item.getCartKey() : item.dish.id;
                               if (onUpdateItemNote) {
-                                onUpdateItemNote(item.dish.id, e.target.value);
+                                onUpdateItemNote(itemKey, e.target.value);
                               } else if (typeof cart?.updateItemNote === 'function') {
-                                cart.updateItemNote(item.dish.id, e.target.value);
+                                cart.updateItemNote(itemKey, e.target.value);
                               }
                             }}
                           />

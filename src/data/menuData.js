@@ -1,3 +1,28 @@
+export const BATIDOS_VARIATIONS = [
+  {
+    id: 'agua_leche',
+    name: 'Agua o leche regular',
+    nameEn: 'Water or regular milk',
+    subtitle: 'Agua o leche regular',
+    subtitleEn: 'Water or regular milk',
+    price: 6.99,
+    priceDisplay: '$6.99',
+    image: 'https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/variacion_agua_o_leche_regular.webp',
+    localImage: './platos_webp/variacion_agua_o_leche_regular.webp'
+  },
+  {
+    id: 'carnation',
+    name: 'Leche Carnation',
+    nameEn: 'Carnation Evaporated Milk',
+    subtitle: 'Leche evaporada Carnation',
+    subtitleEn: 'Carnation evaporated milk',
+    price: 7.99,
+    priceDisplay: '$7.99',
+    image: 'https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/variacion_leche_carnation.webp',
+    localImage: './platos_webp/variacion_leche_carnation.webp'
+  }
+];
+
 // Auto-generated full menu data for Mi Barrunto
 export const CATEGORIES_DATA = [
   {
@@ -3091,5 +3116,188 @@ export const DISHES_DATA = [
     "image": "fotos/238-jugo-de-naranja.jpg",
     "platosImage": "./platos_webp/jugo_de_naranja.webp",
     "hasPhoto": true
+  },
+  {
+    "id": 250,
+    "name": "Batido de Piña",
+    "nameEn": "Pineapple Smoothie",
+    "glosa": "Piña dorada seleccionada licuada con hielo al punto perfecto",
+    "price": 6.99,
+    "priceDisplay": "$6.99",
+    "category": "batidos",
+    "subcategory": "Batidos tradicionales",
+    "image": "https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/batido_de_pina.webp",
+    "platosImage": "./platos_webp/batido_de_pina.webp",
+    "hasPhoto": true,
+    "variations": BATIDOS_VARIATIONS
+  },
+  {
+    "id": 251,
+    "name": "Batido de Fresa",
+    "nameEn": "Strawberry Smoothie",
+    "glosa": "Fresas frescas seleccionadas licuadas con la base de tu preferencia",
+    "price": 6.99,
+    "priceDisplay": "$6.99",
+    "category": "batidos",
+    "subcategory": "Batidos tradicionales",
+    "image": "https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/batido_de_fresa.webp",
+    "platosImage": "./platos_webp/batido_de_fresa.webp",
+    "hasPhoto": true,
+    "variations": BATIDOS_VARIATIONS
+  },
+  {
+    "id": 252,
+    "name": "Batido de Papaya",
+    "nameEn": "Papaya Smoothie",
+    "glosa": "Papaya fresca licuada a tu gusto",
+    "price": 6.99,
+    "priceDisplay": "$6.99",
+    "category": "batidos",
+    "subcategory": "Batidos tradicionales",
+    "image": "https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/batido_de_papaya.webp",
+    "platosImage": "./platos_webp/batido_de_papaya.webp",
+    "hasPhoto": true,
+    "variations": BATIDOS_VARIATIONS
+  },
+  {
+    "id": 253,
+    "name": "Batido de Maracuyá",
+    "nameEn": "Passion Fruit Smoothie",
+    "glosa": "Pura pulpa aromática de maracuyá fresca y refrescante",
+    "price": 6.99,
+    "priceDisplay": "$6.99",
+    "category": "batidos",
+    "subcategory": "Batidos tradicionales",
+    "image": "https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/batido_de_maracuya.webp",
+    "platosImage": "./platos_webp/batido_de_maracuya.webp",
+    "hasPhoto": true,
+    "variations": BATIDOS_VARIATIONS
+  },
+  {
+    "id": 254,
+    "name": "Batido de Mango",
+    "nameEn": "Mango Smoothie",
+    "glosa": "Mango maduro dulce y cremoso licuado al instante",
+    "price": 6.99,
+    "priceDisplay": "$6.99",
+    "category": "batidos",
+    "subcategory": "Batidos tradicionales",
+    "image": "https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/batido_de_mango.webp",
+    "platosImage": "./platos_webp/batido_de_mango.webp",
+    "hasPhoto": true,
+    "variations": BATIDOS_VARIATIONS
+  },
+  {
+    "id": 255,
+    "name": "Batido de Guanábana",
+    "nameEn": "Soursop Smoothie",
+    "glosa": "Deliciosa pulpa exótica de guanábana natural, cremosa y digestiva",
+    "price": 6.99,
+    "priceDisplay": "$6.99",
+    "category": "batidos",
+    "subcategory": "Batidos tradicionales",
+    "image": "https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/batido_de_guanabana.webp",
+    "platosImage": "./platos_webp/batido_de_guanabana.webp",
+    "hasPhoto": true,
+    "variations": BATIDOS_VARIATIONS
+  },
+  {
+    "id": 256,
+    "name": "Batido de Plátano",
+    "nameEn": "Banana Smoothie",
+    "glosa": "Plátanos de seda maduros licuados, nutritivo y energizante",
+    "price": 6.99,
+    "priceDisplay": "$6.99",
+    "category": "batidos",
+    "subcategory": "Batidos tradicionales",
+    "image": "https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/batido_de_platano.webp",
+    "platosImage": "./platos_webp/batido_de_platano.webp",
+    "hasPhoto": true,
+    "variations": BATIDOS_VARIATIONS
+  },
+  {
+    "id": 257,
+    "name": "Batido de Chocolate",
+    "nameEn": "Chocolate Smoothie",
+    "glosa": "Cremoso y tentador batido de chocolate preparado con selecto cacao",
+    "price": 6.99,
+    "priceDisplay": "$6.99",
+    "category": "batidos",
+    "subcategory": "Batidos tradicionales",
+    "image": "https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/batido_de_chocolate.webp",
+    "platosImage": "./platos_webp/batido_de_chocolate.webp",
+    "hasPhoto": true,
+    "variations": BATIDOS_VARIATIONS
+  },
+  {
+    "id": 258,
+    "name": "Batido de Vainilla",
+    "nameEn": "Vanilla Smoothie",
+    "glosa": "Clásico y suave batido con esencia aromática de vainilla",
+    "price": 6.99,
+    "priceDisplay": "$6.99",
+    "category": "batidos",
+    "subcategory": "Batidos tradicionales",
+    "image": "https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/batido_de_vainilla.webp",
+    "platosImage": "./platos_webp/batido_de_vainilla.webp",
+    "hasPhoto": true,
+    "variations": BATIDOS_VARIATIONS
+  },
+  {
+    "id": 259,
+    "name": "Batido de Lúcuma",
+    "nameEn": "Lucuma Smoothie",
+    "glosa": "El auténtico oro de los Incas: lúcuma peruana cremosa y de sabor inigualable",
+    "price": 6.99,
+    "priceDisplay": "$6.99",
+    "category": "batidos",
+    "subcategory": "Batidos tradicionales",
+    "image": "https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/batido_de_lucuma.webp",
+    "platosImage": "./platos_webp/batido_de_lucuma.webp",
+    "hasPhoto": true,
+    "variations": BATIDOS_VARIATIONS
+  },
+  {
+    "id": 260,
+    "name": "Batido de Mora",
+    "nameEn": "Blackberry Smoothie",
+    "glosa": "Moras silvestres frescas con el balance ideal de acidez y dulzor",
+    "price": 6.99,
+    "priceDisplay": "$6.99",
+    "category": "batidos",
+    "subcategory": "Batidos tradicionales",
+    "image": "https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/batido_de_mora.webp",
+    "platosImage": "./platos_webp/batido_de_mora.webp",
+    "hasPhoto": true,
+    "variations": BATIDOS_VARIATIONS
+  },
+  {
+    "id": 261,
+    "name": "Batido Surtido Peruano",
+    "nameEn": "Peruvian Mixed Fruit Smoothie",
+    "glosa": "El tradicional surtido de las juguerías peruanas: papaya, fresa, piña, mango, beterraga y plátano",
+    "price": 6.99,
+    "priceDisplay": "$6.99",
+    "category": "batidos",
+    "subcategory": "Surtido peruano",
+    "image": "https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/batido_surtido_peruano.webp",
+    "platosImage": "./platos_webp/batido_surtido_peruano.webp",
+    "hasPhoto": true,
+    "variations": BATIDOS_VARIATIONS
+  },
+  {
+    "id": 262,
+    "name": "Batido Especial Peruano",
+    "nameEn": "Peruvian Special Rich Smoothie",
+    "glosa": "El clásico reconstituyente peruano: fresa, piña, mango, beterraga, plátano, leche, huevo y algarrobina",
+    "price": 6.99,
+    "priceDisplay": "$6.99",
+    "category": "batidos",
+    "subcategory": "Especial peruano",
+    "image": "https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/batido_especial_peruano.webp",
+    "platosImage": "./platos_webp/batido_especial_peruano.webp",
+    "hasPhoto": true,
+    "variations": BATIDOS_VARIATIONS
   }
+
 ];

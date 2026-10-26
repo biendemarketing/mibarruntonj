@@ -40,7 +40,8 @@ export class Dish {
     isActive = true,
     hasPhoto = false,
     categoryName = '',
-    categoryNameEn = ''
+    categoryNameEn = '',
+    variations = []
   }) {
     this.id = id;
     this.name = name;
@@ -58,7 +59,17 @@ export class Dish {
     this.hasPhoto = Boolean(this.getImage('complete')) || Boolean(image) || hasPhoto || (this.images.length > 0);
     this.categoryName = categoryName || '';
     this.categoryNameEn = categoryNameEn || '';
+    this.variations = Array.isArray(variations) ? variations : [];
   }
+
+  /**
+   * Indica si el plato tiene variaciones o bases configurables (ej: batidos)
+   * @returns {boolean}
+   */
+  hasVariations() {
+    return Array.isArray(this.variations) && this.variations.length > 0;
+  }
+
 
   /**
    * Indica si el plato tiene fotografía según el modo activo ('complete' v2 o 'curated')

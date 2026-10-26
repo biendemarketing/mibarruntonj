@@ -16,14 +16,19 @@ export class Cart {
   }
 
   /**
-   * Agrega un plato al carrito o incrementa su cantidad
+   * Agrega un plato al carrito o incrementa su cantidad considerando variaciones
    * @param {import('./Dish').Dish} dish 
    * @param {number} quantity 
    * @param {string} note 
+   * @param {Object|null} variation
    * @returns {Cart} nuevo carrito inmutable
    */
-  addItem(dish, quantity = 1, note = '') {
-    const existingIndex = this.items.findIndex(i => i.dish.id === dish.id);
+  addItem(dish, quantity = 1, note = '', variation = null) {
+    const targetKey = variation && variation.id
+      ? `${dish.id}__var_${variation.id}`
+      : String(dish.id);
+
+    const existingIndex = this.items.findIndex(i => i.getCartKey() === targetKey);
     let newItems = [...this.items];
 
     if (existingIndex > -1) {
@@ -31,56 +36,63 @@ export class Cart {
       const updatedItem = new CartItem(
         existing.dish,
         existing.quantity + quantity,
-        note || existing.note
+        note || existing.note,
+        existing.variation || variation
       );
       newItems[existingIndex] = updatedItem;
     } else {
-      newItems.push(new CartItem(dish, quantity, note));
+      newItems.push(new CartItem(dish, quantity, note, variation));
     }
 
     return new Cart(newItems, this.customer.clone());
   }
 
   /**
-   * Elimina un plato del carrito
-   * @param {number} dishId 
+   * Elimina un ítem del carrito por id de plato o clave de variación
+   * @param {string|number} identifier 
    * @returns {Cart}
    */
-  removeItem(dishId) {
-    const newItems = this.items.filter(i => i.dish.id !== dishId);
+  removeItem(identifier) {
+    const strId = String(identifier);
+    const newItems = this.items.filter(i => i.getCartKey() !== strId && String(i.dish.id) !== strId);
     return new Cart(newItems, this.customer.clone());
   }
 
   /**
    * Actualiza la cantidad de un ítem
-   * @param {number} dishId 
+   * @param {string|number} identifier 
    * @param {number} qty 
    * @returns {Cart}
    */
-  updateQuantity(dishId, qty) {
+  updateQuantity(identifier, qty) {
     const quantity = Number(qty);
+    const strId = String(identifier);
+
     if (quantity <= 0) {
-      return this.removeItem(dishId);
+      return this.removeItem(identifier);
     }
+
     const newItems = this.items.map(item => {
-      if (item.dish.id === dishId) {
-        return new CartItem(item.dish, quantity, item.note);
+      if (item.getCartKey() === strId || String(item.dish.id) === strId) {
+        return new CartItem(item.dish, quantity, item.note, item.variation);
       }
       return item;
     });
+
     return new Cart(newItems, this.customer.clone());
   }
 
   /**
    * Actualiza la nota especial de un ítem
-   * @param {number} dishId 
+   * @param {string|number} identifier 
    * @param {string} note 
    * @returns {Cart}
    */
-  updateItemNote(dishId, note) {
+  updateItemNote(identifier, note) {
+    const strId = String(identifier);
     const newItems = this.items.map(item => {
-      if (item.dish.id === dishId) {
-        return new CartItem(item.dish, item.quantity, note);
+      if (item.getCartKey() === strId || String(item.dish.id) === strId) {
+        return new CartItem(item.dish, item.quantity, note, item.variation);
       }
       return item;
     });
@@ -116,21 +128,27 @@ export class Cart {
   }
 
   /**
-   * Obtiene un ítem por id de plato
-   * @param {number} dishId 
+   * Obtiene un ítem por id de plato o clave completa
+   * @param {string|number} identifier 
+   * @param {string|null} [variationId]
    * @returns {CartItem|undefined}
    */
-  getItem(dishId) {
-    return this.items.find(i => i.dish.id === dishId);
+  getItem(identifier, variationId = null) {
+    if (variationId) {
+      return this.items.find(i => String(i.dish.id) === String(identifier) && i.variation?.id === variationId);
+    }
+    const strId = String(identifier);
+    return this.items.find(i => i.getCartKey() === strId || String(i.dish.id) === strId);
   }
 
   /**
    * Retorna cantidad del plato en el carrito (0 si no está)
-   * @param {number} dishId 
+   * @param {string|number} identifier 
+   * @param {string|null} [variationId]
    * @returns {number}
    */
-  getItemQuantity(dishId) {
-    const item = this.getItem(dishId);
+  getItemQuantity(identifier, variationId = null) {
+    const item = this.getItem(identifier, variationId);
     return item ? item.quantity : 0;
   }
 
@@ -143,7 +161,7 @@ export class Cart {
   }
 
   /**
-   * Total a pagar en dólares
+   * Total a pagar en dólares sumando cada ítem con su variación respectiva
    * @returns {number}
    */
   getTotalPrice() {
@@ -230,7 +248,7 @@ export class Cart {
    * @returns {Cart}
    */
   clone() {
-    const clonedItems = this.items.map(i => new CartItem(i.dish, i.quantity, i.note));
+    const clonedItems = this.items.map(i => new CartItem(i.dish, i.quantity, i.note, i.variation));
     return new Cart(clonedItems, this.customer.clone());
   }
 }

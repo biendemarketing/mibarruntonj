@@ -1,6 +1,6 @@
 import { Dish } from '../models/Dish';
 import { Category } from '../models/Category';
-import { CATEGORIES_DATA, DISHES_DATA } from '../data/menuData';
+import { CATEGORIES_DATA, DISHES_DATA, BATIDOS_VARIATIONS } from '../data/menuData';
 import platosMap from '../data/platosMap.json';
 import { WhatsAppService } from './WhatsAppService';
 import { menuService } from './supabase';
@@ -76,6 +76,9 @@ export class MenuRepository {
           }
           if (remote.is_available !== undefined) existing.isAvailable = remote.is_available;
           if (remote.is_active !== undefined) existing.isActive = remote.is_active;
+          if ((!existing.variations || existing.variations.length === 0) && existing.category === 'batidos' && Number(existing.id) >= 250) {
+            existing.variations = BATIDOS_VARIATIONS;
+          }
         } else {
           const cat = this.categoriesMap.get(remote.category_id);
           const newDish = new Dish({
@@ -90,7 +93,8 @@ export class MenuRepository {
             isAvailable: remote.is_available,
             isActive: remote.is_active,
             categoryName: cat ? cat.name : '',
-            categoryNameEn: cat ? cat.nameEn : ''
+            categoryNameEn: cat ? cat.nameEn : '',
+            variations: (remote.category_id === 'batidos' && Number(remote.id) >= 250) ? BATIDOS_VARIATIONS : []
           });
           this.dishes.push(newDish);
           this.dishesMap.set(numId, newDish);

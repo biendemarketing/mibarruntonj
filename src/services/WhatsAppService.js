@@ -52,9 +52,11 @@ export class WhatsAppService {
     msg += `DETALLE DEL PEDIDO:\n`;
 
     cart.items.forEach((item, index) => {
-      msg += `\n${index + 1}. [${item.quantity}x] ${item.dish.name} - ${item.getFormattedSubtotal()}`;
-      if (item.dish.nameEn) {
-        msg += `\n   (${item.dish.nameEn})`;
+      const name = typeof item.getDisplayName === 'function' ? item.getDisplayName() : item.dish.name;
+      const nameEn = typeof item.getDisplayNameEn === 'function' ? item.getDisplayNameEn() : (item.dish.nameEn || '');
+      msg += `\n${index + 1}. [${item.quantity}x] ${name} - ${item.getFormattedSubtotal()}`;
+      if (nameEn) {
+        msg += `\n   (${nameEn})`;
       }
       if (item.note && item.note.trim()) {
         msg += `\n   Nota: ${item.note.trim()}`;

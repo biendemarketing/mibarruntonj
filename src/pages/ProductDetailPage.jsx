@@ -56,6 +56,13 @@ export function ProductDetailPage({
   const [addedToast, setAddedToast] = useState('');
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
+  // Variación seleccionada para platos configurables (ej: batidos)
+  const [selectedVariation, setSelectedVariation] = useState(() => {
+    if (cartItem && cartItem.variation) return cartItem.variation;
+    if (dish && dish.variations && dish.variations.length > 0) return dish.variations[0];
+    return null;
+  });
+
   // Estado de acompañamientos seleccionados en la página: { [dishId]: quantity }
   const [selectedAccompaniments, setSelectedAccompaniments] = useState({});
 
@@ -114,6 +121,7 @@ export function ProductDetailPage({
     setCopiedShare(false);
     setSelectedAccompaniments({});
     setSelectedImageIndex(0);
+    setSelectedVariation(currentInCart?.variation || (dish?.variations && dish.variations.length > 0 ? dish.variations[0] : null));
   }, [dish?.id, photoMode]);
 
   // Lista de Acompañamientos Recomendados (Bebidas + Postres Tradicionales Peruanos)
@@ -182,8 +190,12 @@ export function ProductDetailPage({
       .filter(Boolean);
   }, [selectedAccompaniments]);
 
-  // Cálculo en tiempo real de subtotales
-  const mainDishSubtotal = dish ? dish.price * quantity : 0;
+  // Cálculo en tiempo real de subtotales considerando la variación elegida
+  const activeUnitPrice = selectedVariation && selectedVariation.price !== undefined
+    ? Number(selectedVariation.price)
+    : (Number(dish?.price) || 0);
+  const activeFormattedPrice = `$${activeUnitPrice.toFixed(2)}`;
+  const mainDishSubtotal = activeUnitPrice * quantity;
   
   const accompanimentsSubtotal = useMemo(() => {
     return selectedAccompanimentsList.reduce((sum, item) => sum + item.itemSubtotal, 0);
@@ -226,8 +238,8 @@ export function ProductDetailPage({
 
   const handleMainAddToCart = (e) => {
     triggerHaptic(20);
-    // 1. Agregar plato principal
-    onAddToCart(dish, quantity, note, e);
+    // 1. Agregar plato principal con su variación de base
+    onAddToCart(dish, quantity, note, e, selectedVariation);
 
     // 2. Agregar cada acompañamiento seleccionado
     for (const item of selectedAccompanimentsList) {
@@ -238,9 +250,10 @@ export function ProductDetailPage({
       .map((item) => `${item.name}${item.qty > 1 ? ` (x${item.qty})` : ''}`)
       .join(', ');
 
+    const varLabel = selectedVariation ? ` (${selectedVariation.name})` : '';
     const toastText = addedItemsSummary
-      ? `¡${dish.name} + ${addedItemsSummary} agregados a tu pedido!`
-      : `¡${dish.name} agregado a tu pedido!`;
+      ? `¡${dish.name}${varLabel} + ${addedItemsSummary} agregados a tu pedido!`
+      : `¡${dish.name}${varLabel} agregado a tu pedido!`;
 
     setAddedToast(toastText);
     setTimeout(() => setAddedToast(''), 3000);
@@ -526,14 +539,92 @@ export function ProductDetailPage({
             {dish.nameEn && (
               <p className="product-page-subtitle-en">{dish.nameEn}</p>
             )}
+            {dish.glosa && dish.glosa !== dish.nameEn && (
+              <p className="product-page-glosa-text">{dish.glosa}</p>
+            )}
           </div>
+
+          {/* Variaciones de Base (Batidos: Agua/Leche regular vs Leche Carnation) */}
+          {dish.variations && dish.variations.length > 0 && (
+            <div className="product-page-variations-section">
+              <h3 className="product-page-variations-title">
+                <span>Elige tu base</span>
+                <span className="product-page-variations-sub-title">(Choose your base)</span>
+              </h3>
+              <div className="product-page-variations-list">
+                {dish.variations.map((v) => {
+                  const isSelected = selectedVariation?.id === v.id;
+                  const varImg = v.image || v.localImage;
+                  return (
+                    <div
+                      key={v.id}
+                      className={`product-page-variation-card ${isSelected ? 'selected' : ''}`}
+                      onClick={() => {
+                        triggerHaptic(12);
+                        setSelectedVariation(v);
+                      }}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          triggerHaptic(12);
+                          setSelectedVariation(v);
+                        }
+                      }}
+                    >
+                      <div className="variation-radio-indicator">
+                        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                          <circle cx="11" cy="11" r="10" stroke={isSelected ? 'var(--rojo, #d91c2b)' : 'var(--text-muted, #8e8e93)'} strokeWidth="2" />
+                          {isSelected && (
+                            <circle cx="11" cy="11" r="5.5" fill="var(--rojo, #d91c2b)" />
+                          )}
+                        </svg>
+                      </div>
+
+                      {varImg && (
+                        <div className="variation-thumbnail-box">
+                          <img
+                            src={varImg}
+                            alt={v.name}
+                            className="variation-thumbnail-img"
+                            onError={(e) => {
+                              if (v.localImage && e.currentTarget.src !== v.localImage) {
+                                e.currentTarget.src = v.localImage;
+                              }
+                            }}
+                          />
+                        </div>
+                      )}
+
+                      <div className="variation-text-col">
+                        <span className="variation-name">{v.name}</span>
+                        {v.subtitle && (
+                          <span className="variation-subtitle">{v.subtitle}</span>
+                        )}
+                        {v.nameEn && v.nameEn !== v.name && (
+                          <span className="variation-en-desc">{v.nameEn}</span>
+                        )}
+                      </div>
+
+                      <div className="variation-price-col">
+                        <span className="variation-price-tag">
+                          {v.priceDisplay || `$${Number(v.price).toFixed(2)}`}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           <div className="product-page-price-row">
             <div className="product-page-price-main">
-              <span className="product-page-price-amount">{dish.getFormattedPrice()}</span>
-              {dish.price > 0 && quantity > 1 && (
+              <span className="product-page-price-amount">{activeFormattedPrice}</span>
+              {activeUnitPrice > 0 && quantity > 1 && (
                 <span className="product-page-subtotal-badge">
-                  Subtotal: ${(dish.price * quantity).toFixed(2)}
+                  Subtotal: ${(activeUnitPrice * quantity).toFixed(2)}
                 </span>
               )}
             </div>
@@ -586,7 +677,7 @@ export function ProductDetailPage({
             {selectedAccompanimentsList.length > 0 && (
               <div className="product-page-combined-breakdown">
                 <div className="breakdown-line">
-                  <span>{dish.name} (x{quantity})</span>
+                  <span>{dish.name}{selectedVariation ? ` (${selectedVariation.name})` : ''} (x{quantity})</span>
                   <span>${mainDishSubtotal.toFixed(2)}</span>
                 </div>
                 {selectedAccompanimentsList.map((item) => (

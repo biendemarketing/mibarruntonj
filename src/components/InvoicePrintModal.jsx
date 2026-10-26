@@ -37,7 +37,11 @@ function InvoicePrintModalContent({
   const [notes, setNotes] = useState(initialData?.notes || '');
   const [items, setItems] = useState(
     initialData?.items && initialData.items.length > 0 
-      ? initialData.items 
+      ? initialData.items.map(it => ({
+          ...it,
+          name: it.dishName || it.dish_name || it.name || 'Plato',
+          unit_price: Number(it.dishPrice || it.dish_price || it.unit_price || it.price || 0)
+        }))
       : [{ name: 'Consumo General', quantity: 1, unit_price: 0, subtotal: 0 }]
   );
 
