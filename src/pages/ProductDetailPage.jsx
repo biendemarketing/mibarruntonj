@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
   ArrowLeft, Plus, Minus, ShoppingCart, Share2, 
@@ -65,6 +66,7 @@ export function ProductDetailPage({
   // Estados del Lightbox de imágenes a pantalla completa
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
+  const [lightboxActiveSrc, setLightboxActiveSrc] = useState(null);
 
   // Variación seleccionada para platos configurables (ej: batidos)
   const [selectedVariation, setSelectedVariation] = useState(() => {
@@ -472,10 +474,13 @@ export function ProductDetailPage({
     return list;
   }, [dish, currentImage]);
 
-  // Controladores de Lightbox
-  const openLightbox = (index = 0) => {
+  // Controladores de Lightbox con fuente de imagen garantizada
+  const openLightbox = (index = 0, specificSrc = null) => {
     triggerHaptic(12);
-    setLightboxIndex(index >= 0 && index < galleryImages.length ? index : 0);
+    const safeIdx = index >= 0 && index < galleryImages.length ? index : 0;
+    setLightboxIndex(safeIdx);
+    const targetSrc = specificSrc || galleryImages[safeIdx] || currentImage || (dish.getLocalFallbackImage ? dish.getLocalFallbackImage(photoMode) : null);
+    setLightboxActiveSrc(targetSrc);
     setIsLightboxOpen(true);
     if (typeof document !== 'undefined') {
       document.body.style.overflow = 'hidden';
@@ -492,12 +497,20 @@ export function ProductDetailPage({
 
   const handlePrevLightboxImage = () => {
     triggerHaptic(10);
-    setLightboxIndex((prev) => (prev <= 0 ? galleryImages.length - 1 : prev - 1));
+    setLightboxIndex((prev) => {
+      const nextIdx = prev <= 0 ? galleryImages.length - 1 : prev - 1;
+      setLightboxActiveSrc(galleryImages[nextIdx] || currentImage);
+      return nextIdx;
+    });
   };
 
   const handleNextLightboxImage = () => {
     triggerHaptic(10);
-    setLightboxIndex((prev) => (prev >= galleryImages.length - 1 ? 0 : prev + 1));
+    setLightboxIndex((prev) => {
+      const nextIdx = prev >= galleryImages.length - 1 ? 0 : prev + 1;
+      setLightboxActiveSrc(galleryImages[nextIdx] || currentImage);
+      return nextIdx;
+    });
   };
 
   // Atajos de teclado para el Lightbox (Escape, flecha izquierda, flecha derecha)
@@ -734,7 +747,11 @@ export function ProductDetailPage({
           {hasPhoto && displayImage ? (
             <div
               className="product-page-image-box"
-              onClick={() => openLightbox(selectedImageIndex)}
+              onClick={(e) => {
+                const imgEl = e.currentTarget.querySelector('img');
+                const loadedSrc = (imgEl && imgEl.currentSrc) || (imgEl && imgEl.src) || displayImage;
+                openLightbox(selectedImageIndex, loadedSrc);
+              }}
               style={{ cursor: 'zoom-in', position: 'relative' }}
               title="Haz clic para ampliar la foto"
             >
@@ -760,7 +777,10 @@ export function ProductDetailPage({
                 className="product-page-image-zoom-badge"
                 onClick={(e) => {
                   e.stopPropagation();
-                  openLightbox(selectedImageIndex);
+                  const container = e.currentTarget.closest('.product-page-image-box');
+                  const imgEl = container ? container.querySelector('img') : null;
+                  const loadedSrc = (imgEl && imgEl.currentSrc) || (imgEl && imgEl.src) || displayImage;
+                  openLightbox(selectedImageIndex, loadedSrc);
                 }}
                 title="Ampliar imagen a pantalla completa"
                 aria-label="Ampliar imagen"
@@ -1238,8 +1258,8 @@ export function ProductDetailPage({
         </div>
       )}
 
-      {/* 5. LIGHTBOX MODAL PARA IMÁGENES A PANTALLA COMPLETA */}
-      {isLightboxOpen && (
+      {/* 5. LIGHTBOX MODAL PARA IMÁGENES A PANTALLA COMPLETA USANDO PORTAL */}
+      {isLightboxOpen && typeof document !== 'undefined' && createPortal(
         <div
           className="product-lightbox-overlay"
           onClick={closeLightbox}
@@ -1290,10 +1310,16 @@ export function ProductDetailPage({
 
             <div className="product-lightbox-stage">
               <img
-                src={galleryImages[lightboxIndex] || displayImage}
+                src={lightboxActiveSrc || galleryImages[lightboxIndex] || displayImage}
                 alt={`${dish.name} foto ${lightboxIndex + 1}`}
                 className="product-lightbox-img"
                 onClick={(e) => e.stopPropagation()}
+                onError={(e) => {
+                  const fallback = dish.getLocalFallbackImage ? dish.getLocalFallbackImage(photoMode) : null;
+                  if (fallback && e.currentTarget.src !== fallback) {
+                    e.currentTarget.src = fallback;
+                  }
+                }}
               />
             </div>
 
@@ -1323,6 +1349,7 @@ export function ProductDetailPage({
                       triggerHaptic(8);
                       setLightboxIndex(idx);
                       setSelectedImageIndex(idx);
+                      setLightboxActiveSrc(thumbUrl);
                     }}
                     aria-label={`Ver foto ${idx + 1}`}
                   >
@@ -1332,7 +1359,8 @@ export function ProductDetailPage({
               </div>
             </div>
           )}
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
