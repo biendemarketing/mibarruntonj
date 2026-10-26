@@ -124,23 +124,83 @@ export function ProductDetailPage({
     setSelectedVariation(currentInCart?.variation || (dish?.variations && dish.variations.length > 0 ? dish.variations[0] : null));
   }, [dish?.id, photoMode]);
 
-  // Lista de Acompañamientos Recomendados (Bebidas + Postres Tradicionales Peruanos)
+  // Lista de Acompañamientos Recomendados según tipo de plato y con rotación dinámica
   const accompaniments = useMemo(() => {
     if (!dish) return [];
     
-    let targetIds;
-    if (dish.category === 'bebidas') {
-      targetIds = [240, 241, 242, 243, 247, 248, 170, 71];
-    } else if (dish.category === 'postres') {
-      targetIds = [238, 235, 233, 234, 236, 237];
+    const isDrinkOrBatido = 
+      dish.category === 'bebidas' || 
+      dish.category === 'batidos' || 
+      dish.subcategory?.toLowerCase().includes('jugo') || 
+      dish.subcategory?.toLowerCase().includes('batido') ||
+      dish.subcategory?.toLowerCase().includes('bebida');
+
+    const isDessert = dish.category === 'postres';
+
+    let pool = [];
+
+    if (isDrinkOrBatido) {
+      // Para bebidas/batidos: NUNCA sugerir otras bebidas.
+      // Recomendar platos criollos, marinos, sopas y postres destacados con foto.
+      pool = [
+        196, // Arroz con pollo huancaína + ceviche
+        197, // Tallarín Rojo huancaína + ceviche
+        199, // Cau-Cau con huancaína + ceviche
+        201, // Seco de Costilla + ceviche
+        129, // Pollada con huancaína y ensalada
+        208, // Pollo chori-broaster
+        212, // Pollo broaster mostrito a lo pobre
+        50,  // Caldo de gallina con papa amarilla
+        62,  // Aguadito de mariscos
+        240, // Crema Volteada
+        241, // Tres Leches
+        242, // Torta de chocolate
+        243  // Picarones
+      ];
+    } else if (isDessert) {
+      // Para postres: Sugerir bebidas calientes, emoliente, chicha y batidos refrescantes
+      pool = [
+        237, // Emoliente
+        238, // Inca Kola 2L
+        249, // Jugo de naranja natural
+        259, // Batido de Lúcuma
+        250, // Batido de Piña
+        253, // Batido de Maracuyá
+        251, // Batido de Fresa
+        254  // Batido de Mango
+      ];
     } else {
-      targetIds = [238, 235, 233, 234, 240, 241, 242, 243, 247, 248, 236, 237];
+      // Para platos de comida (criollos, marinos, sopas, carnes):
+      // Sugerir refrescantes batidos, jugos naturales, bebidas tradicionales y postres
+      pool = [
+        250, // Batido de Piña
+        251, // Batido de Fresa
+        252, // Batido de Papaya
+        253, // Batido de Maracuyá
+        254, // Batido de Mango
+        259, // Batido de Lúcuma
+        261, // Batido Surtido Peruano
+        249, // Jugo de naranja natural
+        238, // Inca Kola 2L
+        235, // Agua de maracuyá
+        236, // Agua de piña
+        237, // Emoliente
+        240, // Crema Volteada
+        241, // Tres Leches
+        242, // Torta de chocolate
+        243  // Picarones
+      ];
     }
 
-    return targetIds
+    // Rotar según el ID del plato para evitar listas fijas y repetitivas
+    const offset = Math.abs((dish.id * 5) % pool.length);
+    const rotatedPool = [...pool.slice(offset), ...pool.slice(0, offset)];
+
+    return rotatedPool
       .filter((id) => id !== dish.id)
       .map((id) => menuRepository.getDishById(id))
-      .filter(Boolean);
+      .filter(Boolean)
+      .slice(0, 8);
   }, [dish]);
 
   // Platos de la misma categoría para la sección "Más especialidades de..."
@@ -539,7 +599,7 @@ export function ProductDetailPage({
             {dish.nameEn && (
               <p className="product-page-subtitle-en">{dish.nameEn}</p>
             )}
-            {dish.glosa && dish.glosa !== dish.nameEn && (
+            {dish.category !== 'batidos' && dish.glosa && dish.glosa !== dish.nameEn && (
               <p className="product-page-glosa-text">{dish.glosa}</p>
             )}
           </div>
@@ -599,9 +659,6 @@ export function ProductDetailPage({
 
                       <div className="variation-text-col">
                         <span className="variation-name">{v.name}</span>
-                        {v.subtitle && (
-                          <span className="variation-subtitle">{v.subtitle}</span>
-                        )}
                         {v.nameEn && v.nameEn !== v.name && (
                           <span className="variation-en-desc">{v.nameEn}</span>
                         )}

@@ -505,7 +505,11 @@ export function CartDrawer({
                   <select
                     className="cart-select-input"
                     value={customer.dinerCount || 2}
-                    onChange={(e) => onUpdateCustomerField('dinerCount', parseInt(e.target.value, 10))}
+                    onChange={(e) => {
+                      const val = parseInt(e.target.value, 10);
+                      onUpdateCustomerField('dinerCount', val);
+                      setGratuityManualOverride(val > 2 ? true : false);
+                    }}
                   >
                     <option value={1}>1 persona (Individual)</option>
                     <option value={2}>2 personas</option>
@@ -529,6 +533,112 @@ export function CartDrawer({
                     <option value="tarjeta">Tarjeta de Crédito / Débito</option>
                     <option value="transferencia">Transferencia Bancaria</option>
                   </select>
+                </div>
+
+                {/* Gratuity / Propina de Servicio - Prominente debajo del método de pago con Switch Toggle */}
+                <div
+                  className="cart-field-group"
+                  style={{
+                    marginTop: '0.35rem',
+                    marginBottom: '0.35rem'
+                  }}
+                >
+                  <div
+                    onClick={() => {
+                      triggerHaptic(12);
+                      setGratuityManualOverride(!isGratuityActive);
+                    }}
+                    style={{
+                      backgroundColor: isGratuityActive ? '#ecfdf5' : '#f8f7f5',
+                      borderRadius: '16px',
+                      padding: '0.95rem 1.1rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      gap: '0.85rem',
+                      boxShadow: isGratuityActive 
+                        ? '0 4px 18px rgba(5, 150, 105, 0.15)' 
+                        : '0 2px 10px rgba(0,0,0,0.04)',
+                      border: 'none !important',
+                      cursor: 'pointer',
+                      userSelect: 'none',
+                      transition: 'all 0.22s ease'
+                    }}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        triggerHaptic(12);
+                        setGratuityManualOverride(!isGratuityActive);
+                      }
+                    }}
+                  >
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', flex: 1 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', flexWrap: 'wrap' }}>
+                        <span style={{ fontWeight: 800, fontSize: '0.96rem', color: isGratuityActive ? '#065f46' : '#1f1e1c' }}>
+                          Propina de Servicio (Gratuity 16%)
+                        </span>
+                        {dinerCount > 2 && (
+                          <span
+                            style={{
+                              fontSize: '0.68rem',
+                              fontWeight: 800,
+                              color: '#059669',
+                              backgroundColor: '#d1fae5',
+                              padding: '0.15rem 0.5rem',
+                              borderRadius: '9999px',
+                              border: 'none !important'
+                            }}
+                          >
+                            Auto +2 personas
+                          </span>
+                        )}
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8rem', color: isGratuityActive ? '#047857' : '#78716c' }}>
+                        <span>
+                          {isGratuityActive
+                            ? `Monto sugerido incluido: +$${gratuityAmount.toFixed(2)}`
+                            : (dinerCount > 2 ? 'Recomendado para grupos (puedes activarlo)' : 'Opcional para agradecer la atención del equipo')}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Toggle Switch a lado del texto */}
+                    <div
+                      style={{
+                        width: '54px',
+                        height: '30px',
+                        borderRadius: '9999px',
+                        backgroundColor: isGratuityActive ? '#059669' : '#cbd5e1',
+                        padding: '3px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        flexShrink: 0,
+                        transition: 'background-color 0.25s ease',
+                        boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.12)'
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: '24px',
+                          height: '24px',
+                          borderRadius: '50%',
+                          backgroundColor: '#ffffff',
+                          boxShadow: '0 2px 6px rgba(0,0,0,0.22)',
+                          transform: isGratuityActive ? 'translateX(24px)' : 'translateX(0px)',
+                          transition: 'transform 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}
+                      >
+                        {isGratuityActive && (
+                          <CheckCircle2 size={13} color="#059669" strokeWidth={3} />
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Notas generales */}
@@ -586,7 +696,7 @@ export function CartDrawer({
                   </div>
                 )}
 
-                {/* 4. Gratuity 16% (Opcional, auto para >2 personas) */}
+                {/* 4. Gratuity 16% */}
                 <div
                   style={{
                     display: 'flex',
@@ -596,56 +706,30 @@ export function CartDrawer({
                     borderTop: '1px dashed #e2dbce'
                   }}
                 >
-                  <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                      <span style={{ fontWeight: 700, color: isGratuityActive ? '#059669' : '#6b635b' }}>
-                        Gratuity (16%):
-                      </span>
-                      {dinerCount > 2 && (
-                        <span
-                          style={{
-                            fontSize: '0.66rem',
-                            fontWeight: 800,
-                            color: '#059669',
-                            backgroundColor: '#ecfdf5',
-                            padding: '0.1rem 0.4rem',
-                            borderRadius: '9999px'
-                          }}
-                        >
-                          Auto +2 pers.
-                        </span>
-                      )}
-                    </div>
-                    <span style={{ fontSize: '0.68rem', color: '#8c827a' }}>
-                      {isGratuityActive ? 'Opcional (puedes quitarlo)' : 'Opcional (puedes incluirlo)'}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                    <span style={{ fontWeight: 700, color: isGratuityActive ? '#059669' : '#6b635b' }}>
+                      Gratuity (16%):
                     </span>
+                    {isGratuityActive && (
+                      <span
+                        style={{
+                          fontSize: '0.66rem',
+                          fontWeight: 800,
+                          color: '#059669',
+                          backgroundColor: '#ecfdf5',
+                          padding: '0.1rem 0.4rem',
+                          borderRadius: '9999px',
+                          border: 'none !important'
+                        }}
+                      >
+                        {dinerCount > 2 ? 'Auto +2 pers.' : 'Incluido'}
+                      </span>
+                    )}
                   </div>
 
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-                    <span style={{ fontWeight: 800, color: isGratuityActive ? '#059669' : '#8c827a' }}>
-                      {isGratuityActive ? `+$${gratuityAmount.toFixed(2)}` : '$0.00'}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        triggerHaptic(8);
-                        setGratuityManualOverride(!isGratuityActive);
-                      }}
-                      style={{
-                        fontSize: '0.7rem',
-                        fontWeight: 800,
-                        padding: '0.2rem 0.5rem',
-                        borderRadius: '8px',
-                        backgroundColor: isGratuityActive ? '#fee2e2' : '#ecfdf5',
-                        color: isGratuityActive ? '#dc2626' : '#059669',
-                        border: 'none !important',
-                        cursor: 'pointer',
-                        transition: 'all 0.15s ease'
-                      }}
-                    >
-                      {isGratuityActive ? 'Quitar' : 'Incluir (16%)'}
-                    </button>
-                  </div>
+                  <span style={{ fontWeight: 800, color: isGratuityActive ? '#059669' : '#8c827a' }}>
+                    {isGratuityActive ? `+$${gratuityAmount.toFixed(2)}` : '$0.00'}
+                  </span>
                 </div>
 
                 {/* 5. Total Final a Pagar */}
