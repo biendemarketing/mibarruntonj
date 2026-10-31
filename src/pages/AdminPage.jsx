@@ -5,7 +5,7 @@ import {
   ExternalLink, Lock, Check, ShieldCheck, KeyRound, 
   Clock, Volume2, VolumeX, ArrowLeft, RefreshCw, Printer,
   Menu, X, Mail, ShieldAlert, Sparkles, ChefHat, User,
-  UserCheck, Eye, EyeOff, ShoppingBag, Receipt, CheckSquare
+  UserCheck, Eye, EyeOff, ShoppingBag, Receipt, CheckSquare, TrendingUp
 } from 'lucide-react';
 import { 
   ordersService, menuService, tablesService, 
@@ -21,6 +21,7 @@ import { AdminCategoriesTab } from '../components/AdminCategoriesTab';
 import { AdminTablesTab } from '../components/AdminTablesTab';
 import { AdminWaitersTab } from '../components/AdminWaitersTab';
 import { AdminPrintableTab } from '../components/AdminPrintableTab';
+import { AdminAnalyticsTab } from '../components/AdminAnalyticsTab';
 import { 
   playOrderNotificationSound, 
   unlockAudio, 
@@ -442,7 +443,8 @@ export function AdminPage() {
       { id: 'dishes', label: 'Gestión de Platos', icon: Utensils, badge: dishes.length },
       { id: 'tables', label: 'Mesas & QR', icon: QrCode, badge: tables.length },
       { id: 'waiters', label: 'Personal & Meseros', icon: Users, badge: waiters.length },
-      { id: 'printable', label: 'Menú Imprimible', icon: Printer }
+      { id: 'analytics', label: 'Analíticas & Visitas', icon: TrendingUp },
+        { id: 'printable', label: 'Menú Imprimible', icon: Printer }
     ];
 
     // La cuenta admin siempre puede ver todo

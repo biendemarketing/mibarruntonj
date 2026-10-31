@@ -5,11 +5,15 @@ import { SpeedInsights } from '@vercel/speed-insights/react';
 import { AlertConfirmProvider } from './context/AlertConfirmContext';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { purgePwaAndUnregisterSW } from './registerSW';
+import { visitTracker } from './utils/visitTracker';
 import App from './App.jsx';
 import './index.css';
 
 // Purga inmediata de Service Workers y cachés antiguas
 purgePwaAndUnregisterSW();
+
+// Inicializar telemetría de visitas para el panel de administración
+visitTracker.init();
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

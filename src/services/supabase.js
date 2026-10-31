@@ -103,6 +103,13 @@ export const ordersService = {
       if (itemsError) console.error('Error insertando items del pedido:', itemsError);
     }
 
+    // Registrar conversión en analíticas internas del restaurante
+    try {
+      import('../utils/visitTracker').then(({ visitTracker }) => {
+        visitTracker.recordOrderConversion(numTotal);
+      }).catch(() => {});
+    } catch (_) {}
+
     return order;
   },
 
