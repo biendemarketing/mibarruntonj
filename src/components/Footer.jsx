@@ -1,8 +1,10 @@
 import React from 'react';
 import { InstagramIcon, FacebookIcon, WhatsAppIcon, DoorDashIcon, UberEatsIcon } from './Icons';
 import { Phone, MapPin, Printer, Download, Images, Tv, Clock } from 'lucide-react';
+import { useLanguage } from '../utils/i18n';
 
 export function Footer({ photoMode = 'complete', onTogglePhotoMode, onOpenTvMode }) {
+  const { isEn } = useLanguage();
   return (
     <footer className="footer-compact-black">
       <div className="footer-compact-inner">
@@ -10,24 +12,24 @@ export function Footer({ photoMode = 'complete', onTogglePhotoMode, onOpenTvMode
         <div className="footer-compact-grid">
           {/* Horario de Atención */}
           <div className="footer-compact-card">
-            <span className="footer-compact-label">Horario</span>
+            <span className="footer-compact-label">{isEn ? 'Hours' : 'Horario'}</span>
             <p className="footer-compact-text">
-              <strong style={{ color: '#ff5c6c', fontWeight: 800 }}>Atención 24 Horas</strong><br />
-              Abierto todos los días
+              <strong style={{ color: '#ff5c6c', fontWeight: 800 }}>{isEn ? 'Open 24 Hours' : 'Atención 24 Horas'}</strong><br />
+              {isEn ? 'Open every day' : 'Abierto todos los días'}
             </p>
           </div>
 
           {/* Servicios */}
           <div className="footer-compact-card">
-            <span className="footer-compact-label">Servicios</span>
+            <span className="footer-compact-label">{isEn ? 'Services' : 'Servicios'}</span>
             <p className="footer-compact-text">
-              Desayunos · Almuerzos · Cenas · Productos peruanos y más
+              {isEn ? 'Breakfast · Lunch · Dinner · Peruvian grocery & more' : 'Desayunos · Almuerzos · Cenas · Productos peruanos y más'}
             </p>
           </div>
 
           {/* Dirección */}
           <div className="footer-compact-card">
-            <span className="footer-compact-label">Dirección</span>
+            <span className="footer-compact-label">{isEn ? 'Address' : 'Dirección'}</span>
             <a
               href="https://maps.google.com/?q=21+Mill+st,+Paterson,+NJ+07011"
               target="_blank"
@@ -41,7 +43,7 @@ export function Footer({ photoMode = 'complete', onTogglePhotoMode, onOpenTvMode
 
           {/* Teléfono */}
           <div className="footer-compact-card">
-            <span className="footer-compact-label">Teléfono</span>
+            <span className="footer-compact-label">{isEn ? 'Phone' : 'Teléfono'}</span>
             <a href="tel:9736533749" className="footer-compact-link">
               <Phone size={14} color="var(--naranja)" />
               <span style={{ fontWeight: 700 }}>(973) 653-3749</span>
@@ -110,7 +112,7 @@ export function Footer({ photoMode = 'complete', onTogglePhotoMode, onOpenTvMode
           {/* Redes Sociales Oficiales */}
           <div className="footer-social-icons-group">
             <a
-              href="https://www.facebook.com/cebicheriamibarrunto"
+              href="https://www.facebook.com/people/Mi-barrunto-NJ/100063740263668/"
               target="_blank"
               rel="noopener noreferrer"
               className="footer-social-circle"
@@ -120,7 +122,7 @@ export function Footer({ photoMode = 'complete', onTogglePhotoMode, onOpenTvMode
               <FacebookIcon size={16} />
             </a>
             <a
-              href="https://www.instagram.com/cevicheria.mibarrunto/"
+              href="https://www.instagram.com/miibarruntonj/"
               target="_blank"
               rel="noopener noreferrer"
               className="footer-social-circle"
@@ -175,7 +177,7 @@ export function Footer({ photoMode = 'complete', onTogglePhotoMode, onOpenTvMode
 
         {/* Copyright */}
         <div className="footer-compact-bottom">
-          <p style={{ color: '#d1d5db' }}>Mi Barrunto © Todos los derechos reservados · Paterson, NJ</p>
+          <p style={{ color: '#d1d5db' }}>{isEn ? 'Mi Barrunto © All rights reserved · Paterson, NJ' : 'Mi Barrunto © Todos los derechos reservados · Paterson, NJ'}</p>
         </div>
       </div>
     </footer>

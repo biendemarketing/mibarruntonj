@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Search, ShoppingCart, Moon, Sun, Menu, LayoutGrid, Grid2X2, Rows3, MapPin, Phone, SlidersHorizontal, Heart, Clock } from 'lucide-react';
 import { FacebookIcon, InstagramIcon, WhatsAppIcon, PlateIcon } from './Icons';
+import { useLanguage } from '../utils/i18n';
 
 const POPULAR_SEARCHES = [
   'Ceviche Mi Barrunto',
@@ -32,6 +33,7 @@ export function Header({
   onOpenDetail,
   photoMode = 'complete'
 }) {
+  const { isEn, toggleLang } = useLanguage();
   const totalCount = cart.getTotalCount();
   const formattedTotal = cart.getFormattedTotal();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -149,8 +151,8 @@ export function Header({
             <span className="header-top-divider">·</span>
             <span className="header-top-hours" title="Horario de atención continuo">
               <Clock size={12} color="var(--naranja)" />
-              <span className="header-hours-full">Atención 24 Horas</span>
-              <span className="header-hours-short">24 Horas</span>
+              <span className="header-hours-full">{isEn ? 'Open 24 Hours' : 'Atención 24 Horas'}</span>
+              <span className="header-hours-short">{isEn ? '24/7' : '24 Horas'}</span>
             </span>
             <span className="header-top-divider">·</span>
             <a href="tel:9736533749" className="header-top-phone-link" title="Llamar a Mi Barrunto">
@@ -190,6 +192,22 @@ export function Header({
             >
               <WhatsAppIcon size={14} />
             </a>
+            <button
+              type="button"
+              onClick={toggleLang}
+              className="header-top-social-circle"
+              aria-label={isEn ? 'Cambiar idioma a Español' : 'Switch language to English'}
+              title={isEn ? 'Cambiar a Español' : 'Switch to English'}
+              style={{
+                fontSize: '0.66rem',
+                fontWeight: 800,
+                padding: '0 6px !important',
+                width: 'auto !important',
+                letterSpacing: '0.03em'
+              }}
+            >
+              {isEn ? 'ES' : 'EN'}
+            </button>
           </div>
         </div>
       </div>
@@ -214,7 +232,7 @@ export function Header({
           />
           <div className="brand-titles">
             <h1 className="brand-name">Mi Barrunto</h1>
-            <p className="brand-tagline">Comida criolla peruana</p>
+            <p className="brand-tagline">{isEn ? 'Authentic Peruvian Cuisine' : 'Comida criolla peruana'}</p>
           </div>
         </div>
 
@@ -227,7 +245,7 @@ export function Header({
             <input
               type="text"
               className="header-search-input"
-              placeholder="Buscar platos en la carta..."
+              placeholder={isEn ? 'Search dishes on the menu...' : 'Buscar platos en la carta...'}
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
               onFocus={() => setIsSearchFocused(true)}
@@ -267,7 +285,7 @@ export function Header({
           {isSearchFocused && !searchQuery.trim() && (
             <div className="header-popular-searches-popover">
               <div className="popular-searches-header">
-                <span>Búsquedas populares</span>
+                <span>{isEn ? 'Popular searches' : 'Búsquedas populares'}</span>
               </div>
               <div className="popular-searches-chips">
                 {POPULAR_SEARCHES.map((term) => (
@@ -294,7 +312,7 @@ export function Header({
             <div className="header-search-results-popover">
               <div className="search-results-popover-header">
                 <Search size={14} color="var(--rojo)" />
-                <span>Resultados de la carta ({matchingDishes.length})</span>
+                <span>{isEn ? `Menu results (${matchingDishes.length})` : `Resultados de la carta (${matchingDishes.length})`}</span>
               </div>
 
               {matchingDishes.length > 0 ? (
@@ -353,7 +371,7 @@ export function Header({
                 </div>
               ) : (
                 <div className="search-results-popover-empty">
-                  <p>No se encontraron platos para "{searchQuery}"</p>
+                  <p>{isEn ? `No dishes found for "${searchQuery}"` : `No se encontraron platos para "${searchQuery}"`}</p>
                 </div>
               )}
             </div>
@@ -365,7 +383,7 @@ export function Header({
               <div className="filter-popover-header">
                 <div className="filter-popover-title-row">
                   <SlidersHorizontal size={14} color="var(--naranja)" />
-                  <span className="filter-popover-title">Filtros de la Carta</span>
+                  <span className="filter-popover-title">{isEn ? 'Menu Filters' : 'Filtros de la Carta'}</span>
                 </div>
                 {hasActiveFilters && (
                   <button
@@ -386,13 +404,13 @@ export function Header({
                     checked={filters.onlyWithPhoto || false}
                     onChange={(e) => onUpdateFilter('onlyWithPhoto', e.target.checked)}
                   />
-                  <span>Solo platos con foto</span>
+                  <span>{isEn ? 'Only dishes with photo' : 'Solo platos con foto'}</span>
                 </label>
               </div>
 
               {/* Opción 2: Rango de Precio */}
               <div className="filter-popover-group">
-                <span className="filter-popover-label">Rango de precio:</span>
+                <span className="filter-popover-label">{isEn ? 'Price range:' : 'Rango de precio:'}</span>
                 <div className="filter-chips-grid">
                   <button
                     type="button"
@@ -427,7 +445,7 @@ export function Header({
 
               {/* Opción 3: Ordenar por Precio */}
               <div className="filter-popover-group">
-                <span className="filter-popover-label">Ordenar por precio:</span>
+                <span className="filter-popover-label">{isEn ? 'Sort by price:' : 'Ordenar por precio:'}</span>
                 <div className="filter-chips-grid">
                   <button
                     type="button"

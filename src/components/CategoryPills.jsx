@@ -1,6 +1,7 @@
 import React from 'react';
 import { Utensils, LayoutGrid, Grid2X2, Rows3, ChevronRight } from 'lucide-react';
 import { triggerHaptic } from '../utils/haptics';
+import { useLanguage } from '../utils/i18n';
 
 export function CategoryPills({
   categories,
@@ -13,6 +14,7 @@ export function CategoryPills({
   onToggleViewMode,
   onSetViewMode
 }) {
+  const { isEn } = useLanguage();
   // Auto-scroll del botón activo dentro del contenedor del sidebar
   React.useEffect(() => {
     if (activeScrollCategory) {
@@ -35,7 +37,7 @@ export function CategoryPills({
       <div className="sidebar-nav-header">
         <div className="sidebar-nav-title-wrap">
           <Utensils size={17} color="var(--rojo)" />
-          <h2 className="sidebar-nav-title">Categorías</h2>
+          <h2 className="sidebar-nav-title">{isEn ? 'Categories' : 'Categorías'}</h2>
         </div>
 
         {/* Selector de Vistas en el Sidebar de Escritorio */}
@@ -91,7 +93,7 @@ export function CategoryPills({
           className={`category-nav-item ${(selectedCategory === 'todos' && !activeScrollCategory && !showFavoritesOnly) ? 'active' : ''}`}
           onClick={() => handleCategoryClick('todos')}
         >
-          <span className="category-nav-name">Toda la Carta</span>
+          <span className="category-nav-name">{isEn ? 'Full Menu' : 'Toda la Carta'}</span>
           <ChevronRight size={15} className="category-nav-arrow" />
         </button>
 
@@ -109,7 +111,7 @@ export function CategoryPills({
               className={`category-nav-item ${isCurrentActive ? 'active' : ''}`}
               onClick={() => handleCategoryClick(cat.id)}
             >
-              <span className="category-nav-name">{cat.name}</span>
+              <span className="category-nav-name">{isEn && cat.nameEn ? cat.nameEn : cat.name}</span>
               <ChevronRight size={15} className="category-nav-arrow" />
             </button>
           );

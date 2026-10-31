@@ -34,8 +34,10 @@ import { triggerHaptic } from './utils/haptics';
 import { triggerFlyToCart } from './utils/flyToCart';
 import { useAlertConfirm } from './context/AlertConfirmContext';
 import { getDishGridClass } from './utils/gridOptimizer';
+import { useLanguage } from './utils/i18n';
 
 export function App() {
+  const { isEn } = useLanguage();
   const { showAlert, showConfirm } = useAlertConfirm();
   const location = useLocation();
   const navigate = useNavigate();
@@ -856,7 +858,7 @@ export function App() {
                 <RotateCcw size={18} />
               </div>
               <div className="reorder-text-wrap">
-                <strong className="reorder-title">¿Deseas repetir tu último pedido?</strong>
+                <strong className="reorder-title">{isEn ? 'Would you like to repeat your last order?' : '¿Deseas repetir tu último pedido?'}</strong>
                 <span className="reorder-desc">
                   {lastOrder.items?.length || 0} {(lastOrder.items?.length || 0) === 1 ? 'plato guardado' : 'platos guardados'} de tu visita anterior
                 </span>
@@ -868,7 +870,7 @@ export function App() {
                 className="reorder-action-btn"
                 onClick={handleReorderLast}
               >
-                Pedir de nuevo
+                {isEn ? 'Order again' : 'Pedir de nuevo'}
               </button>
               <button
                 type="button"
@@ -893,7 +895,7 @@ export function App() {
               className="search-results-clear"
               onClick={() => handleSearchChange('')}
             >
-              Ver toda la carta ✕
+              {isEn ? 'View full menu ✕' : 'Ver toda la carta ✕'}
             </button>
           </div>
         )}
@@ -909,7 +911,7 @@ export function App() {
               className="search-results-clear"
               onClick={() => handleSelectCategory('todos')}
             >
-              Ver toda la carta ✕
+              {isEn ? 'View full menu ✕' : 'Ver toda la carta ✕'}
             </button>
           </div>
         )}
@@ -1031,10 +1033,10 @@ export function App() {
                 </div>
                 <div className="category-header-center">
                   <h2 className="category-title">
-                    <span>{category.name}</span>
+                    <span>{isEn && category.nameEn ? category.nameEn : category.name}</span>
                   </h2>
                   {category.nameEn && (
-                    <span className="category-title-en">{category.nameEn}</span>
+                    <span className="category-title-en">{isEn ? category.name : category.nameEn}</span>
                   )}
                 </div>
                 <div className="category-header-double-line" aria-hidden="true">

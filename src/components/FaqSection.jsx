@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useLanguage } from '../utils/i18n';
 import { HelpCircle, ChevronDown, ChevronUp, MapPin, Clock, Phone, Sparkles } from 'lucide-react';
 
 const FAQS_DATA = {
@@ -57,7 +58,7 @@ const FAQS_DATA = {
 };
 
 export function FaqSection() {
-  const [lang, setLang] = useState('es');
+  const { lang, setLang } = useLanguage();
   const [openIndex, setOpenIndex] = useState(null);
   const [isExpanded, setIsExpanded] = useState(false);
 

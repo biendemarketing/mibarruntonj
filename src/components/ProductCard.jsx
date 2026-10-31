@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Plus, Minus, Heart, Check } from 'lucide-react';
 import { PlateIcon } from './Icons';
+import { useLanguage } from '../utils/i18n';
 
 export function ProductCard({
   dish,
@@ -19,6 +20,7 @@ export function ProductCard({
   onToggleSelect,
   layoutClassName = ''
 }) {
+  const { isEn } = useLanguage();
   const hasPhoto = dish.hasImage(photoMode);
   const currentImage = dish.getResolvedImage ? dish.getResolvedImage(photoMode) : dish.getImage(photoMode);
   const isCompact = viewMode === 'compact';
@@ -279,7 +281,7 @@ export function ProductCard({
               aria-label={`Agregar ${dish.name}`}
             >
               <Plus size={13} className="btn-add-cart-icon" />
-              <span className="btn-add-cart-text">Ordenar</span>
+              <span className="btn-add-cart-text">{isEn ? 'Order' : 'Ordenar'}</span>
             </button>
           )}
         </div>

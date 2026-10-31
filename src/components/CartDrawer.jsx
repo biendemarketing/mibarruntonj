@@ -27,6 +27,7 @@ import {
 import { sanitizeCustomerName, sanitizePhone, sanitizeNotes } from '../utils/sanitizer';
 import { useAlertConfirm } from '../context/AlertConfirmContext';
 import { triggerHaptic } from '../utils/haptics';
+import { useLanguage } from '../utils/i18n';
 
 export function CartDrawer({
   isOpen,
@@ -40,6 +41,7 @@ export function CartDrawer({
   photoMode = 'complete',
   onOrderPlaced
 }) {
+  const { isEn } = useLanguage();
   const { showAlert } = useAlertConfirm();
   const [isClosing, setIsClosing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -249,9 +251,9 @@ export function CartDrawer({
               <div className="cart-drawer-icon-wrap">
                 <ShoppingCart size={19} />
               </div>
-              <h2 className="cart-drawer-heading">Mi Pedido</h2>
+              <h2 className="cart-drawer-heading">{isEn ? 'My Order' : 'Mi Pedido'}</h2>
               <span className="cart-drawer-count-badge">
-                {totalCount} {totalCount === 1 ? 'plato' : 'platos'}
+                {totalCount} {isEn ? (totalCount === 1 ? 'dish' : 'dishes') : (totalCount === 1 ? 'plato' : 'platos')}
               </span>
             </div>
             <button
@@ -272,9 +274,9 @@ export function CartDrawer({
               <div className="cart-empty-icon-wrap">
                 <ShoppingCart size={42} />
               </div>
-              <p className="cart-empty-title">Tu pedido está vacío</p>
+              <p className="cart-empty-title">{isEn ? 'Your order is empty' : 'Tu pedido está vacío'}</p>
               <p className="cart-empty-desc">
-                Explora nuestra carta y agrega los mejores platos peruanos.
+                {isEn ? 'Explore our menu and add your favorite Peruvian dishes.' : 'Explora nuestra carta y agrega los mejores platos peruanos.'}
               </p>
             </div>
           ) : (
@@ -291,7 +293,7 @@ export function CartDrawer({
                   title="Vaciar todo el pedido"
                 >
                   <Trash2 size={13} />
-                  <span>Vaciar</span>
+                  <span>{isEn ? 'Clear' : 'Vaciar'}</span>
                 </button>
               </div>
 
@@ -420,13 +422,13 @@ export function CartDrawer({
 
               {/* Datos de Entrega y Pedido */}
               <div className="cart-checkout-card">
-                <span className="cart-checkout-title">Datos para tu Mesa y Cocina</span>
+                <span className="cart-checkout-title">{isEn ? 'Table & Kitchen Details' : 'Datos para tu Mesa y Cocina'}</span>
 
                 {/* Nombre del cliente */}
                 <div className="cart-field-group">
                   <label className="cart-field-label">
                     <User size={13} />
-                    <span>Tu Nombre *:</span>
+                    <span>{isEn ? 'Your Name *:' : 'Tu Nombre *:'}</span>
                   </label>
                   <input
                     type="text"
@@ -442,7 +444,7 @@ export function CartDrawer({
                 <div className="cart-field-group">
                   <label className="cart-field-label">
                     <UtensilsCrossed size={13} />
-                    <span>Modalidad:</span>
+                    <span>{isEn ? 'Order Type:' : 'Modalidad:'}</span>
                   </label>
                   <div className="cart-order-type-segmented">
                     <button
@@ -450,14 +452,14 @@ export function CartDrawer({
                       className={`cart-order-type-btn ${customer.orderType === 'mesa' ? 'active' : ''}`}
                       onClick={() => onUpdateCustomerField('orderType', 'mesa')}
                     >
-                      En Mesa
+                      {isEn ? 'Dine-In' : 'En Mesa'}
                     </button>
                     <button
                       type="button"
                       className={`cart-order-type-btn ${customer.orderType === 'llevar' ? 'active' : ''}`}
                       onClick={() => onUpdateCustomerField('orderType', 'llevar')}
                     >
-                      Para Llevar
+                      {isEn ? 'Takeout' : 'Para Llevar'}
                     </button>
                     <button
                       type="button"
@@ -523,7 +525,7 @@ export function CartDrawer({
 
                 {/* Método de Pago */}
                 <div className="cart-field-group">
-                  <label className="cart-field-label">Forma de Pago:</label>
+                  <label className="cart-field-label">{isEn ? 'Payment Method:' : 'Forma de Pago:'}</label>
                   <select
                     className="cart-select-input"
                     value={customer.paymentMethod || 'efectivo'}
@@ -744,7 +746,7 @@ export function CartDrawer({
                     marginTop: '0.15rem'
                   }}
                 >
-                  <span style={{ fontSize: '0.95rem', fontWeight: 900, color: '#1f1e1c' }}>Total a Pagar:</span>
+                  <span style={{ fontSize: '0.95rem', fontWeight: 900, color: '#1f1e1c' }}>{isEn ? 'Total to Pay:' : 'Total a Pagar:'}</span>
                   <span style={{ fontSize: '1.22rem', fontWeight: 900, color: 'var(--rojo, #d91c2b)' }}>
                     ${finalTotal.toFixed(2)}
                   </span>
@@ -779,7 +781,7 @@ export function CartDrawer({
                 ) : (
                   <Send size={18} />
                 )}
-                <span>{isSubmitting ? 'Enviando comanda a cocina...' : 'Confirmar y Enviar Pedido a Cocina'}</span>
+                <span>{isSubmitting ? (isEn ? 'Sending order to kitchen...' : 'Enviando comanda a cocina...') : (isEn ? 'Confirm & Send Order to Kitchen' : 'Confirmar y Enviar Pedido a Cocina')}</span>
               </button>
             </div>
           </div>

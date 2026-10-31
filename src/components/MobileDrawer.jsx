@@ -1,6 +1,7 @@
 import './MobileDrawer.css';
 import React, { useEffect } from 'react';
 import { X, ChevronRight, Utensils, MapPin, Phone, Printer, Clock } from 'lucide-react';
+import { useLanguage } from '../utils/i18n';
 
 export function MobileDrawer({
   isOpen,
@@ -9,6 +10,7 @@ export function MobileDrawer({
   selectedCategory,
   onSelectCategory
 }) {
+  const { isEn } = useLanguage();
   // Bloquear scroll de fondo al abrir el drawer móvil
   useEffect(() => {
     if (!isOpen) return;
@@ -75,7 +77,7 @@ export function MobileDrawer({
           >
             <span className="mobile-drawer-item-label">
               <Utensils size={16} className="mobile-drawer-icon" />
-              <span>Toda la Carta</span>
+              <span>{isEn ? 'Full Menu' : 'Toda la Carta'}</span>
             </span>
             <ChevronRight size={16} className="mobile-drawer-arrow" />
           </button>
@@ -91,7 +93,7 @@ export function MobileDrawer({
               }}
             >
               <span className="mobile-drawer-item-label">
-                <span>{cat.name}</span>
+                <span>{isEn && cat.nameEn ? cat.nameEn : cat.name}</span>
               </span>
               <div className="mobile-drawer-item-end">
                 {cat.dishes && cat.dishes.length > 0 && (
@@ -122,7 +124,7 @@ export function MobileDrawer({
             }}
           >
             <Printer size={16} />
-            <span>Carta Imprimible (11x8.5)</span>
+            <span>{isEn ? 'Printable Menu (11x8.5)' : 'Carta Imprimible (11x8.5)'}</span>
           </a>
         </div>
 
@@ -131,7 +133,7 @@ export function MobileDrawer({
           <div className="mobile-drawer-footer-inner" style={{ flexDirection: 'column', gap: '0.45rem', alignItems: 'center' }}>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.78rem', color: 'var(--rojo)', fontWeight: 800 }}>
               <Clock size={13} color="var(--rojo)" />
-              <span>Atención 24 Horas</span>
+              <span>{isEn ? 'Open 24 Hours' : 'Atención 24 Horas'}</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
               <a
