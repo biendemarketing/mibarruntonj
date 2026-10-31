@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import { AlertConfirmProvider } from './context/AlertConfirmContext';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { purgePwaAndUnregisterSW } from './registerSW';
@@ -16,6 +17,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <BrowserRouter>
         <AlertConfirmProvider>
           <App />
+          <SpeedInsights />
         </AlertConfirmProvider>
       </BrowserRouter>
     </ErrorBoundary>
