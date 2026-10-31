@@ -1,0 +1,1374 @@
+# Mi Barrunto Restaurant & Grocery — Carta Completa Exhaustiva
+> Información detallada para sistemas de IA, asistentes de búsqueda y modelos de lenguaje (LLMs).
+> URL Canónica: https://mibarruntonj.com/
+> Dirección: 21 Mill St, Paterson, NJ 07011 | Tel: +1-973-653-3749 | Horario: 24 Horas
+
+
+## Categoría: SANDWICHES (22 platos)
+
+### Pan con chicharrón — $9.75
+- **ID:** 1
+- **URL:** https://mibarruntonj.com/plato/1
+- **Descripción en Inglés:** Fried pork, fried sweet potato and salsa criolla
+
+### Pan con relleno — $9.75
+- **ID:** 2
+- **URL:** https://mibarruntonj.com/plato/2
+- **Descripción en Inglés:** Fried black sausage, fried sweet potato and salsa criol
+
+### Pan con pollo deshilachado — $9.75
+- **ID:** 3
+- **URL:** https://mibarruntonj.com/plato/3
+- **Descripción en Inglés:** Shredded chicken and potato sticks
+
+### Pan con pechuga — $9.75
+- **ID:** 4
+- **URL:** https://mibarruntonj.com/plato/4
+- **Descripción en Inglés:** Chicken breast, french fries, lettuce and tomato
+
+### Pan con bistec — $9.75
+- **ID:** 5
+- **URL:** https://mibarruntonj.com/plato/5
+- **Descripción en Inglés:** Steak, french fries, lettuce and tomato
+
+### Pan con milanesa de pollo — $9.99
+- **ID:** 6
+- **URL:** https://mibarruntonj.com/plato/6
+- **Descripción en Inglés:** Breaded chicken, french fries, lettuce and tomato
+
+### Pan con salchicha huachana — $9.75
+- **ID:** 7
+- **URL:** https://mibarruntonj.com/plato/7
+- **Descripción en Inglés:** Scrambled eggs and peruvian sausage
+
+### Pan con jamón del país con butifarra — $9.75
+- **ID:** 8
+- **URL:** https://mibarruntonj.com/plato/8
+- **Descripción en Inglés:** Peruvian ham, butter sausage, lettuce and salsa criolla
+
+### Pan con pavo — $9.75
+- **ID:** 9
+- **URL:** https://mibarruntonj.com/plato/9
+- **Descripción en Inglés:** Turkey, lettuce and salsa criolla
+
+### Pan con lechón — $9.75
+- **ID:** 10
+- **URL:** https://mibarruntonj.com/plato/10
+- **Descripción en Inglés:** Oven-roasted pork, lettuce and salsa criolla
+
+### Pan con pollo a la brasa — $9.75
+- **ID:** 11
+- **URL:** https://mibarruntonj.com/plato/11
+- **Descripción en Inglés:** Rotisserie chicken and potato sticks
+
+### Hamburguesa clásica — $9.99
+- **ID:** 12
+- **URL:** https://mibarruntonj.com/plato/12
+- **Descripción en Inglés:** Lettuce, tomato, cheese and french fries
+
+### Hamburguesa Especial — $12.99
+- **ID:** 13
+- **URL:** https://mibarruntonj.com/plato/13
+- **Descripción en Inglés:** Fried egg, bacon, cheese, lettuce, tomato and french fr
+
+### Hamburguesa Royal — $14.99
+- **ID:** 14
+- **URL:** https://mibarruntonj.com/plato/14
+- **Descripción en Inglés:** Chorizo, fried egg, bacon and cheese, with lettuce and
+
+### Hamburguesa Royal Especial — $19.99
+- **ID:** 15
+- **URL:** https://mibarruntonj.com/plato/15
+- **Descripción en Inglés:** Chorizo, fried egg, bacon, cheese and shredded chicken,
+
+### Chorizo Especial — $12.99
+- **ID:** 16
+- **URL:** https://mibarruntonj.com/plato/16
+- **Descripción en Inglés:** Fried egg, bacon, cheese, lettuce, tomato and french fr
+
+### Pan con pollo deshilachado Royal — $14.99
+- **ID:** 17
+- **URL:** https://mibarruntonj.com/plato/17
+- **Descripción en Inglés:** Shredded chicken, chorizo, fried egg, bacon and cheese,
+
+### Pan con chorizo con lechuga y tomate — $9.99
+- **ID:** 18
+- **URL:** https://mibarruntonj.com/plato/18
+- **Descripción en Inglés:** Chorizo, lettuce, tomato and french fries
+
+### Pan con atún — $9.75
+- **ID:** 19
+- **URL:** https://mibarruntonj.com/plato/19
+- **Descripción en Inglés:** Tuna sandwich
+
+### Pan con camote — $6.99
+- **ID:** 20
+- **URL:** https://mibarruntonj.com/plato/20
+- **Descripción en Inglés:** Sweet potato sandwich
+
+### Pan con huevo + hot dog — $6.99
+- **ID:** 21
+- **URL:** https://mibarruntonj.com/plato/21
+- **Descripción en Inglés:** Fried egg and hot dog
+
+### Pan con huevo frito — $4.99
+- **ID:** 22
+- **URL:** https://mibarruntonj.com/plato/22
+- **Descripción en Inglés:** Fried egg
+
+
+## Categoría: DESAYUNO PERUANO (10 platos)
+
+### Porción de chicharrón — $19.99
+- **ID:** 23
+- **URL:** https://mibarruntonj.com/plato/23
+- **Descripción en Inglés:** Fried pork with fried sweet potato and salsa criolla
+
+### Porción de chicharrón y relleno — $19.99
+- **ID:** 24
+- **URL:** https://mibarruntonj.com/plato/24
+- **Descripción en Inglés:** Fried pork and black sausage, sweet potato and salsa cr
+
+### Porción de relleno — $19.99
+- **ID:** 25
+- **URL:** https://mibarruntonj.com/plato/25
+- **Descripción en Inglés:** Fried black sausage with fried sweet potato and salsa c
+
+### Lomo al jugo — $19.99
+- **ID:** 26
+- **URL:** https://mibarruntonj.com/plato/26
+- **Descripción en Inglés:** Sautéed beef in tomato-onion sauce
+
+### Chancho a la caja china — $29.99
+- **ID:** 27
+- **URL:** https://mibarruntonj.com/plato/27
+- **Descripción en Inglés:** With huayro potato, corn, mote, rocoto cream and salsa
+
+### Mi Barrunto Desayuno — $29.99
+- **ID:** 28
+- **URL:** https://mibarruntonj.com/plato/28
+- **Descripción en Inglés:** Chicharrón, relleno, tamal, mote, fried sweet potato an
+
+### Escabeche de pescado — $19.99
+- **ID:** 29
+- **URL:** https://mibarruntonj.com/plato/29
+- **Descripción en Inglés:** Fried fish in onion sauce with boiled sweet potato and
+
+### Escabeche de pollo — $18.99
+- **ID:** 30
+- **URL:** https://mibarruntonj.com/plato/30
+- **Descripción en Inglés:** Fried chicken in onion sauce with boiled sweet potato a
+
+### Tamal de pollo — $7.99
+- **ID:** 31
+- **URL:** https://mibarruntonj.com/plato/31
+- **Descripción en Inglés:** Corn tamale with chicken and salsa criolla
+
+### Tamal de chancho — $7.99
+- **ID:** 32
+- **URL:** https://mibarruntonj.com/plato/32
+- **Descripción en Inglés:** Corn tamale with pork and salsa criolla
+
+
+## Categoría: ENTRADAS (17 platos)
+
+### Papa a la Huancaína — $11.99
+- **ID:** 33
+- **URL:** https://mibarruntonj.com/plato/33
+- **Descripción en Inglés:** Potato in creamy huancaína sauce
+
+### Yuca a la huancaína — $12.99
+- **ID:** 34
+- **URL:** https://mibarruntonj.com/plato/34
+- **Descripción en Inglés:** Cassava in huancaína sauce
+
+### Papa huayro a la huancaína — $12.99
+- **ID:** 35
+- **URL:** https://mibarruntonj.com/plato/35
+- **Descripción en Inglés:** Huayro potato in huancaína sauce
+
+### Choclo desgranado con queso — $11.99
+- **ID:** 36
+- **URL:** https://mibarruntonj.com/plato/36
+- **Descripción en Inglés:** Corn kernels with cheese
+
+### Causa de pollo — $14.99
+- **ID:** 37
+- **URL:** https://mibarruntonj.com/plato/37
+- **Descripción en Inglés:** Mashed potato terrine with chicken
+
+### Causa de atún — $14.99
+- **ID:** 38
+- **URL:** https://mibarruntonj.com/plato/38
+- **Descripción en Inglés:** Mashed potato terrine with tuna
+
+### Causa de camarón — $16.99
+- **ID:** 39
+- **URL:** https://mibarruntonj.com/plato/39
+- **Descripción en Inglés:** Mashed potato terrine with shrimp
+
+### Causa de cangrejo — $16.99
+- **ID:** 40
+- **URL:** https://mibarruntonj.com/plato/40
+- **Descripción en Inglés:** Mashed potato terrine with crab
+
+### Causa Acevichada — $21.99
+- **ID:** 41
+- **URL:** https://mibarruntonj.com/plato/41
+- **Descripción en Inglés:** Mashed potato terrine with ceviche
+
+### Salchipapa con papa natural — $13.99
+- **ID:** 42
+- **URL:** https://mibarruntonj.com/plato/42
+- **Descripción en Inglés:** Fresh-cut fries with hot dog
+
+### Salchipapa con pollo desmenuzado — $19.99
+- **ID:** 43
+- **URL:** https://mibarruntonj.com/plato/43
+- **Descripción en Inglés:** Fresh-cut fries with hot dog and shredded chicken
+
+### Salchipapa Especial — $24.99
+- **ID:** 44
+- **URL:** https://mibarruntonj.com/plato/44
+- **Descripción en Inglés:** Fresh-cut fries, hot dog, shredded chicken, chorizo and
+
+### Salchipapa montada — $17.50
+- **ID:** 45
+- **URL:** https://mibarruntonj.com/plato/45
+- **Descripción en Inglés:** Fresh-cut fries, hot dog and fried egg
+
+### Salchipapa a lo pobre — $19.99
+- **ID:** 46
+- **URL:** https://mibarruntonj.com/plato/46
+- **Descripción en Inglés:** Fresh-cut fries, hot dog, sweet plantain and fried egg
+
+### Salchipapa con chaufa — $19.99
+- **ID:** 47
+- **URL:** https://mibarruntonj.com/plato/47
+- **Descripción en Inglés:** Fresh-cut fries, hot dog and fried rice
+
+### Tiritas de pollo — $14.99
+- **ID:** 48
+- **URL:** https://mibarruntonj.com/plato/48
+- **Descripción en Inglés:** Chicken strips with french fries and hot dog
+
+### Chicharrón de chancho picado — $19.99
+- **ID:** 49
+- **URL:** https://mibarruntonj.com/plato/49
+- **Descripción en Inglés:** Chopped fried pork with fried cassava
+
+
+## Categoría: SOPAS (20 platos)
+
+### Caldo de gallina con papa amarilla — $14.99
+- **ID:** 50
+- **URL:** https://mibarruntonj.com/plato/50
+- **Descripción en Inglés:** Hen stew with yellow potato, boiled egg and noodles
+
+### Caldo de gallina Acevichado — $24.99
+- **ID:** 51
+- **URL:** https://mibarruntonj.com/plato/51
+- **Descripción en Inglés:** Hen stew with yellow potato, egg, noodles and acevichad
+
+### Patasca — $22.99
+- **ID:** 52
+- **URL:** https://mibarruntonj.com/plato/52
+- **Descripción en Inglés:** Hearty peruvian soup with mote, mondongo and beef ribs
+
+### Patasca con caldo de gallina — $28.99
+- **ID:** 53
+- **URL:** https://mibarruntonj.com/plato/53
+- **Descripción en Inglés:** House patasca with hen and noodles
+
+### Sopa a la minuta con papa amarilla — $14.99
+- **ID:** 54
+- **URL:** https://mibarruntonj.com/plato/54
+- **Descripción en Inglés:** Beef soup with milk, egg and yellow potato
+
+### Sancochado de res — $19.99
+- **ID:** 55
+- **URL:** https://mibarruntonj.com/plato/55
+- **Descripción en Inglés:** Beef ribs with rice, carrot, celery, corn, cilantro, ca
+
+### Menestrón de res — $19.99
+- **ID:** 56
+- **URL:** https://mibarruntonj.com/plato/56
+- **Descripción en Inglés:** Beef ribs, vegetables, beans, pesto cream and canuto no
+
+### Sopa de carne — $19.99
+- **ID:** 57
+- **URL:** https://mibarruntonj.com/plato/57
+- **Descripción en Inglés:** Beef ribs with vegetables and noodles
+
+### Sustancia de pollo con fideo y papas — $14.99
+- **ID:** 58
+- **URL:** https://mibarruntonj.com/plato/58
+- **Descripción en Inglés:** Chicken soup with noodles and potatoes
+
+### Sustancia de carne con fideo y papas — $14.99
+- **ID:** 59
+- **URL:** https://mibarruntonj.com/plato/59
+- **Descripción en Inglés:** Beef soup with noodles and potatoes
+
+### Parihuela — $24.99
+- **ID:** 60
+- **URL:** https://mibarruntonj.com/plato/60
+- **Descripción en Inglés:** Mixed seafood soup: calamari, fish, shrimp, crab, octop
+
+### Sopa de mariscos — $24.99
+- **ID:** 61
+- **URL:** https://mibarruntonj.com/plato/61
+- **Descripción en Inglés:** Mixed seafood soup with noodles and potato
+
+### Aguadito de mariscos — $24.99
+- **ID:** 62
+- **URL:** https://mibarruntonj.com/plato/62
+- **Descripción en Inglés:** Mixed seafood soup with rice and cilantro
+
+### Chupe de camarón — $23.99
+- **ID:** 63
+- **URL:** https://mibarruntonj.com/plato/63
+- **Descripción en Inglés:** Shrimp chowder with rice, egg, milk, peas, carrot, chee
+
+### Chupe de pescado — $19.99
+- **ID:** 64
+- **URL:** https://mibarruntonj.com/plato/64
+- **Descripción en Inglés:** Fish chowder with rice, egg, milk, peas, carrot, cheese
+
+### Chupe de mariscos — $24.99
+- **ID:** 65
+- **URL:** https://mibarruntonj.com/plato/65
+- **Descripción en Inglés:** Shellfish chowder with milk, cheese and vegetables
+
+### Levanta muerto — la Resaca — $32.75
+- **ID:** 66
+- **URL:** https://mibarruntonj.com/plato/66
+- **Descripción en Inglés:** Filling seafood soup with ceviche on top
+
+### Sopa de pescado — $19.99
+- **ID:** 67
+- **URL:** https://mibarruntonj.com/plato/67
+- **Descripción en Inglés:** Fish soup with noodles, potato, peas and carrot
+
+### Sopa de camarón — $23.99
+- **ID:** 68
+- **URL:** https://mibarruntonj.com/plato/68
+- **Descripción en Inglés:** Shrimp soup with noodles, potato, peas and carrot
+
+### Sopa de choros — $21.99
+- **ID:** 69
+- **URL:** https://mibarruntonj.com/plato/69
+- **Descripción en Inglés:** Mussel soup with noodles, potato, peas and carrot
+
+
+## Categoría: COMIDA CRIOLLA (61 platos)
+
+### Lomo Saltado — $18.99
+- **ID:** 70
+- **URL:** https://mibarruntonj.com/plato/70
+- **Descripción en Inglés:** Sautéed beef with onions and tomato, french fries and w
+
+### Lomo Saltado con Huancaína — $24.99
+- **ID:** 71
+- **URL:** https://mibarruntonj.com/plato/71
+- **Descripción en Inglés:** Sautéed beef with french fries and huancaína sauce
+
+### Lomo saltado con chaufa — $24.99
+- **ID:** 72
+- **URL:** https://mibarruntonj.com/plato/72
+- **Descripción en Inglés:** Sautéed beef with fried rice
+
+### Lomo Saltado a lo pobre — $24.99
+- **ID:** 73
+- **URL:** https://mibarruntonj.com/plato/73
+- **Descripción en Inglés:** Sautéed beef with sweet plantain and fried egg
+
+### Lomo Saltado con chaufa a lo pobre — $29.99
+- **ID:** 74
+- **URL:** https://mibarruntonj.com/plato/74
+- **Descripción en Inglés:** Sautéed beef with fried rice, sweet plantain and fried
+
+### Lomo Saltado Especial — $29.99
+- **ID:** 75
+- **URL:** https://mibarruntonj.com/plato/75
+- **Descripción en Inglés:** Sautéed beef with fried rice and huancaína sauce · chau
+
+### Lomo Saltado Royal con Huancaína a lo pobre — $29.99
+- **ID:** 76
+- **URL:** https://mibarruntonj.com/plato/76
+- **Descripción en Inglés:** Sautéed beef with huancaína sauce, sweet plantain and f
+
+### Saltado de pollo — $16.99
+- **ID:** 77
+- **URL:** https://mibarruntonj.com/plato/77
+- **Descripción en Inglés:** Sautéed chicken with onions and tomato, french fries an
+
+### Bistec con papas fritas y arroz — $18.99
+- **ID:** 78
+- **URL:** https://mibarruntonj.com/plato/78
+- **Descripción en Inglés:** Steak with french fries and rice
+
+### Bistec Encebollado — $19.99
+- **ID:** 79
+- **URL:** https://mibarruntonj.com/plato/79
+- **Descripción en Inglés:** Sautéed steak with onions and tomato, with white rice
+
+### Bistec a lo pobre — $20.99
+- **ID:** 80
+- **URL:** https://mibarruntonj.com/plato/80
+- **Descripción en Inglés:** Steak with french fries, sweet plantain, fried egg and
+
+### Bistec con tostones y ensalada — $19.99
+- **ID:** 81
+- **URL:** https://mibarruntonj.com/plato/81
+- **Descripción en Inglés:** Sautéed steak with fried green plantain and salad
+
+### Bistec Mi Barrunto — $24.99
+- **ID:** 82
+- **URL:** https://mibarruntonj.com/plato/82
+- **Descripción en Inglés:** Steak with rice, beans, fried egg and sweet plantain
+
+### Bistec Empanizado a lo pobre — $22.75
+- **ID:** 83
+- **URL:** https://mibarruntonj.com/plato/83
+- **Descripción en Inglés:** Breaded steak with white rice, french fries, fried egg
+
+### Milanesa de pollo con arroz y papas fritas — $18.99
+- **ID:** 84
+- **URL:** https://mibarruntonj.com/plato/84
+- **Descripción en Inglés:** Breaded chicken with white rice and french fries
+
+### Chaufa de pollo — $16.99
+- **ID:** 85
+- **URL:** https://mibarruntonj.com/plato/85
+- **Descripción en Inglés:** Fried rice with egg, scallions and chicken
+
+### Chaufa de carne — $18.75
+- **ID:** 86
+- **URL:** https://mibarruntonj.com/plato/86
+- **Descripción en Inglés:** Fried rice with egg, scallions and beef
+
+### Chaufa Mixto carne–pollo — $20.99
+- **ID:** 87
+- **URL:** https://mibarruntonj.com/plato/87
+- **Descripción en Inglés:** Fried rice with egg, scallions, beef and chicken
+
+### Chaufa de chancho — $19.99
+- **ID:** 88
+- **URL:** https://mibarruntonj.com/plato/88
+- **Descripción en Inglés:** Fried rice with egg, scallions and pork
+
+### Chaufa de pescado — $19.75
+- **ID:** 89
+- **URL:** https://mibarruntonj.com/plato/89
+- **Descripción en Inglés:** Fried rice with egg, scallions and fish
+
+### Chaufa Especial — $24.99
+- **ID:** 90
+- **URL:** https://mibarruntonj.com/plato/90
+- **Descripción en Inglés:** Fried rice with egg, scallions, beef, chicken and shrim
+
+### Chaufa Especial Barrunto — $29.99
+- **ID:** 91
+- **URL:** https://mibarruntonj.com/plato/91
+- **Descripción en Inglés:** Fried rice with egg, scallions, beef, chicken, shrimp a
+
+### Tallarín Saltado de carne — $18.99
+- **ID:** 92
+- **URL:** https://mibarruntonj.com/plato/92
+- **Descripción en Inglés:** Beef sautéed noodles with onions, tomato and peppers
+
+### Tallarín Saltado de pollo — $17.99
+- **ID:** 93
+- **URL:** https://mibarruntonj.com/plato/93
+- **Descripción en Inglés:** Chicken sautéed noodles with onions, tomato and peppers
+
+### Tallarín Saltado de chancho — $18.99
+- **ID:** 94
+- **URL:** https://mibarruntonj.com/plato/94
+- **Descripción en Inglés:** Pork sautéed noodles with onions, tomato and peppers
+
+### Tallarín Saltado Mixto carne–pollo — $20.99
+- **ID:** 95
+- **URL:** https://mibarruntonj.com/plato/95
+- **Descripción en Inglés:** Beef and chicken sautéed noodles with onions, tomato an
+
+### Tallarín Verde de Bistec a lo pobre — $24.99
+- **ID:** 96
+- **URL:** https://mibarruntonj.com/plato/96
+- **Descripción en Inglés:** Pesto spaghetti with steak, sweet plantain and fried eg
+
+### Tallarín Verde solo con papa dorada — $14.99
+- **ID:** 97
+- **URL:** https://mibarruntonj.com/plato/97
+- **Descripción en Inglés:** Pesto spaghetti with parmesan cream and golden potato
+
+### Tallarín Verde con Bistec — $18.99
+- **ID:** 98
+- **URL:** https://mibarruntonj.com/plato/98
+- **Descripción en Inglés:** Pesto spaghetti with steak
+
+### Tallarín Verde con pechuga parrilla — $17.99
+- **ID:** 99
+- **URL:** https://mibarruntonj.com/plato/99
+- **Descripción en Inglés:** Pesto spaghetti with grilled chicken breast
+
+### Tallarín Verde con milanesa de pollo — $18.99
+- **ID:** 100
+- **URL:** https://mibarruntonj.com/plato/100
+- **Descripción en Inglés:** Pesto spaghetti with breaded chicken
+
+### Tallarín Verde con chuleta parrilla — $19.99
+- **ID:** 101
+- **URL:** https://mibarruntonj.com/plato/101
+- **Descripción en Inglés:** Pesto spaghetti with grilled pork chop
+
+### Tallarín Verde con churrasco a la parrilla — $29.99
+- **ID:** 102
+- **URL:** https://mibarruntonj.com/plato/102
+- **Descripción en Inglés:** Pesto spaghetti with grilled bone-in steak
+
+### Tallarín Verde con Lomo Saltado — $24.99
+- **ID:** 103
+- **URL:** https://mibarruntonj.com/plato/103
+- **Descripción en Inglés:** Pesto spaghetti with sautéed beef, onions and tomato
+
+### Tallarín a la Huancaína con Bistec — $19.99
+- **ID:** 104
+- **URL:** https://mibarruntonj.com/plato/104
+- **Descripción en Inglés:** Spaghetti in huancaína sauce with steak
+
+### Tallarín a la Huancaína de pechuga parrilla — $19.99
+- **ID:** 105
+- **URL:** https://mibarruntonj.com/plato/105
+- **Descripción en Inglés:** Spaghetti in huancaína sauce with grilled chicken breas
+
+### Tallarín a la Huancaína con milanesa pollo — $19.99
+- **ID:** 106
+- **URL:** https://mibarruntonj.com/plato/106
+- **Descripción en Inglés:** Spaghetti in huancaína sauce with breaded chicken
+
+### Tallarín a la Huancaína con chuleta parrilla — $19.99
+- **ID:** 107
+- **URL:** https://mibarruntonj.com/plato/107
+- **Descripción en Inglés:** Spaghetti in huancaína sauce with grilled pork chop
+
+### Tallarín a la Huancaína con lomo saltado — $24.99
+- **ID:** 108
+- **URL:** https://mibarruntonj.com/plato/108
+- **Descripción en Inglés:** Spaghetti in huancaína sauce with sautéed beef, onions
+
+### Tallarín a la Huancaína con Bistec a lo pobre — $24.99
+- **ID:** 109
+- **URL:** https://mibarruntonj.com/plato/109
+- **Descripción en Inglés:** Spaghetti in huancaína sauce with steak, sweet plantain
+
+### Tallarín a la Huancaína con churrasco — $29.99
+- **ID:** 110
+- **URL:** https://mibarruntonj.com/plato/110
+- **Descripción en Inglés:** Spaghetti in huancaína sauce with bone-in steak
+
+### Tacu Tacu con Bistec — $19.99
+- **ID:** 111
+- **URL:** https://mibarruntonj.com/plato/111
+- **Descripción en Inglés:** Rice and bean mash-up with steak
+
+### Tacu Tacu con Bistec a lo pobre — $24.99
+- **ID:** 112
+- **URL:** https://mibarruntonj.com/plato/112
+- **Descripción en Inglés:** Rice and bean mash-up with steak, sweet plantain and fr
+
+### Tacu Tacu con Bistec Encebollado — $22.99
+- **ID:** 113
+- **URL:** https://mibarruntonj.com/plato/113
+- **Descripción en Inglés:** Rice and bean mash-up with steak, onions and tomato
+
+### Tacu Tacu con lomo saltado — $24.99
+- **ID:** 114
+- **URL:** https://mibarruntonj.com/plato/114
+- **Descripción en Inglés:** Rice and bean mash-up with sautéed beef, onions and tom
+
+### Tacu Tacu con pechuga a la parrilla — $18.99
+- **ID:** 115
+- **URL:** https://mibarruntonj.com/plato/115
+- **Descripción en Inglés:** Rice and bean mash-up with grilled chicken breast
+
+### Tacu Tacu con milanesa de pollo — $19.99
+- **ID:** 116
+- **URL:** https://mibarruntonj.com/plato/116
+- **Descripción en Inglés:** Rice and bean mash-up with breaded chicken
+
+### Tacu Tacu con chuleta a la parrilla — $19.99
+- **ID:** 117
+- **URL:** https://mibarruntonj.com/plato/117
+- **Descripción en Inglés:** Rice and bean mash-up with grilled pork chop
+
+### Tacu Tacu con cabrito a la Norteña — $28.99
+- **ID:** 118
+- **URL:** https://mibarruntonj.com/plato/118
+- **Descripción en Inglés:** Rice and bean mash-up with northern-style goat stew
+
+### Tacu Tacu con Seco de Costilla de Res — $28.99
+- **ID:** 119
+- **URL:** https://mibarruntonj.com/plato/119
+- **Descripción en Inglés:** Rice and bean mash-up with beef rib stew
+
+### Tallarín Rojo de pollo con Huancaína — $19.99
+- **ID:** 120
+- **URL:** https://mibarruntonj.com/plato/120
+- **Descripción en Inglés:** Spaghetti in tomato sauce with chicken and huancaína sa
+
+### Arroz con pollo con huancaína — $18.99
+- **ID:** 121
+- **URL:** https://mibarruntonj.com/plato/121
+- **Descripción en Inglés:** Cilantro rice with chicken and huancaína sauce
+
+### Arroz Verde con pollo frito — $18.99
+- **ID:** 122
+- **URL:** https://mibarruntonj.com/plato/122
+- **Descripción en Inglés:** Cilantro rice with fried chicken
+
+### Arroz con pato con Sarsa Criolla — $19.99
+- **ID:** 123
+- **URL:** https://mibarruntonj.com/plato/123
+- **Descripción en Inglés:** Green rice with duck and salsa criolla
+
+### Arroz con pato con huancaína — $24.99
+- **ID:** 124
+- **URL:** https://mibarruntonj.com/plato/124
+- **Descripción en Inglés:** Green rice with duck and huancaína sauce
+
+### Pato a lo Norteño con arroz y frejol — $19.99
+- **ID:** 125
+- **URL:** https://mibarruntonj.com/plato/125
+- **Descripción en Inglés:** Stewed duck with rice and beans
+
+### Cau-Cau — $18.99
+- **ID:** 126
+- **URL:** https://mibarruntonj.com/plato/126
+- **Descripción en Inglés:** Stew of beef tripe with potato, turmeric and peas
+
+### Ají de gallina — $18.35
+- **ID:** 127
+- **URL:** https://mibarruntonj.com/plato/127
+- **Descripción en Inglés:** Shredded chicken in mild ají cream with white rice
+
+### Carapulcra de chancho — $19.99
+- **ID:** 128
+- **URL:** https://mibarruntonj.com/plato/128
+- **Descripción en Inglés:** Pork stew with papa seca (dried potato) and spices
+
+### Pollada con huancaína y ensalada — $19.99
+- **ID:** 129
+- **URL:** https://mibarruntonj.com/plato/129
+- **Descripción en Inglés:** Marinated fried chicken with huancaína sauce and salad
+
+### Pollo frito con arroz y papas fritas — $18.99
+- **ID:** 130
+- **URL:** https://mibarruntonj.com/plato/130
+- **Descripción en Inglés:** Fried chicken with white rice and french fries
+
+
+## Categoría: PARRILLAS (19 platos)
+
+### Anticucho de corazón con papa dorada y choclo — $14.99
+- **ID:** 131
+- **URL:** https://mibarruntonj.com/plato/131
+- **Descripción en Inglés:** Grilled beef heart skewers with golden potato and corn
+
+### Anticucho de pollo con papa dorada y choclo — $19.99
+- **ID:** 132
+- **URL:** https://mibarruntonj.com/plato/132
+- **Descripción en Inglés:** Grilled chicken skewers with golden potato and corn
+
+### Anticucho de bistec con papa dorada y choclo — $23.99
+- **ID:** 133
+- **URL:** https://mibarruntonj.com/plato/133
+- **Descripción en Inglés:** Grilled steak skewers with golden potato and corn
+
+### Anticucho de camarón con papa dorada y choclo — $23.99
+- **ID:** 134
+- **URL:** https://mibarruntonj.com/plato/134
+- **Descripción en Inglés:** Grilled shrimp skewers with golden potato and corn
+
+### Anticucho de pulpo con papa dorada y choclo — $26.99
+- **ID:** 135
+- **URL:** https://mibarruntonj.com/plato/135
+- **Descripción en Inglés:** Grilled octopus skewers with golden potato and corn
+
+### Anticucho con rachi con papa dorada y choclo — $23.99
+- **ID:** 136
+- **URL:** https://mibarruntonj.com/plato/136
+- **Descripción en Inglés:** Grilled beef tripe skewers with golden potato and corn
+
+### Anticucho Combinado — $29.99
+- **ID:** 137
+- **URL:** https://mibarruntonj.com/plato/137
+- **Descripción en Inglés:** Anticucho, rachi and choncholí · anticucho, rachi, chon
+
+### Higadito carretillero con yuca y ensalada — $18.99
+- **ID:** 138
+- **URL:** https://mibarruntonj.com/plato/138
+- **Descripción en Inglés:** Marinated fried liver with cassava and salad
+
+### Mollejita a la parrilla con papas fritas y ensalada — $16.99
+- **ID:** 139
+- **URL:** https://mibarruntonj.com/plato/139
+- **Descripción en Inglés:** Grilled chicken gizzards with french fries and salad
+
+### Corazoncito de pollo a la parrilla con papas fritas y ensalada — $16.99
+- **ID:** 140
+- **URL:** https://mibarruntonj.com/plato/140
+- **Descripción en Inglés:** Grilled chicken hearts with french fries and salad
+
+### Choclo entero solo — $8.99
+- **ID:** 141
+- **URL:** https://mibarruntonj.com/plato/141
+- **Descripción en Inglés:** Whole boiled peruvian corn
+
+### Bistec parrilla con papa dorada, choclo y ensalada — $19.99
+- **ID:** 142
+- **URL:** https://mibarruntonj.com/plato/142
+- **Descripción en Inglés:** Grilled steak with golden potato, corn and salad
+
+### Pechuga parrilla con papa dorada, choclo y ensalada — $19.99
+- **ID:** 143
+- **URL:** https://mibarruntonj.com/plato/143
+- **Descripción en Inglés:** Grilled chicken breast with golden potato, corn and sal
+
+### Chuleta parrilla con papa dorada, choclo y ensalada — $19.99
+- **ID:** 144
+- **URL:** https://mibarruntonj.com/plato/144
+- **Descripción en Inglés:** Grilled pork chop with golden potato, corn and salad
+
+### Churrasco a la parrilla con papa dorada, choclo y ensalada — $29.99
+- **ID:** 145
+- **URL:** https://mibarruntonj.com/plato/145
+- **Descripción en Inglés:** Grilled bone-in steak with golden potato, corn and sala
+
+### Bistec a la parrilla con Huancaína y ensalada — $24.75
+- **ID:** 146
+- **URL:** https://mibarruntonj.com/plato/146
+- **Descripción en Inglés:** Grilled steak with huancaína sauce and salad
+
+### Parrillero Mi Barrunto — $89.99
+- **ID:** 147
+- **URL:** https://mibarruntonj.com/plato/147
+- **Descripción en Inglés:** Churrasco, chicken breast, pork chop, anticucho, chorizo, fried chicken
+- **Detalle / Glosa:** Churrasco, pechuga, chuleta, anticucho, chorizo y chicharrón de pollo
+
+### Pulpo a la Parrilla — $25.99
+- **ID:** 148
+- **URL:** https://mibarruntonj.com/plato/148
+- **Descripción en Inglés:** Grilled octopus
+
+### Parrilla con papa a la huancaína — $16.99
+- **ID:** 149
+- **URL:** https://mibarruntonj.com/plato/149
+- **Descripción en Inglés:** Grilled meat with potato in huancaína sauce
+
+
+## Categoría: CEVICHES (19 platos)
+
+### Ceviche de pescado — $18.99
+- **ID:** 150
+- **URL:** https://mibarruntonj.com/plato/150
+- **Descripción en Inglés:** Fish cured in lime juice
+
+### Ceviche Carretillero con Huancaína — $25.99
+- **ID:** 151
+- **URL:** https://mibarruntonj.com/plato/151
+- **Descripción en Inglés:** Street-style ceviche with huancaína sauce
+
+### Ceviche Mixto — $24.99
+- **ID:** 152
+- **URL:** https://mibarruntonj.com/plato/152
+- **Descripción en Inglés:** Mixed seafood cured in lime juice
+
+### Ceviche Mixto + chorito a la chalaca — $34.99
+- **ID:** 153
+- **URL:** https://mibarruntonj.com/plato/153
+- **Descripción en Inglés:** Mixed ceviche with peruvian-style mussels
+
+### Ceviche de camarones — $23.99
+- **ID:** 154
+- **URL:** https://mibarruntonj.com/plato/154
+- **Descripción en Inglés:** Shrimp cured in lime juice
+
+### Ceviche de mariscos — $24.99
+- **ID:** 155
+- **URL:** https://mibarruntonj.com/plato/155
+- **Descripción en Inglés:** Seafood cured in lime juice
+
+### Ceviche de pulpo — $24.99
+- **ID:** 156
+- **URL:** https://mibarruntonj.com/plato/156
+- **Descripción en Inglés:** Octopus cured in lime juice
+
+### Ceviche de conchas negras — $27.99
+- **ID:** 157
+- **URL:** https://mibarruntonj.com/plato/157
+- **Descripción en Inglés:** Black clam cured in lime juice
+
+### Choritos a la chalaca (12) — $21.99
+- **ID:** 158
+- **URL:** https://mibarruntonj.com/plato/158
+- **Descripción en Inglés:** Dozen mussels in chalaca salsa
+
+### Choritos a la chalaca (6) — $13.99
+- **ID:** 159
+- **URL:** https://mibarruntonj.com/plato/159
+- **Descripción en Inglés:** Half-dozen mussels in chalaca salsa
+
+### Leche de tigre — $15.99
+- **ID:** 160
+- **URL:** https://mibarruntonj.com/plato/160
+- **Descripción en Inglés:** Minced fish in lime juice with onion, corn and cilantro
+
+### Leche de tigre Mi Barrunto — $22.99
+- **ID:** 161
+- **URL:** https://mibarruntonj.com/plato/161
+- **Descripción en Inglés:** Minced fish in lime juice with fried calamari
+
+### Leche de tigre de pulpo — $22.99
+- **ID:** 162
+- **URL:** https://mibarruntonj.com/plato/162
+- **Descripción en Inglés:** Minced octopus in lime juice
+
+### Leche de tigre de pulpo Mi Barrunto — $29.99
+- **ID:** 163
+- **URL:** https://mibarruntonj.com/plato/163
+- **Descripción en Inglés:** Minced octopus in lime juice with fried calamari
+
+### Leche de tigre de camarones — $22.99
+- **ID:** 164
+- **URL:** https://mibarruntonj.com/plato/164
+- **Descripción en Inglés:** Minced shrimp in lime juice
+
+### Leche de tigre de camarones Mi Barrunto — $29.99
+- **ID:** 165
+- **URL:** https://mibarruntonj.com/plato/165
+- **Descripción en Inglés:** Minced shrimp in lime juice with fried calamari
+
+### Leche de tigre chalaca — $19.99
+- **ID:** 166
+- **URL:** https://mibarruntonj.com/plato/166
+- **Descripción en Inglés:** Minced mussels in lime juice
+
+### Leche de tigre chalaca Mi Barrunto — $26.99
+- **ID:** 167
+- **URL:** https://mibarruntonj.com/plato/167
+- **Descripción en Inglés:** Minced mussels in lime juice with fried calamari
+
+### Tiradito — $19.99
+- **ID:** 168
+- **URL:** https://mibarruntonj.com/plato/168
+- **Descripción en Inglés:** Fish in lime juice with yellow ají sauce
+
+
+## Categoría: MARISCOS (27 platos)
+
+### Jalea con yuca frita — $24.99
+- **ID:** 169
+- **URL:** https://mibarruntonj.com/plato/169
+- **Descripción en Inglés:** Fried mixed seafood with fried cassava, salsa criolla
+
+### Chicharrón de calamar — $29.99
+- **ID:** 170
+- **URL:** https://mibarruntonj.com/plato/170
+- **Descripción en Inglés:** Fried calamari with fried cassava, salsa criolla
+
+### Chicharrón de pescado — $17.75
+- **ID:** 171
+- **URL:** https://mibarruntonj.com/plato/171
+- **Descripción en Inglés:** Breaded fried fish with fried cassava, salsa criolla
+
+### Lomo de pescado — $19.75
+- **ID:** 172
+- **URL:** https://mibarruntonj.com/plato/172
+- **Descripción en Inglés:** Sautéed fish with onions and tomato, with french fries
+
+### Tacu Tacu a lo macho — $34.99
+- **ID:** 173
+- **URL:** https://mibarruntonj.com/plato/173
+- **Descripción en Inglés:** Rice and bean mash-up with fried fish in seafood cream
+
+### Churrasco en salsa de mariscos — $38.99
+- **ID:** 174
+- **URL:** https://mibarruntonj.com/plato/174
+- **Descripción en Inglés:** Bone-in steak with seafood sauce
+
+### Picante de camarón — $24.99
+- **ID:** 175
+- **URL:** https://mibarruntonj.com/plato/175
+- **Descripción en Inglés:** Creamy shrimp stew with rice
+
+### Picante de mariscos — $24.99
+- **ID:** 176
+- **URL:** https://mibarruntonj.com/plato/176
+- **Descripción en Inglés:** Creamy seafood stew with rice
+
+### Camarón al ajillo — $24.99
+- **ID:** 177
+- **URL:** https://mibarruntonj.com/plato/177
+- **Descripción en Inglés:** Shrimp in garlic sauce
+
+### Sudado de mariscos — $24.99
+- **ID:** 178
+- **URL:** https://mibarruntonj.com/plato/178
+- **Descripción en Inglés:** Steamed mixed seafood with onions and tomato
+
+### Sudado de pescado (filete) — $18.99
+- **ID:** 179
+- **URL:** https://mibarruntonj.com/plato/179
+- **Descripción en Inglés:** Steamed fish fillet with onions, tomato and rice
+
+### Pescado a lo macho (filete) — $24.99
+- **ID:** 180
+- **URL:** https://mibarruntonj.com/plato/180
+- **Descripción en Inglés:** Fried fish fillet with seafood cream and rice
+
+### Pescado a la chorrillana — $18.99
+- **ID:** 181
+- **URL:** https://mibarruntonj.com/plato/181
+- **Descripción en Inglés:** Fried fish with onions and tomato, with rice
+
+### Filete de pescado con arroz, ensalada y yuca — $18.99
+- **ID:** 182
+- **URL:** https://mibarruntonj.com/plato/182
+- **Descripción en Inglés:** Fried fish fillet with rice, salad and fried cassava
+
+### Salmón a la parrilla con arroz y ensalada — $24.99
+- **ID:** 183
+- **URL:** https://mibarruntonj.com/plato/183
+- **Descripción en Inglés:** Grilled salmon with rice and salad
+
+### Arroz con camarones — $24.99
+- **ID:** 184
+- **URL:** https://mibarruntonj.com/plato/184
+- **Descripción en Inglés:** Yellow rice with shrimp
+
+### Arroz con pulpo — $24.99
+- **ID:** 185
+- **URL:** https://mibarruntonj.com/plato/185
+- **Descripción en Inglés:** Yellow rice with octopus
+
+### Tallarín en salsa de mariscos — $24.99
+- **ID:** 186
+- **URL:** https://mibarruntonj.com/plato/186
+- **Descripción en Inglés:** Spaghetti with creamy seafood stew
+
+### Pescado entero (Pargo) con arroz, ensalada y yuca — $29.99
+- **ID:** 187
+- **URL:** https://mibarruntonj.com/plato/187
+- **Descripción en Inglés:** Whole red snapper with rice, salad and fried cassava
+
+### Arroz con mariscos — $24.99
+- **ID:** 188
+- **URL:** https://mibarruntonj.com/plato/188
+- **Descripción en Inglés:** Yellow seafood rice
+
+### Chaufa de mariscos — $24.99
+- **ID:** 189
+- **URL:** https://mibarruntonj.com/plato/189
+- **Descripción en Inglés:** Seafood fried rice
+
+### Chaufa de camarones — $23.99
+- **ID:** 190
+- **URL:** https://mibarruntonj.com/plato/190
+- **Descripción en Inglés:** Shrimp fried rice
+
+### Jalea y ceviche — $34.99
+- **ID:** 191
+- **URL:** https://mibarruntonj.com/plato/191
+- **Descripción en Inglés:** Fried mixed seafood with diced fish in lemon juice
+
+### Arroz con mariscos y ceviche — $34.99
+- **ID:** 192
+- **URL:** https://mibarruntonj.com/plato/192
+- **Descripción en Inglés:** Peruvian style seafood yellow rice with diced fish in lemon juice
+
+### Chaufa de mariscos y ceviche — $34.99
+- **ID:** 193
+- **URL:** https://mibarruntonj.com/plato/193
+- **Descripción en Inglés:** Seafood fried rice with diced fish in lemon juice
+
+### Tripleta Marina — $48.99
+- **ID:** 194
+- **URL:** https://mibarruntonj.com/plato/194
+- **Descripción en Inglés:** Arroz c/mariscos, jalea y ceviche · Seafood rice, fried seafood & ceviche
+- **Detalle / Glosa:** Arroz con mariscos, jalea y ceviche
+
+### Ronda Marina — $74.99
+- **ID:** 195
+- **URL:** https://mibarruntonj.com/plato/195
+- **Descripción en Inglés:** Arroz c/mariscos, chaufa, jalea, ceviche, choritos · Seafood platter to share
+- **Detalle / Glosa:** Arroz con mariscos, chaufa de mariscos, jalea, ceviche y choritos a la chalaca
+
+
+## Categoría: RONDAS CRIOLLAS (7 platos)
+
+### Arroz con pollo huancaína + ceviche — $28.99
+- **ID:** 196
+- **URL:** https://mibarruntonj.com/plato/196
+- **Descripción en Inglés:** Cilantro rice with chicken in huancaína sauce, plus cev
+
+### Tallarín Rojo huancaína + ceviche — $28.99
+- **ID:** 197
+- **URL:** https://mibarruntonj.com/plato/197
+- **Descripción en Inglés:** Tomato spaghetti with huancaína sauce, plus ceviche
+
+### Carapulcra Mixta con huancaína + ceviche — $28.99
+- **ID:** 198
+- **URL:** https://mibarruntonj.com/plato/198
+- **Descripción en Inglés:** Mixed carapulcra with huancaína sauce, plus ceviche
+
+### Cau-Cau con huancaína + ceviche — $28.99
+- **ID:** 199
+- **URL:** https://mibarruntonj.com/plato/199
+- **Descripción en Inglés:** Beef tripe stew with huancaína sauce, plus ceviche
+
+### Cabrito Norteño con arroz y frejol + ceviche — $34.99
+- **ID:** 200
+- **URL:** https://mibarruntonj.com/plato/200
+- **Descripción en Inglés:** Northern-style goat stew with rice and beans, plus cevi
+
+### Seco de Costilla de Res con arroz y frejol + ceviche — $34.99
+- **ID:** 201
+- **URL:** https://mibarruntonj.com/plato/201
+- **Descripción en Inglés:** Beef rib stew with rice and beans, plus ceviche
+
+### Pato a la Norteña con arroz y frejol + ceviche — $29.99
+- **ID:** 202
+- **URL:** https://mibarruntonj.com/plato/202
+- **Descripción en Inglés:** Northern-style duck with rice and beans, plus ceviche
+
+
+## Categoría: BROASTER (15 platos)
+
+### Pollo broaster con papas fritas y ensalada — $16.99
+- **ID:** 203
+- **URL:** https://mibarruntonj.com/plato/203
+- **Descripción en Inglés:** Broasted chicken with french fries and salad
+
+### Pollo broaster a lo pobre — $19.99
+- **ID:** 204
+- **URL:** https://mibarruntonj.com/plato/204
+- **Descripción en Inglés:** Broasted chicken with french fries, salad, sweet planta
+
+### Pollo salchi-broaster — $19.99
+- **ID:** 205
+- **URL:** https://mibarruntonj.com/plato/205
+- **Descripción en Inglés:** Broasted chicken with french fries, salad and hot dog
+
+### Pollo broaster Acevichado — $16.99
+- **ID:** 206
+- **URL:** https://mibarruntonj.com/plato/206
+- **Descripción en Inglés:** Broasted chicken with french fries, salad and acevichad
+
+### Pollo broaster BBQ — $16.99
+- **ID:** 207
+- **URL:** https://mibarruntonj.com/plato/207
+- **Descripción en Inglés:** Broasted chicken with french fries, salad and BBQ sauce
+
+### Pollo chori-broaster — $19.99
+- **ID:** 208
+- **URL:** https://mibarruntonj.com/plato/208
+- **Descripción en Inglés:** Broasted chicken with french fries, salad and chorizo
+
+### Alitas broaster — $16.99
+- **ID:** 209
+- **URL:** https://mibarruntonj.com/plato/209
+- **Descripción en Inglés:** Broasted wings with french fries and salad
+
+### Alitas Acevichadas — $16.99
+- **ID:** 210
+- **URL:** https://mibarruntonj.com/plato/210
+- **Descripción en Inglés:** Broasted wings with french fries, salad and acevichado
+
+### Pollo broaster mostrito — $17.99
+- **ID:** 211
+- **URL:** https://mibarruntonj.com/plato/211
+- **Descripción en Inglés:** Broasted chicken with french fries and chaufa
+
+### Pollo broaster mostrito a lo pobre — $22.99
+- **ID:** 212
+- **URL:** https://mibarruntonj.com/plato/212
+- **Descripción en Inglés:** With french fries, chaufa, sweet plantain and fried egg
+
+### Pollo broaster salchimosrito — $22.99
+- **ID:** 213
+- **URL:** https://mibarruntonj.com/plato/213
+- **Descripción en Inglés:** With french fries, chaufa and hot dog
+
+### Pollo broaster chori-mosrito — $22.99
+- **ID:** 214
+- **URL:** https://mibarruntonj.com/plato/214
+- **Descripción en Inglés:** With french fries, chaufa and chorizo
+
+### Pollo broaster mostrito Acevichado — $19.99
+- **ID:** 215
+- **URL:** https://mibarruntonj.com/plato/215
+- **Descripción en Inglés:** With french fries and chaufa in acevichado sauce
+
+### Pollo broaster mostrito Acevichado a lo pobre — $22.99
+- **ID:** 216
+- **URL:** https://mibarruntonj.com/plato/216
+- **Descripción en Inglés:** With french fries, chaufa, sweet plantain and fried egg
+
+### Pollo broaster mostrito Especial — $25.99
+- **ID:** 217
+- **URL:** https://mibarruntonj.com/plato/217
+- **Descripción en Inglés:** Chaufa, french fries, sweet plantain, fried egg and hot
+
+
+## Categoría: GUARNICIONES (15 platos)
+
+### Porción de arroz blanco — $4.99
+- **ID:** 218
+- **URL:** https://mibarruntonj.com/plato/218
+- **Descripción en Inglés:** White rice
+
+### Porción de tostones — $6.99
+- **ID:** 219
+- **URL:** https://mibarruntonj.com/plato/219
+- **Descripción en Inglés:** Fried green plantain
+
+### Porción de maduros — $6.99
+- **ID:** 220
+- **URL:** https://mibarruntonj.com/plato/220
+- **Descripción en Inglés:** Sweet fried plantain
+
+### Porción de yuca — $6.99
+- **ID:** 221
+- **URL:** https://mibarruntonj.com/plato/221
+- **Descripción en Inglés:** Cassava, boiled or fried
+
+### Porción papas fritas Regular — $7.99
+- **ID:** 222
+- **URL:** https://mibarruntonj.com/plato/222
+- **Descripción en Inglés:** Regular french fries
+
+### Porción papas naturales — $9.99
+- **ID:** 223
+- **URL:** https://mibarruntonj.com/plato/223
+- **Descripción en Inglés:** Fresh-cut fries with skin
+
+### Porción Salsa Criolla — $6.99
+- **ID:** 224
+- **URL:** https://mibarruntonj.com/plato/224
+- **Descripción en Inglés:** Peruvian onion and cilantro relish
+
+### Porción Ensalada Verde de lechuga — $7.99
+- **ID:** 225
+- **URL:** https://mibarruntonj.com/plato/225
+- **Descripción en Inglés:** Green lettuce salad
+
+### Porción de Cancha — $6.99
+- **ID:** 226
+- **URL:** https://mibarruntonj.com/plato/226
+- **Descripción en Inglés:** Roasted corn
+
+### Crema de la huancaína 2 oz — $1.99
+- **ID:** 227
+- **URL:** https://mibarruntonj.com/plato/227
+- **Descripción en Inglés:** Huancaína cream
+
+### Ají verde 2 oz — $0.99
+- **ID:** 228
+- **URL:** https://mibarruntonj.com/plato/228
+- **Descripción en Inglés:** Green ají sauce
+
+### Mayonesa casera 2 oz — $1.49
+- **ID:** 229
+- **URL:** https://mibarruntonj.com/plato/229
+- **Descripción en Inglés:** House mayonnaise
+
+### Aceituna casera 2 oz — $1.49
+- **ID:** 230
+- **URL:** https://mibarruntonj.com/plato/230
+- **Descripción en Inglés:** House olive sauce
+
+### Salsa Rosada 2 oz — $1.49
+- **ID:** 231
+- **URL:** https://mibarruntonj.com/plato/231
+- **Descripción en Inglés:** Pink sauce
+
+### Rocoto pamillero 2 oz — $1.49
+- **ID:** 232
+- **URL:** https://mibarruntonj.com/plato/232
+- **Descripción en Inglés:** Rocoto pepper cream
+
+
+## Categoría: BEBIDAS (7 platos)
+
+### Chicha morada — $3.99
+- **ID:** 233
+- **URL:** https://mibarruntonj.com/plato/233
+- **Descripción en Inglés:** Purple corn drink · vaso o jarra / glass or pitcher
+
+### Agua de manzana — $3.99
+- **ID:** 234
+- **URL:** https://mibarruntonj.com/plato/234
+- **Descripción en Inglés:** Apple water · vaso o jarra / glass or pitcher
+
+### Agua de maracuyá — $3.99
+- **ID:** 235
+- **URL:** https://mibarruntonj.com/plato/235
+- **Descripción en Inglés:** Passion fruit water · vaso o jarra / glass or pitcher
+
+### Agua de piña — $3.99
+- **ID:** 236
+- **URL:** https://mibarruntonj.com/plato/236
+- **Descripción en Inglés:** Pineapple water · vaso o jarra / glass or pitcher
+
+### Emoliente — $3.99
+- **ID:** 237
+- **URL:** https://mibarruntonj.com/plato/237
+- **Descripción en Inglés:** Peruvian herb beverage
+
+### Inca Kola 2 Litros — $6.99
+- **ID:** 238
+- **URL:** https://mibarruntonj.com/plato/238
+- **Descripción en Inglés:** Peruvian golden kola 2-liter bottle
+- **Detalle / Glosa:** Inca Kola 2 Litros
+
+### Sodas en lata (12 oz) — $1.99
+- **ID:** 239
+- **URL:** https://mibarruntonj.com/plato/239
+- **Descripción en Inglés:** Canned soda
+
+
+## Categoría: POSTRES CASEROS (9 platos)
+
+### Crema Volteada — $7.99
+- **ID:** 240
+- **URL:** https://mibarruntonj.com/plato/240
+- **Descripción en Inglés:** Traditional Peruvian caramel egg custard
+
+### Tres Leches — $7.99
+- **ID:** 241
+- **URL:** https://mibarruntonj.com/plato/241
+- **Descripción en Inglés:** Rich sponge cake soaked in three milks
+
+### Torta de chocolate — $7.99
+- **ID:** 242
+- **URL:** https://mibarruntonj.com/plato/242
+- **Descripción en Inglés:** Classic Peruvian chocolate cake with fudge
+
+### Picarones — $8.99
+- **ID:** 243
+- **URL:** https://mibarruntonj.com/plato/243
+- **Descripción en Inglés:** Crispy sweet potato & squash rings with chancaca spiced syrup
+
+### Tiramisú — $7.99
+- **ID:** 244
+- **URL:** https://mibarruntonj.com/plato/244
+- **Descripción en Inglés:** Coffee-flavoured Italian-Peruvian dessert
+
+### Gelatina sola — $4.99
+- **ID:** 245
+- **URL:** https://mibarruntonj.com/plato/245
+- **Descripción en Inglés:** Fruit gelatin dessert
+
+### Gelatina con flan — $4.99
+- **ID:** 246
+- **URL:** https://mibarruntonj.com/plato/246
+- **Descripción en Inglés:** Layered gelatin and vanilla flan
+
+### Mazamorra morada — $4.99
+- **ID:** 247
+- **URL:** https://mibarruntonj.com/plato/247
+- **Descripción en Inglés:** Traditional purple corn pudding with dried fruit
+
+### Arroz con leche — $4.99
+- **ID:** 248
+- **URL:** https://mibarruntonj.com/plato/248
+- **Descripción en Inglés:** Creamy Peruvian rice pudding with cinnamon
+
+
+## Categoría: BATIDOS & JUGOS (14 platos)
+
+### Jugo de naranja natural — $7.99
+- **ID:** 249
+- **URL:** https://mibarruntonj.com/plato/249
+- **Descripción en Inglés:** Freshly squeezed natural orange juice
+
+### Batido de Piña — $6.99
+- **ID:** 250
+- **URL:** https://mibarruntonj.com/plato/250
+- **Descripción en Inglés:** Pineapple Smoothie
+- **Detalle / Glosa:** Piña dorada seleccionada licuada con hielo al punto perfecto
+
+### Batido de Fresa — $6.99
+- **ID:** 251
+- **URL:** https://mibarruntonj.com/plato/251
+- **Descripción en Inglés:** Strawberry Smoothie
+- **Detalle / Glosa:** Fresas frescas seleccionadas licuadas con la base de tu preferencia
+
+### Batido de Papaya — $6.99
+- **ID:** 252
+- **URL:** https://mibarruntonj.com/plato/252
+- **Descripción en Inglés:** Papaya Smoothie
+- **Detalle / Glosa:** Papaya fresca licuada a tu gusto
+
+### Batido de Maracuyá — $6.99
+- **ID:** 253
+- **URL:** https://mibarruntonj.com/plato/253
+- **Descripción en Inglés:** Passion Fruit Smoothie
+- **Detalle / Glosa:** Pura pulpa aromática de maracuyá fresca y refrescante
+
+### Batido de Mango — $6.99
+- **ID:** 254
+- **URL:** https://mibarruntonj.com/plato/254
+- **Descripción en Inglés:** Mango Smoothie
+- **Detalle / Glosa:** Mango maduro dulce y cremoso licuado al instante
+
+### Batido de Guanábana — $6.99
+- **ID:** 255
+- **URL:** https://mibarruntonj.com/plato/255
+- **Descripción en Inglés:** Soursop Smoothie
+- **Detalle / Glosa:** Deliciosa pulpa exótica de guanábana natural, cremosa y digestiva
+
+### Batido de Plátano — $6.99
+- **ID:** 256
+- **URL:** https://mibarruntonj.com/plato/256
+- **Descripción en Inglés:** Banana Smoothie
+- **Detalle / Glosa:** Plátanos de seda maduros licuados, nutritivo y energizante
+
+### Batido de Chocolate — $6.99
+- **ID:** 257
+- **URL:** https://mibarruntonj.com/plato/257
+- **Descripción en Inglés:** Chocolate Smoothie
+- **Detalle / Glosa:** Cremoso y tentador batido de chocolate preparado con selecto cacao
+
+### Batido de Vainilla — $6.99
+- **ID:** 258
+- **URL:** https://mibarruntonj.com/plato/258
+- **Descripción en Inglés:** Vanilla Smoothie
+- **Detalle / Glosa:** Clásico y suave batido con esencia aromática de vainilla
+
+### Batido de Lúcuma — $6.99
+- **ID:** 259
+- **URL:** https://mibarruntonj.com/plato/259
+- **Descripción en Inglés:** Lucuma Smoothie
+- **Detalle / Glosa:** El auténtico oro de los Incas: lúcuma peruana cremosa y de sabor inigualable
+
+### Batido de Mora — $6.99
+- **ID:** 260
+- **URL:** https://mibarruntonj.com/plato/260
+- **Descripción en Inglés:** Blackberry Smoothie
+- **Detalle / Glosa:** Moras silvestres frescas con el balance ideal de acidez y dulzor
+
+### Batido Surtido Peruano — $6.99
+- **ID:** 261
+- **URL:** https://mibarruntonj.com/plato/261
+- **Descripción en Inglés:** Peruvian Mixed Fruit Smoothie
+- **Detalle / Glosa:** El tradicional surtido de las juguerías peruanas: papaya, fresa, piña, mango, beterraga y plátano
+
+### Batido Especial Peruano — $6.99
+- **ID:** 262
+- **URL:** https://mibarruntonj.com/plato/262
+- **Descripción en Inglés:** Peruvian Special Rich Smoothie
+- **Detalle / Glosa:** El clásico reconstituyente peruano: fresa, piña, mango, beterraga, plátano, leche, huevo y algarrobina
+

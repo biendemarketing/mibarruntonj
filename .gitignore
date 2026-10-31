@@ -25,6 +25,9 @@ dist-ssr
 /public/platos
 scratch_*
 *.txt
+!public/robots.txt
+!public/llms.txt
+!public/llms-full.txt
 __pycache__/
 *.py
 # Environment variables

@@ -23,7 +23,7 @@ async function prerenderOpenGraph() {
     platosMap = JSON.parse(mapContent);
   } catch (e) {}
 
-  const baseUrl = 'https://mibarruntonj.vercel.app';
+  const baseUrl = 'https://mibarruntonj.com';
   let generatedCount = 0;
 
   for (const dish of DISHES_DATA) {
@@ -48,6 +48,8 @@ async function prerenderOpenGraph() {
       .replace(/<title>.*?<\/title>/i, `<title>${titleText}</title>`)
       // Description
       .replace(/<meta\s+name=["']description["']\s+content=["'].*?["']\s*\/?>/i, `<meta name="description" content="${descText}" />`)
+      // Canonical
+      .replace(/<link\s+rel=["']canonical["']\s+href=["'].*?["']\s*\/?>/i, `<link rel="canonical" href="${pageUrl}" />`)
       // OG Title
       .replace(/<meta\s+property=["']og:title["']\s+content=["'].*?["']\s*\/?>/i, `<meta property="og:title" content="${titleText}" />`)
       // OG Description

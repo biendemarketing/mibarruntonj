@@ -46,6 +46,14 @@
   ],
   "rewrites": [
     {
+      "source": "/sitemap.xml",
+      "destination": "/api/sitemap"
+    },
+    {
+      "source": "/llms.txt",
+      "destination": "/api/llms"
+    },
+    {
       "source": "/(.*)menu_imprimible.html",
       "destination": "/menu_imprimible.html"
     },
@@ -66,7 +74,7 @@
       "destination": "/logo/logo.png"
     },
     {
-      "source": "/((?!assets/|fotos/|logo/|LogoPWA/|platos_webp/|fonts/|.*\\..*).*)",
+      "source": "/((?!api/|assets/|fotos/|logo/|LogoPWA/|platos_webp/|fonts/|.*\\..*).*)",
       "destination": "/index.html"
     }
   ]

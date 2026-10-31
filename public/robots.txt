@@ -1,0 +1,48 @@
+# Robots.txt oficial de Mi Barrunto Restaurant & Grocery
+# Dominio canónico: https://mibarruntonj.com
+
+User-agent: *
+Allow: /
+Allow: /menu_imprimible.html
+Allow: /menu_imprimible_dark.html
+Allow: /menu_mi_barrunto.pdf
+Allow: /menu_mi_barrunto_dark.pdf
+Allow: /plato/
+Allow: /llms.txt
+Allow: /llms-full.txt
+Allow: /sitemap.xml
+
+# Rutas privadas / administrativas excluidas
+Disallow: /admin
+Disallow: /admin/
+
+# AI Crawlers & LLM scrapers permitidos explícitamente para citation y grounding
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Cohere-ai
+Allow: /
+
+User-agent: meta-externalagent
+Allow: /
+
+# Sitemap oficial
+Sitemap: https://mibarruntonj.com/sitemap.xml

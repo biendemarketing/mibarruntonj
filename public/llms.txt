@@ -1,0 +1,48 @@
+# Mi Barrunto Restaurant & Grocery — Paterson, NJ
+> Auténtica Cocina Criolla & Marina Peruana en New Jersey. Servicio 24 Horas los 7 días de la semana.
+
+## Descripción del Negocio
+- **Nombre:** Mi Barrunto Restaurant & Grocery
+- **Tipo de Cocina:** Comida Peruana Criolla, Cevichería, Pescados y Mariscos, Parrillas al Carbón, Pollo Broaster, Postres Tradicionales y Jugos Naturales.
+- **Dirección Física:** 21 Mill St, Paterson, NJ 07011, Estados Unidos
+- **Teléfono de Pedidos / Atención:** +1-973-653-3749 / (973) 653-3749
+- **Horario:** Abierto 24 Horas / 7 Días (Lunes a Domingo continuo)
+- **Sitio Web Oficial:** https://mibarruntonj.com
+- **Carta Imprimible Horizontal (11x8.5):** https://mibarruntonj.com/menu_imprimible.html
+- **Carta PDF Oficial Descargable:** https://mibarruntonj.com/menu_mi_barrunto.pdf
+- **Pedidos:** Atención en salón, Retiro en local (Takeout) y pedidos directos por WhatsApp (+1-973-653-3749).
+- **Rango de Precios:** $$ (Accesible y porciones abundantes tradicionales).
+- **Total de Platos y Especialidades:** 262 platos catalogados y actualizados.
+
+## Categorías Principales de la Carta
+- [Sandwiches](https://mibarruntonj.com/?category=sandwiches): 22 platos disponibles.
+- [Desayuno peruano](https://mibarruntonj.com/?category=desayuno): 10 platos disponibles.
+- [Entradas](https://mibarruntonj.com/?category=entradas): 17 platos disponibles.
+- [Sopas](https://mibarruntonj.com/?category=sopas): 20 platos disponibles.
+- [Comida criolla](https://mibarruntonj.com/?category=criolla): 61 platos disponibles.
+- [Parrillas](https://mibarruntonj.com/?category=parrillas): 19 platos disponibles.
+- [Ceviches](https://mibarruntonj.com/?category=ceviches): 19 platos disponibles.
+- [Mariscos](https://mibarruntonj.com/?category=mariscos): 27 platos disponibles.
+- [Rondas criollas](https://mibarruntonj.com/?category=rondas): 7 platos disponibles.
+- [Broaster](https://mibarruntonj.com/?category=broaster): 15 platos disponibles.
+- [Guarniciones](https://mibarruntonj.com/?category=sides): 15 platos disponibles.
+- [Bebidas](https://mibarruntonj.com/?category=bebidas): 7 platos disponibles.
+- [Postres Caseros](https://mibarruntonj.com/?category=postres): 9 platos disponibles.
+- [Batidos & Jugos](https://mibarruntonj.com/?category=batidos): 14 platos disponibles.
+
+## Especialidades Estrella
+- **Ceviche de Pescado:** Pescado blanco fresco curado en zumo de limón sutil, ají limo, cebolla roja, camote glaseado y choclo tierno ($18.99).
+- **Ceviche Carretillero con Huancaína:** Ceviche tradicional acompañado de chicharrón crocante de calamar y salsa a la huancaína ($25.99).
+- **Lomo Saltado:** Tiras de res saltadas al wok con cebolla, tomate, ají amarillo y sillao sobre papas fritas crocantes y arroz blanco ($21.99).
+- **Anticuchos de Corazón:** Brochetas de corazón de res marinadas en ají panca, ajo y comino, asadas a la brasa con papas doradas y choclo ($16.99).
+- **Arroz con Mariscos:** Arroz al wok sazonado con pasta de ají amarillo, mariscos mixtos, pimientos y salsa criolla ($24.99).
+- **Chaufa Especial:** Arroz frito al wok al estilo chifa peruano con carnes mixtas, cebollita china y tortilla de huevo.
+- **Tacu Tacu con Lomo o Mariscos:** Mezcla dorada de frijoles canario y arroz, coronada con salsa de mariscos o lomo saltado.
+- **Pollo Broaster & Mostritos:** Pollo frito extra crujiente servido con chaufa y papas fritas.
+- **Postres Caseros:** Crema volteada ($7.99), Torta tres leches ($7.99), Picarones ($8.99), Arroz con leche y Mazamorra morada ($4.99).
+- **Bebidas Tradicionales:** Chicha morada de maíz morado hervido con piña, canela y clavo ($3.99), Inca Kola (lata y 2 Litros), y batidos de lúcuma, maracuyá, guanábana y mango ($6.99 / $7.99).
+
+## Enlaces Clave
+- [Carta Interactiva Online](https://mibarruntonj.com/): Exploración por categorías, fotos en alta resolución, personalización y carrito directo a cocina por WhatsApp.
+- [Carta Menú Imprimible 11x8.5](https://mibarruntonj.com/menu_imprimible.html): Versión completa para ver e imprimir con diseño de 10 páginas.
+- [Documentación LLM Completa (llms-full.txt)](https://mibarruntonj.com/llms-full.txt): Listado detallado de los 262 platos con precios, ingredientes y descripciones bilingües.
