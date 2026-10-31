@@ -1,26 +1,42 @@
 <!doctype html>
 <html lang="es">
 <head>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-J7SJ662J8V"></script>
+  <!-- Google tag (gtag.js) & Google Tag Manager (Carga diferida tras LCP para máximo rendimiento) -->
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-
     gtag('config', 'G-J7SJ662J8V');
+    window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+
+    (function() {
+      var loaded = false;
+      function loadAnalytics() {
+        if (loaded) return;
+        loaded = true;
+        var g = document.createElement('script');
+        g.async = true;
+        g.src = 'https://www.googletagmanager.com/gtag/js?id=G-J7SJ662J8V';
+        document.head.appendChild(g);
+
+        var gtm = document.createElement('script');
+        gtm.async = true;
+        gtm.src = 'https://www.googletagmanager.com/gtm.js?id=GTM-PGP7X6HF';
+        document.head.appendChild(gtm);
+      }
+      window.addEventListener('scroll', loadAnalytics, { once: true, passive: true });
+      window.addEventListener('touchstart', loadAnalytics, { once: true, passive: true });
+      window.addEventListener('mousemove', loadAnalytics, { once: true, passive: true });
+      window.addEventListener('load', function() {
+        setTimeout(loadAnalytics, 2800);
+      });
+    })();
   </script>
 
-  <!-- Google Tag Manager -->
-  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','GTM-PGP7X6HF');</script>
-  <!-- End Google Tag Manager -->
-
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preload" as="image" href="/logo/logo.webp" fetchpriority="high" />
+  <link rel="preload" as="image" href="/bg-restaurant.webp" fetchpriority="high" />
   
   <!-- Restaurador de URLs SPA para Enlaces Compartidos -->
   <script>
@@ -223,7 +239,9 @@
   <!-- Google Fonts: Roboto (Primaria Admin), DM Sans, Inter (Secundaria Admin), Grandstander & Alegreya Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:ital,wght@0,300;0,400;0,500;0,700;0,800;0,900;1,400;1,700&family=DM+Sans:ital,opsz,wght@0,9..40,400..900;1,9..40,400..900&family=Grandstander:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400;1,700;1,800&family=Inter:wght@400;500;600;700;800;900&family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet">
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:ital,wght@0,300;0,400;0,500;0,700;0,800;0,900;1,400;1,700&family=DM+Sans:ital,opsz,wght@0,9..40,400..900;1,9..40,400..900&family=Grandstander:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400;1,700;1,800&family=Inter:wght@400;500;600;700;800;900&family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400;1,700&display=swap" />
+  <link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:ital,wght@0,300;0,400;0,500;0,700;0,800;0,900;1,400;1,700&family=DM+Sans:ital,opsz,wght@0,9..40,400..900;1,9..40,400..900&family=Grandstander:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400;1,700;1,800&family=Inter:wght@400;500;600;700;800;900&family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:ital,wght@0,300;0,400;0,500;0,700;0,800;0,900;1,400;1,700&family=DM+Sans:ital,opsz,wght@0,9..40,400..900;1,9..40,400..900&family=Grandstander:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400;1,700;1,800&family=Inter:wght@400;500;600;700;800;900&family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet"></noscript>
   <script>
     // Recuperación automática ante desincronización de caché o caída de chunks de despliegue
     window.addEventListener('error', function(e) {

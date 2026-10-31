@@ -30,7 +30,16 @@
       ]
     },
     {
-      "source": "/assets/(.*)",
+      "source": "/(assets|platos_webp|logo|LogoPWA|fotos|fonts)/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/(bg-restaurant\\.jpg|bg-restaurant\\.webp|header-bg\\.mp4)",
       "headers": [
         {
           "key": "Cache-Control",

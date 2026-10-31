@@ -30,7 +30,7 @@ import { Cart } from './models/Cart';
 import { CartItem } from './models/CartItem';
 import { Customer } from './models/Customer';
 import { Search, ShoppingCart, LayoutGrid, Rows3, ChevronUp, ChevronLeft, RotateCcw, X, Heart, Trash2, CheckSquare, Square, CheckCircle2, Plus } from 'lucide-react';
-import { TvMenuModal } from './components/TvMenuModal';
+const TvMenuModal = lazy(() => import('./components/TvMenuModal').then((m) => ({ default: m.TvMenuModal })));
 import { triggerHaptic } from './utils/haptics';
 import { triggerFlyToCart } from './utils/flyToCart';
 import { useAlertConfirm } from './context/AlertConfirmContext';
@@ -974,11 +974,11 @@ export function App() {
             </div>
           )
         ) : (
-          groupedCatalog.map(({ category, dishes }) => (
+          groupedCatalog.map(({ category, dishes }, catIdx) => (
             <section
               key={category.id}
               id={category.id}
-              style={{ marginBottom: '2.5rem' }}
+              style={{ marginBottom: '2.5rem', ...(catIdx > 0 ? { contentVisibility: 'auto', containIntrinsicSize: '1px 700px' } : {}) }}
             >
               {/* Encabezado de la Categoría con Título Centrado y Doble Línea Horizontal (Roja y Naranja) */}
               <div className="category-section-header">
@@ -1011,6 +1011,7 @@ export function App() {
                       key={dish.id}
                       dish={dish}
                       index={dishIdx}
+                      isPriority={catIdx === 0 && dishIdx < 2}
                       photoMode={photoMode}
                       quantity={qty}
                       viewMode={viewMode}
@@ -1155,12 +1156,16 @@ export function App() {
         </div>
       )}
       {/* Modal Pantalla Completa: Modo Menú TV */}
-      <TvMenuModal
-        isOpen={isTvModeOpen}
-        onClose={() => setIsTvModeOpen(false)}
-        dishes={allDishes}
-        photoMode={photoMode}
-      />
+      {isTvModeOpen && (
+        <Suspense fallback={null}>
+          <TvMenuModal
+            isOpen={isTvModeOpen}
+            onClose={() => setIsTvModeOpen(false)}
+            dishes={allDishes}
+            photoMode={photoMode}
+          />
+        </Suspense>
+      )}
     </div>
   );
 }

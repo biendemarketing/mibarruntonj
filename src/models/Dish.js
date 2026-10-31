@@ -107,7 +107,18 @@ export class Dish {
     const raw = this.getImage(photoMode);
     if (!raw) return null;
 
-    // Si ya es una URL completa (HTTP o HTTPS, ej: Supabase Storage CDN)
+    const base = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.BASE_URL) || '/';
+    const baseClean = base.endsWith('/') ? base : base + '/';
+
+    // Si es una URL de Supabase que apunta a platos_webp/, servir primero desde el Edge CDN local (comprimido y con caché de 1 año)
+    if (raw.includes('/storage/v1/object/public/dishes/platos_webp/')) {
+      const filename = raw.split('/platos_webp/').pop();
+      if (filename) {
+        return `${baseClean}platos_webp/${filename}`;
+      }
+    }
+
+    // Si es otra URL externa (ej: fotos nuevas subidas desde Admin en uploads/)
     if (raw.startsWith('http://') || raw.startsWith('https://')) {
       return raw;
     }
@@ -116,27 +127,21 @@ export class Dish {
 
     // Si es una ruta que pertenece a platos_webp/
     if (clean.startsWith('platos_webp/')) {
-      return `${SUPABASE_CDN_BASE}/${clean}`;
+      return `${baseClean}${clean}`;
     }
 
-    // Si es un archivo con nombre webp, mapear al CDN de Supabase Storage
+    // Si es un archivo con nombre webp, mapear a platos_webp local optimizado
     const filename = clean.split('/').pop();
     if (filename && filename.toLowerCase().endsWith('.webp')) {
-      return `${SUPABASE_CDN_BASE}/platos_webp/${filename}`;
-    }
-
-    // Si es un asset en la carpeta assets/
-    if (clean.startsWith('assets/')) {
-      return `${SUPABASE_CDN_BASE}/${clean}`;
+      return `${baseClean}platos_webp/${filename}`;
     }
 
     // Fallback relativo para otros recursos
-    const base = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.BASE_URL) || '/';
-    return `${base.endsWith('/') ? base : base + '/'}${clean}`;
+    return `${baseClean}${clean}`;
   }
 
   /**
-   * Obtiene la ruta local relativa de respaldo en caso de desconexión o fallo del CDN
+   * Obtiene la ruta de respaldo en Supabase Storage CDN en caso de que un archivo nuevo no exista localmente
    * @param {'curated'|'complete'} photoMode
    * @returns {string|null}
    */
@@ -144,17 +149,16 @@ export class Dish {
     const raw = this.getImage(photoMode);
     if (!raw) return null;
 
-    const base = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.BASE_URL) || '/';
-    const baseClean = base.endsWith('/') ? base : base + '/';
-
-    // Si es una URL de Supabase CDN, extraer la subruta dentro del bucket
-    if (raw.includes('/storage/v1/object/public/dishes/')) {
-      const storagePath = raw.split('/storage/v1/object/public/dishes/')[1];
-      return `${baseClean}${storagePath}`;
+    if (raw.startsWith('http://') || raw.startsWith('https://')) {
+      return raw;
     }
 
     const clean = raw.replace(/^(\.\/|\/)+/, '');
-    return `${baseClean}${clean}`;
+    const filename = clean.split('/').pop();
+    if (filename && filename.toLowerCase().endsWith('.webp')) {
+      return `${SUPABASE_CDN_BASE}/platos_webp/${filename}`;
+    }
+    return `${SUPABASE_CDN_BASE}/${clean}`;
   }
 
   /**

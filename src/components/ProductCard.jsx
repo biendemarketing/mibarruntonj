@@ -11,6 +11,7 @@ export function ProductCard({
   onOpenDetail,
   viewMode = 'grid',
   index = 0,
+  isPriority = false,
   isFavorite = false,
   onToggleFavorite,
   isSelectionMode = false,
@@ -57,7 +58,8 @@ export function ProductCard({
               src={currentImage}
               alt={`${dish.name} — Plato peruano en Mi Barrunto`}
               className={`compact-img ${isImageLoaded ? 'img-loaded' : 'img-loading'}`}
-              loading="lazy"
+              loading={isPriority ? "eager" : "lazy"}
+              fetchPriority={isPriority && index === 0 ? "high" : "auto"}
               decoding="async"
               onLoad={() => setIsImageLoaded(true)}
               onError={(e) => {
@@ -183,7 +185,10 @@ export function ProductCard({
             src={currentImage}
             alt={`${dish.name} — Comida criolla peruana en Mi Barrunto`}
             className={`product-card-img ${isImageLoaded ? 'img-loaded' : 'img-loading'}`}
-            loading="lazy"
+            width="680"
+            height="426"
+            loading={isPriority ? "eager" : "lazy"}
+            fetchPriority={isPriority && index === 0 ? "high" : "auto"}
             decoding="async"
             onLoad={() => setIsImageLoaded(true)}
             onError={(e) => {

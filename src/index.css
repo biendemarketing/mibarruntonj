@@ -5,7 +5,7 @@
    Tipografía Dirección y Redes: 'Inter' / 'Speedee' (sistema limpio)
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Alegreya+Sans:ital,wght@0,300;0,400;0,500;0,700;0,800;0,900;1,400;1,700&family=DM+Sans:ital,opsz,wght@0,9..40,400..900;1,9..40,400..900&family=Grandstander:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400;1,700;1,800&family=Inter:wght@400;500;600;700;800;900&family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400;1,700&display=swap');
+/* Tipografías cargadas de forma asíncrona desde index.html para evitar bloqueo de renderizado */
 
 @font-face {
   font-family: 'Speedee';
@@ -181,7 +181,7 @@ body {
   padding-bottom: 95px;
   
   /* Imagen de Fondo Fija - CDN de Supabase Storage con fallback local */
-  background-image: linear-gradient(var(--overlay-bg), var(--overlay-bg)), url('https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/assets/bg-restaurant.jpg'), url('/bg-restaurant.jpg');
+  background-image: linear-gradient(var(--overlay-bg), var(--overlay-bg)), url('/bg-restaurant.webp');
   background-attachment: fixed;
   background-size: cover;
   background-position: center;

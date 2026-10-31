@@ -79,21 +79,40 @@ export function Header({
     };
   }, []);
 
+  const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
+
+  useEffect(() => {
+    let activated = false;
+    const enableVideo = () => {
+      if (!activated) {
+        activated = true;
+        setShouldLoadVideo(true);
+      }
+    };
+    const timer = setTimeout(enableVideo, 3200);
+    window.addEventListener('scroll', enableVideo, { once: true, passive: true });
+    window.addEventListener('touchstart', enableVideo, { once: true, passive: true });
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('scroll', enableVideo);
+      window.removeEventListener('touchstart', enableVideo);
+    };
+  }, []);
+
   return (
     <header className="brand-header">
-      {/* Video de Fondo en Bucle Continuo - Totalmente Limpio Sin Overlay */}
+      {/* Video de Fondo en Bucle Continuo - Carga diferida inteligente para proteger LCP */}
       <div className="brand-header-video-wrap" aria-hidden="true">
         <video
           className="brand-header-video"
-          autoPlay
+          autoPlay={shouldLoadVideo}
           loop
           muted
           playsInline
-          preload="metadata"
-          poster="https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/assets/bg-restaurant.jpg"
+          preload="none"
+          poster="/bg-restaurant.webp"
         >
-          <source src="https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/assets/header-bg.mp4" type="video/mp4" />
-          <source src="/header-bg.mp4" type="video/mp4" />
+          {shouldLoadVideo && <source src="/header-bg.mp4" type="video/mp4" />}
         </video>
       </div>
 
@@ -163,12 +182,16 @@ export function Header({
         {/* Logo y Marca (Centrado en Móvil con Logo Grande, Izquierda en Escritorio) */}
         <div className="brand-logo-container">
           <img
-            src="/logo/logo.png"
+            src="/logo/logo.webp"
+            width="236"
+            height="236"
+            fetchPriority="high"
+            decoding="async"
             alt="Mi Barrunto - Restaurante Peruano en Paterson NJ"
             className="brand-logo-img"
             onError={(e) => {
-              const fallback = 'https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/assets/logo.png';
-              if (e.currentTarget.src !== fallback) {
+              const fallback = '/logo/logo.png';
+              if (!e.currentTarget.src.endsWith(fallback)) {
                 e.currentTarget.src = fallback;
               }
             }}

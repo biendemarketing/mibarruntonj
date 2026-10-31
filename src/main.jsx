@@ -5,7 +5,6 @@ import { SpeedInsights } from '@vercel/speed-insights/react';
 import { AlertConfirmProvider } from './context/AlertConfirmContext';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { purgePwaAndUnregisterSW } from './registerSW';
-import { visitTracker } from './utils/visitTracker';
 import App from './App.jsx';
 import './index.css';
 
@@ -13,7 +12,7 @@ import './index.css';
 purgePwaAndUnregisterSW();
 
 // Inicializar telemetría de visitas para el panel de administración
-visitTracker.init();
+setTimeout(() => { import('./utils/visitTracker').then(({ visitTracker }) => visitTracker.init()).catch(() => {}); }, 1500);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
