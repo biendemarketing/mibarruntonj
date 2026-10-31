@@ -21,8 +21,8 @@ async function prerenderOpenGraph() {
     const cssFullPath = path.join(distDir, cssRelPath);
     if (fs.existsSync(cssFullPath)) {
       const cssContent = fs.readFileSync(cssFullPath, 'utf-8');
-      baseHtml = baseHtml.replace(cssLinkMatch[0], `<style>${cssContent}</style>`);
-      fs.writeFileSync(distIndexPath, baseHtml, 'utf-8');
+      const inlinedHtml = baseHtml.replace(cssLinkMatch[0], `<style>${cssContent}</style>`);
+      fs.writeFileSync(distIndexPath, inlinedHtml, 'utf-8');
       console.log(`[prerender-og] Inlined ${cssRelPath} (${(cssContent.length / 1024).toFixed(1)} KB) into dist/index.html to eliminate render-blocking CSS.`);
     }
   }

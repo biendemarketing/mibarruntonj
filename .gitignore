@@ -38,3 +38,18 @@ __pycache__/
 .env.test.local
 .env.production.local
 !.env.example
+
+# Carpetas de recursos originales de diseño (no requeridas en el build de Vercel)
+/platos/
+/platos2/
+/platosquefaltan/
+/cuaderno/
+/legacy_tools/
+/fotos/
+/logo/
+/menu_mi_barrunto_dark.pdf
+/menu_imprimible_dark.html
+/public/menu_mi_barrunto_dark.pdf
+/public/menu_imprimible_dark.html
+/public/LogoPWA/logo_pwa.png
+/public/LogoPWA/logo-black-bg.png
