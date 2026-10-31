@@ -253,10 +253,15 @@ export function Header({
               }
             }}
           />
-          <div className="brand-titles">
-            <h1 className="brand-name">Mi Barrunto</h1>
-            <p className="brand-tagline">{isEn ? 'Authentic Peruvian Cuisine' : 'Comida criolla peruana'}</p>
-          </div>
+          <h1 className="brand-titles" style={{ margin: 0 }}>
+            <span className="brand-name">Mi Barrunto</span>
+            <span className="brand-tagline" style={{ textTransform: 'none' }}>
+              {isEn ? 'Authentic Peruvian Cuisine' : 'Comida criolla peruana'}
+              <span style={{ position: 'absolute', width: '1px', height: '1px', padding: 0, margin: '-1px', overflow: 'hidden', clip: 'rect(0, 0, 0, 0)', whiteSpace: 'nowrap', border: 0 }}>
+                {isEn ? ' — Peruvian Restaurant & Cevichería in Paterson, NJ' : ' — Restaurante Peruano y Cevichería en Paterson, NJ'}
+              </span>
+            </span>
+          </h1>
         </div>
 
         {/* Controles de Búsqueda y Acciones del Header */}

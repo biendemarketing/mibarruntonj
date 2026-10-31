@@ -194,7 +194,7 @@ export function TvMenuModal({ isOpen, onClose, dishes = [], photoMode = 'complet
             }}
           />
           <div className="tv-header-text">
-            <h1 className="tv-header-title">Mi Barrunto</h1>
+            <h2 className="tv-header-title">Mi Barrunto</h2>
             <span className="tv-header-sub">Paterson, NJ · Carta Oficial</span>
           </div>
         </div>
