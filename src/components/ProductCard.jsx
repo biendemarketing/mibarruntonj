@@ -185,8 +185,8 @@ export function ProductCard({
             src={currentImage}
             alt={`${dish.name} — Comida criolla peruana en Mi Barrunto`}
             className={`product-card-img ${isPriority || isImageLoaded ? 'img-loaded' : 'img-loading'}`}
-            width="680"
-            height="426"
+            width="350"
+            height="195"
             loading={isPriority ? "eager" : "lazy"}
             fetchPriority={isPriority ? "high" : "low"}
             decoding="async"

@@ -105,19 +105,31 @@ export function Header({
 
   return (
     <header className="brand-header">
-      {/* Video de Fondo en Bucle Continuo - Carga diferida inteligente para proteger LCP */}
+      {/* Imagen LCP descubrible con fetchpriority="high" + Video diferido tras interacción */}
       <div className="brand-header-video-wrap" aria-hidden="true">
-        <video
+        <img
+          src="/bg-restaurant.webp"
+          alt=""
+          width="540"
+          height="302"
+          fetchPriority="high"
+          loading="eager"
+          decoding="sync"
           className="brand-header-video"
-          autoPlay={shouldLoadVideo}
-          loop
-          muted
-          playsInline
-          preload="none"
-          poster="/bg-restaurant.webp"
-        >
-          {shouldLoadVideo && <source src="/header-bg.mp4" type="video/mp4" />}
-        </video>
+        />
+        {shouldLoadVideo && (
+          <video
+            className="brand-header-video"
+            style={{ position: 'absolute', inset: 0 }}
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="metadata"
+          >
+            <source src="/header-bg.mp4" type="video/mp4" />
+          </video>
+        )}
       </div>
 
       {/* Barra Superior con Dirección y Redes Sociales Oficiales */}
@@ -187,8 +199,8 @@ export function Header({
         <div className="brand-logo-container">
           <img
             src="/logo/logo.webp"
-            width="236"
-            height="236"
+            width="118"
+            height="118"
             fetchPriority="high"
             decoding="async"
             alt="Mi Barrunto - Restaurante Peruano en Paterson NJ"
