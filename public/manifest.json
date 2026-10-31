@@ -1,0 +1,59 @@
+{
+  "name": "Mi Barrunto Restaurant & Grocery",
+  "short_name": "Mi Barrunto",
+  "description": "Auténtica comida criolla y marina peruana en Paterson, NJ. Ceviches, lomo saltado, parrillas y atención 24 horas.",
+  "start_url": "/",
+  "id": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "orientation": "portrait-primary",
+  "lang": "es-US",
+  "icons": [
+    {
+      "src": "/LogoPWA/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/LogoPWA/icon-maskable-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/LogoPWA/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/LogoPWA/icon-maskable-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "categories": [
+    "food",
+    "restaurants",
+    "shopping"
+  ],
+  "shortcuts": [
+    {
+      "name": "Carta Menú Imprimible",
+      "short_name": "Carta Menú",
+      "description": "Ver la carta oficial completa 11x8.5",
+      "url": "/menu_imprimible.html",
+      "icons": [{ "src": "/LogoPWA/icon-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Cevichería",
+      "short_name": "Ceviches",
+      "description": "Ceviches frescos y leches de tigre",
+      "url": "/?category=ceviches",
+      "icons": [{ "src": "/LogoPWA/icon-192x192.png", "sizes": "192x192" }]
+    }
+  ]
+}
