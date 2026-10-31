@@ -159,6 +159,10 @@ export const ordersService = {
       .single();
 
     if (error) throw error;
+    // Ping automático para indexación inmediata del nuevo plato en Google & Bing
+    try {
+      notifySearchEngines(`https://mibarruntonj.com/plato/${data.id || id}`);
+    } catch (_) {}
     return data;
   },
 
@@ -1444,3 +1448,17 @@ export const tasksService = {
 };
 
 
+
+// Notificar automticamente a motores de bsqueda (Google & Bing / IndexNow) sobre nuevo contenido
+export async function notifySearchEngines(url) {
+  try {
+    const endpoint = '/api/ping-search-engines';
+    await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url: url || 'https://mibarruntonj.com/' })
+    });
+  } catch (err) {
+    console.warn('[SEO] Ping silencioso a buscadores finalizado:', err.message);
+  }
+}
