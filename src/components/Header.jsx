@@ -207,18 +207,29 @@ export function Header({
             <button
               type="button"
               onClick={toggleLang}
-              className="header-top-social-circle"
               aria-label={isEn ? 'Cambiar idioma a Español' : 'Switch language to English'}
               title={isEn ? 'Cambiar a Español' : 'Switch to English'}
               style={{
-                fontSize: '0.66rem',
+                background: 'transparent',
+                border: 'none',
+                color: '#ffffff',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minHeight: '24px',
+                minWidth: '46px',
+                padding: '0 6px',
+                fontSize: '0.68rem',
                 fontWeight: 800,
-                padding: '0 6px !important',
-                width: 'auto !important',
-                letterSpacing: '0.03em'
+                letterSpacing: '0.02em',
+                gap: '3px',
+                cursor: 'pointer',
+                filter: 'drop-shadow(0 1px 3px rgba(0, 0, 0, 0.85))'
               }}
             >
-              {isEn ? 'ES' : 'EN'}
+              <span style={{ color: !isEn ? 'var(--naranja)' : 'rgba(255,255,255,0.65)', textDecoration: !isEn ? 'underline' : 'none' }}>ES</span>
+              <span style={{ color: 'rgba(255,255,255,0.4)' }}>/</span>
+              <span style={{ color: isEn ? 'var(--naranja)' : 'rgba(255,255,255,0.65)', textDecoration: isEn ? 'underline' : 'none' }}>EN</span>
             </button>
           </div>
         </div>
