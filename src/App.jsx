@@ -5,6 +5,7 @@ import { CategoryPills } from './components/CategoryPills';
 import { ProductCard } from './components/ProductCard';
 import { MobileNavBar } from './components/MobileNavBar';
 import { Footer } from './components/Footer';
+import { FaqSection } from './components/FaqSection';
 
 // Carga diferida (Lazy Loading y Code-Splitting) para vistas y modales pesados
 const ProductDetailPage = lazy(() =>
@@ -1032,6 +1033,9 @@ export function App() {
         </main>
         </div>
       )}
+
+      {/* 5.5 Sección de Preguntas Frecuentes y Guía Local SEO */}
+      {!isDishDetailPage && <FaqSection />}
 
       {/* 6. Footer con Redes Sociales Oficiales y Selector de Versión de Fotos (Oculto en vista detalle) */}
       {!isDishDetailPage && (
