@@ -117,7 +117,7 @@ export function FaqSection() {
               </h2>
               <p style={{
                 fontSize: '0.8rem',
-                color: 'rgba(255, 255, 255, 0.6)',
+                color: '#d4d4d8',
                 margin: '0.2rem 0 0 0'
               }}>
                 Paterson, Clifton, Passaic & North Jersey • 24/7
@@ -138,13 +138,13 @@ export function FaqSection() {
                 type="button"
                 onClick={() => setLang('es')}
                 style={{
-                  padding: '4px 10px',
+                  padding: '6px 12px',
                   borderRadius: '6px',
-                  fontSize: '0.75rem',
+                  fontSize: '0.78rem',
                   fontWeight: 700,
                   border: 'none',
                   cursor: 'pointer',
-                  background: lang === 'es' ? '#ef4444' : 'transparent',
+                  background: lang === 'es' ? '#b91c1c' : 'transparent',
                   color: '#ffffff',
                   transition: 'background 0.2s'
                 }}
@@ -155,13 +155,13 @@ export function FaqSection() {
                 type="button"
                 onClick={() => setLang('en')}
                 style={{
-                  padding: '4px 10px',
+                  padding: '6px 12px',
                   borderRadius: '6px',
-                  fontSize: '0.75rem',
+                  fontSize: '0.78rem',
                   fontWeight: 700,
                   border: 'none',
                   cursor: 'pointer',
-                  background: lang === 'en' ? '#ef4444' : 'transparent',
+                  background: lang === 'en' ? '#b91c1c' : 'transparent',
                   color: '#ffffff',
                   transition: 'background 0.2s'
                 }}
