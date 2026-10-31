@@ -48,13 +48,21 @@ export function App() {
 
   const isAdminPage = normalizedPath.startsWith('/admin');
   const isDishDetailPage = normalizedPath.startsWith('/plato/');
-  const categories = useMemo(() => menuRepository.getAllCategories(), []);
-  const allDishes = useMemo(() => menuRepository.getAllDishes(), []);
+  const [catalogVersion, setCatalogVersion] = useState(0);
+  useEffect(() => {
+    return menuRepository.subscribe(() => setCatalogVersion((v) => v + 1));
+  }, []);
+  const categories = useMemo(() => menuRepository.getAllCategories(), [catalogVersion]);
+  const allDishes = useMemo(() => menuRepository.getAllDishes(), [catalogVersion]);
   const [isTvModeOpen, setIsTvModeOpen] = useState(false);
   const [isFullCatalogReady, setIsFullCatalogReady] = useState(false);
 
   useEffect(() => {
-    const unlockCatalog = () => setIsFullCatalogReady(true);
+    const unlockCatalog = () => {
+      import('./InteractiveFeatures.css').catch(() => {});
+      menuRepository.loadFullCatalog();
+      setIsFullCatalogReady(true);
+    };
     window.addEventListener('scroll', unlockCatalog, { once: true, passive: true });
     window.addEventListener('touchstart', unlockCatalog, { once: true, passive: true });
     window.addEventListener('pointerdown', unlockCatalog, { once: true, passive: true });
@@ -389,6 +397,9 @@ export function App() {
 
   // Tema oscuro de alto contraste
   useEffect(() => {
+    if (isDarkMode || viewMode !== 'grid' || showFavoritesOnly) {
+      import('./InteractiveFeatures.css').catch(() => {});
+    }
     if (isDarkMode) {
       document.documentElement.classList.add('dark');
     } else {
@@ -463,7 +474,7 @@ export function App() {
     }
 
     return rawCatalog;
-  }, [selectedCategory, searchQuery, filters, photoMode, showFavoritesOnly, favorites]);
+  }, [catalogVersion, selectedCategory, searchQuery, filters, photoMode, showFavoritesOnly, favorites]);
 
   // Lista plana de platos visibles actualmente para la navegación del modal (flechas anterior / siguiente)
   const currentCatalogDishes = useMemo(() => {

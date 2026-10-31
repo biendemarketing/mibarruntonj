@@ -1,12 +1,11 @@
 import { Dish } from '../models/Dish';
 import { Category } from '../models/Category';
-import { CATEGORIES_DATA, DISHES_DATA, BATIDOS_VARIATIONS } from '../data/menuData';
-import platosMap from '../data/platosMap.json';
+import { CATEGORIES_DATA, INITIAL_DISHES_DATA, BATIDOS_VARIATIONS } from '../data/initialMenuData';
 import { WhatsAppService } from './WhatsAppService';
 
 /**
  * Repositorio de Menú y Catálogo
- * Arquitectura Orientada a Objetos
+ * Arquitectura Orientada a Objetos con Hidratación Progresiva para LCP instantáneo
  */
 export class MenuRepository {
   constructor() {
@@ -14,29 +13,72 @@ export class MenuRepository {
     this.dishes = [];
     this.dishesMap = new Map();
     this.categoriesMap = new Map();
+    this.fullCatalogLoaded = false;
+    this.fullCatalogPromise = null;
+    this.listeners = new Set();
     this.init();
   }
 
-  /**
-   * Inicializa e indexa los modelos de dominio
-   */
+  subscribe(listener) {
+    this.listeners.add(listener);
+    return () => this.listeners.delete(listener);
+  }
+
+  notifyListeners() {
+    this.listeners.forEach((fn) => {
+      try { fn(); } catch {}
+    });
+  }
+
   init() {
-    // Instanciar categorías
     this.categories = CATEGORIES_DATA.map(c => new Category(c));
     this.categories.forEach(cat => {
       this.categoriesMap.set(cat.id, cat);
     });
 
-    // Instanciar platos con metadatos de categoría y fotos completas de la carpeta platos
-    this.dishes = DISHES_DATA.map(d => {
+    this.populateDishes(INITIAL_DISHES_DATA, {});
+
+    if (typeof window !== 'undefined') {
+      const path = window.location.pathname || '/';
+      const hasSavedState = Boolean(
+        localStorage.getItem('mb-cart-state') ||
+        localStorage.getItem('mb-favoritos') ||
+        localStorage.getItem('mb-last-order')
+      );
+      if (path !== '/' || hasSavedState) {
+        this.loadFullCatalog();
+      } else {
+        const triggerLoad = () => {
+          window.removeEventListener('scroll', triggerLoad);
+          window.removeEventListener('touchstart', triggerLoad);
+          window.removeEventListener('pointerdown', triggerLoad);
+          window.removeEventListener('mousemove', triggerLoad);
+          window.removeEventListener('keydown', triggerLoad);
+          this.loadFullCatalog();
+        };
+        window.addEventListener('scroll', triggerLoad, { once: true, passive: true });
+        window.addEventListener('touchstart', triggerLoad, { once: true, passive: true });
+        window.addEventListener('pointerdown', triggerLoad, { once: true, passive: true });
+        window.addEventListener('mousemove', triggerLoad, { once: true, passive: true });
+        window.addEventListener('keydown', triggerLoad, { once: true, passive: true });
+      }
+    }
+  }
+
+  populateDishes(dishesArray, platosMapObj = {}) {
+    this.categories.forEach(cat => {
+      cat.dishes = [];
+    });
+    this.dishes = dishesArray.map(d => {
       const cat = this.categoriesMap.get(d.category);
       return new Dish({
         ...d,
-        platosImage: d.platosImage || platosMap[d.id] || null,
+        platosImage: d.platosImage || platosMapObj[d.id] || null,
         categoryName: cat ? cat.name : '',
         categoryNameEn: cat ? cat.nameEn : ''
       });
     });
+    this.dishesMap.clear();
     this.dishes.forEach(dish => {
       this.dishesMap.set(dish.id, dish);
       const cat = this.categoriesMap.get(dish.category);
@@ -44,25 +86,29 @@ export class MenuRepository {
         cat.addDish(dish);
       }
     });
-
-    // Iniciar sincronización de fondo con Supabase
-    if (typeof window !== 'undefined') {
-      const triggerSync = () => {
-        window.removeEventListener('scroll', triggerSync);
-        window.removeEventListener('touchstart', triggerSync);
-        window.removeEventListener('pointerdown', triggerSync);
-        this.syncWithSupabase();
-      };
-      window.addEventListener('scroll', triggerSync, { once: true, passive: true });
-      window.addEventListener('touchstart', triggerSync, { once: true, passive: true });
-      window.addEventListener('pointerdown', triggerSync, { once: true, passive: true });
-    }
   }
 
-  /**
-   * Sincroniza el catálogo en caliente con la base de datos de Supabase
-   * Aprovecha el CDN de Storage y refleja cambios en vivo realizados desde el Admin Panel
-   */
+  async loadFullCatalog() {
+    if (this.fullCatalogLoaded) return;
+    if (this.fullCatalogPromise) return this.fullCatalogPromise;
+
+    this.fullCatalogPromise = (async () => {
+      try {
+        const [{ DISHES_DATA }, platosMapModule] = await Promise.all([
+          import('../data/menuData'),
+          import('../data/platosMap.json')
+        ]);
+        const platosMap = platosMapModule.default || platosMapModule || {};
+        this.populateDishes(DISHES_DATA, platosMap);
+        this.fullCatalogLoaded = true;
+        this.notifyListeners();
+        this.syncWithSupabase();
+      } catch (e) {}
+    })();
+
+    return this.fullCatalogPromise;
+  }
+
   async syncWithSupabase() {
     try {
       const { menuService } = await import('./supabase');
@@ -109,41 +155,24 @@ export class MenuRepository {
           if (cat) cat.addDish(newDish);
         }
       });
+      this.notifyListeners();
     } catch (e) {
       // Modo offline seguro
     }
   }
 
-  /**
-   * Todas las categorías
-   * @returns {Category[]}
-   */
   getAllCategories() {
     return this.categories;
   }
 
-  /**
-   * Obtiene una categoría por su identificador
-   * @param {string} id 
-   * @returns {Category|undefined}
-   */
   getCategoryById(id) {
     return this.categoriesMap.get(id);
   }
 
-  /**
-   * Todos los platos
-   * @returns {Dish[]}
-   */
   getAllDishes() {
     return this.dishes;
   }
 
-  /**
-   * Obtiene plato por ID
-   * @param {number} id 
-   * @returns {Dish|undefined}
-   */
   getDishById(id) {
     if (!id && id !== 0) return undefined;
     const num = Number(id);
@@ -151,11 +180,9 @@ export class MenuRepository {
       return this.dishesMap.get(num);
     }
     const strId = String(id).trim();
-    // Búsqueda directa por id exacto como string
     const direct = this.dishes.find(d => String(d.id) === strId);
     if (direct) return direct;
 
-    // Búsqueda por slug amigable (ej: "arroz-con-mariscos", "ceviche-clasico")
     const cleanId = strId.toLowerCase().replace(/^[0-9]+-/, '');
     return this.dishes.find(d => {
       const slug = (d.name || '').toLowerCase()
@@ -166,11 +193,6 @@ export class MenuRepository {
     });
   }
 
-  /**
-   * Obtiene todos los platos pertenecientes a una categoría
-   * @param {string} categoryId 
-   * @returns {Dish[]}
-   */
   getDishesByCategory(categoryId) {
     const cat = this.categoriesMap.get(categoryId);
     if (cat && cat.dishes && cat.dishes.length > 0) {
@@ -179,16 +201,6 @@ export class MenuRepository {
     return this.dishes.filter(d => d.category === categoryId);
   }
 
-  /**
-   * Filtra platos por criterios de búsqueda y filtros
-   * @param {Object} filters
-   * @param {string} [filters.categoryId]
-   * @param {string} [filters.query]
-   * @param {boolean} [filters.onlyWithPhoto]
-   * @param {'none'|'asc'|'desc'} [filters.priceSort]
-   * @param {'all'|'under10'|'10to20'|'over20'} [filters.priceRange]
-   * @returns {Dish[]}
-   */
   searchDishes({
     categoryId = 'todos',
     query = '',
@@ -228,11 +240,6 @@ export class MenuRepository {
     return result;
   }
 
-  /**
-   * Agrupa los platos filtrados por categoría para renderizar la carta completa
-   * @param {Object} filters 
-   * @returns {Array<{ category: Category, dishes: Dish[] }>}
-   */
   getCatalogGrouped(filters = {}) {
     const filteredDishes = this.searchDishes(filters);
     const groups = [];
@@ -256,6 +263,5 @@ export class MenuRepository {
   }
 }
 
-// Singleton para toda la aplicación
 export const menuRepository = new MenuRepository();
 export const whatsAppService = new WhatsAppService('15551234567');

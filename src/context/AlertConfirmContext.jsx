@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState, useCallback, useRef } from 'react';
-import { CustomDialog } from '../components/CustomDialog';
+import React, { createContext, useContext, useState, useCallback, useRef, lazy, Suspense } from 'react';
+const CustomDialog = lazy(() => import('../components/CustomDialog').then(m => ({ default: m.CustomDialog })));
 
 const AlertConfirmContext = createContext(null);
 
@@ -86,18 +86,22 @@ export function AlertConfirmProvider({ children }) {
   return (
     <AlertConfirmContext.Provider value={{ showAlert, showConfirm }}>
       {children}
-      <CustomDialog
-        isOpen={dialogState.isOpen}
-        onClose={handleClose}
-        onConfirm={handleConfirm}
-        title={dialogState.title}
-        message={dialogState.message}
-        type={dialogState.type}
-        confirmText={dialogState.confirmText}
-        cancelText={dialogState.cancelText}
-        isConfirm={dialogState.isConfirm}
-        confirmButtonDanger={dialogState.confirmButtonDanger}
-      />
+      {dialogState.isOpen && (
+        <Suspense fallback={null}>
+          <CustomDialog
+            isOpen={dialogState.isOpen}
+            onClose={handleClose}
+            onConfirm={handleConfirm}
+            title={dialogState.title}
+            message={dialogState.message}
+            type={dialogState.type}
+            confirmText={dialogState.confirmText}
+            cancelText={dialogState.cancelText}
+            isConfirm={dialogState.isConfirm}
+            confirmButtonDanger={dialogState.confirmButtonDanger}
+          />
+        </Suspense>
+      )}
     </AlertConfirmContext.Provider>
   );
 }
