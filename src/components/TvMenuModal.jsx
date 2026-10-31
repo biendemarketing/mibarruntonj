@@ -1,3 +1,4 @@
+import './TvMenuModal.css';
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Play, Pause, Maximize, Minimize, X, Tv } from 'lucide-react';
 import { PlateIcon } from './Icons';

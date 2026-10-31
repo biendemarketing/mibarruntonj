@@ -1,0 +1,236 @@
+/* ==========================================================================
+   DRAWER DE MENÚ (PANTALLA COMPLETA)
+   ========================================================================== */
+.mobile-drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 0.18s ease;
+}
+
+.mobile-drawer {
+  width: 100vw;
+  max-width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  inset: 0;
+  border-radius: 0;
+  background-color: var(--overlay-bg);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  color: var(--text-main);
+  display: flex;
+  flex-direction: column;
+  box-shadow: none;
+  animation: fullDrawerEnter 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+.mobile-drawer-header-clean {
+  padding: 1rem 1.25rem;
+  background-color: var(--rojo);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+  width: 100%;
+}
+
+.mobile-drawer-header-inner {
+  max-width: 600px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mobile-drawer-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.mobile-drawer-logo {
+  width: 38px;
+  height: 38px;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  object-fit: contain;
+}
+
+.mobile-drawer-brand-text {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  line-height: 1.15;
+}
+
+.mobile-drawer-brand-name {
+  font-family: var(--font-primary);
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: 0.02em;
+  color: #ffffff;
+}
+
+.mobile-drawer-brand-sub {
+  font-family: var(--font-secondary);
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.mobile-drawer-close-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.mobile-drawer-close-btn:hover {
+  background-color: rgba(255, 255, 255, 0.35);
+  transform: scale(1.05);
+}
+
+.mobile-drawer-list {
+  padding: 1.25rem 1rem;
+  overflow-y: auto;
+  scrollbar-width: none;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: 600px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.mobile-drawer-list::-webkit-scrollbar {
+  display: none;
+}
+
+.mobile-drawer-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1.15rem;
+  border-radius: 12px;
+  background-color: var(--secondary-bg);
+  font-family: var(--font-primary);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-main);
+  text-align: left;
+  transition: all 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+  border: none;
+  cursor: pointer;
+}
+
+.mobile-drawer-item:hover {
+  background-color: var(--card-hover);
+  color: var(--rojo);
+  transform: translateX(4px);
+}
+
+.mobile-drawer-item.active {
+  background-color: var(--rojo);
+  color: #ffffff;
+  box-shadow: 0 4px 16px rgba(238, 0, 0, 0.35);
+}
+
+.mobile-drawer-item-label {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.mobile-drawer-icon {
+  color: var(--naranja);
+}
+
+.mobile-drawer-item.active .mobile-drawer-icon {
+  color: #ffffff;
+}
+
+.mobile-drawer-item-end {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.mobile-drawer-count {
+  font-family: var(--font-secondary);
+  font-size: 0.74rem;
+  background-color: rgba(0, 0, 0, 0.08);
+  color: var(--text-light);
+  padding: 0.15rem 0.55rem;
+  border-radius: 12px;
+}
+
+.mobile-drawer-item.active .mobile-drawer-count {
+  background-color: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+}
+
+.mobile-drawer-arrow {
+  opacity: 0.4;
+  transition: transform 0.15s ease;
+}
+
+.mobile-drawer-item:hover .mobile-drawer-arrow {
+  opacity: 1;
+  transform: translateX(3px);
+}
+
+.mobile-drawer-item.active .mobile-drawer-arrow {
+  opacity: 0.9;
+  color: #ffffff;
+}
+
+.mobile-drawer-footer {
+  padding: 1rem 1.25rem;
+  background-color: var(--secondary-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.mobile-drawer-footer-inner {
+  max-width: 600px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  font-family: var(--font-secondary);
+  font-size: 0.82rem;
+}
+
+.mobile-drawer-info-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.mobile-drawer-info-link:hover {
+  color: var(--rojo);
+}
+

@@ -35,7 +35,7 @@ export function CategoryPills({
       <div className="sidebar-nav-header">
         <div className="sidebar-nav-title-wrap">
           <Utensils size={17} color="var(--rojo)" />
-          <h3 className="sidebar-nav-title">Categorías</h3>
+          <h2 className="sidebar-nav-title">Categorías</h2>
         </div>
 
         {/* Selector de Vistas en el Sidebar de Escritorio */}

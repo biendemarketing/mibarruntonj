@@ -304,7 +304,7 @@ export function App() {
 
   // ScrollSpy para destacar la categoría activa en el sidebar al hacer scroll en Toda la Carta
   useEffect(() => {
-    if (selectedCategory !== 'todos' || showFavoritesOnly || isDishDetailPage || searchQuery.trim()) {
+    if (!isFullCatalogReady || selectedCategory !== 'todos' || showFavoritesOnly || isDishDetailPage || searchQuery.trim()) {
       setActiveScrollCategory(null);
       return;
     }
@@ -329,7 +329,7 @@ export function App() {
     });
 
     return () => observer.disconnect();
-  }, [selectedCategory, showFavoritesOnly, isDishDetailPage, searchQuery, categories]);
+  }, [isFullCatalogReady, selectedCategory, showFavoritesOnly, isDishDetailPage, searchQuery, categories]);
 
   // Sincronización de rutas del navegador (Browser Routing con URLs reales)
   useEffect(() => {
@@ -771,16 +771,18 @@ export function App() {
         </header>
       )}
 
-      {/* 2. Menú Hamburguesa Móvil (Carga diferida) */}
-      <Suspense fallback={null}>
-        <MobileDrawer
-          isOpen={isMobileMenuOpen}
-          onClose={() => setIsMobileMenuOpen(false)}
-          categories={categories}
-          selectedCategory={searchQuery.trim() ? 'todos' : selectedCategory}
-          onSelectCategory={handleSelectCategory}
-        />
-      </Suspense>
+      {/* 2. Menú Hamburguesa Móvil (Carga diferida solo al abrir) */}
+      {isMobileMenuOpen && (
+        <Suspense fallback={null}>
+          <MobileDrawer
+            isOpen={isMobileMenuOpen}
+            onClose={() => setIsMobileMenuOpen(false)}
+            categories={categories}
+            selectedCategory={searchQuery.trim() ? 'todos' : selectedCategory}
+            onSelectCategory={handleSelectCategory}
+          />
+        </Suspense>
+      )}
 
       {/* 3. Layout Principal: Detalle de Plato dedicado o Catálogo con Sidebar */}
       {isDishDetailPage ? (
@@ -1066,7 +1068,7 @@ export function App() {
       )}
 
       {/* 5.5 Sección de Preguntas Frecuentes y Guía Local SEO */}
-      {!isDishDetailPage && <Suspense fallback={null}><FaqSection /></Suspense>}
+      {!isDishDetailPage && isFullCatalogReady && <Suspense fallback={null}><FaqSection /></Suspense>}
 
       {/* 6. Footer con Redes Sociales Oficiales y Selector de Versión de Fotos (Oculto en vista detalle) */}
       {!isDishDetailPage && (
@@ -1105,23 +1107,25 @@ export function App() {
         }}
       />
 
-      {/* 8. Carrito y Envío a WhatsApp (Carga diferida) */}
-      <Suspense fallback={null}>
-        <CartDrawer
-          isOpen={isCartOpen}
-          onClose={handleCloseCart}
-          cart={cart}
-          onUpdateQuantity={handleUpdateQuantity}
-          onRemoveItem={handleRemoveItem}
-          onUpdateCustomerField={handleUpdateCustomerField}
-          onUpdateItemNote={handleUpdateItemNote}
-          onClearCart={handleClearCart}
-          photoMode={photoMode}
-          onOrderPlaced={(createdOrder) => {
-            setActiveClientOrder(createdOrder);
-          }}
-        />
-      </Suspense>
+      {/* 8. Carrito y Envío a WhatsApp (Carga diferida solo al abrir) */}
+      {isCartOpen && (
+        <Suspense fallback={null}>
+          <CartDrawer
+            isOpen={isCartOpen}
+            onClose={handleCloseCart}
+            cart={cart}
+            onUpdateQuantity={handleUpdateQuantity}
+            onRemoveItem={handleRemoveItem}
+            onUpdateCustomerField={handleUpdateCustomerField}
+            onUpdateItemNote={handleUpdateItemNote}
+            onClearCart={handleClearCart}
+            photoMode={photoMode}
+            onOrderPlaced={(createdOrder) => {
+              setActiveClientOrder(createdOrder);
+            }}
+          />
+        </Suspense>
+      )}
 
       {/* 9. Seguimiento en Vivo del Pedido para el Cliente (Sin Registro) */}
       {activeClientOrder && (

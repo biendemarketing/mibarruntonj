@@ -199,8 +199,8 @@ export function Header({
         <div className="brand-logo-container">
           <img
             src="/logo/logo.webp"
-            width="118"
-            height="118"
+            width="110"
+            height="110"
             fetchPriority="high"
             decoding="async"
             alt="Mi Barrunto - Restaurante Peruano en Paterson NJ"

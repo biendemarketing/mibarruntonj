@@ -1,0 +1,411 @@
+/* ==========================================================================
+   MODO MENÚ TV (ENCUADRE COMPLETO SIN CORTES, SIN ZOOM EXCESIVO + AMBIENTE)
+   ========================================================================== */
+.tv-menu-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background-color: #040507;
+  color: #ffffff;
+  overflow: hidden;
+  border: none !important;
+  outline: none !important;
+  user-select: none;
+  transition: cursor 0.3s ease;
+}
+
+.tv-menu-overlay.tv-controls-hidden {
+  cursor: none !important;
+}
+
+.tv-menu-overlay.tv-controls-active {
+  cursor: default;
+}
+
+/* 1. Fondo Ambiental Difuminado del Plato: llena toda la pantalla sin cortes */
+.tv-ambient-backdrop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 1;
+  background-color: #040507;
+}
+
+.tv-ambient-bg-image {
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  filter: blur(48px) brightness(0.24) saturate(1.25);
+  transform: scale(1.12);
+  display: block;
+}
+
+/* 2. Escenario del Plato: 100% visible, sin cortes y sin zoom excesivo */
+.tv-dish-stage {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 62%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3.5rem 2rem 3.5rem 4.5rem;
+  z-index: 3;
+  animation: tvDishHeroFadeIn 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes tvDishHeroFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.97) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.tv-dish-hero-image {
+  max-width: 100%;
+  max-height: 84vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 28px;
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.82), 0 4px 20px rgba(0, 0, 0, 0.5);
+  display: block;
+  image-rendering: auto;
+  filter: contrast(1.04) saturate(1.06);
+  border: none !important;
+  outline: none !important;
+}
+
+.tv-fullscreen-placeholder {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  color: rgba(255, 255, 255, 0.15);
+}
+
+/* 3. Overlay Negro Gradual en la Foto para Contraste y Legibilidad */
+.tv-overlay-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(4, 5, 7, 0.15) 32%,
+    rgba(4, 5, 7, 0.72) 54%,
+    rgba(4, 5, 7, 0.94) 75%,
+    #040507 100%
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* 4. Ficha con Título, Descripción y Precio en la Parte Derecha */
+.tv-dish-sidebar {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 44%;
+  max-width: 620px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.35rem;
+  padding: 3rem 4.5rem 3rem 1.5rem;
+  z-index: 10;
+  pointer-events: none;
+  animation: tvSidebarSlideIn 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes tvSidebarSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(25px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.tv-sidebar-badge {
+  align-self: flex-start;
+  background-color: rgba(227, 24, 55, 0.2);
+  color: var(--rojo);
+  padding: 0.45rem 1.25rem;
+  border-radius: 9999px;
+  font-size: 0.88rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: none !important;
+  outline: none !important;
+  box-shadow: 0 4px 16px rgba(227, 24, 55, 0.25);
+}
+
+.tv-sidebar-title {
+  font-family: var(--font-primary);
+  font-size: clamp(2.3rem, 3.8vw, 3.8rem);
+  font-weight: 900;
+  color: #ffffff;
+  line-height: 1.1;
+  margin: 0;
+  letter-spacing: -0.02em;
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.85);
+}
+
+.tv-sidebar-name-en {
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.72);
+  font-style: italic;
+  margin: 0;
+  font-weight: 400;
+  line-height: 1.35;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
+}
+
+.tv-sidebar-desc {
+  font-size: 1.05rem;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.5;
+  margin: 0;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+}
+
+.tv-sidebar-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  color: var(--amarillo);
+  font-family: var(--font-primary);
+  margin-top: 0.6rem;
+  text-shadow: 0 4px 28px rgba(245, 166, 35, 0.35);
+}
+
+.tv-sidebar-currency {
+  font-size: 2.1rem;
+  font-weight: 800;
+}
+
+.tv-sidebar-price {
+  font-size: clamp(3.2rem, 5.2vw, 4.8rem);
+  font-weight: 900;
+  letter-spacing: -0.025em;
+}
+
+/* 5. Barra Superior Autocultable */
+.tv-menu-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.2rem 2.5rem;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.82) 0%, rgba(0, 0, 0, 0.35) 65%, transparent 100%);
+  border: none !important;
+  outline: none !important;
+  z-index: 30;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  will-change: opacity, transform;
+}
+
+.tv-menu-header.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.tv-menu-header.is-hidden {
+  opacity: 0;
+  transform: translateY(-20px);
+  pointer-events: none;
+}
+
+.tv-header-brand {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+}
+
+.tv-header-logo {
+  height: 46px;
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.8));
+}
+
+.tv-header-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.tv-header-title {
+  font-family: var(--font-primary);
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+}
+
+.tv-header-sub {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 0.03em;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.8);
+}
+
+.tv-header-center {
+  display: flex;
+  align-items: center;
+}
+
+.tv-live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background-color: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #ffffff;
+  padding: 0.45rem 1.1rem;
+  border-radius: 9999px;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  border: none !important;
+  outline: none !important;
+}
+
+.tv-live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--rojo);
+  box-shadow: 0 0 10px var(--rojo);
+  animation: tvLivePulse 1.8s ease-in-out infinite;
+}
+
+@keyframes tvLivePulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.35;
+    transform: scale(0.8);
+  }
+}
+
+.tv-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.tv-ctrl-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  border: none !important;
+  outline: none !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tv-ctrl-btn:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+  transform: scale(1.08);
+}
+
+.tv-ctrl-btn.tv-close-btn {
+  background-color: rgba(227, 24, 55, 0.45);
+  color: #ffffff;
+}
+
+.tv-ctrl-btn.tv-close-btn:hover {
+  background-color: var(--rojo);
+}
+
+/* 6. Zonas de navegación transparentes a los costados */
+.tv-nav-invisible-zone {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 20%;
+  max-width: 250px;
+  cursor: pointer;
+  z-index: 20;
+  background: transparent;
+  border: none !important;
+  outline: none !important;
+  opacity: 0;
+}
+
+.tv-nav-invisible-prev {
+  left: 0;
+}
+
+.tv-nav-invisible-next {
+  right: 0;
+}
+
+@media (max-width: 900px) {
+  .tv-dish-stage {
+    width: 100%;
+    height: 52vh;
+    padding: 4.5rem 1.5rem 1rem 1.5rem;
+  }
+
+  .tv-dish-hero-image {
+    max-height: 44vh;
+  }
+
+  .tv-overlay-gradient {
+    background: linear-gradient(
+      to top,
+      #040507 0%,
+      rgba(4, 5, 7, 0.96) 45%,
+      rgba(4, 5, 7, 0.6) 70%,
+      transparent 100%
+    );
+  }
+
+  .tv-dish-sidebar {
+    width: 100%;
+    max-width: 100%;
+    top: auto;
+    bottom: 0;
+    padding: 1.5rem 2rem 2.8rem 2rem;
+    gap: 0.9rem;
+  }
+
+  .tv-sidebar-title {
+    font-size: 2.2rem;
+  }
+
+  .tv-sidebar-price {
+    font-size: 3rem;
+  }
+}
+

@@ -14,7 +14,18 @@ async function prerenderOpenGraph() {
     return;
   }
 
-  const baseHtml = fs.readFileSync(distIndexPath, 'utf-8');
+  let baseHtml = fs.readFileSync(distIndexPath, 'utf-8');
+  const cssLinkMatch = baseHtml.match(/<link\s+rel=["']stylesheet["'][^>]*href=["'](\/assets\/index-[^"']+\.css)["'][^>]*>/i);
+  if (cssLinkMatch) {
+    const cssRelPath = cssLinkMatch[1].replace(/^\//, '');
+    const cssFullPath = path.join(distDir, cssRelPath);
+    if (fs.existsSync(cssFullPath)) {
+      const cssContent = fs.readFileSync(cssFullPath, 'utf-8');
+      baseHtml = baseHtml.replace(cssLinkMatch[0], `<style>${cssContent}</style>`);
+      fs.writeFileSync(distIndexPath, baseHtml, 'utf-8');
+      console.log(`[prerender-og] Inlined ${cssRelPath} (${(cssContent.length / 1024).toFixed(1)} KB) into dist/index.html to eliminate render-blocking CSS.`);
+    }
+  }
   const { DISHES_DATA, CATEGORIES_DATA } = await import('../src/data/menuData.js');
   
   let platosMap = {};
