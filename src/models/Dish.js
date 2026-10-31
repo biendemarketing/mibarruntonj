@@ -166,8 +166,19 @@ export class Dish {
    * @returns {string[]}
    */
   getGalleryImages() {
-    const primary = this.getResolvedImage();
-    const result = primary ? [primary] : [];
+    const primary = this.getLocalFallbackImage() || this.getResolvedImage();
+    const result = [];
+    const seenKeys = new Set();
+    const addUnique = (url) => {
+      if (!url) return;
+      const clean = String(url).split('?')[0];
+      const key = clean.includes('/platos_webp/')
+        ? 'platos_webp/' + clean.split('/platos_webp/').pop().toLowerCase()
+        : clean.toLowerCase();
+      if (seenKeys.has(key)) return;
+      seenKeys.add(key);
+      result.push(url);
+    };
 
     if (Array.isArray(this.images)) {
       this.images.forEach(img => {
@@ -177,11 +188,10 @@ export class Dish {
           const clean = img.replace(/^(\.\/|\/)+/, '');
           resolved = `${SUPABASE_CDN_BASE}/${clean}`;
         }
-        if (!result.includes(resolved)) {
-          result.push(resolved);
-        }
+        addUnique(resolved);
       });
     }
+    if (primary) addUnique(primary);
 
     return result;
   }

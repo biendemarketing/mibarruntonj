@@ -455,21 +455,36 @@ export function ProductDetailPage({
   }
 
   const hasPhoto = dish.hasImage(photoMode);
-  const currentImage = dish.getResolvedImage ? dish.getResolvedImage(photoMode) : dish.getImage(photoMode);
+  const currentImage = dish.getLocalFallbackImage ? (dish.getLocalFallbackImage(photoMode) || dish.getResolvedImage(photoMode)) : dish.getImage(photoMode);
 
   const galleryImages = useMemo(() => {
     if (!dish) return [];
     const list = [];
-    if (currentImage) list.push(currentImage);
+    const seenKeys = new Set();
+    const getCanonicalKey = (url) => {
+      if (!url) return '';
+      const clean = String(url).split('?')[0];
+      if (clean.includes('/platos_webp/')) {
+        return 'platos_webp/' + clean.split('/platos_webp/').pop().toLowerCase();
+      }
+      return clean.toLowerCase();
+    };
+    const addUnique = (url) => {
+      if (!url) return;
+      const key = getCanonicalKey(url);
+      if (seenKeys.has(key)) return;
+      seenKeys.add(key);
+      list.push(url);
+    };
+
     if (Array.isArray(dish.images)) {
-      dish.images.forEach(img => {
-        if (img && !list.includes(img)) list.push(img);
-      });
+      dish.images.forEach(img => addUnique(img));
     }
+    if (currentImage) addUnique(currentImage);
     if (Array.isArray(dish.variations)) {
       dish.variations.forEach(v => {
         const vImg = v.image || v.localImage;
-        if (vImg && !list.includes(vImg)) list.push(vImg);
+        if (vImg) addUnique(vImg);
       });
     }
     return list;
