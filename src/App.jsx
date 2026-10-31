@@ -51,6 +51,23 @@ export function App() {
   const categories = useMemo(() => menuRepository.getAllCategories(), []);
   const allDishes = useMemo(() => menuRepository.getAllDishes(), []);
   const [isTvModeOpen, setIsTvModeOpen] = useState(false);
+  const [isFullCatalogReady, setIsFullCatalogReady] = useState(false);
+
+  useEffect(() => {
+    const unlockCatalog = () => setIsFullCatalogReady(true);
+    window.addEventListener('scroll', unlockCatalog, { once: true, passive: true });
+    window.addEventListener('touchstart', unlockCatalog, { once: true, passive: true });
+    window.addEventListener('pointerdown', unlockCatalog, { once: true, passive: true });
+    window.addEventListener('mousemove', unlockCatalog, { once: true, passive: true });
+    window.addEventListener('keydown', unlockCatalog, { once: true, passive: true });
+    return () => {
+      window.removeEventListener('scroll', unlockCatalog);
+      window.removeEventListener('touchstart', unlockCatalog);
+      window.removeEventListener('pointerdown', unlockCatalog);
+      window.removeEventListener('mousemove', unlockCatalog);
+      window.removeEventListener('keydown', unlockCatalog);
+    };
+  }, []);
   const [activeClientOrder, setActiveClientOrder] = useState(null);
 
   // Consultar pedidos activos del cliente actual (sin registro, usando client_uuid)
@@ -71,7 +88,20 @@ export function App() {
         // En caso de modo offline temporal
       }
     };
-    const t = setTimeout(fetchActiveOrder, 4000); return () => clearTimeout(t);
+    const onInteract = () => {
+      window.removeEventListener('scroll', onInteract);
+      window.removeEventListener('touchstart', onInteract);
+      window.removeEventListener('pointerdown', onInteract);
+      fetchActiveOrder();
+    };
+    window.addEventListener('scroll', onInteract, { once: true, passive: true });
+    window.addEventListener('touchstart', onInteract, { once: true, passive: true });
+    window.addEventListener('pointerdown', onInteract, { once: true, passive: true });
+    return () => {
+      window.removeEventListener('scroll', onInteract);
+      window.removeEventListener('touchstart', onInteract);
+      window.removeEventListener('pointerdown', onInteract);
+    };
   }, [isAdminPage]);
 
   // Historial de último pedido (One-Tap Reorder)
@@ -974,7 +1004,7 @@ export function App() {
             </div>
           )
         ) : (
-          groupedCatalog.map(({ category, dishes }, catIdx) => (
+          (isFullCatalogReady || selectedCategory !== 'todos' || searchQuery ? groupedCatalog : groupedCatalog.slice(0, 1).map(g => ({ ...g, dishes: g.dishes.slice(0, 6) }))).map(({ category, dishes }, catIdx) => (
             <section
               key={category.id}
               id={category.id}

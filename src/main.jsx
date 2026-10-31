@@ -12,7 +12,18 @@ import './index.css';
 purgePwaAndUnregisterSW();
 
 // Inicializar telemetría de visitas para el panel de administración
-setTimeout(() => { import('./utils/visitTracker').then(({ visitTracker }) => visitTracker.init()).catch(() => {}); }, 1500);
+(function() {
+  let tracked = false;
+  const startTracker = () => {
+    if (tracked) return;
+    tracked = true;
+    import('./utils/visitTracker').then(({ visitTracker }) => visitTracker.init()).catch(() => {});
+  };
+  window.addEventListener('scroll', startTracker, { once: true, passive: true });
+  window.addEventListener('touchstart', startTracker, { once: true, passive: true });
+  window.addEventListener('pointerdown', startTracker, { once: true, passive: true });
+  window.addEventListener('mousemove', startTracker, { once: true, passive: true });
+})();
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

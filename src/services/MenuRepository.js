@@ -56,7 +56,6 @@ export class MenuRepository {
       window.addEventListener('scroll', triggerSync, { once: true, passive: true });
       window.addEventListener('touchstart', triggerSync, { once: true, passive: true });
       window.addEventListener('pointerdown', triggerSync, { once: true, passive: true });
-      setTimeout(triggerSync, 6000);
     }
   }
 
