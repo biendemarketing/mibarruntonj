@@ -123,7 +123,11 @@ async function generateSeoFiles() {
 
     for (const dish of dishesInCat) {
       const priceStr = dish.priceDisplay || `$${dish.price ? dish.price.toFixed(2) : '0.00'}`;
-      llmsFullTxt += `### ${dish.name} — ${priceStr}\n`;
+      let relImg = dish.platosImage || dish.image || '/logo/logo.png';
+    if (relImg.startsWith('./')) relImg = relImg.replace(/^\.\//, '/');
+    if (!relImg.startsWith('/')) relImg = '/' + relImg;
+    const fullImg = `${baseUrl}${relImg}`;
+    llmsFullTxt += `### ${dish.name}\n![${dish.name}](${fullImg})\n — ${priceStr}\n`;
       llmsFullTxt += `- **ID:** ${dish.id}\n`;
       llmsFullTxt += `- **URL:** https://mibarruntonj.com/plato/${dish.id}\n`;
       if (dish.nameEn) llmsFullTxt += `- **Descripción en Inglés:** ${dish.nameEn}\n`;

@@ -96,6 +96,44 @@ async function prerenderOpenGraph() {
       // Twitter Image
       .replace(/<meta\s+name=["']twitter:image["']\s+content=["'].*?["']\s*\/?>/i, `<meta name="twitter:image" content="${fullImageUrl}" />`);
 
+        // Inyectar Schema.org MenuItem & Product para que Google y Gemini muestren tarjetas visuales con foto
+    const priceNum = dish.price ? dish.price.toFixed(2) : "0.00";
+    const dishSchemaJson = `  <!-- Schema.org MenuItem & Product para Visual Dishes en Google y Gemini -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": ["MenuItem", "Product"],
+    "name": ${JSON.stringify(dish.name)},
+    "alternateName": ${JSON.stringify(dish.nameEn || dish.name)},
+    "image": [${JSON.stringify(fullImageUrl)}],
+    "description": ${JSON.stringify(descText)},
+    "url": ${JSON.stringify(pageUrl)},
+    "offers": {
+      "@type": "Offer",
+      "price": "${priceNum}",
+      "priceCurrency": "USD",
+      "priceValidUntil": "2027-12-31",
+      "availability": "https://schema.org/InStock",
+      "url": ${JSON.stringify(pageUrl)}
+    },
+    "menuAddOn": {
+      "@type": "Restaurant",
+      "name": "Mi Barrunto Restaurant & Grocery",
+      "telephone": "+1-973-653-3749",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "21 Mill st",
+        "addressLocality": "Paterson",
+        "addressRegion": "NJ",
+        "postalCode": "07011",
+        "addressCountry": "US"
+      }
+    }
+  }
+  </script>
+</head>`;
+    dishHtml = dishHtml.replace('</head>', dishSchemaJson);
+
     fs.writeFileSync(path.join(dishDir, 'index.html'), dishHtml, 'utf-8');
     generatedCount++;
   }
