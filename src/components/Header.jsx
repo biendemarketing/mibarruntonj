@@ -3,13 +3,22 @@ import { Search, ShoppingCart, Moon, Sun, Menu, LayoutGrid, Grid2X2, Rows3, MapP
 import { FacebookIcon, InstagramIcon, WhatsAppIcon, PlateIcon } from './Icons';
 import { useLanguage } from '../utils/i18n';
 
-const POPULAR_SEARCHES = [
+const POPULAR_SEARCHES_ES = [
   'Ceviche Mi Barrunto',
   'Lomo Saltado',
   'Pan con chicharrón',
   'Anticuchos',
   'Chicha Morada',
   'Alfajores'
+];
+
+const POPULAR_SEARCHES_EN = [
+  'Fish Ceviche',
+  'Lomo Saltado',
+  'Fried pork',
+  'Anticuchos',
+  'Purple corn drink',
+  'Picarones'
 ];
 
 export function Header({
@@ -41,6 +50,8 @@ export function Header({
   const filterPopoverRef = useRef(null);
   const searchBoxRef = useRef(null);
 
+  const popularTerms = isEn ? POPULAR_SEARCHES_EN : POPULAR_SEARCHES_ES;
+
   // Platos que coinciden en vivo con la búsqueda para el dropdown con imágenes
   const matchingDishes = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
@@ -50,6 +61,7 @@ export function Header({
         const nameMatch = dish.name && dish.name.toLowerCase().includes(q);
         const nameEnMatch = dish.nameEn && dish.nameEn.toLowerCase().includes(q);
         const catMatch = (dish.categoryName && dish.categoryName.toLowerCase().includes(q)) ||
+                         (dish.categoryNameEn && dish.categoryNameEn.toLowerCase().includes(q)) ||
                          (dish.category && dish.category.toLowerCase().includes(q));
         return nameMatch || nameEnMatch || catMatch;
       })
@@ -143,19 +155,19 @@ export function Header({
               target="_blank"
               rel="noopener noreferrer"
               className="header-top-address-link"
-              title="Abrir ubicación en Google Maps"
+              title={isEn ? 'Open location in Google Maps' : 'Abrir ubicación en Google Maps'}
             >
               <MapPin size={12} color="var(--naranja)" />
               <span className="header-address-text">21 Mill st, Paterson, NJ 07011</span>
             </a>
             <span className="header-top-divider">·</span>
-            <span className="header-top-hours" title="Horario de atención continuo">
+            <span className="header-top-hours" title={isEn ? 'Open 24/7' : 'Horario de atención continuo'}>
               <Clock size={12} color="var(--naranja)" />
               <span className="header-hours-full">{isEn ? 'Open 24 Hours' : 'Atención 24 Horas'}</span>
               <span className="header-hours-short">{isEn ? '24/7' : '24 Horas'}</span>
             </span>
             <span className="header-top-divider">·</span>
-            <a href="tel:9736533749" className="header-top-phone-link" title="Llamar a Mi Barrunto">
+            <a href="tel:9736533749" className="header-top-phone-link" title={isEn ? 'Call Mi Barrunto' : 'Llamar a Mi Barrunto'}>
               <Phone size={12} color="var(--naranja)" />
               <span>(973) 653-3749</span>
             </a>
@@ -249,14 +261,14 @@ export function Header({
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
               onFocus={() => setIsSearchFocused(true)}
-              aria-label="Buscar en la carta"
+              aria-label={isEn ? 'Search menu' : 'Buscar en la carta'}
             />
             {searchQuery && (
               <button
                 type="button"
                 className="header-search-clear"
                 onClick={() => onSearchChange('')}
-                aria-label="Limpiar búsqueda"
+                aria-label={isEn ? 'Clear search' : 'Limpiar búsqueda'}
               >
                 ✕
               </button>
@@ -272,8 +284,8 @@ export function Header({
                   setIsFilterOpen((prev) => !prev);
                   setIsSearchFocused(false);
                 }}
-                title={hasActiveFilters ? 'Filtros activos (clic para ver)' : 'Filtrar platos'}
-                aria-label="Filtros de la carta"
+                title={hasActiveFilters ? (isEn ? 'Active filters (click to view)' : 'Filtros activos (clic para ver)') : (isEn ? 'Filter dishes' : 'Filtrar platos')}
+                aria-label={isEn ? 'Menu filters' : 'Filtros de la carta'}
               >
                 <SlidersHorizontal size={15} />
                 {hasActiveFilters && <span className="header-filter-dot" />}
@@ -288,7 +300,7 @@ export function Header({
                 <span>{isEn ? 'Popular searches' : 'Búsquedas populares'}</span>
               </div>
               <div className="popular-searches-chips">
-                {POPULAR_SEARCHES.map((term) => (
+                {popularTerms.map((term) => (
                   <button
                     key={term}
                     type="button"
@@ -319,6 +331,9 @@ export function Header({
                 <div className="search-results-popover-list">
                   {matchingDishes.map((dish) => {
                     const img = dish.getResolvedImage ? dish.getResolvedImage(photoMode) : dish.getImage(photoMode);
+                    const primaryDishName = isEn && dish.nameEn ? dish.nameEn : dish.name;
+                    const secondaryDishName = isEn && dish.nameEn ? dish.name : dish.nameEn;
+                    const catLabel = isEn && dish.categoryNameEn ? dish.categoryNameEn : dish.categoryName;
                     return (
                       <div
                         key={dish.id}
@@ -335,7 +350,7 @@ export function Header({
                           {img ? (
                             <img
                               src={img}
-                              alt={dish.name}
+                              alt={primaryDishName}
                               className="search-result-thumb-img"
                               loading="lazy"
                               onError={(e) => {
@@ -353,12 +368,12 @@ export function Header({
                         </div>
 
                         <div className="search-result-info">
-                          <h4 className="search-result-name">{dish.name}</h4>
-                          {dish.nameEn && (
-                            <span className="search-result-name-en">{dish.nameEn}</span>
+                          <h4 className="search-result-name">{primaryDishName}</h4>
+                          {secondaryDishName && (
+                            <span className="search-result-name-en">{secondaryDishName}</span>
                           )}
-                          {dish.categoryName && (
-                            <span className="search-result-category">{dish.categoryName}</span>
+                          {catLabel && (
+                            <span className="search-result-category">{catLabel}</span>
                           )}
                         </div>
 
@@ -391,7 +406,7 @@ export function Header({
                     className="filter-popover-reset-btn"
                     onClick={onResetFilters}
                   >
-                    Restablecer
+                    {isEn ? 'Reset' : 'Restablecer'}
                   </button>
                 )}
               </div>
@@ -417,7 +432,7 @@ export function Header({
                     className={`filter-chip ${filters.priceRange === 'all' ? 'active' : ''}`}
                     onClick={() => onUpdateFilter('priceRange', 'all')}
                   >
-                    Todos
+                    {isEn ? 'All' : 'Todos'}
                   </button>
                   <button
                     type="button"
@@ -452,21 +467,21 @@ export function Header({
                     className={`filter-chip ${filters.priceSort === 'none' ? 'active' : ''}`}
                     onClick={() => onUpdateFilter('priceSort', 'none')}
                   >
-                    Por defecto
+                    {isEn ? 'Default' : 'Por defecto'}
                   </button>
                   <button
                     type="button"
                     className={`filter-chip ${filters.priceSort === 'asc' ? 'active' : ''}`}
                     onClick={() => onUpdateFilter('priceSort', 'asc')}
                   >
-                    $ Menor a Mayor
+                    {isEn ? '$ Low to High' : '$ Menor a Mayor'}
                   </button>
                   <button
                     type="button"
                     className={`filter-chip ${filters.priceSort === 'desc' ? 'active' : ''}`}
                     onClick={() => onUpdateFilter('priceSort', 'desc')}
                   >
-                    $ Mayor a Menor
+                    {isEn ? '$ High to Low' : '$ Mayor a Menor'}
                   </button>
                 </div>
               </div>
@@ -477,7 +492,7 @@ export function Header({
                   className="filter-popover-close-btn"
                   onClick={() => setIsFilterOpen(false)}
                 >
-                  Listo
+                  {isEn ? 'Done' : 'Listo'}
                 </button>
               </div>
             </div>
@@ -494,12 +509,12 @@ export function Header({
                 onClick={onToggleViewMode}
                 title={
                   viewMode === 'grid'
-                    ? 'Cambiar a 4 columnas cuadradas'
+                    ? (isEn ? 'Switch to 4-column grid' : 'Cambiar a 4 columnas cuadradas')
                     : viewMode === 'grid4'
-                    ? 'Cambiar a vista compacta'
-                    : 'Cambiar a cuadrícula estándar'
+                    ? (isEn ? 'Switch to compact view' : 'Cambiar a vista compacta')
+                    : (isEn ? 'Switch to standard grid' : 'Cambiar a cuadrícula estándar')
                 }
-                aria-label="Alternar vista de la carta"
+                aria-label={isEn ? 'Toggle menu view' : 'Alternar vista de la carta'}
               >
                 {viewMode === 'grid' ? (
                   <Grid2X2 size={19} />
@@ -516,8 +531,8 @@ export function Header({
               type="button"
               className="header-ctrl-btn header-theme-toggle-btn"
               onClick={onToggleDarkMode}
-              title={isDarkMode ? 'Modo Claro' : 'Modo Oscuro'}
-              aria-label="Alternar tema de color"
+              title={isDarkMode ? (isEn ? 'Light Mode' : 'Modo Claro') : (isEn ? 'Dark Mode' : 'Modo Oscuro')}
+              aria-label={isEn ? 'Toggle color theme' : 'Alternar tema de color'}
             >
               {isDarkMode ? <Sun size={19} /> : <Moon size={19} />}
             </button>
@@ -527,8 +542,8 @@ export function Header({
               type="button"
               className="header-ctrl-btn header-menu-trigger-btn"
               onClick={onOpenMobileMenu}
-              aria-label="Abrir menú de categorías"
-              title="La Carta"
+              aria-label={isEn ? 'Open categories menu' : 'Abrir menú de categorías'}
+              title={isEn ? 'Menu' : 'La Carta'}
             >
               <Menu size={21} />
             </button>
@@ -539,8 +554,8 @@ export function Header({
                 type="button"
                 className={`header-ctrl-btn header-desktop-fav-btn ${showFavoritesOnly ? 'active' : ''} ${favoritesCount > 0 ? 'has-items' : ''}`}
                 onClick={onToggleFavorites}
-                aria-label="Ver mis favoritos"
-                title={favoritesCount > 0 ? `Mis Favoritos (${favoritesCount} guardados)` : 'Mis Favoritos'}
+                aria-label={isEn ? 'View my favorites' : 'Ver mis favoritos'}
+                title={favoritesCount > 0 ? (isEn ? `My Favorites (${favoritesCount} saved)` : `Mis Favoritos (${favoritesCount} guardados)`) : (isEn ? 'My Favorites' : 'Mis Favoritos')}
               >
                 <Heart
                   size={19}
@@ -558,8 +573,8 @@ export function Header({
               type="button"
               className={`header-ctrl-btn header-desktop-cart-btn ${totalCount > 0 ? 'has-items' : ''}`}
               onClick={onOpenCart}
-              aria-label="Ver mi pedido"
-              title={totalCount > 0 ? `Ver mi pedido (${totalCount} platos — ${formattedTotal})` : 'Ver mi pedido'}
+              aria-label={isEn ? 'View my order' : 'Ver mi pedido'}
+              title={totalCount > 0 ? (isEn ? `View my order (${totalCount} items — ${formattedTotal})` : `Ver mi pedido (${totalCount} platos — ${formattedTotal})`) : (isEn ? 'View my order' : 'Ver mi pedido')}
             >
               <ShoppingCart size={19} />
               {totalCount > 0 && (

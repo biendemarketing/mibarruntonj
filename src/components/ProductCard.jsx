@@ -26,6 +26,9 @@ export function ProductCard({
   const isCompact = viewMode === 'compact';
   const [isImageLoaded, setIsImageLoaded] = useState(isPriority);
 
+  const primaryTitle = isEn && dish.nameEn ? dish.nameEn : dish.name;
+  const secondarySubtitle = isEn && dish.nameEn ? dish.name : dish.nameEn;
+
   // =========================================================================
   // VISTA 2: COMPACTA / HORIZONTAL (Inspirada en el diseño enviado por el usuario)
   // Menos altura (aprox la mitad), foto a la izquierda, título y precio con botón +
@@ -36,7 +39,7 @@ export function ProductCard({
         className={`product-card product-card-compact ${layoutClassName} ${hasPhoto ? 'has-photo' : 'no-photo'} ${isSelected ? 'card-batch-selected' : ''}`.trim()}
         data-dish-id={dish.id}
         onClick={() => onOpenDetail(dish)}
-        title="Clic para ver detalles"
+        title={isEn ? 'Click to view details' : 'Clic para ver detalles'}
       >
         {/* Selector Checkbox de selección múltiple (en vista de favoritos) */}
         {isSelectionMode && onToggleSelect && (
@@ -47,8 +50,8 @@ export function ProductCard({
               e.stopPropagation();
               onToggleSelect(dish.id);
             }}
-            aria-label={isSelected ? `Deseleccionar ${dish.name}` : `Seleccionar ${dish.name}`}
-            title={isSelected ? 'Deseleccionar' : 'Seleccionar'}
+            aria-label={isSelected ? `Deseleccionar ${primaryTitle}` : `Seleccionar ${primaryTitle}`}
+            title={isSelected ? (isEn ? 'Deselect' : 'Deseleccionar') : (isEn ? 'Select' : 'Seleccionar')}
           >
             {isSelected ? <Check size={13} strokeWidth={3} /> : null}
           </button>
@@ -58,7 +61,7 @@ export function ProductCard({
           {hasPhoto && currentImage ? (
             <img
               src={currentImage}
-              alt={`${dish.name} — Plato peruano en Mi Barrunto`}
+              alt={`${primaryTitle} — Mi Barrunto`}
               className={`compact-img ${isImageLoaded ? 'img-loaded' : 'img-loading'}`}
               loading={isPriority ? "eager" : "lazy"}
               fetchPriority={isPriority ? "high" : "low"}
@@ -81,9 +84,9 @@ export function ProductCard({
         {/* Contenido a la derecha */}
         <div className="compact-content">
           <div className="compact-header">
-            <h3 className="compact-title">{dish.name}</h3>
-            {dish.nameEn && (
-              <p className="compact-en">{dish.nameEn}</p>
+            <h3 className="compact-title">{primaryTitle}</h3>
+            {secondarySubtitle && (
+              <p className="compact-en">{secondarySubtitle}</p>
             )}
           </div>
 
@@ -102,8 +105,8 @@ export function ProductCard({
                     e.stopPropagation();
                     onToggleFavorite(dish.id);
                   }}
-                  aria-label={isFavorite ? `Quitar ${dish.name} de favoritos` : `Guardar ${dish.name} en favoritos`}
-                  title={isFavorite ? 'En tus favoritos' : 'Guardar en favoritos'}
+                  aria-label={isFavorite ? `Quitar ${primaryTitle} de favoritos` : `Guardar ${primaryTitle} en favoritos`}
+                  title={isFavorite ? (isEn ? 'In your favorites' : 'En tus favoritos') : (isEn ? 'Save to favorites' : 'Guardar en favoritos')}
                 >
                   <Heart
                     size={16}
@@ -119,8 +122,8 @@ export function ProductCard({
                     type="button"
                     className="qty-btn"
                     onClick={() => onUpdateQuantity(dish.id, quantity - 1)}
-                    title="Disminuir"
-                    aria-label={`Disminuir cantidad de ${dish.name}`}
+                    title={isEn ? 'Decrease' : 'Disminuir'}
+                    aria-label={`Disminuir cantidad de ${primaryTitle}`}
                   >
                     <Minus size={13} />
                   </button>
@@ -129,8 +132,8 @@ export function ProductCard({
                     type="button"
                     className="qty-btn"
                     onClick={() => onUpdateQuantity(dish.id, quantity + 1)}
-                    title="Aumentar"
-                    aria-label={`Aumentar cantidad de ${dish.name}`}
+                    title={isEn ? 'Increase' : 'Aumentar'}
+                    aria-label={`Aumentar cantidad de ${primaryTitle}`}
                   >
                     <Plus size={13} />
                   </button>
@@ -140,8 +143,8 @@ export function ProductCard({
                   type="button"
                   className="compact-add-btn"
                   onClick={(e) => onAddToCart(dish, e)}
-                  title="Agregar a mi pedido"
-                  aria-label={`Agregar ${dish.name}`}
+                  title={isEn ? 'Add to my order' : 'Agregar a mi pedido'}
+                  aria-label={`Agregar ${primaryTitle}`}
                 >
                   <Plus size={16} />
                 </button>
@@ -170,8 +173,8 @@ export function ProductCard({
             e.stopPropagation();
             onToggleSelect(dish.id);
           }}
-          aria-label={isSelected ? `Deseleccionar ${dish.name}` : `Seleccionar ${dish.name}`}
-          title={isSelected ? 'Deseleccionar' : 'Seleccionar'}
+          aria-label={isSelected ? `Deseleccionar ${primaryTitle}` : `Seleccionar ${primaryTitle}`}
+          title={isSelected ? (isEn ? 'Deselect' : 'Deseleccionar') : (isEn ? 'Select' : 'Seleccionar')}
         >
           {isSelected ? <Check size={14} strokeWidth={3} /> : null}
         </button>
@@ -180,12 +183,12 @@ export function ProductCard({
       <div
         className={`product-card-image-wrap ${!hasPhoto || !currentImage ? 'product-card-placeholder' : ''}`}
         onClick={() => onOpenDetail(dish)}
-        title="Ver detalle del plato"
+        title={isEn ? 'View dish details' : 'Ver detalle del plato'}
       >
         {hasPhoto && currentImage ? (
           <img
             src={currentImage}
-            alt={`${dish.name} — Comida criolla peruana en Mi Barrunto`}
+            alt={`${primaryTitle} — Comida criolla peruana en Mi Barrunto`}
             className={`product-card-img ${isPriority || isImageLoaded ? 'img-loaded' : 'img-loading'}`}
             width="350"
             height="195"
@@ -211,11 +214,11 @@ export function ProductCard({
       <div
         className="product-card-body"
         onClick={() => onOpenDetail(dish)}
-        title="Clic para ver detalles"
+        title={isEn ? 'Click to view details' : 'Clic para ver detalles'}
       >
-        <h3 className="product-card-title">{dish.name}</h3>
-        {dish.nameEn && (
-          <p className="product-card-en">{dish.nameEn}</p>
+        <h3 className="product-card-title">{primaryTitle}</h3>
+        {secondarySubtitle && (
+          <p className="product-card-en">{secondarySubtitle}</p>
         )}
       </div>
 
@@ -235,8 +238,8 @@ export function ProductCard({
                 e.stopPropagation();
                 onToggleFavorite(dish.id);
               }}
-              aria-label={isFavorite ? `Quitar ${dish.name} de favoritos` : `Guardar ${dish.name} en favoritos`}
-              title={isFavorite ? 'En tus favoritos' : 'Guardar en favoritos'}
+              aria-label={isFavorite ? `Quitar ${primaryTitle} de favoritos` : `Guardar ${primaryTitle} en favoritos`}
+              title={isFavorite ? (isEn ? 'In your favorites' : 'En tus favoritos') : (isEn ? 'Save to favorites' : 'Guardar en favoritos')}
             >
               <Heart
                 size={18}
@@ -253,8 +256,8 @@ export function ProductCard({
                 type="button"
                 className="qty-btn"
                 onClick={() => onUpdateQuantity(dish.id, quantity - 1)}
-                title="Disminuir"
-                aria-label={`Disminuir cantidad de ${dish.name}`}
+                title={isEn ? 'Decrease' : 'Disminuir'}
+                aria-label={`Disminuir cantidad de ${primaryTitle}`}
               >
                 <Minus size={14} />
               </button>
@@ -263,8 +266,8 @@ export function ProductCard({
                 type="button"
                 className="qty-btn"
                 onClick={() => onUpdateQuantity(dish.id, quantity + 1)}
-                title="Aumentar"
-                aria-label={`Aumentar cantidad de ${dish.name}`}
+                title={isEn ? 'Increase' : 'Aumentar'}
+                aria-label={`Aumentar cantidad de ${primaryTitle}`}
               >
                 <Plus size={14} />
               </button>
@@ -277,8 +280,8 @@ export function ProductCard({
                 e.stopPropagation();
                 onAddToCart(dish, e);
               }}
-              title="Agregar a mi pedido"
-              aria-label={`Agregar ${dish.name}`}
+              title={isEn ? 'Add to my order' : 'Agregar a mi pedido'}
+              aria-label={`Agregar ${primaryTitle}`}
             >
               <Plus size={13} className="btn-add-cart-icon" />
               <span className="btn-add-cart-text">{isEn ? 'Order' : 'Ordenar'}</span>

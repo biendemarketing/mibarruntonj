@@ -10,6 +10,7 @@ import {
 import { PlateIcon } from '../components/Icons';
 import { menuRepository } from '../services/MenuRepository';
 import { triggerHaptic } from '../utils/haptics';
+import { useLanguage } from '../utils/i18n';
 
 export function ProductDetailPage({
   dish: propDish,
@@ -22,6 +23,7 @@ export function ProductDetailPage({
   isFavorite = false,
   onToggleFavorite
 }) {
+  const { isEn } = useLanguage();
   const { id: paramId } = useParams();
   const navigate = useNavigate();
 
@@ -153,8 +155,6 @@ export function ProductDetailPage({
     let pool = [];
 
     if (isDrinkOrBatido) {
-      // Para bebidas/batidos: NUNCA sugerir otras bebidas.
-      // Recomendar platos criollos, marinos, sopas y postres destacados con foto.
       pool = [
         196, // Arroz con pollo huancaína + ceviche
         197, // Tallarín Rojo huancaína + ceviche
@@ -171,7 +171,6 @@ export function ProductDetailPage({
         243  // Picarones
       ];
     } else if (isDessert) {
-      // Para postres: Sugerir bebidas calientes, emoliente, chicha y batidos refrescantes
       pool = [
         237, // Emoliente
         238, // Inca Kola 2L
@@ -183,8 +182,6 @@ export function ProductDetailPage({
         254  // Batido de Mango
       ];
     } else {
-      // Para platos de comida (criollos, marinos, sopas, carnes):
-      // Sugerir refrescantes batidos, jugos naturales, bebidas tradicionales y postres
       pool = [
         250, // Batido de Piña
         251, // Batido de Fresa
@@ -205,7 +202,6 @@ export function ProductDetailPage({
       ];
     }
 
-    // Rotar según el ID del plato para evitar listas fijas y repetitivas
     const offset = Math.abs((dish.id * 5) % pool.length);
     const rotatedPool = [...pool.slice(offset), ...pool.slice(0, offset)];
 
@@ -274,10 +270,6 @@ export function ProductDetailPage({
     return selectedAccompanimentsList.reduce((sum, item) => sum + item.itemSubtotal, 0);
   }, [selectedAccompanimentsList]);
 
-  const totalSelectedAccompanimentsCount = useMemo(() => {
-    return selectedAccompanimentsList.reduce((sum, item) => sum + item.qty, 0);
-  }, [selectedAccompanimentsList]);
-
   const grandTotal = mainDishSubtotal + accompanimentsSubtotal;
 
   const handleShare = async () => {
@@ -311,34 +303,32 @@ export function ProductDetailPage({
 
   const handleMainAddToCart = (e) => {
     triggerHaptic(20);
-    // 1. Agregar plato principal con su variación de base
     onAddToCart(dish, quantity, note, e, selectedVariation);
 
-    // 2. Agregar cada acompañamiento seleccionado
     for (const item of selectedAccompanimentsList) {
       onAddToCart(item, item.qty, '', e);
     }
 
+    const dishTitle = isEn && dish.nameEn ? dish.nameEn : dish.name;
     const addedItemsSummary = selectedAccompanimentsList
-      .map((item) => `${item.name}${item.qty > 1 ? ` (x${item.qty})` : ''}`)
+      .map((item) => `${isEn && item.nameEn ? item.nameEn : item.name}${item.qty > 1 ? ` (x${item.qty})` : ''}`)
       .join(', ');
 
-    const varLabel = selectedVariation ? ` (${selectedVariation.name})` : '';
+    const varLabel = selectedVariation ? ` (${isEn && selectedVariation.nameEn ? selectedVariation.nameEn : selectedVariation.name})` : '';
     const toastText = addedItemsSummary
-      ? `¡${dish.name}${varLabel} + ${addedItemsSummary} agregados a tu pedido!`
-      : `¡${dish.name}${varLabel} agregado a tu pedido!`;
+      ? (isEn ? `${dishTitle}${varLabel} + ${addedItemsSummary} added to your order!` : `¡${dishTitle}${varLabel} + ${addedItemsSummary} agregados a tu pedido!`)
+      : (isEn ? `${dishTitle}${varLabel} added to your order!` : `¡${dishTitle}${varLabel} agregado a tu pedido!`);
 
     setAddedToast(toastText);
     setTimeout(() => setAddedToast(''), 3000);
-
-    // Limpiar acompañamientos seleccionados para el siguiente plato
     setSelectedAccompaniments({});
   };
 
   const handleQuickAddRelated = (targetDish, e) => {
     triggerHaptic(15);
     onAddToCart(targetDish, 1, '', e);
-    setAddedToast(`¡${targetDish.name} agregado a tu pedido!`);
+    const title = isEn && targetDish.nameEn ? targetDish.nameEn : targetDish.name;
+    setAddedToast(isEn ? `${title} added to your order!` : `¡${title} agregado a tu pedido!`);
     setTimeout(() => setAddedToast(''), 2500);
   };
 
@@ -361,7 +351,6 @@ export function ProductDetailPage({
     carouselRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
   };
 
-  // Botón volver: regresa a la categoría previa o al historial
   const handleBack = () => {
     triggerHaptic(12);
     if (typeof onBack === 'function') {
@@ -383,7 +372,6 @@ export function ProductDetailPage({
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Platos disponibles para la barra de búsqueda en vista de producto
   const allDishes = useMemo(() => {
     return menuRepository.getAllDishes() || [];
   }, []);
@@ -396,13 +384,13 @@ export function ProductDetailPage({
         const nameMatch = d.name && d.name.toLowerCase().includes(q);
         const nameEnMatch = d.nameEn && d.nameEn.toLowerCase().includes(q);
         const catMatch = (d.categoryName && d.categoryName.toLowerCase().includes(q)) ||
+                         (d.categoryNameEn && d.categoryNameEn.toLowerCase().includes(q)) ||
                          (d.category && d.category.toLowerCase().includes(q));
         return nameMatch || nameEnMatch || catMatch;
       })
       .slice(0, 8);
   }, [searchQuery, allDishes]);
 
-  // Cerrar dropdown de búsqueda al hacer clic fuera
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (searchContainerRef.current && !searchContainerRef.current.contains(e.target)) {
@@ -435,19 +423,33 @@ export function ProductDetailPage({
 
   if (!dish) {
     return (
-      <div className="product-page-container">
-        <div className="product-page-not-found">
-          <h2>Plato no encontrado</h2>
-          <p>El plato seleccionado no está disponible en la carta actual.</p>
-          <button
-            type="button"
-            className="product-page-back-arrow-btn"
-            onClick={handleBack}
-            aria-label="Volver a la carta"
-          >
-            <ArrowLeft size={22} color="var(--rojo)" strokeWidth={2.6} />
-          </button>
+      <div className="product-page-container" style={{ minHeight: '80vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '2rem', textAlign: 'center' }}>
+        <div style={{ width: '64px', height: '64px', borderRadius: '50%', backgroundColor: 'rgba(217, 28, 43, 0.12)', display: 'grid', placeItems: 'center', marginBottom: '1.25rem', color: 'var(--rojo)' }}>
+          <Utensils size={32} />
         </div>
+        <h2 style={{ fontSize: '1.35rem', fontWeight: 900, marginBottom: '0.6rem', color: '#1f1e1c', letterSpacing: '-0.3px' }}>
+          {isEn ? 'Dish not found' : 'Plato no encontrado'}
+        </h2>
+        <p style={{ color: '#78716c', fontSize: '0.92rem', maxWidth: '380px', marginBottom: '1.75rem', lineHeight: 1.5 }}>
+          {isEn ? 'The dish you are looking for is not available. Explore our full menu.' : 'El plato que buscas no se encuentra disponible o el enlace ha cambiado. Te invitamos a explorar nuestra carta oficial completa.'}
+        </p>
+        <button
+          type="button"
+          onClick={handleBackToHome}
+          style={{
+            backgroundColor: 'var(--rojo, #d91c2b)',
+            color: '#ffffff',
+            fontWeight: 800,
+            fontSize: '0.95rem',
+            padding: '0.9rem 1.8rem',
+            borderRadius: '16px',
+            border: 'none !important',
+            cursor: 'pointer',
+            boxShadow: '0 8px 25px rgba(217, 28, 43, 0.35)'
+          }}
+        >
+          {isEn ? 'Explore Full Menu' : 'Explorar Carta Completa'}
+        </button>
       </div>
     );
   }
@@ -455,7 +457,6 @@ export function ProductDetailPage({
   const hasPhoto = dish.hasImage(photoMode);
   const currentImage = dish.getResolvedImage ? dish.getResolvedImage(photoMode) : dish.getImage(photoMode);
 
-  // Galería de imágenes (soporte para múltiples imágenes por plato y variaciones)
   const galleryImages = useMemo(() => {
     if (!dish) return [];
     const list = [];
@@ -465,7 +466,6 @@ export function ProductDetailPage({
         if (img && !list.includes(img)) list.push(img);
       });
     }
-    // Incluir imágenes de variaciones de base si existen
     if (Array.isArray(dish.variations)) {
       dish.variations.forEach(v => {
         const vImg = v.image || v.localImage;
@@ -475,7 +475,6 @@ export function ProductDetailPage({
     return list;
   }, [dish, currentImage]);
 
-  // Controladores de Lightbox con fuente de imagen garantizada
   const openLightbox = (index = 0, specificSrc = null) => {
     triggerHaptic(12);
     const safeIdx = index >= 0 && index < galleryImages.length ? index : 0;
@@ -514,7 +513,6 @@ export function ProductDetailPage({
     });
   };
 
-  // Atajos de teclado para el Lightbox (Escape, flecha izquierda, flecha derecha)
   useEffect(() => {
     if (!isLightboxOpen) return;
     const handleKeyDown = (e) => {
@@ -532,7 +530,6 @@ export function ProductDetailPage({
     };
   }, [isLightboxOpen, galleryImages.length]);
 
-  // Asegurar restauración de scroll al desmontar
   useEffect(() => {
     return () => {
       if (typeof document !== 'undefined') {
@@ -541,55 +538,24 @@ export function ProductDetailPage({
     };
   }, []);
 
-  if (!dish) {
-    return (
-      <div className="product-page-container" style={{ minHeight: '80vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '2rem', textAlign: 'center' }}>
-        <div style={{ width: '64px', height: '64px', borderRadius: '50%', backgroundColor: 'rgba(217, 28, 43, 0.12)', display: 'grid', placeItems: 'center', marginBottom: '1.25rem', color: 'var(--rojo)' }}>
-          <Utensils size={32} />
-        </div>
-        <h2 style={{ fontSize: '1.35rem', fontWeight: 900, marginBottom: '0.6rem', color: '#1f1e1c', letterSpacing: '-0.3px' }}>
-          Plato no encontrado
-        </h2>
-        <p style={{ color: '#78716c', fontSize: '0.92rem', maxWidth: '380px', marginBottom: '1.75rem', lineHeight: 1.5 }}>
-          El plato que buscas no se encuentra disponible o el enlace ha cambiado. Te invitamos a explorar nuestra carta oficial completa.
-        </p>
-        <button
-          type="button"
-          onClick={handleBackToHome}
-          style={{
-            backgroundColor: 'var(--rojo, #d91c2b)',
-            color: '#ffffff',
-            fontWeight: 800,
-            fontSize: '0.95rem',
-            padding: '0.9rem 1.8rem',
-            borderRadius: '16px',
-            border: 'none !important',
-            cursor: 'pointer',
-            boxShadow: '0 8px 25px rgba(217, 28, 43, 0.35)'
-          }}
-        >
-          Explorar Carta Completa
-        </button>
-      </div>
-    );
-  }
-
   const displayImage = galleryImages[selectedImageIndex] || currentImage;
-  const isDishInCart = cart && cart.getItem(dish.id);
   const cartTotalCount = cart ? cart.getTotalCount() : 0;
+
+  const primaryDishTitle = isEn && dish.nameEn ? dish.nameEn : dish.name;
+  const secondaryDishSubtitle = isEn && dish.nameEn ? dish.name : dish.nameEn;
+  const dishCategoryLabel = isEn && dish.categoryNameEn ? dish.categoryNameEn : (dish.categoryName || dish.category);
 
   return (
     <div className="product-page-container">
       {/* 1. Barra Superior: Flecha Volver, Barra de Búsqueda y Acciones Rápidas */}
       <div className="product-page-top-bar">
         <div className="product-page-top-nav-group">
-          {/* Botón Volver: Flecha que regresa a la categoría previa o al historial */}
           <button
             type="button"
             className="product-page-back-arrow-btn"
             onClick={handleBack}
-            aria-label="Volver a la carta"
-            title="Volver a la carta"
+            aria-label={isEn ? 'Back to menu' : 'Volver a la carta'}
+            title={isEn ? 'Back to menu' : 'Volver a la carta'}
           >
             <ArrowLeft size={22} color="var(--rojo)" strokeWidth={2.6} />
           </button>
@@ -602,7 +568,7 @@ export function ProductDetailPage({
             <input
               type="text"
               className="product-page-search-input"
-              placeholder="Buscar otros platos en la carta..."
+              placeholder={isEn ? 'Search other dishes on the menu...' : 'Buscar otros platos en la carta...'}
               value={searchQuery}
               onChange={(e) => {
                 setSearchQuery(e.target.value);
@@ -610,14 +576,14 @@ export function ProductDetailPage({
               }}
               onFocus={() => setIsSearchOpen(true)}
               onKeyDown={handleSearchKeyDown}
-              aria-label="Buscar platos en la carta"
+              aria-label={isEn ? 'Search menu' : 'Buscar platos en la carta'}
             />
             {searchQuery && (
               <button
                 type="button"
                 className="product-page-search-clear-btn"
                 onClick={() => setSearchQuery('')}
-                aria-label="Limpiar búsqueda"
+                aria-label={isEn ? 'Clear search' : 'Limpiar búsqueda'}
               >
                 <X size={14} />
               </button>
@@ -629,12 +595,15 @@ export function ProductDetailPage({
             <div className="product-page-search-dropdown">
               <div className="product-page-search-dropdown-header">
                 <Search size={13} color="var(--rojo)" />
-                <span>Resultados de la carta ({searchResults.length})</span>
+                <span>{isEn ? `Menu results (${searchResults.length})` : `Resultados de la carta (${searchResults.length})`}</span>
               </div>
               {searchResults.length > 0 ? (
                 <div className="product-page-search-results-list">
                   {searchResults.map((item) => {
                     const itemImg = item.getResolvedImage ? item.getResolvedImage(photoMode) : item.getImage(photoMode);
+                    const itemPrimary = isEn && item.nameEn ? item.nameEn : item.name;
+                    const itemSecondary = isEn && item.nameEn ? item.name : item.nameEn;
+                    const itemCat = isEn && item.categoryNameEn ? item.categoryNameEn : (item.categoryName || item.category);
                     return (
                       <div
                         key={item.id}
@@ -643,17 +612,17 @@ export function ProductDetailPage({
                       >
                         <div className="product-page-search-item-thumb">
                           {itemImg ? (
-                            <img src={itemImg} alt={item.name} loading="lazy" />
+                            <img src={itemImg} alt={itemPrimary} loading="lazy" />
                           ) : (
                             <PlateIcon size={18} />
                           )}
                         </div>
                         <div className="product-page-search-item-info">
-                          <span className="product-page-search-item-name">{item.name}</span>
-                          {item.nameEn && (
-                            <span className="product-page-search-item-sub">{item.nameEn}</span>
+                          <span className="product-page-search-item-name">{itemPrimary}</span>
+                          {itemSecondary && (
+                            <span className="product-page-search-item-sub">{itemSecondary}</span>
                           )}
-                          <span className="product-page-search-item-cat">{item.categoryName || item.category}</span>
+                          <span className="product-page-search-item-cat">{itemCat}</span>
                         </div>
                         <span className="product-page-search-item-price">{item.getFormattedPrice()}</span>
                       </div>
@@ -662,7 +631,7 @@ export function ProductDetailPage({
                 </div>
               ) : (
                 <div className="product-page-search-empty">
-                  <span>No se encontraron platos para "{searchQuery}"</span>
+                  <span>{isEn ? `No dishes found for "${searchQuery}"` : `No se encontraron platos para "${searchQuery}"`}</span>
                 </div>
               )}
             </div>
@@ -671,13 +640,12 @@ export function ProductDetailPage({
 
         {/* Lado Derecho: Acciones de Plato y Navegación Stepper */}
         <div className="product-page-top-actions-group">
-          {/* Botón Mi Pedido: Solo icono */}
           <button
             type="button"
             className={`product-page-top-cart-icon-btn ${cartTotalCount > 0 ? 'has-items' : ''}`}
             onClick={onOpenCart}
-            aria-label="Ver mi pedido"
-            title="Ver mi pedido"
+            aria-label={isEn ? 'View my order' : 'Ver mi pedido'}
+            title={isEn ? 'View my order' : 'Ver mi pedido'}
           >
             <ShoppingCart size={20} />
             {cartTotalCount > 0 && (
@@ -685,25 +653,23 @@ export function ProductDetailPage({
             )}
           </button>
 
-          {/* Botón Compartir: Solo icono */}
           <button
             type="button"
             className={`product-page-top-share-icon-btn ${copiedShare ? 'copied' : ''}`}
             onClick={handleShare}
-            aria-label="Compartir este plato"
-            title="Compartir este plato"
+            aria-label={isEn ? 'Share this dish' : 'Compartir este plato'}
+            title={isEn ? 'Share this dish' : 'Compartir este plato'}
           >
             {copiedShare ? <Check size={19} /> : <Share2 size={19} />}
           </button>
 
-          {/* Botón Favoritos: Solo icono */}
           {onToggleFavorite && (
             <button
               type="button"
               className={`product-page-top-fav-btn ${isFavorite ? 'is-fav' : ''}`}
               onClick={() => onToggleFavorite(dish.id)}
-              aria-label={isFavorite ? 'Quitar de favoritos' : 'Guardar en favoritos'}
-              title={isFavorite ? 'En tus favoritos' : 'Guardar en favoritos'}
+              aria-label={isFavorite ? (isEn ? 'Remove from favorites' : 'Quitar de favoritos') : (isEn ? 'Save to favorites' : 'Guardar en favoritos')}
+              title={isFavorite ? (isEn ? 'In your favorites' : 'En tus favoritos') : (isEn ? 'Save to favorites' : 'Guardar en favoritos')}
             >
               <Heart
                 size={19}
@@ -713,15 +679,14 @@ export function ProductDetailPage({
             </button>
           )}
 
-          {/* Flechas de navegación entre platos a la derecha */}
           <div className="product-page-stepper-nav">
             {prevDish && (
               <button
                 type="button"
                 className="product-page-nav-arrow"
                 onClick={() => handleNavigateDish(prevDish)}
-                title={`Anterior: ${prevDish.name}`}
-                aria-label="Plato anterior"
+                title={`${isEn ? 'Previous' : 'Anterior'}: ${isEn && prevDish.nameEn ? prevDish.nameEn : prevDish.name}`}
+                aria-label={isEn ? 'Previous dish' : 'Plato anterior'}
               >
                 <ChevronLeft size={18} />
               </button>
@@ -731,8 +696,8 @@ export function ProductDetailPage({
                 type="button"
                 className="product-page-nav-arrow"
                 onClick={() => handleNavigateDish(nextDish)}
-                title={`Siguiente: ${nextDish.name}`}
-                aria-label="Siguiente plato"
+                title={`${isEn ? 'Next' : 'Siguiente'}: ${isEn && nextDish.nameEn ? nextDish.nameEn : nextDish.name}`}
+                aria-label={isEn ? 'Next dish' : 'Siguiente plato'}
               >
                 <ChevronRight size={18} />
               </button>
@@ -754,11 +719,11 @@ export function ProductDetailPage({
                 openLightbox(selectedImageIndex, loadedSrc);
               }}
               style={{ cursor: 'zoom-in', position: 'relative' }}
-              title="Haz clic para ampliar la foto"
+              title={isEn ? 'Click to enlarge photo' : 'Haz clic para ampliar la foto'}
             >
               <img
                 src={displayImage}
-                alt={`${dish.name} — Mi Barrunto`}
+                alt={`${primaryDishTitle} — Mi Barrunto`}
                 className="product-page-img"
                 loading="eager"
                 onError={(e) => {
@@ -769,10 +734,9 @@ export function ProductDetailPage({
                 }}
               />
               <span className="product-page-category-tag">
-                {dish.categoryName || dish.category}
+                {dishCategoryLabel}
               </span>
 
-              {/* Botón Flotante para abrir Lightbox */}
               <button
                 type="button"
                 className="product-page-image-zoom-badge"
@@ -783,23 +747,22 @@ export function ProductDetailPage({
                   const loadedSrc = (imgEl && imgEl.currentSrc) || (imgEl && imgEl.src) || displayImage;
                   openLightbox(selectedImageIndex, loadedSrc);
                 }}
-                title="Ampliar imagen a pantalla completa"
-                aria-label="Ampliar imagen"
+                title={isEn ? 'Enlarge image fullscreen' : 'Ampliar imagen a pantalla completa'}
+                aria-label={isEn ? 'Enlarge image' : 'Ampliar imagen'}
               >
                 <Maximize2 size={14} />
-                <span>Ampliar</span>
+                <span>{isEn ? 'Zoom' : 'Ampliar'}</span>
               </button>
             </div>
           ) : (
             <div className="product-page-placeholder-box">
               <PlateIcon size={88} className="product-page-placeholder-icon" />
               <span className="product-page-category-tag">
-                {dish.categoryName || dish.category}
+                {dishCategoryLabel}
               </span>
             </div>
           )}
 
-          {/* Miniaturas de galería si el plato tiene múltiples fotos */}
           {galleryImages.length > 1 && (
             <div
               style={{
@@ -834,11 +797,11 @@ export function ProductDetailPage({
                     flexShrink: 0,
                     transition: 'all 0.2s ease'
                   }}
-                  title={`Ver foto ${idx + 1}`}
+                  title={isEn ? `View photo ${idx + 1}` : `Ver foto ${idx + 1}`}
                 >
                   <img
                     src={imgUrl}
-                    alt={`${dish.name} foto ${idx + 1}`}
+                    alt={`${primaryDishTitle} foto ${idx + 1}`}
                     style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                   />
                 </button>
@@ -850,9 +813,9 @@ export function ProductDetailPage({
         {/* Detalles, Precio, Cantidad e Indicaciones */}
         <div className="product-page-details-card">
           <div className="product-page-header-group">
-            <h1 className="product-page-title">{dish.name}</h1>
-            {dish.nameEn && (
-              <p className="product-page-subtitle-en">{dish.nameEn}</p>
+            <h1 className="product-page-title">{primaryDishTitle}</h1>
+            {secondaryDishSubtitle && (
+              <p className="product-page-subtitle-en">{secondaryDishSubtitle}</p>
             )}
             {dish.category !== 'batidos' && dish.glosa && dish.glosa !== dish.nameEn && (
               <p className="product-page-glosa-text">{dish.glosa}</p>
@@ -863,13 +826,15 @@ export function ProductDetailPage({
           {dish.variations && dish.variations.length > 0 && (
             <div className="product-page-variations-section">
               <h3 className="product-page-variations-title">
-                <span>Elige tu base</span>
-                <span className="product-page-variations-sub-title">(Choose your base)</span>
+                <span>{isEn ? 'Choose your base' : 'Elige tu base'}</span>
+                <span className="product-page-variations-sub-title">{isEn ? '(Elige tu base)' : '(Choose your base)'}</span>
               </h3>
               <div className="product-page-variations-list">
                 {dish.variations.map((v) => {
                   const isSelected = selectedVariation?.id === v.id;
                   const varImg = v.image || v.localImage;
+                  const vPrimary = isEn && v.nameEn ? v.nameEn : v.name;
+                  const vSecondary = isEn && v.nameEn ? v.name : v.nameEn;
                   return (
                     <div
                       key={v.id}
@@ -901,7 +866,7 @@ export function ProductDetailPage({
                         <div className="variation-thumbnail-box">
                           <img
                             src={varImg}
-                            alt={v.name}
+                            alt={vPrimary}
                             className="variation-thumbnail-img"
                             onError={(e) => {
                               if (v.localImage && e.currentTarget.src !== v.localImage) {
@@ -913,9 +878,9 @@ export function ProductDetailPage({
                       )}
 
                       <div className="variation-text-col">
-                        <span className="variation-name">{v.name}</span>
-                        {v.nameEn && v.nameEn !== v.name && (
-                          <span className="variation-en-desc">{v.nameEn}</span>
+                        <span className="variation-name">{vPrimary}</span>
+                        {vSecondary && vSecondary !== vPrimary && (
+                          <span className="variation-en-desc">{vSecondary}</span>
                         )}
                       </div>
 
@@ -941,7 +906,6 @@ export function ProductDetailPage({
               )}
             </div>
 
-            {/* Stepper de Cantidad para el Plato Principal */}
             <div className="product-page-qty-control">
               <button
                 type="button"
@@ -950,7 +914,7 @@ export function ProductDetailPage({
                   triggerHaptic(10);
                   setQuantity(Math.max(1, quantity - 1));
                 }}
-                aria-label="Disminuir cantidad"
+                aria-label={isEn ? 'Decrease quantity' : 'Disminuir cantidad'}
               >
                 <Minus size={16} />
               </button>
@@ -962,7 +926,7 @@ export function ProductDetailPage({
                   triggerHaptic(10);
                   setQuantity(quantity + 1);
                 }}
-                aria-label="Aumentar cantidad"
+                aria-label={isEn ? 'Increase quantity' : 'Aumentar cantidad'}
               >
                 <Plus size={16} />
               </button>
@@ -972,12 +936,12 @@ export function ProductDetailPage({
           {/* Indicaciones especiales para cocina */}
           <div className="product-page-notes-block">
             <label htmlFor="dish-note" className="product-page-notes-label">
-              Indicaciones especiales para cocina (opcional):
+              {isEn ? 'Special instructions for the kitchen (optional):' : 'Indicaciones especiales para cocina (opcional):'}
             </label>
             <textarea
               id="dish-note"
               className="product-page-textarea"
-              placeholder="Ejemplo: sin cebolla, ají de huacatay aparte, término medio..."
+              placeholder={isEn ? 'Example: no onions, sauce on the side, medium rare...' : 'Ejemplo: sin cebolla, ají de huacatay aparte, término medio...'}
               value={note}
               onChange={(e) => setNote(e.target.value)}
               rows={2}
@@ -989,49 +953,48 @@ export function ProductDetailPage({
             {selectedAccompanimentsList.length > 0 && (
               <div className="product-page-combined-breakdown">
                 <div className="breakdown-line">
-                  <span>{dish.name}{selectedVariation ? ` (${selectedVariation.name})` : ''} (x{quantity})</span>
+                  <span>{primaryDishTitle}{selectedVariation ? ` (${isEn && selectedVariation.nameEn ? selectedVariation.nameEn : selectedVariation.name})` : ''} (x{quantity})</span>
                   <span>${mainDishSubtotal.toFixed(2)}</span>
                 </div>
                 {selectedAccompanimentsList.map((item) => (
                   <div key={item.id} className="breakdown-line breakdown-line-accompaniment">
-                    <span className="breakdown-item-name">{item.name} (x{item.qty})</span>
+                    <span className="breakdown-item-name">{isEn && item.nameEn ? item.nameEn : item.name} (x{item.qty})</span>
                     <span className="breakdown-item-price">+${item.itemSubtotal.toFixed(2)}</span>
                   </div>
                 ))}
               </div>
             )}
 
-            {/* Botón Ordenar con Icono de Carrito y Total */}
             <button
               type="button"
               className="product-page-add-btn"
               onClick={handleMainAddToCart}
             >
               <ShoppingCart size={20} />
-              <span>Ordenar</span>
+              <span>{isEn ? 'Order' : 'Ordenar'}</span>
               <span className="product-page-add-total">${grandTotal.toFixed(2)}</span>
             </button>
           </div>
         </div>
       </div>
 
-      {/* 3. Sección: Acompáñalo con (Sin fondo en las cards, clic directo en la foto para añadir) */}
+      {/* 3. Sección: Acompáñalo con */}
       {accompaniments.length > 0 && (
         <section className="product-page-section">
           <div className="product-page-section-header">
             <div className="product-page-section-title-wrap">
-              <h2 className="product-page-section-title">Acompáñalo con</h2>
+              <h2 className="product-page-section-title">{isEn ? 'Pair it with' : 'Acompáñalo con'}</h2>
             </div>
             <div className="product-page-section-sub-row">
               <span className="product-page-section-sub">
-                Toca la foto para añadir bebidas y postres tradicionales a tu pedido
+                {isEn ? 'Tap the photo to add traditional drinks and desserts to your order' : 'Toca la foto para añadir bebidas y postres tradicionales a tu pedido'}
               </span>
               <div className="product-page-carousel-controls">
                 <button
                   type="button"
                   className="carousel-arrow-btn"
                   onClick={() => handleScrollCarousel('left')}
-                  aria-label="Desplazar a la izquierda"
+                  aria-label={isEn ? 'Scroll left' : 'Desplazar a la izquierda'}
                 >
                   <ChevronLeft size={18} />
                 </button>
@@ -1039,7 +1002,7 @@ export function ProductDetailPage({
                   type="button"
                   className="carousel-arrow-btn"
                   onClick={() => handleScrollCarousel('right')}
-                  aria-label="Desplazar a la derecha"
+                  aria-label={isEn ? 'Scroll right' : 'Desplazar a la derecha'}
                 >
                   <ChevronRight size={18} />
                 </button>
@@ -1047,24 +1010,23 @@ export function ProductDetailPage({
             </div>
           </div>
 
-          {/* Track del Carrusel */}
           <div className="product-page-accompaniments-carousel" ref={carouselRef}>
             {accompaniments.map((accItem) => {
               const accHasPhoto = accItem.hasImage(photoMode);
               const accImage = accItem.getResolvedImage ? accItem.getResolvedImage(photoMode) : accItem.getImage(photoMode);
               const selectedCount = selectedAccompaniments[accItem.id] || 0;
               const isSelected = selectedCount > 0;
+              const accTitle = isEn && accItem.nameEn ? accItem.nameEn : accItem.name;
 
               return (
                 <div
                   key={accItem.id}
                   className={`accompaniment-circular-card-clean ${isSelected ? 'is-selected' : ''}`}
                 >
-                  {/* Foto Circular: Clic directo para añadir / incrementar */}
                   <div
                     className="accompaniment-circle-avatar-wrap clickable-avatar"
                     onClick={() => handleToggleAccompaniment(accItem, 1)}
-                    title={`Toca para añadir ${accItem.name}`}
+                    title={isEn ? `Tap to add ${accTitle}` : `Toca para añadir ${accTitle}`}
                     role="button"
                     tabIndex={0}
                     onKeyDown={(e) => {
@@ -1077,7 +1039,7 @@ export function ProductDetailPage({
                     {accHasPhoto && accImage ? (
                       <img
                         src={accImage}
-                        alt={accItem.name}
+                        alt={accTitle}
                         className="accompaniment-circle-avatar"
                         loading="lazy"
                         decoding="async"
@@ -1093,10 +1055,9 @@ export function ProductDetailPage({
                         <PlateIcon size={34} />
                       </div>
                     )}
-                    {/* Overlay centrado: Signo + centrado por defecto; Overlay rojo con carrito blanco al seleccionarse */}
                     <div 
                       className={`accompaniment-circle-overlay ${isSelected ? 'is-in-cart' : 'is-plus'}`}
-                      aria-label={isSelected ? `${accItem.name} en el pedido` : `Añadir ${accItem.name}`}
+                      aria-label={isSelected ? `${accTitle} in order` : `Add ${accTitle}`}
                     >
                       {isSelected ? (
                         <ShoppingCart size={32} strokeWidth={2.4} className="overlay-cart-icon" />
@@ -1106,18 +1067,16 @@ export function ProductDetailPage({
                     </div>
                   </div>
 
-                  {/* Nombre y Precio */}
                   <div className="accompaniment-circle-meta">
                     <h4 
                       className="accompaniment-circle-name"
                       onClick={() => handleToggleAccompaniment(accItem, 1)}
                     >
-                      {accItem.name}
+                      {accTitle}
                     </h4>
                     <span className="accompaniment-circle-price">{accItem.getFormattedPrice()}</span>
                   </div>
 
-                  {/* Stepper para quitar o sumar si ya está seleccionado */}
                   {isSelected && (
                     <div className="accompaniment-circle-actions">
                       <div className="accompaniment-stepper">
@@ -1125,7 +1084,7 @@ export function ProductDetailPage({
                           type="button"
                           className="acc-stepper-btn"
                           onClick={() => handleToggleAccompaniment(accItem, -1)}
-                          aria-label={`Quitar ${accItem.name}`}
+                          aria-label={`Remove ${accTitle}`}
                         >
                           <Minus size={13} />
                         </button>
@@ -1134,7 +1093,7 @@ export function ProductDetailPage({
                           type="button"
                           className="acc-stepper-btn"
                           onClick={() => handleToggleAccompaniment(accItem, 1)}
-                          aria-label={`Añadir otro ${accItem.name}`}
+                          aria-label={`Add another ${accTitle}`}
                         >
                           <Plus size={13} />
                         </button>
@@ -1155,11 +1114,11 @@ export function ProductDetailPage({
             <div className="product-page-section-title-wrap">
               <Utensils size={20} className="product-page-section-icon" />
               <h2 className="product-page-section-title">
-                Más {dish.categoryName || dish.category} y especialidades
+                {isEn ? `More ${dishCategoryLabel} & specialties` : `Más ${dish.categoryName || dish.category} y especialidades`}
               </h2>
             </div>
             <span className="product-page-section-sub">
-              Otras delicias preparadas con el auténtico sazón criollo y marino
+              {isEn ? 'Other dishes prepared with authentic Peruvian Criollo & seafood flavor' : 'Otras delicias preparadas con el auténtico sazón criollo y marino'}
             </span>
           </div>
 
@@ -1169,19 +1128,22 @@ export function ProductDetailPage({
               const relImage = relDish.getResolvedImage ? relDish.getResolvedImage(photoMode) : relDish.getImage(photoMode);
               const relItemInCart = cart ? cart.getItem(relDish.id) : null;
               const relQty = relItemInCart ? relItemInCart.quantity : 0;
+              const relPrimary = isEn && relDish.nameEn ? relDish.nameEn : relDish.name;
+              const relSecondary = isEn && relDish.nameEn ? relDish.name : relDish.nameEn;
+              const relCat = isEn && relDish.categoryNameEn ? relDish.categoryNameEn : (relDish.categoryName || relDish.category);
 
               return (
                 <article
                   key={relDish.id}
                   className="product-page-editorial-card-2col"
                   onClick={() => handleNavigateDish(relDish)}
-                  title={`Ver detalle de ${relDish.name}`}
+                  title={isEn ? `View details of ${relPrimary}` : `Ver detalle de ${relPrimary}`}
                 >
                   <div className="editorial-card-media-2col">
                     {relHasPhoto && relImage ? (
                       <img
                         src={relImage}
-                        alt={relDish.name}
+                        alt={relPrimary}
                         className="editorial-card-img"
                         loading="lazy"
                         decoding="async"
@@ -1198,14 +1160,14 @@ export function ProductDetailPage({
                       </div>
                     )}
                     <span className="editorial-card-tag-2col">
-                      {relDish.categoryName || relDish.category}
+                      {relCat}
                     </span>
                   </div>
 
                   <div className="editorial-card-content-2col">
-                    <h3 className="editorial-card-title-2col">{relDish.name}</h3>
-                    {relDish.nameEn && (
-                      <p className="editorial-card-desc-2col">{relDish.nameEn}</p>
+                    <h3 className="editorial-card-title-2col">{relPrimary}</h3>
+                    {relSecondary && (
+                      <p className="editorial-card-desc-2col">{relSecondary}</p>
                     )}
                     <div className="editorial-card-footer-2col" onClick={(e) => e.stopPropagation()}>
                       <span className="editorial-card-price-2col">{relDish.getFormattedPrice()}</span>
@@ -1215,8 +1177,8 @@ export function ProductDetailPage({
                             type="button"
                             className="editorial-stepper-btn"
                             onClick={() => handleUpdateRelatedQuantity(relDish, relQty - 1)}
-                            title={`Disminuir cantidad de ${relDish.name}`}
-                            aria-label={`Disminuir ${relDish.name}`}
+                            title={isEn ? `Decrease quantity of ${relPrimary}` : `Disminuir cantidad de ${relPrimary}`}
+                            aria-label={`Disminuir ${relPrimary}`}
                           >
                             <Minus size={13} />
                           </button>
@@ -1225,8 +1187,8 @@ export function ProductDetailPage({
                             type="button"
                             className="editorial-stepper-btn"
                             onClick={() => handleUpdateRelatedQuantity(relDish, relQty + 1)}
-                            title={`Aumentar cantidad de ${relDish.name}`}
-                            aria-label={`Aumentar ${relDish.name}`}
+                            title={isEn ? `Increase quantity of ${relPrimary}` : `Aumentar cantidad de ${relPrimary}`}
+                            aria-label={`Aumentar ${relPrimary}`}
                           >
                             <Plus size={13} />
                           </button>
@@ -1236,10 +1198,10 @@ export function ProductDetailPage({
                           type="button"
                           className="editorial-card-btn-2col"
                           onClick={(e) => handleQuickAddRelated(relDish, e)}
-                          title={`Agregar ${relDish.name} al pedido`}
+                          title={isEn ? `Add ${relPrimary} to order` : `Agregar ${relPrimary} al pedido`}
                         >
                           <Plus size={14} />
-                          <span>Ordenar</span>
+                          <span>{isEn ? 'Order' : 'Ordenar'}</span>
                         </button>
                       )}
                     </div>
@@ -1251,7 +1213,6 @@ export function ProductDetailPage({
         </section>
       )}
 
-      {/* Toast Flotante de confirmación de agregado */}
       {addedToast && (
         <div className="product-page-floating-toast">
           <Check size={18} />
@@ -1266,14 +1227,13 @@ export function ProductDetailPage({
           onClick={closeLightbox}
           role="dialog"
           aria-modal="true"
-          aria-label={`Visualizador de fotos de ${dish.name}`}
+          aria-label={`Visualizador de fotos de ${primaryDishTitle}`}
         >
-          {/* Header del Lightbox */}
           <div className="product-lightbox-header" onClick={(e) => e.stopPropagation()}>
             <div className="product-lightbox-title-group">
-              <h3 className="product-lightbox-title">{dish.name}</h3>
-              {dish.nameEn && (
-                <span className="product-lightbox-subtitle">{dish.nameEn}</span>
+              <h3 className="product-lightbox-title">{primaryDishTitle}</h3>
+              {secondaryDishSubtitle && (
+                <span className="product-lightbox-subtitle">{secondaryDishSubtitle}</span>
               )}
             </div>
 
@@ -1287,23 +1247,22 @@ export function ProductDetailPage({
                 type="button"
                 className="product-lightbox-close-btn"
                 onClick={closeLightbox}
-                aria-label="Cerrar visor"
-                title="Cerrar visor (Esc)"
+                aria-label={isEn ? 'Close viewer' : 'Cerrar visor'}
+                title={isEn ? 'Close viewer (Esc)' : 'Cerrar visor (Esc)'}
               >
                 <X size={20} />
               </button>
             </div>
           </div>
 
-          {/* Cuerpo del Lightbox con la foto ampliada y flechas de navegación */}
           <div className="product-lightbox-body" onClick={(e) => e.stopPropagation()}>
             {galleryImages.length > 1 && (
               <button
                 type="button"
                 className="product-lightbox-nav-btn prev"
                 onClick={handlePrevLightboxImage}
-                aria-label="Foto anterior"
-                title="Foto anterior (Flecha izquierda)"
+                aria-label={isEn ? 'Previous photo' : 'Foto anterior'}
+                title={isEn ? 'Previous photo' : 'Foto anterior'}
               >
                 <ChevronLeft size={28} />
               </button>
@@ -1312,7 +1271,7 @@ export function ProductDetailPage({
             <div className="product-lightbox-stage">
               <img
                 src={lightboxActiveSrc || galleryImages[lightboxIndex] || displayImage}
-                alt={`${dish.name} foto ${lightboxIndex + 1}`}
+                alt={`${primaryDishTitle} foto ${lightboxIndex + 1}`}
                 className="product-lightbox-img"
                 onClick={(e) => e.stopPropagation()}
                 onError={(e) => {
@@ -1329,15 +1288,14 @@ export function ProductDetailPage({
                 type="button"
                 className="product-lightbox-nav-btn next"
                 onClick={handleNextLightboxImage}
-                aria-label="Foto siguiente"
-                title="Foto siguiente (Flecha derecha)"
+                aria-label={isEn ? 'Next photo' : 'Foto siguiente'}
+                title={isEn ? 'Next photo' : 'Foto siguiente'}
               >
                 <ChevronRight size={28} />
               </button>
             )}
           </div>
 
-          {/* Miniaturas inferiores si hay más de 1 imagen */}
           {galleryImages.length > 1 && (
             <div className="product-lightbox-footer" onClick={(e) => e.stopPropagation()}>
               <div className="product-lightbox-thumbs-track">

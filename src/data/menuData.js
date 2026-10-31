@@ -24,85 +24,85 @@ export const CATEGORIES_DATA = [
   {
     "id": "sandwiches",
     "name": "Sandwiches",
-    "nameEn": "Sandwiches y panes de la casa",
+    "nameEn": "Peruvian Sandwiches",
     "icon": "Sandwich"
   },
   {
     "id": "desayuno",
     "name": "Desayuno peruano",
-    "nameEn": "Desayunos criollos tradicionales",
+    "nameEn": "Peruvian Breakfast",
     "icon": "Sunrise"
   },
   {
     "id": "entradas",
     "name": "Entradas",
-    "nameEn": "Huancaína, causas y piqueos",
+    "nameEn": "Appetizers & Starters",
     "icon": "UtensilsCrossed"
   },
   {
     "id": "sopas",
     "name": "Sopas",
-    "nameEn": "Caldos, chupe y parihuela",
+    "nameEn": "Traditional Soups",
     "icon": "Soup"
   },
   {
     "id": "criolla",
     "name": "Comida criolla",
-    "nameEn": "Lomo saltado, bistec y clásicos",
+    "nameEn": "Peruvian Criollo Classics",
     "icon": "Flame"
   },
   {
     "id": "parrillas",
     "name": "Parrillas",
-    "nameEn": "Anticuchos y cortes al carbón",
+    "nameEn": "Charcoal Grill & Anticuchos",
     "icon": "Beef"
   },
   {
     "id": "ceviches",
     "name": "Ceviches",
-    "nameEn": "Ceviches, tiraditos y leche de tigre",
+    "nameEn": "Fresh Ceviches & Tiraditos",
     "icon": "Fish"
   },
   {
     "id": "mariscos",
     "name": "Mariscos",
-    "nameEn": "Jaleas, arroces y pastas marinas",
+    "nameEn": "Seafood Specialties",
     "icon": "Fish"
   },
   {
     "id": "rondas",
     "name": "Rondas criollas",
-    "nameEn": "Combinados para compartir",
+    "nameEn": "Sharing Platters & Combos",
     "icon": "Layers"
   },
   {
     "id": "broaster",
     "name": "Broaster",
-    "nameEn": "Pollo crujiente, alitas y mostritos",
+    "nameEn": "Crispy Broaster Chicken",
     "icon": "Drumstick"
   },
   {
     "id": "sides",
     "name": "Guarniciones",
-    "nameEn": "Porciones y salsas artesanales",
+    "nameEn": "Side Orders & Sauces",
     "icon": "Utensils"
   },
   {
     "id": "bebidas",
     "name": "Bebidas",
-    "nameEn": "Chicha morada, jugos y sodas",
+    "nameEn": "Traditional Drinks & Sodas",
     "icon": "Coffee"
   },
   {
     "id": "postres",
     "name": "Postres Caseros",
-    "nameEn": "Postres caseros tradicionales peruanos",
+    "nameEn": "Homemade Peruvian Desserts",
     "icon": "cake"
   },
   {
     "id": "batidos",
     "name": "Batidos & Jugos",
-    "nameEn": "Batidos y jugos naturales preparados al momento",
+    "nameEn": "Fresh Smoothies & Juices",
     "icon": "Coffee"
   }
 ];
