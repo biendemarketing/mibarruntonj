@@ -40,6 +40,23 @@ export default async function handler(req, res) {
 `;
     }
 
+    
+    // Categorías principales de la carta para Google Sitelinks
+    const categories = [
+      'sandwiches', 'desayuno', 'entradas', 'sopas', 'criolla',
+      'parrillas', 'ceviches', 'mariscos', 'rondas', 'broaster',
+      'sides', 'bebidas', 'postres', 'batidos'
+    ];
+    for (const cat of categories) {
+      xml += `  <url>
+    <loc>${baseUrl}/categoria/${cat}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+`;
+    }
+
     if (dishes && dishes.length > 0) {
       for (const dish of dishes) {
         const dishDate = dish.updated_at ? dish.updated_at.split('T')[0] : lastmod;

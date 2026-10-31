@@ -36,6 +36,16 @@ async function generateSeoFiles() {
 `;
   }
 
+  for (const cat of CATEGORIES_DATA) {
+    sitemapXml += `  <url>
+    <loc>${baseUrl}/categoria/${cat.id}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+`;
+  }
+
   for (const dish of DISHES_DATA) {
     sitemapXml += `  <url>
     <loc>${baseUrl}/plato/${dish.id}</loc>
@@ -48,7 +58,7 @@ async function generateSeoFiles() {
 
   sitemapXml += `</urlset>`;
   fs.writeFileSync(path.join(publicDir, 'sitemap.xml'), sitemapXml, 'utf-8');
-  console.log(`[generate_seo_files] sitemap.xml generado con ${staticUrls.length + DISHES_DATA.length} URLs.`);
+  console.log(`[generate_seo_files] sitemap.xml generado con ${staticUrls.length + CATEGORIES_DATA.length + DISHES_DATA.length} URLs (incluyendo ${CATEGORIES_DATA.length} categorías para Google Sitelinks).`);
 
   // 2. GENERAR LLMS.TXT (Estándar para LLMs y Agentes de IA)
   let llmsTxt = `# Mi Barrunto Restaurant & Grocery — Paterson, NJ

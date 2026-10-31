@@ -209,6 +209,84 @@
   }
   </script>
 
+  <!-- Datos Estructurados Schema.org para Sitelinks en Google (SiteNavigationElement & WebSite) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://mibarruntonj.com/#website",
+        "url": "https://mibarruntonj.com/",
+        "name": "Mi Barrunto Restaurant & Grocery",
+        "alternateName": [
+          "Mi Barrunto",
+          "Mi Barrunto NJ",
+          "Mi Barrunto Paterson",
+          "Mi Barrunto Peruvian Restaurant"
+        ],
+        "description": "Auténtica comida criolla, cevichería peruana y pescados & mariscos en Paterson, NJ. Abierto 24 Horas.",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://mibarruntonj.com/?buscar={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
+        }
+      },
+      {
+        "@type": "ItemList",
+        "@id": "https://mibarruntonj.com/#sitelinks",
+        "name": "Categorías Principales y Carta",
+        "itemListElement": [
+          {
+            "@type": "SiteNavigationElement",
+            "position": 1,
+            "name": "Ceviches & Pescados",
+            "description": "Ceviche clásico de pescado, ceviche carretillero, mixto y especialidades marinas.",
+            "url": "https://mibarruntonj.com/categoria/ceviches"
+          },
+          {
+            "@type": "SiteNavigationElement",
+            "position": 2,
+            "name": "Comida Criolla",
+            "description": "Lomo saltado, ají de gallina, seco de res, arroz chaufa y tradicionales criollos.",
+            "url": "https://mibarruntonj.com/categoria/criolla"
+          },
+          {
+            "@type": "SiteNavigationElement",
+            "position": 3,
+            "name": "Pescados y Mariscos",
+            "description": "Jalea mixta, arroz con mariscos, parihuelas y cazuelas marinas.",
+            "url": "https://mibarruntonj.com/categoria/mariscos"
+          },
+          {
+            "@type": "SiteNavigationElement",
+            "position": 4,
+            "name": "Parrillas al Carbón",
+            "description": "Anticuchos de corazón, bistec a lo pobre, churrascos y combinados.",
+            "url": "https://mibarruntonj.com/categoria/parrillas"
+          },
+          {
+            "@type": "SiteNavigationElement",
+            "position": 5,
+            "name": "Desayuno Peruano",
+            "description": "Chicharrón de cerdo, tamal criollo, camote frito y café pasado.",
+            "url": "https://mibarruntonj.com/categoria/desayuno"
+          },
+          {
+            "@type": "SiteNavigationElement",
+            "position": 6,
+            "name": "Carta Menú Imprimible (11x8.5)",
+            "description": "Menú completo descargable e imprimible de Mi Barrunto.",
+            "url": "https://mibarruntonj.com/menu_imprimible.html"
+          }
+        ]
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
   <!-- Google Tag Manager (noscript) -->

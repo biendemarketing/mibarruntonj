@@ -15,7 +15,7 @@ async function prerenderOpenGraph() {
   }
 
   const baseHtml = fs.readFileSync(distIndexPath, 'utf-8');
-  const { DISHES_DATA } = await import('../src/data/menuData.js');
+  const { DISHES_DATA, CATEGORIES_DATA } = await import('../src/data/menuData.js');
   
   let platosMap = {};
   try {
@@ -25,6 +25,35 @@ async function prerenderOpenGraph() {
 
   const baseUrl = 'https://mibarruntonj.com';
   let generatedCount = 0;
+
+
+  // Prerenderizar páginas de categorías para Google Sitelinks y SEO
+  let catGenerated = 0;
+  for (const cat of CATEGORIES_DATA) {
+    const catDir = path.join(distDir, 'categoria', cat.id);
+    fs.mkdirSync(catDir, { recursive: true });
+
+    const catTitle = `${cat.name} | Mi Barrunto Restaurant Paterson NJ`;
+    const catDesc = `Explora nuestra selección de ${cat.name} en Mi Barrunto Paterson NJ. Auténtica comida peruana, ceviches y criollos 24 horas.`;
+    const catUrl = `${baseUrl}/categoria/${cat.id}`;
+    const catImage = `${baseUrl}/logo/logo.png`;
+
+    let catHtml = baseHtml
+      .replace(/<title>.*?<\/title>/i, `<title>${catTitle}</title>`)
+      .replace(/<meta\s+name=["']description["']\s+content=["'].*?["']\s*\/?>/i, `<meta name="description" content="${catDesc}" />`)
+      .replace(/<link\s+rel=["']canonical["']\s+href=["'].*?["']\s*\/?>/i, `<link rel="canonical" href="${catUrl}" />`)
+      .replace(/<meta\s+property=["']og:title["']\s+content=["'].*?["']\s*\/?>/i, `<meta property="og:title" content="${catTitle}" />`)
+      .replace(/<meta\s+property=["']og:description["']\s+content=["'].*?["']\s*\/?>/i, `<meta property="og:description" content="${catDesc}" />`)
+      .replace(/<meta\s+property=["']og:image["']\s+content=["'].*?["']\s*\/?>/i, `<meta property="og:image" content="${catImage}" />`)
+      .replace(/<meta\s+property=["']og:image:secure_url["']\s+content=["'].*?["']\s*\/?>/i, `<meta property="og:image:secure_url" content="${catImage}" />`)
+      .replace(/<meta\s+property=["']og:url["']\s+content=["'].*?["']\s*\/?>/i, `<meta property="og:url" content="${catUrl}" />`);
+
+    fs.writeFileSync(path.join(catDir, 'index.html'), catHtml, 'utf-8');
+    catGenerated++;
+  }
+  fs.mkdirSync(path.join(distDir, 'categoria'), { recursive: true });
+  fs.writeFileSync(path.join(distDir, 'categoria', 'index.html'), baseHtml, 'utf-8');
+  console.log(`[prerender-og] Generadas ${catGenerated} páginas estáticas de categorías para Google Sitelinks.`);
 
   for (const dish of DISHES_DATA) {
     const dishDir = path.join(distDir, 'plato', String(dish.id));
