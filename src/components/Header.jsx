@@ -239,7 +239,7 @@ export function Header({
         {/* Logo y Marca (Centrado en Móvil con Logo Grande, Izquierda en Escritorio) */}
         <div className="brand-logo-container">
           <img
-            src="/logo/logo.webp"
+            src="/logo/logo.webp?v=2"
             width="110"
             height="110"
             fetchPriority="high"
@@ -247,8 +247,8 @@ export function Header({
             alt="Mi Barrunto - Restaurante Peruano en Paterson NJ"
             className="brand-logo-img"
             onError={(e) => {
-              const fallback = '/logo/logo.png';
-              if (!e.currentTarget.src.endsWith(fallback)) {
+              const fallback = 'https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/assets/logo.png';
+              if (e.currentTarget.src !== fallback) {
                 e.currentTarget.src = fallback;
               }
             }}

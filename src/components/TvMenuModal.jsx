@@ -183,7 +183,7 @@ export function TvMenuModal({ isOpen, onClose, dishes = [], photoMode = 'complet
       <header className={`tv-menu-header ${showControls ? 'is-visible' : 'is-hidden'}`}>
         <div className="tv-header-brand">
           <img
-            src="/logo/logo.png"
+            src="/logo/logo.webp?v=2"
             alt="Mi Barrunto"
             className="tv-header-logo"
             onError={(e) => {
