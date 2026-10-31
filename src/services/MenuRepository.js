@@ -3,7 +3,6 @@ import { Category } from '../models/Category';
 import { CATEGORIES_DATA, DISHES_DATA, BATIDOS_VARIATIONS } from '../data/menuData';
 import platosMap from '../data/platosMap.json';
 import { WhatsAppService } from './WhatsAppService';
-import { menuService } from './supabase';
 
 /**
  * Repositorio de Menú y Catálogo
@@ -48,7 +47,16 @@ export class MenuRepository {
 
     // Iniciar sincronización de fondo con Supabase
     if (typeof window !== 'undefined') {
-      setTimeout(() => this.syncWithSupabase(), 100);
+      const triggerSync = () => {
+        window.removeEventListener('scroll', triggerSync);
+        window.removeEventListener('touchstart', triggerSync);
+        window.removeEventListener('pointerdown', triggerSync);
+        this.syncWithSupabase();
+      };
+      window.addEventListener('scroll', triggerSync, { once: true, passive: true });
+      window.addEventListener('touchstart', triggerSync, { once: true, passive: true });
+      window.addEventListener('pointerdown', triggerSync, { once: true, passive: true });
+      setTimeout(triggerSync, 6000);
     }
   }
 
@@ -58,6 +66,7 @@ export class MenuRepository {
    */
   async syncWithSupabase() {
     try {
+      const { menuService } = await import('./supabase');
       const remoteDishes = await menuService.getDishes();
       if (!remoteDishes || remoteDishes.length === 0) return;
 

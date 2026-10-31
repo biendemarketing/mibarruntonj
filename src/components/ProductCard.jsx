@@ -22,7 +22,7 @@ export function ProductCard({
   const hasPhoto = dish.hasImage(photoMode);
   const currentImage = dish.getResolvedImage ? dish.getResolvedImage(photoMode) : dish.getImage(photoMode);
   const isCompact = viewMode === 'compact';
-  const [isImageLoaded, setIsImageLoaded] = useState(false);
+  const [isImageLoaded, setIsImageLoaded] = useState(isPriority);
 
   // =========================================================================
   // VISTA 2: COMPACTA / HORIZONTAL (Inspirada en el diseño enviado por el usuario)
@@ -59,7 +59,7 @@ export function ProductCard({
               alt={`${dish.name} — Plato peruano en Mi Barrunto`}
               className={`compact-img ${isImageLoaded ? 'img-loaded' : 'img-loading'}`}
               loading={isPriority ? "eager" : "lazy"}
-              fetchPriority={isPriority && index === 0 ? "high" : "auto"}
+              fetchPriority={isPriority ? "high" : "low"}
               decoding="async"
               onLoad={() => setIsImageLoaded(true)}
               onError={(e) => {
@@ -184,11 +184,11 @@ export function ProductCard({
           <img
             src={currentImage}
             alt={`${dish.name} — Comida criolla peruana en Mi Barrunto`}
-            className={`product-card-img ${isImageLoaded ? 'img-loaded' : 'img-loading'}`}
+            className={`product-card-img ${isPriority || isImageLoaded ? 'img-loaded' : 'img-loading'}`}
             width="680"
             height="426"
             loading={isPriority ? "eager" : "lazy"}
-            fetchPriority={isPriority && index === 0 ? "high" : "auto"}
+            fetchPriority={isPriority ? "high" : "low"}
             decoding="async"
             onLoad={() => setIsImageLoaded(true)}
             onError={(e) => {

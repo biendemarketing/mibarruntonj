@@ -26,10 +26,9 @@
       }
       window.addEventListener('scroll', loadAnalytics, { once: true, passive: true });
       window.addEventListener('touchstart', loadAnalytics, { once: true, passive: true });
+      window.addEventListener('pointerdown', loadAnalytics, { once: true, passive: true });
       window.addEventListener('mousemove', loadAnalytics, { once: true, passive: true });
-      window.addEventListener('load', function() {
-        setTimeout(loadAnalytics, 2800);
-      });
+      window.addEventListener('keydown', loadAnalytics, { once: true, passive: true });
     })();
   </script>
 
@@ -37,6 +36,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="preload" as="image" href="/logo/logo.webp" fetchpriority="high" />
   <link rel="preload" as="image" href="/bg-restaurant.webp" fetchpriority="high" />
+  <link rel="preload" as="image" href="/platos_webp/Pan_con_chicharron.webp" fetchpriority="high" />
   
   <!-- Restaurador de URLs SPA para Enlaces Compartidos -->
   <script>

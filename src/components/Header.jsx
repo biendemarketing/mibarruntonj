@@ -89,13 +89,17 @@ export function Header({
         setShouldLoadVideo(true);
       }
     };
-    const timer = setTimeout(enableVideo, 3200);
     window.addEventListener('scroll', enableVideo, { once: true, passive: true });
     window.addEventListener('touchstart', enableVideo, { once: true, passive: true });
+    window.addEventListener('pointerdown', enableVideo, { once: true, passive: true });
+    window.addEventListener('mousemove', enableVideo, { once: true, passive: true });
+    window.addEventListener('keydown', enableVideo, { once: true, passive: true });
     return () => {
-      clearTimeout(timer);
       window.removeEventListener('scroll', enableVideo);
       window.removeEventListener('touchstart', enableVideo);
+      window.removeEventListener('pointerdown', enableVideo);
+      window.removeEventListener('mousemove', enableVideo);
+      window.removeEventListener('keydown', enableVideo);
     };
   }, []);
 

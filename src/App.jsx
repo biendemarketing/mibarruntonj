@@ -5,7 +5,7 @@ import { CategoryPills } from './components/CategoryPills';
 import { ProductCard } from './components/ProductCard';
 import { MobileNavBar } from './components/MobileNavBar';
 import { Footer } from './components/Footer';
-import { FaqSection } from './components/FaqSection';
+const FaqSection = lazy(() => import('./components/FaqSection').then((m) => ({ default: m.FaqSection })));
 
 // Carga diferida (Lazy Loading y Code-Splitting) para vistas y modales pesados
 const ProductDetailPage = lazy(() =>
@@ -24,7 +24,6 @@ const ActiveOrderTracker = lazy(() =>
   import('./components/ActiveOrderTracker').then((m) => ({ default: m.ActiveOrderTracker }))
 );
 import { getClientUuid } from './utils/clientIdentity';
-import { ordersService } from './services/supabase';
 import { menuRepository } from './services/MenuRepository';
 import { Cart } from './models/Cart';
 import { CartItem } from './models/CartItem';
@@ -60,6 +59,7 @@ export function App() {
     const fetchActiveOrder = async () => {
       try {
         const clientUuid = getClientUuid();
+        const { ordersService } = await import('./services/supabase');
         const clientOrders = await ordersService.getClientOrders(clientUuid);
         const active = clientOrders.find(o => 
           o.status === 'pending' || o.status === 'in_kitchen' || o.status === 'accepted' || o.status === 'ready'
@@ -71,7 +71,7 @@ export function App() {
         // En caso de modo offline temporal
       }
     };
-    fetchActiveOrder();
+    const t = setTimeout(fetchActiveOrder, 4000); return () => clearTimeout(t);
   }, [isAdminPage]);
 
   // Historial de último pedido (One-Tap Reorder)
@@ -1036,7 +1036,7 @@ export function App() {
       )}
 
       {/* 5.5 Sección de Preguntas Frecuentes y Guía Local SEO */}
-      {!isDishDetailPage && <FaqSection />}
+      {!isDishDetailPage && <Suspense fallback={null}><FaqSection /></Suspense>}
 
       {/* 6. Footer con Redes Sociales Oficiales y Selector de Versión de Fotos (Oculto en vista detalle) */}
       {!isDishDetailPage && (
