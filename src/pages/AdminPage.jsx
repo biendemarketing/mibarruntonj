@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { 
   Bell, BellRing, Utensils, Layers, QrCode, Users, LogOut, 
   ExternalLink, Lock, Check, ShieldCheck, KeyRound, 
@@ -32,8 +32,13 @@ import {
 import { useAlertConfirm } from '../context/AlertConfirmContext';
 import { triggerHaptic } from '../utils/haptics';
 
-export function AdminPage() {
+export function AdminPage({ forceMode = null }) {
   const navigate = useNavigate();
+  const location = useLocation();
+  const isWaiterPortal = forceMode === 'waiter' || 
+    location.pathname.startsWith('/mesero') || 
+    location.pathname.startsWith('/waiter') || 
+    location.pathname.startsWith('/sala');
   const { showAlert, showConfirm } = useAlertConfirm();
 
   // Estado de Autenticación
@@ -41,7 +46,16 @@ export function AdminPage() {
   const [authRole, setAuthRole] = useState(() => adminAuthService.getAuthRole());
   const [currentWaiter, setCurrentWaiter] = useState(() => adminAuthService.getCurrentWaiter());
 
-  const [loginMode, setLoginMode] = useState('admin'); // 'admin' | 'waiter'
+  const [loginMode, setLoginMode] = useState(isWaiterPortal ? 'waiter' : 'admin'); // 'admin' | 'waiter'
+
+  useEffect(() => {
+    setLoginMode(isWaiterPortal ? 'waiter' : 'admin');
+    if (isWaiterPortal) {
+      document.title = 'Portal Meseros · Mi Barrunto';
+    } else {
+      document.title = 'Administración · Mi Barrunto';
+    }
+  }, [isWaiterPortal]);
   const [loginUser, setLoginUser] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
   const [waiterUsername, setWaiterUsername] = useState('');
@@ -219,6 +233,7 @@ export function AdminPage() {
       setIsAuthenticated(true);
       setAuthRole('admin');
       setCurrentWaiter(null);
+      navigate(isWaiterPortal ? '/meseros' : '/admin');
       setLoginError(false);
       setLoginPassword('');
     } else {
@@ -273,6 +288,7 @@ export function AdminPage() {
       setIsAuthenticated(false);
       setAuthRole(null);
       setCurrentWaiter(null);
+      navigate(isWaiterPortal ? '/meseros' : '/admin');
     }
   };
 
@@ -520,14 +536,19 @@ export function AdminPage() {
               }}
             />
             <h1 style={{ fontSize: '1.35rem', fontWeight: 900, margin: 0, color: '#1f1e1c', letterSpacing: '-0.3px' }}>
-              Mi Barrunto · Panel Operativo
+              {isWaiterPortal ? 'Mi Barrunto · Portal de Meseros' : 'Mi Barrunto · Administración Central'}
             </h1>
             <p style={{ fontSize: '0.82rem', color: '#78716c', margin: 0 }}>
-              Acceso para administración general y meseros de sala
+              {isWaiterPortal ? 'Acceso con usuario y PIN para personal de sala' : 'Acceso exclusivo para gerencia y administración general'}
             </p>
           </div>
 
-          {/* Switcher de Modo de Ingreso: Admin vs Mesero */}
+          {/* Badge del Portal según ruta */}
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem', backgroundColor: isWaiterPortal ? 'rgba(37, 99, 235, 0.08)' : 'rgba(217, 28, 43, 0.08)', color: isWaiterPortal ? '#2563eb' : 'var(--rojo, #d91c2b)', padding: '0.5rem 1.1rem', borderRadius: '9999px', fontSize: '0.84rem', fontWeight: 800 }}>
+            {isWaiterPortal ? <UserCheck size={17} /> : <ShieldCheck size={17} />}
+            <span>{isWaiterPortal ? 'Portal de Meseros y Sala' : 'Panel de Administración Central'}</span>
+          </div>
+          {false && (
           <div
             style={{
               display: 'flex',
@@ -596,6 +617,8 @@ export function AdminPage() {
               <span>Mesero / Sala</span>
             </button>
           </div>
+
+          )}
 
           {/* Formulario Administrador */}
           {loginMode === 'admin' && (
@@ -819,6 +842,28 @@ export function AdminPage() {
             <ArrowLeft size={15} />
             <span>Volver a la Carta del Menú</span>
           </button>
+
+          <button
+            type="button"
+            onClick={() => navigate(isWaiterPortal ? '/admin' : '/meseros')}
+            style={{
+              backgroundColor: 'transparent',
+              color: isWaiterPortal ? '#2563eb' : '#d91c2b',
+              fontSize: '0.82rem',
+              fontWeight: 700,
+              cursor: 'pointer',
+              border: 'none !important',
+              textDecoration: 'underline',
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.4rem',
+              padding: '0.35rem 0.5rem',
+              marginTop: '0.2rem'
+            }}
+          >
+            {isWaiterPortal ? '¿Acceso administrativo? Ir al Panel Central (/admin)' : '¿Personal de sala o meseros? Ir al Portal de Meseros (/meseros)'}
+          </button>
         </div>
       </div>
     );
@@ -888,7 +933,7 @@ export function AdminPage() {
                 />
               </div>
               <span style={{ fontSize: '0.72rem', color: '#78716c', fontWeight: 600 }}>
-                Panel Administrativo
+                {authRole === 'waiter' || isWaiterPortal ? 'Portal de Meseros' : 'Panel Administrativo'}
               </span>
             </div>
           </div>
@@ -1175,7 +1220,7 @@ export function AdminPage() {
                     <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 900, color: '#1f1e1c' }}>
                       Mi Barrunto
                     </h3>
-                    <span style={{ fontSize: '0.72rem', color: '#78716c' }}>Panel Administrativo</span>
+                    <span style={{ fontSize: '0.72rem', color: '#78716c' }}>{authRole === 'waiter' || isWaiterPortal ? 'Portal de Meseros' : 'Panel Administrativo'}</span>
                   </div>
                 </div>
                 <button

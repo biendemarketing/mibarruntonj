@@ -74,8 +74,8 @@ class VisitTracker {
   init() {
     if (typeof window === 'undefined') return;
 
-    // Evitar contar accesos al panel de administración como visitas de clientes
-    if (window.location.pathname.startsWith('/admin')) return;
+    // Evitar contar accesos al panel de administración o portal de meseros como visitas de clientes
+    if (window.location.pathname.startsWith('/admin') || window.location.pathname.startsWith('/mesero')) return;
 
     // Registrar inicio de visita
     this.sendPayload({ hasOrdered: false });

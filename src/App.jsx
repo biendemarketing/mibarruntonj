@@ -49,6 +49,8 @@ export function App() {
   }, [location.pathname]);
 
   const isAdminPage = normalizedPath.startsWith('/admin');
+  const isWaiterPage = normalizedPath.startsWith('/meseros') || normalizedPath.startsWith('/mesero') || normalizedPath.startsWith('/waiter') || normalizedPath.startsWith('/sala');
+  const isStaffPage = isAdminPage || isWaiterPage;
   const isDishDetailPage = normalizedPath.startsWith('/plato/');
   const [catalogVersion, setCatalogVersion] = useState(0);
   useEffect(() => {
@@ -82,7 +84,7 @@ export function App() {
 
   // Consultar pedidos activos del cliente actual (sin registro, usando client_uuid)
   useEffect(() => {
-    if (isAdminPage) return;
+    if (isStaffPage) return;
     const fetchActiveOrder = async () => {
       try {
         const clientUuid = getClientUuid();
@@ -112,7 +114,7 @@ export function App() {
       window.removeEventListener('touchstart', onInteract);
       window.removeEventListener('pointerdown', onInteract);
     };
-  }, [isAdminPage]);
+  }, [isStaffPage]);
 
   // Historial de último pedido (One-Tap Reorder)
   const [lastOrder, setLastOrder] = useState(() => {
@@ -669,8 +671,8 @@ export function App() {
 
   const isAnyModalOpen = Boolean(isCartOpen || isMobileMenuOpen || isTvModeOpen);
 
-  // Si la ruta es /admin, renderizar directamente el panel de administración
-  if (isAdminPage) {
+  // Si la ruta es /admin o /meseros, renderizar directamente el panel correspondiente
+  if (isStaffPage) {
     return (
       <Suspense fallback={
         <div style={{
@@ -684,10 +686,10 @@ export function App() {
           fontSize: '1rem',
           fontWeight: 700
         }}>
-          Cargando Panel Administrativo Mi Barrunto...
+          {isWaiterPage ? 'Cargando Portal de Meseros Mi Barrunto...' : 'Cargando Panel Administrativo Mi Barrunto...'}
         </div>
       }>
-        <AdminPage />
+        <AdminPage forceMode={isWaiterPage ? 'waiter' : 'admin'} />
       </Suspense>
     );
   }

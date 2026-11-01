@@ -15,6 +15,10 @@ Allow: /sitemap.xml
 # Rutas privadas / administrativas excluidas
 Disallow: /admin
 Disallow: /admin/
+Disallow: /meseros
+Disallow: /meseros/
+Disallow: /mesero
+Disallow: /mesero/
 
 # AI Crawlers & LLM scrapers permitidos explícitamente para citation y grounding
 User-agent: GPTBot
