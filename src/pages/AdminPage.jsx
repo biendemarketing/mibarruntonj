@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { 
-  Bell, BellRing, Utensils, Layers, QrCode, Users, LogOut, 
-  ExternalLink, Lock, Check, ShieldCheck, KeyRound, 
+import {
+  Bell, BellRing, Utensils, Layers, QrCode, Users, LogOut,
+  ExternalLink, Lock, Check, ShieldCheck, KeyRound,
   Clock, Volume2, VolumeX, ArrowLeft, RefreshCw, Printer,
   Menu, X, Mail, ShieldAlert, Sparkles, ChefHat, User,
   UserCheck, Eye, EyeOff, ShoppingBag, Receipt, CheckSquare, TrendingUp
 } from 'lucide-react';
-import { 
-  ordersService, menuService, tablesService, 
-  waitersService, adminAuthService, tasksService 
+import {
+  ordersService, menuService, tablesService,
+  waitersService, adminAuthService, tasksService
 } from '../services/supabase';
 import { AdminOrdersTab } from '../components/AdminOrdersTab';
 import { AdminPOSTab } from '../components/AdminPOSTab';
@@ -22,12 +22,12 @@ import { AdminTablesTab } from '../components/AdminTablesTab';
 import { AdminWaitersTab } from '../components/AdminWaitersTab';
 import { AdminPrintableTab } from '../components/AdminPrintableTab';
 import { AdminAnalyticsTab } from '../components/AdminAnalyticsTab';
-import { 
-  playOrderNotificationSound, 
-  unlockAudio, 
-  sendBrowserNotification, 
-  requestNotificationPermission, 
-  getNotificationPermissionStatus 
+import {
+  playOrderNotificationSound,
+  unlockAudio,
+  sendBrowserNotification,
+  requestNotificationPermission,
+  getNotificationPermissionStatus
 } from '../utils/orderSound';
 import { useAlertConfirm } from '../context/AlertConfirmContext';
 import { triggerHaptic } from '../utils/haptics';
@@ -35,9 +35,9 @@ import { triggerHaptic } from '../utils/haptics';
 export function AdminPage({ forceMode = null }) {
   const navigate = useNavigate();
   const location = useLocation();
-  const isWaiterPortal = forceMode === 'waiter' || 
-    location.pathname.startsWith('/mesero') || 
-    location.pathname.startsWith('/waiter') || 
+  const isWaiterPortal = forceMode === 'waiter' ||
+    location.pathname.startsWith('/mesero') ||
+    location.pathname.startsWith('/waiter') ||
     location.pathname.startsWith('/sala');
   const { showAlert, showConfirm } = useAlertConfirm();
 
@@ -65,7 +65,7 @@ export function AdminPage({ forceMode = null }) {
 
   // Cargar lista de personal desde el inicio para permitir login de meseros
   useEffect(() => {
-    waitersService.getWaiters().then(setWaiters).catch(() => {});
+    waitersService.getWaiters().then(setWaiters).catch(() => { });
   }, []);
 
   // Pestaña Activa
@@ -328,12 +328,12 @@ export function AdminPage({ forceMode = null }) {
   const handleMarkOrderPaid = async (orderId, isPaid = true, paymentMethod = 'efectivo') => {
     triggerHaptic(10);
     await ordersService.markOrderPaid(orderId, isPaid, paymentMethod);
-    setOrders(prev => prev.map(o => o.id === orderId ? { 
-      ...o, 
-      is_paid: isPaid, 
+    setOrders(prev => prev.map(o => o.id === orderId ? {
+      ...o,
+      is_paid: isPaid,
       payment_status: isPaid ? 'paid' : 'pending',
       payment_method: paymentMethod,
-      paid_at: isPaid ? new Date().toISOString() : null 
+      paid_at: isPaid ? new Date().toISOString() : null
     } : o));
   };
 
@@ -460,7 +460,7 @@ export function AdminPage({ forceMode = null }) {
       { id: 'tables', label: 'Mesas & QR', icon: QrCode, badge: tables.length },
       { id: 'waiters', label: 'Personal & Meseros', icon: Users, badge: waiters.length },
       { id: 'analytics', label: 'Analíticas & Visitas', icon: TrendingUp },
-        { id: 'printable', label: 'Menú Imprimible', icon: Printer }
+      { id: 'printable', label: 'Menú Imprimible', icon: Printer }
     ];
 
     // La cuenta admin siempre puede ver todo
@@ -549,74 +549,74 @@ export function AdminPage({ forceMode = null }) {
             <span>{isWaiterPortal ? 'Portal de Meseros y Sala' : 'Panel de Administración Central'}</span>
           </div>
           {false && (
-          <div
-            style={{
-              display: 'flex',
-              width: '100%',
-              backgroundColor: '#f5efe4',
-              padding: '0.3rem',
-              borderRadius: '14px',
-              gap: '0.35rem'
-            }}
-          >
-            <button
-              type="button"
-              onClick={() => {
-                triggerHaptic(6);
-                setLoginMode('admin');
-                setLoginError(false);
-              }}
+            <div
               style={{
-                flex: 1,
-                padding: '0.65rem 0.5rem',
-                borderRadius: '10px',
-                backgroundColor: loginMode === 'admin' ? '#ffffff' : 'transparent',
-                color: loginMode === 'admin' ? 'var(--rojo, #d91c2b)' : '#6b635b',
-                fontWeight: 800,
-                fontSize: '0.82rem',
-                cursor: 'pointer',
-                border: 'none !important',
-                boxShadow: loginMode === 'admin' ? '0 2px 8px rgba(0,0,0,0.06)' : 'none',
                 display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '0.35rem',
-                transition: 'all 0.15s ease'
+                width: '100%',
+                backgroundColor: '#f5efe4',
+                padding: '0.3rem',
+                borderRadius: '14px',
+                gap: '0.35rem'
               }}
             >
-              <ShieldCheck size={15} />
-              <span>Administrador</span>
-            </button>
+              <button
+                type="button"
+                onClick={() => {
+                  triggerHaptic(6);
+                  setLoginMode('admin');
+                  setLoginError(false);
+                }}
+                style={{
+                  flex: 1,
+                  padding: '0.65rem 0.5rem',
+                  borderRadius: '10px',
+                  backgroundColor: loginMode === 'admin' ? '#ffffff' : 'transparent',
+                  color: loginMode === 'admin' ? 'var(--rojo, #d91c2b)' : '#6b635b',
+                  fontWeight: 800,
+                  fontSize: '0.82rem',
+                  cursor: 'pointer',
+                  border: 'none !important',
+                  boxShadow: loginMode === 'admin' ? '0 2px 8px rgba(0,0,0,0.06)' : 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.35rem',
+                  transition: 'all 0.15s ease'
+                }}
+              >
+                <ShieldCheck size={15} />
+                <span>Administrador</span>
+              </button>
 
-            <button
-              type="button"
-              onClick={() => {
-                triggerHaptic(6);
-                setLoginMode('waiter');
-                setLoginError(false);
-              }}
-              style={{
-                flex: 1,
-                padding: '0.65rem 0.5rem',
-                borderRadius: '10px',
-                backgroundColor: loginMode === 'waiter' ? '#ffffff' : 'transparent',
-                color: loginMode === 'waiter' ? '#2563eb' : '#6b635b',
-                fontWeight: 800,
-                fontSize: '0.82rem',
-                cursor: 'pointer',
-                border: 'none !important',
-                boxShadow: loginMode === 'waiter' ? '0 2px 8px rgba(0,0,0,0.06)' : 'none',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '0.35rem',
-                transition: 'all 0.15s ease'
-              }}
-            >
-              <UserCheck size={15} />
-              <span>Mesero / Sala</span>
-            </button>
-          </div>
+              <button
+                type="button"
+                onClick={() => {
+                  triggerHaptic(6);
+                  setLoginMode('waiter');
+                  setLoginError(false);
+                }}
+                style={{
+                  flex: 1,
+                  padding: '0.65rem 0.5rem',
+                  borderRadius: '10px',
+                  backgroundColor: loginMode === 'waiter' ? '#ffffff' : 'transparent',
+                  color: loginMode === 'waiter' ? '#2563eb' : '#6b635b',
+                  fontWeight: 800,
+                  fontSize: '0.82rem',
+                  cursor: 'pointer',
+                  border: 'none !important',
+                  boxShadow: loginMode === 'waiter' ? '0 2px 8px rgba(0,0,0,0.06)' : 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.35rem',
+                  transition: 'all 0.15s ease'
+                }}
+              >
+                <UserCheck size={15} />
+                <span>Mesero / Sala</span>
+              </button>
+            </div>
 
           )}
 
@@ -1155,8 +1155,8 @@ export function AdminPage({ forceMode = null }) {
                   {authRole === 'waiter' ? currentWaiter?.name || 'Mesero de Sala' : 'Administrador'}
                 </p>
                 <span style={{ fontSize: '0.7rem', color: authRole === 'waiter' ? '#2563eb' : '#78716c', fontWeight: 700 }}>
-                  {authRole === 'waiter' 
-                    ? `@${currentWaiter?.username || 'mesero'} · Turno Activo` 
+                  {authRole === 'waiter'
+                    ? `@${currentWaiter?.username || 'mesero'} · Turno Activo`
                     : 'Acceso Total Central'}
                 </span>
               </div>
@@ -1561,7 +1561,7 @@ export function AdminPage({ forceMode = null }) {
           )}
 
           {activeTab === 'customers' && (
-            <AdminCustomersTab 
+            <AdminCustomersTab
               onRefreshData={loadAllData}
             />
           )}

@@ -63,7 +63,7 @@ export function App() {
 
   useEffect(() => {
     const unlockCatalog = () => {
-      import('./InteractiveFeatures.css').catch(() => {});
+      import('./InteractiveFeatures.css').catch(() => { });
       menuRepository.loadFullCatalog();
       setIsFullCatalogReady(true);
     };
@@ -90,7 +90,7 @@ export function App() {
         const clientUuid = getClientUuid();
         const { ordersService } = await import('./services/supabase');
         const clientOrders = await ordersService.getClientOrders(clientUuid);
-        const active = clientOrders.find(o => 
+        const active = clientOrders.find(o =>
           o.status === 'pending' || o.status === 'in_kitchen' || o.status === 'accepted' || o.status === 'ready'
         );
         if (active) {
@@ -121,7 +121,7 @@ export function App() {
     try {
       const saved = localStorage.getItem('mb-last-order');
       if (saved) return JSON.parse(saved);
-    } catch {}
+    } catch { }
     return null;
   });
   const [dismissedLastOrder, setDismissedLastOrder] = useState(false);
@@ -187,7 +187,7 @@ export function App() {
     try {
       const saved = localStorage.getItem('mb-favoritos');
       if (saved) return JSON.parse(saved);
-    } catch {}
+    } catch { }
     return [];
   });
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
@@ -402,7 +402,7 @@ export function App() {
   // Tema oscuro de alto contraste
   useEffect(() => {
     if (isDarkMode || viewMode !== 'grid' || showFavoritesOnly) {
-      import('./InteractiveFeatures.css').catch(() => {});
+      import('./InteractiveFeatures.css').catch(() => { });
     }
     if (isDarkMode) {
       document.documentElement.classList.add('dark');
@@ -411,7 +411,7 @@ export function App() {
     }
     try {
       localStorage.setItem('mb-noche', isDarkMode ? '1' : '0');
-    } catch {}
+    } catch { }
   }, [isDarkMode]);
 
   // Botón Volver Arriba
@@ -446,7 +446,7 @@ export function App() {
       const next = prev === 'complete' ? 'curated' : 'complete';
       try {
         localStorage.setItem('mb-photo-mode', next);
-      } catch {}
+      } catch { }
       setToastMessage(
         next === 'complete'
           ? 'Modo V2 Activo: Galería completa de fotos al 100%'
@@ -656,7 +656,7 @@ export function App() {
       try {
         localStorage.setItem('mb-vista-v2', next);
         localStorage.setItem('mb-vista', next);
-      } catch {}
+      } catch { }
       return next;
     });
   };
@@ -666,7 +666,7 @@ export function App() {
     try {
       localStorage.setItem('mb-vista-v2', mode);
       localStorage.setItem('mb-vista', mode);
-    } catch {}
+    } catch { }
   };
 
   const isAnyModalOpen = Boolean(isCartOpen || isMobileMenuOpen || isTvModeOpen);
@@ -852,233 +852,233 @@ export function App() {
 
           {/* 4. Catálogo de Platos */}
           <main className={`menu-main-layout ${showFavoritesOnly ? 'favorites-main-layout' : ''}`}>
-        {/* Banner de Repetir Último Pedido (One-Tap Reorder) */}
-        {lastOrder && cart.isEmpty() && !dismissedLastOrder && (
-          <div className="reorder-banner">
-            <div className="reorder-banner-left">
-              <div className="reorder-icon-wrap">
-                <RotateCcw size={18} />
+            {/* Banner de Repetir Último Pedido (One-Tap Reorder) */}
+            {lastOrder && cart.isEmpty() && !dismissedLastOrder && (
+              <div className="reorder-banner">
+                <div className="reorder-banner-left">
+                  <div className="reorder-icon-wrap">
+                    <RotateCcw size={18} />
+                  </div>
+                  <div className="reorder-text-wrap">
+                    <strong className="reorder-title">{isEn ? 'Would you like to repeat your last order?' : '¿Deseas repetir tu último pedido?'}</strong>
+                    <span className="reorder-desc">
+                      {lastOrder.items?.length || 0} {(lastOrder.items?.length || 0) === 1 ? 'plato guardado' : 'platos guardados'} de tu visita anterior
+                    </span>
+                  </div>
+                </div>
+                <div className="reorder-actions">
+                  <button
+                    type="button"
+                    className="reorder-action-btn"
+                    onClick={handleReorderLast}
+                  >
+                    {isEn ? 'Order again' : 'Pedir de nuevo'}
+                  </button>
+                  <button
+                    type="button"
+                    className="reorder-close-btn"
+                    onClick={() => setDismissedLastOrder(true)}
+                    aria-label="Cerrar sugerencia"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
               </div>
-              <div className="reorder-text-wrap">
-                <strong className="reorder-title">{isEn ? 'Would you like to repeat your last order?' : '¿Deseas repetir tu último pedido?'}</strong>
-                <span className="reorder-desc">
-                  {lastOrder.items?.length || 0} {(lastOrder.items?.length || 0) === 1 ? 'plato guardado' : 'platos guardados'} de tu visita anterior
+            )}
+
+            {/* Banner de búsqueda activa en vivo con botón para limpiar */}
+            {searchQuery.trim() && (
+              <div className="search-results-banner">
+                <span>
+                  Buscando: <strong style={{ color: 'var(--naranja)' }}>"{searchQuery}"</strong> ({groupedCatalog.reduce((acc, g) => acc + g.dishes.length, 0)} platos encontrados)
                 </span>
-              </div>
-            </div>
-            <div className="reorder-actions">
-              <button
-                type="button"
-                className="reorder-action-btn"
-                onClick={handleReorderLast}
-              >
-                {isEn ? 'Order again' : 'Pedir de nuevo'}
-              </button>
-              <button
-                type="button"
-                className="reorder-close-btn"
-                onClick={() => setDismissedLastOrder(true)}
-                aria-label="Cerrar sugerencia"
-              >
-                <X size={16} />
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Banner de búsqueda activa en vivo con botón para limpiar */}
-        {searchQuery.trim() && (
-          <div className="search-results-banner">
-            <span>
-              Buscando: <strong style={{ color: 'var(--naranja)' }}>"{searchQuery}"</strong> ({groupedCatalog.reduce((acc, g) => acc + g.dishes.length, 0)} platos encontrados)
-            </span>
-            <button
-              type="button"
-              className="search-results-clear"
-              onClick={() => handleSearchChange('')}
-            >
-              {isEn ? 'View full menu ✕' : 'Ver toda la carta ✕'}
-            </button>
-          </div>
-        )}
-
-        {/* Banner de categoría activa con opción para regresar a toda la carta */}
-        {!searchQuery.trim() && selectedCategory !== 'todos' && !showFavoritesOnly && (
-          <div className="search-results-banner">
-            <span>
-              Categoría: <strong style={{ color: 'var(--rojo)' }}>{categories.find((c) => c.id === selectedCategory)?.name || selectedCategory}</strong> ({groupedCatalog.reduce((acc, g) => acc + g.dishes.length, 0)} platos)
-            </span>
-            <button
-              type="button"
-              className="search-results-clear"
-              onClick={() => handleSelectCategory('todos')}
-            >
-              {isEn ? 'View full menu ✕' : 'Ver toda la carta ✕'}
-            </button>
-          </div>
-        )}
-
-        {/* Banner de filtros activos cuando no hay búsqueda por texto */}
-        {!searchQuery.trim() && hasActiveFilters && (
-          <div className="search-results-banner active-filter-notice">
-            <span>
-              Filtros activos: {filters.onlyWithPhoto && <strong>[Con foto] </strong>}
-              {filters.priceRange !== 'all' && (
-                <strong>
-                  [Precio: {filters.priceRange === 'under10' ? '< $10' : filters.priceRange === '10to20' ? '$10 - $20' : '> $20'}]
-                </strong>
-              )}{' '}
-              {filters.priceSort !== 'none' && (
-                <strong>
-                  [Orden: {filters.priceSort === 'asc' ? 'Menor a mayor' : 'Mayor a menor'}]
-                </strong>
-              )} ({groupedCatalog.reduce((acc, g) => acc + g.dishes.length, 0)} platos)
-            </span>
-            <button
-              type="button"
-              className="search-results-clear"
-              onClick={handleResetFilters}
-            >
-              Quitar filtros ✕
-            </button>
-          </div>
-        )}
-
-        {/* Barra Flotante de Acciones en Lote cuando hay platos seleccionados en Favoritos */}
-        {showFavoritesOnly && selectedFavIds.length > 0 && (
-          <div className="favorites-batch-actions-bar">
-            <div className="batch-actions-info">
-              <CheckCircle2 size={16} color="#ffffff" />
-              <span>
-                <strong>{selectedFavIds.length}</strong> {selectedFavIds.length === 1 ? 'plato seleccionado' : 'platos seleccionados'}
-              </span>
-            </div>
-
-            <div className="batch-actions-btns">
-              {/* Botón Añadir Seleccionados al Pedido */}
-              <button
-                type="button"
-                className="batch-action-btn batch-add-cart-btn"
-                onClick={handleAddSelectedFavsToCart}
-              >
-                <Plus size={16} />
-                <span>Ordenar ({selectedFavIds.length})</span>
-              </button>
-
-              {/* Botón Quitar Seleccionados de Favoritos */}
-              <button
-                type="button"
-                className="batch-action-btn batch-remove-fav-btn"
-                onClick={handleRemoveSelectedFavs}
-              >
-                <Trash2 size={15} />
-                <span>Quitar seleccionados</span>
-              </button>
-            </div>
-          </div>
-        )}
-
-        {groupedCatalog.length === 0 ? (
-          showFavoritesOnly ? (
-            <div className="favorites-empty-state">
-              <div className="favorites-empty-icon">
-                <Heart size={44} color="var(--rojo)" strokeWidth={1.8} />
-              </div>
-              <h2 className="favorites-empty-title">Aún no tienes platos en favoritos</h2>
-              <p className="favorites-empty-desc">
-                Guarda tus platos preferidos tocando el corazón en las tarjetas o en la vista de detalle para tenerlos siempre a mano.
-              </p>
-              <button
-                type="button"
-                className="favorites-empty-btn"
-                onClick={() => setShowFavoritesOnly(false)}
-              >
-                Explorar toda la carta
-              </button>
-            </div>
-          ) : (
-            <div style={{
-              textAlign: 'center',
-              padding: '3.5rem 1rem',
-              color: 'var(--text-light)'
-            }}>
-              <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-main)' }}>
-                No se encontraron platos para "{searchQuery}"
-              </h2>
-              <p style={{ marginTop: '0.35rem', fontSize: '0.88rem' }}>
-                Intenta con otro término de búsqueda o selecciona otra sección.
-              </p>
-              {searchQuery && (
                 <button
                   type="button"
                   className="search-results-clear"
                   onClick={() => handleSearchChange('')}
-                  style={{ marginTop: '1rem' }}
                 >
-                  Limpiar búsqueda y ver carta completa
+                  {isEn ? 'View full menu ✕' : 'Ver toda la carta ✕'}
                 </button>
-              )}
-            </div>
-          )
-        ) : (
-          (isFullCatalogReady || selectedCategory !== 'todos' || searchQuery ? groupedCatalog : groupedCatalog.slice(0, 1).map(g => ({ ...g, dishes: g.dishes.slice(0, 6) }))).map(({ category, dishes }, catIdx) => (
-            <section
-              key={category.id}
-              id={category.id}
-              style={{ marginBottom: '2.5rem', ...(catIdx > 0 ? { contentVisibility: 'auto', containIntrinsicSize: '1px 700px' } : {}) }}
-            >
-              {/* Encabezado de la Categoría con Título Centrado y Doble Línea Horizontal (Roja y Naranja) */}
-              <div className="category-section-header">
-                <div className="category-header-double-line" aria-hidden="true">
-                  <span className="category-line-stripe stripe-rojo" />
-                  <span className="category-line-stripe stripe-naranja" />
+              </div>
+            )}
+
+            {/* Banner de categoría activa con opción para regresar a toda la carta */}
+            {!searchQuery.trim() && selectedCategory !== 'todos' && !showFavoritesOnly && (
+              <div className="search-results-banner">
+                <span>
+                  Categoría: <strong style={{ color: 'var(--rojo)' }}>{categories.find((c) => c.id === selectedCategory)?.name || selectedCategory}</strong> ({groupedCatalog.reduce((acc, g) => acc + g.dishes.length, 0)} platos)
+                </span>
+                <button
+                  type="button"
+                  className="search-results-clear"
+                  onClick={() => handleSelectCategory('todos')}
+                >
+                  {isEn ? 'View full menu ✕' : 'Ver toda la carta ✕'}
+                </button>
+              </div>
+            )}
+
+            {/* Banner de filtros activos cuando no hay búsqueda por texto */}
+            {!searchQuery.trim() && hasActiveFilters && (
+              <div className="search-results-banner active-filter-notice">
+                <span>
+                  Filtros activos: {filters.onlyWithPhoto && <strong>[Con foto] </strong>}
+                  {filters.priceRange !== 'all' && (
+                    <strong>
+                      [Precio: {filters.priceRange === 'under10' ? '< $10' : filters.priceRange === '10to20' ? '$10 - $20' : '> $20'}]
+                    </strong>
+                  )}{' '}
+                  {filters.priceSort !== 'none' && (
+                    <strong>
+                      [Orden: {filters.priceSort === 'asc' ? 'Menor a mayor' : 'Mayor a menor'}]
+                    </strong>
+                  )} ({groupedCatalog.reduce((acc, g) => acc + g.dishes.length, 0)} platos)
+                </span>
+                <button
+                  type="button"
+                  className="search-results-clear"
+                  onClick={handleResetFilters}
+                >
+                  Quitar filtros ✕
+                </button>
+              </div>
+            )}
+
+            {/* Barra Flotante de Acciones en Lote cuando hay platos seleccionados en Favoritos */}
+            {showFavoritesOnly && selectedFavIds.length > 0 && (
+              <div className="favorites-batch-actions-bar">
+                <div className="batch-actions-info">
+                  <CheckCircle2 size={16} color="#ffffff" />
+                  <span>
+                    <strong>{selectedFavIds.length}</strong> {selectedFavIds.length === 1 ? 'plato seleccionado' : 'platos seleccionados'}
+                  </span>
                 </div>
-                <div className="category-header-center">
-                  <h2 className="category-title">
-                    <span>{isEn && category.nameEn ? category.nameEn : category.name}</span>
+
+                <div className="batch-actions-btns">
+                  {/* Botón Añadir Seleccionados al Pedido */}
+                  <button
+                    type="button"
+                    className="batch-action-btn batch-add-cart-btn"
+                    onClick={handleAddSelectedFavsToCart}
+                  >
+                    <Plus size={16} />
+                    <span>Ordenar ({selectedFavIds.length})</span>
+                  </button>
+
+                  {/* Botón Quitar Seleccionados de Favoritos */}
+                  <button
+                    type="button"
+                    className="batch-action-btn batch-remove-fav-btn"
+                    onClick={handleRemoveSelectedFavs}
+                  >
+                    <Trash2 size={15} />
+                    <span>Quitar seleccionados</span>
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {groupedCatalog.length === 0 ? (
+              showFavoritesOnly ? (
+                <div className="favorites-empty-state">
+                  <div className="favorites-empty-icon">
+                    <Heart size={44} color="var(--rojo)" strokeWidth={1.8} />
+                  </div>
+                  <h2 className="favorites-empty-title">Aún no tienes platos en favoritos</h2>
+                  <p className="favorites-empty-desc">
+                    Guarda tus platos preferidos tocando el corazón en las tarjetas o en la vista de detalle para tenerlos siempre a mano.
+                  </p>
+                  <button
+                    type="button"
+                    className="favorites-empty-btn"
+                    onClick={() => setShowFavoritesOnly(false)}
+                  >
+                    Explorar toda la carta
+                  </button>
+                </div>
+              ) : (
+                <div style={{
+                  textAlign: 'center',
+                  padding: '3.5rem 1rem',
+                  color: 'var(--text-light)'
+                }}>
+                  <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-main)' }}>
+                    No se encontraron platos para "{searchQuery}"
                   </h2>
-                  {category.nameEn && (
-                    <span className="category-title-en">{isEn ? category.name : category.nameEn}</span>
+                  <p style={{ marginTop: '0.35rem', fontSize: '0.88rem' }}>
+                    Intenta con otro término de búsqueda o selecciona otra sección.
+                  </p>
+                  {searchQuery && (
+                    <button
+                      type="button"
+                      className="search-results-clear"
+                      onClick={() => handleSearchChange('')}
+                      style={{ marginTop: '1rem' }}
+                    >
+                      Limpiar búsqueda y ver carta completa
+                    </button>
                   )}
                 </div>
-                <div className="category-header-double-line" aria-hidden="true">
-                  <span className="category-line-stripe stripe-rojo" />
-                  <span className="category-line-stripe stripe-naranja" />
-                </div>
-              </div>
+              )
+            ) : (
+              (isFullCatalogReady || selectedCategory !== 'todos' || searchQuery ? groupedCatalog : groupedCatalog.slice(0, 1).map(g => ({ ...g, dishes: g.dishes.slice(0, 6) }))).map(({ category, dishes }, catIdx) => (
+                <section
+                  key={category.id}
+                  id={category.id}
+                  style={{ marginBottom: '2.5rem', ...(catIdx > 0 ? { contentVisibility: 'auto', containIntrinsicSize: '1px 700px' } : {}) }}
+                >
+                  {/* Encabezado de la Categoría con Título Centrado y Doble Línea Horizontal (Roja y Naranja) */}
+                  <div className="category-section-header">
+                    <div className="category-header-double-line" aria-hidden="true">
+                      <span className="category-line-stripe stripe-rojo" />
+                      <span className="category-line-stripe stripe-naranja" />
+                    </div>
+                    <div className="category-header-center">
+                      <h2 className="category-title">
+                        <span>{isEn && category.nameEn ? category.nameEn : category.name}</span>
+                      </h2>
+                      {category.nameEn && (
+                        <span className="category-title-en">{isEn ? category.name : category.nameEn}</span>
+                      )}
+                    </div>
+                    <div className="category-header-double-line" aria-hidden="true">
+                      <span className="category-line-stripe stripe-rojo" />
+                      <span className="category-line-stripe stripe-naranja" />
+                    </div>
+                  </div>
 
-              {/* Grid de Productos (Soporta vista normal 3 cols, cuadrícula 4 cols y compacta horizontal) */}
-              <div className={`products-grid ${viewMode === 'compact' ? 'compact-grid' : viewMode === 'grid4' ? 'grid4-grid' : ''}`}>
-                {dishes.map((dish, dishIdx) => {
-                  const itemInCart = cart.getItem(dish.id);
-                  const qty = itemInCart ? itemInCart.quantity : 0;
+                  {/* Grid de Productos (Soporta vista normal 3 cols, cuadrícula 4 cols y compacta horizontal) */}
+                  <div className={`products-grid ${viewMode === 'compact' ? 'compact-grid' : viewMode === 'grid4' ? 'grid4-grid' : ''}`}>
+                    {dishes.map((dish, dishIdx) => {
+                      const itemInCart = cart.getItem(dish.id);
+                      const qty = itemInCart ? itemInCart.quantity : 0;
 
-                  return (
-                    <ProductCard
-                      key={dish.id}
-                      dish={dish}
-                      index={dishIdx}
-                      isPriority={catIdx === 0 && dishIdx < 2}
-                      photoMode={photoMode}
-                      quantity={qty}
-                      viewMode={viewMode}
-                      layoutClassName={getDishGridClass(dishIdx, dishes.length, viewMode)}
-                      isFavorite={favorites.includes(dish.id)}
-                      onToggleFavorite={handleToggleFavorite}
-                      isSelectionMode={showFavoritesOnly && favorites.length > 0}
-                      isSelected={selectedFavIds.includes(dish.id)}
-                      onToggleSelect={handleToggleSelectFavDish}
-                      onAddToCart={(d, e) => handleAddToCart(d, 1, '', e)}
-                      onUpdateQuantity={(id, q) => handleUpdateQuantity(id, q)}
-                      onOpenDetail={(d) => handleOpenDishDetail(d)}
-                    />
-                  );
-                })}
-              </div>
-            </section>
-          ))
-        )}
-        </main>
+                      return (
+                        <ProductCard
+                          key={dish.id}
+                          dish={dish}
+                          index={dishIdx}
+                          isPriority={catIdx === 0 && dishIdx < 2}
+                          photoMode={photoMode}
+                          quantity={qty}
+                          viewMode={viewMode}
+                          layoutClassName={getDishGridClass(dishIdx, dishes.length, viewMode)}
+                          isFavorite={favorites.includes(dish.id)}
+                          onToggleFavorite={handleToggleFavorite}
+                          isSelectionMode={showFavoritesOnly && favorites.length > 0}
+                          isSelected={selectedFavIds.includes(dish.id)}
+                          onToggleSelect={handleToggleSelectFavDish}
+                          onAddToCart={(d, e) => handleAddToCart(d, 1, '', e)}
+                          onUpdateQuantity={(id, q) => handleUpdateQuantity(id, q)}
+                          onOpenDetail={(d) => handleOpenDishDetail(d)}
+                        />
+                      );
+                    })}
+                  </div>
+                </section>
+              ))
+            )}
+          </main>
         </div>
       )}
 

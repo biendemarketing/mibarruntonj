@@ -37,6 +37,24 @@ async function prerenderOpenGraph() {
   const baseUrl = 'https://mibarruntonj.com';
   let generatedCount = 0;
 
+  // ── Contenido HTML rastreable (SEO) ─────────────────────────────────────────
+  // El #root se renderiza vacío con React (SPA), por lo que Google "descubre" las URLs
+  // del sitemap pero no ve contenido ni enlaces internos y las deja sin indexar.
+  // Inyectamos HTML estático con enlaces <a href> reales; React lo reemplaza al montar.
+  const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  const withBody = (html, body) => html.replace('<div id="root"></div>', `<div id="root">${body}</div>`);
+  const catNameById = Object.fromEntries(CATEGORIES_DATA.map((c) => [c.id, c.name]));
+  const dishLink = (d) => `<li><a href="/plato/${d.id}">${esc(d.name)}</a> — ${esc(d.priceDisplay || '')}</li>`;
+  const catNav = `<nav aria-label="Categorías"><ul>${CATEGORIES_DATA.map((c) => `<li><a href="/categoria/${c.id}">${esc(c.name)}</a></li>`).join('')}</ul></nav>`;
+
+  const homeBody = `<main><h1>Mi Barrunto — Restaurante Peruano en Paterson, NJ</h1>`
+    + `<p>Auténtica comida criolla y marina peruana: ceviches, lomo saltado, parrillas y más. 21 Mill St, Paterson, NJ 07011. Tel. +1-973-653-3749.</p>`
+    + catNav
+    + CATEGORIES_DATA.map((c) => `<section><h2><a href="/categoria/${c.id}">${esc(c.name)}</a></h2><ul>${DISHES_DATA.filter((d) => d.category === c.id).map(dishLink).join('')}</ul></section>`).join('')
+    + `</main>`;
+  fs.writeFileSync(distIndexPath, withBody(baseHtml, homeBody), 'utf-8');
+
+
 
   // Prerenderizar páginas de categorías para Google Sitelinks y SEO
   let catGenerated = 0;
@@ -59,6 +77,7 @@ async function prerenderOpenGraph() {
       .replace(/<meta\s+property=["']og:image:secure_url["']\s+content=["'].*?["']\s*\/?>/i, `<meta property="og:image:secure_url" content="${catImage}" />`)
       .replace(/<meta\s+property=["']og:url["']\s+content=["'].*?["']\s*\/?>/i, `<meta property="og:url" content="${catUrl}" />`);
 
+    catHtml = withBody(catHtml, `<main><h1>${esc(cat.name)} — Mi Barrunto Paterson NJ</h1><p>${esc(cat.nameEn || '')}</p><ul>${DISHES_DATA.filter((d) => d.category === cat.id).map(dishLink).join('')}</ul>${catNav}<p><a href="/">Ver carta completa</a></p></main>`);
     fs.writeFileSync(path.join(catDir, 'index.html'), catHtml, 'utf-8');
     catGenerated++;
   }
@@ -145,6 +164,8 @@ async function prerenderOpenGraph() {
 </head>`;
     dishHtml = dishHtml.replace('</head>', dishSchemaJson);
 
+    const siblings = DISHES_DATA.filter((d) => d.category === dish.category && d.id !== dish.id).slice(0, 8);
+    dishHtml = withBody(dishHtml, `<main><h1>${esc(dish.name)}</h1><p>${esc(dish.nameEn || '')}</p><p>Precio: ${esc(priceText)}</p><p>${esc(descText)}</p><p><a href="/categoria/${esc(dish.category)}">Más de ${esc(catNameById[dish.category] || 'nuestra carta')}</a> · <a href="/">Carta completa de Mi Barrunto</a></p>${siblings.length ? `<h2>Otros platos</h2><ul>${siblings.map(dishLink).join('')}</ul>` : ''}</main>`);
     fs.writeFileSync(path.join(dishDir, 'index.html'), dishHtml, 'utf-8');
     generatedCount++;
   }
