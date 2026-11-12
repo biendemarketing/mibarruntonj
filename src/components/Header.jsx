@@ -158,9 +158,9 @@ export function Header({
               title={isEn ? 'Open location in Google Maps' : 'Abrir ubicación en Google Maps'}
             >
               <MapPin size={12} color="var(--naranja)" />
-              <span className="header-address-text">21 Mill st, Paterson, NJ 07011</span>
+              <span className="header-address-text">21 Mill st, Paterson, NJ<span className="header-zip-code"> 07011</span></span>
             </a>
-            <span className="header-top-divider">·</span>
+            <span className="header-top-divider header-top-hours-divider">·</span>
             <span className="header-top-hours" title={isEn ? 'Open 24/7' : 'Horario de atención continuo'}>
               <Clock size={12} color="var(--naranja)" />
               <span className="header-hours-full">{isEn ? 'Open 24 Hours' : 'Atención 24 Horas'}</span>
@@ -207,6 +207,7 @@ export function Header({
             <button
               type="button"
               onClick={toggleLang}
+              className="header-lang-toggle-btn"
               aria-label={isEn ? 'Cambiar idioma a Español' : 'Switch language to English'}
               title={isEn ? 'Cambiar a Español' : 'Switch to English'}
               style={{
@@ -217,12 +218,11 @@ export function Header({
                 alignItems: 'center',
                 justifyContent: 'center',
                 minHeight: '24px',
-                minWidth: '46px',
-                padding: '0 6px',
+                padding: '0 4px',
                 fontSize: '0.68rem',
                 fontWeight: 800,
                 letterSpacing: '0.02em',
-                gap: '3px',
+                gap: '2px',
                 cursor: 'pointer',
                 filter: 'drop-shadow(0 1px 3px rgba(0, 0, 0, 0.85))'
               }}

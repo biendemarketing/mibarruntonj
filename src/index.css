@@ -376,33 +376,28 @@ input, textarea, select {
 
 @media (max-width: 768px) {
   .header-address-text {
-    font-size: clamp(0.61rem, 2.2vw, 0.72rem) !important;
+    font-size: clamp(0.62rem, 2.2vw, 0.72rem) !important;
     letter-spacing: -0.2px !important;
     white-space: nowrap !important;
     display: inline-block !important;
   }
 
-  .header-hours-full {
+  .header-zip-code {
     display: none !important;
   }
 
-  .header-hours-short {
-    display: inline !important;
-  }
-
-  .header-top-hours {
-    font-size: 0.69rem !important;
-    white-space: nowrap !important;
-    flex-shrink: 0 !important;
+  .header-top-hours,
+  .header-top-hours-divider {
+    display: none !important;
   }
 
   .header-top-bar-inner {
     display: flex !important;
     align-items: center !important;
     justify-content: space-between !important;
-    flex-wrap: nowrap !important;
-    padding: 0.4rem 0.65rem 0.15rem !important;
-    gap: 0.35rem !important;
+    flex-wrap: wrap !important;
+    padding: 0.4rem 0.6rem 0.15rem !important;
+    gap: 0.25rem 0.4rem !important;
     width: 100% !important;
     box-sizing: border-box !important;
   }
@@ -410,37 +405,36 @@ input, textarea, select {
   .header-top-info {
     display: flex !important;
     align-items: center !important;
-    flex-shrink: 1 !important;
-    min-width: 0 !important;
-    gap: 0.3rem !important;
-    font-size: 0.69rem !important;
+    flex-shrink: 0 !important;
+    gap: 0.28rem !important;
+    font-size: 0.68rem !important;
     white-space: nowrap !important;
   }
 
   .header-top-address-link,
   .header-top-phone-link {
-    font-size: 0.69rem !important;
+    font-size: 0.68rem !important;
     white-space: nowrap !important;
     flex-shrink: 0 !important;
     display: inline-flex !important;
     align-items: center !important;
     min-height: 24px !important;
-    gap: 0.25rem !important;
+    gap: 0.22rem !important;
   }
 
   .header-top-socials {
     display: flex !important;
     align-items: center !important;
     flex-shrink: 0 !important;
-    gap: 4px !important;
-    margin: 0 !important;
+    gap: 2px !important;
+    margin: 0 0 0 auto !important;
   }
 
   .header-top-social-circle {
-    width: 24px !important;
-    height: 24px !important;
-    min-width: 24px !important;
-    min-height: 24px !important;
+    width: 22px !important;
+    height: 22px !important;
+    min-width: 22px !important;
+    min-height: 22px !important;
     padding: 0 !important;
   }
 
@@ -456,41 +450,32 @@ input, textarea, select {
 
 @media (max-width: 440px) {
   .header-top-bar-inner {
-    padding: 0.35rem 0.5rem 0.15rem !important;
-    gap: 0.25rem !important;
+    padding: 0.35rem 0.45rem 0.15rem !important;
+    gap: 0.2rem 0.3rem !important;
   }
 
   .header-top-info {
-    gap: 0.22rem !important;
+    gap: 0.2rem !important;
   }
 
-  .header-address-text {
-    font-size: 0.62rem !important;
-    letter-spacing: -0.3px !important;
-  }
-
-  .header-top-hours,
+  .header-address-text,
   .header-top-phone-link {
-    font-size: 0.64rem !important;
+    font-size: 0.63rem !important;
+    letter-spacing: -0.25px !important;
   }
 
   .header-top-socials {
-    gap: 3px !important;
+    gap: 2px !important;
   }
 }
 
-@media (max-width: 370px) {
-  .header-address-text {
-    font-size: 0.58rem !important;
-    letter-spacing: -0.35px !important;
+@media (max-width: 360px) {
+  .header-top-bar-inner {
+    justify-content: center !important;
   }
 
-  .header-top-hours {
-    display: none !important;
-  }
-
-  .header-top-divider:first-of-type {
-    display: none !important;
+  .header-top-socials {
+    margin: 0 !important;
   }
 }
 
