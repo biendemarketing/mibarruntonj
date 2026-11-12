@@ -3103,7 +3103,7 @@ export const DISHES_DATA = [
     "priceDisplay": "$7.99",
     "category": "batidos",
     "subcategory": "Batidos y Jugos",
-    "image": "fotos/238-jugo-de-naranja.jpg",
+    "image": "./platos_webp/jugo_de_naranja.webp",
     "platosImage": "./platos_webp/jugo_de_naranja.webp",
     "hasPhoto": true
   },

@@ -77,18 +77,21 @@ async function main() {
   await runQueue(tasks, 12);
   console.log('✅ Todas las imágenes subidas al bucket dishes.');
 
-  // Actualizar base de datos
+  // Actualizar base de datos usando platosMap.json actualizado
+  const platosMap = JSON.parse(fs.readFileSync(path.join(__dirname, '../src/data/platosMap.json'), 'utf8'));
   const { data: dishes } = await supabase.from('dishes').select('*');
-  console.log(`Sincronizando ${dishes.length} platos en Supabase con sus URLs CDN...`);
+  console.log(`Sincronizando ${dishes.length} platos en Supabase con sus URLs CDN desde platosMap.json...`);
 
   const updateTasks = dishes.map((dish) => async () => {
-    if (!dish.platos_image) return;
-    const baseName = dish.platos_image.split('/').pop();
+    const mappedPath = platosMap[String(dish.id)] || dish.platos_image;
+    if (!mappedPath) return;
+    const baseName = mappedPath.split('/').pop();
     const cdnUrl = urlMap.get(baseName) || urlMap.get(cleanStorageName(baseName));
 
     if (cdnUrl) {
       await supabase.from('dishes').update({
         platos_image: cdnUrl,
+        image_url: cdnUrl,
         images: [cdnUrl]
       }).eq('id', dish.id);
     }
