@@ -2,13 +2,68 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+import { createClient } from '@supabase/supabase-js';
+import './env_loader.js';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, '..');
 const publicDir = path.join(rootDir, 'public');
 
-async function generateSeoFiles() {
+async function loadMergedDishesAndCategories() {
   const { DISHES_DATA, CATEGORIES_DATA } = await import('../src/data/menuData.js');
+  const dishesMap = new Map(DISHES_DATA.map(d => [String(d.id), { ...d }]));
+  const categoriesMap = new Map(CATEGORIES_DATA.map(c => [String(c.id), { ...c }]));
+
+  try {
+    const supabaseUrl = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL || 'https://scvlxcgmhbwjmvycrttf.supabase.co';
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY;
+    if (supabaseUrl && supabaseKey) {
+      const supabase = createClient(supabaseUrl, supabaseKey);
+      const [{ data: remoteCats }, { data: remoteDishes }] = await Promise.all([
+        supabase.from('categories').select('*').neq('is_active', false),
+        supabase.from('dishes').select('*').neq('is_active', false)
+      ]);
+      if (Array.isArray(remoteCats)) {
+        for (const rc of remoteCats) {
+          if (!categoriesMap.has(String(rc.id))) {
+            categoriesMap.set(String(rc.id), {
+              id: rc.id,
+              name: rc.name,
+              nameEn: rc.name_en || ''
+            });
+          }
+        }
+      }
+      if (Array.isArray(remoteDishes)) {
+        for (const rd of remoteDishes) {
+          const existing = dishesMap.get(String(rd.id)) || {};
+          const price = Number(rd.price ?? existing.price ?? 0);
+          dishesMap.set(String(rd.id), {
+            ...existing,
+            id: existing.id ?? rd.id,
+            name: rd.name || existing.name,
+            nameEn: rd.name_en || rd.description || existing.nameEn || '',
+            glosa: rd.description || existing.glosa || '',
+            price,
+            priceDisplay: `$${price.toFixed(2)}`,
+            category: rd.category_id || existing.category || 'criolla',
+            platosImage: rd.platos_image || existing.platosImage || null,
+            image: rd.image_url || existing.image || null
+          });
+        }
+      }
+    }
+  } catch (_) {}
+
+  return {
+    DISHES_DATA: Array.from(dishesMap.values()),
+    CATEGORIES_DATA: Array.from(categoriesMap.values())
+  };
+}
+
+async function generateSeoFiles() {
+  const { DISHES_DATA, CATEGORIES_DATA } = await loadMergedDishesAndCategories();
   const baseUrl = 'https://mibarruntonj.com';
   const lastmod = new Date().toISOString().split('T')[0];
 
@@ -124,10 +179,11 @@ async function generateSeoFiles() {
     for (const dish of dishesInCat) {
       const priceStr = dish.priceDisplay || `$${dish.price ? dish.price.toFixed(2) : '0.00'}`;
       let relImg = dish.platosImage || dish.image || '/logo/logo.png';
-    if (relImg.startsWith('./')) relImg = relImg.replace(/^\.\//, '/');
-    if (!relImg.startsWith('/')) relImg = '/' + relImg;
-    const fullImg = `${baseUrl}${relImg}`;
-    llmsFullTxt += `### ${dish.name}\n![${dish.name}](${fullImg})\n — ${priceStr}\n`;
+      if (relImg.startsWith('./')) relImg = relImg.replace(/^\.\//, '/');
+      const fullImg = relImg.startsWith('http')
+        ? relImg
+        : `${baseUrl}${relImg.startsWith('/') ? '' : '/'}${relImg}`;
+      llmsFullTxt += `### ${dish.name}\n![${dish.name}](${fullImg})\n — ${priceStr}\n`;
       llmsFullTxt += `- **ID:** ${dish.id}\n`;
       llmsFullTxt += `- **URL:** https://mibarruntonj.com/plato/${dish.id}\n`;
       if (dish.nameEn) llmsFullTxt += `- **Descripción en Inglés:** ${dish.nameEn}\n`;

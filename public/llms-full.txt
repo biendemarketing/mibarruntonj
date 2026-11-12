@@ -7,154 +7,154 @@
 ## Categoría: SANDWICHES (22 platos)
 
 ### Pan con chicharrón
-![Pan con chicharrón](https://mibarruntonj.com/logo/logo.png)
+![Pan con chicharrón](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Pan_con_chicharron.webp)
  — $9.75
 - **ID:** 1
 - **URL:** https://mibarruntonj.com/plato/1
 - **Descripción en Inglés:** Fried pork, fried sweet potato and salsa criolla
 
 ### Pan con relleno
-![Pan con relleno](https://mibarruntonj.com/logo/logo.png)
+![Pan con relleno](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Pan_con_relleno.webp)
  — $9.75
 - **ID:** 2
 - **URL:** https://mibarruntonj.com/plato/2
 - **Descripción en Inglés:** Fried black sausage, fried sweet potato and salsa criol
 
 ### Pan con pollo deshilachado
-![Pan con pollo deshilachado](https://mibarruntonj.com/logo/logo.png)
+![Pan con pollo deshilachado](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Pan_con_pollo_deshilachado.webp)
  — $9.75
 - **ID:** 3
 - **URL:** https://mibarruntonj.com/plato/3
 - **Descripción en Inglés:** Shredded chicken and potato sticks
 
 ### Pan con pechuga
-![Pan con pechuga](https://mibarruntonj.com/logo/logo.png)
+![Pan con pechuga](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Pan_con_pechuga.webp)
  — $9.75
 - **ID:** 4
 - **URL:** https://mibarruntonj.com/plato/4
 - **Descripción en Inglés:** Chicken breast, french fries, lettuce and tomato
 
 ### Pan con bistec
-![Pan con bistec](https://mibarruntonj.com/logo/logo.png)
+![Pan con bistec](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Pan_con_bistec.webp)
  — $9.75
 - **ID:** 5
 - **URL:** https://mibarruntonj.com/plato/5
 - **Descripción en Inglés:** Steak, french fries, lettuce and tomato
 
 ### Pan con milanesa de pollo
-![Pan con milanesa de pollo](https://mibarruntonj.com/logo/logo.png)
+![Pan con milanesa de pollo](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Pan_con_milanesa_de_pollo.webp)
  — $9.99
 - **ID:** 6
 - **URL:** https://mibarruntonj.com/plato/6
 - **Descripción en Inglés:** Breaded chicken, french fries, lettuce and tomato
 
 ### Pan con salchicha huachana
-![Pan con salchicha huachana](https://mibarruntonj.com/logo/logo.png)
+![Pan con salchicha huachana](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Pan_con_salchicha_huachana.webp)
  — $9.75
 - **ID:** 7
 - **URL:** https://mibarruntonj.com/plato/7
 - **Descripción en Inglés:** Scrambled eggs and peruvian sausage
 
 ### Pan con jamón del país con butifarra
-![Pan con jamón del país con butifarra](https://mibarruntonj.com/logo/logo.png)
+![Pan con jamón del país con butifarra](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Ham_sandwich_with_criolla_salsa_20261017131431.webp)
  — $9.75
 - **ID:** 8
 - **URL:** https://mibarruntonj.com/plato/8
 - **Descripción en Inglés:** Peruvian ham, butter sausage, lettuce and salsa criolla
 
 ### Pan con pavo
-![Pan con pavo](https://mibarruntonj.com/logo/logo.png)
+![Pan con pavo](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Pan_con_pavo.webp)
  — $9.75
 - **ID:** 9
 - **URL:** https://mibarruntonj.com/plato/9
 - **Descripción en Inglés:** Turkey, lettuce and salsa criolla
 
 ### Pan con lechón
-![Pan con lechón](https://mibarruntonj.com/logo/logo.png)
+![Pan con lechón](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Pan_con_lechon.webp)
  — $9.75
 - **ID:** 10
 - **URL:** https://mibarruntonj.com/plato/10
 - **Descripción en Inglés:** Oven-roasted pork, lettuce and salsa criolla
 
 ### Pan con pollo a la brasa
-![Pan con pollo a la brasa](https://mibarruntonj.com/logo/logo.png)
+![Pan con pollo a la brasa](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Pan_con_pollo_a_la_brasa.webp)
  — $9.75
 - **ID:** 11
 - **URL:** https://mibarruntonj.com/plato/11
 - **Descripción en Inglés:** Rotisserie chicken and potato sticks
 
 ### Hamburguesa clásica
-![Hamburguesa clásica](https://mibarruntonj.com/logo/logo.png)
+![Hamburguesa clásica](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Hamburguesa_clasica.webp)
  — $9.99
 - **ID:** 12
 - **URL:** https://mibarruntonj.com/plato/12
 - **Descripción en Inglés:** Lettuce, tomato, cheese and french fries
 
 ### Hamburguesa Especial
-![Hamburguesa Especial](https://mibarruntonj.com/logo/logo.png)
+![Hamburguesa Especial](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Hamburguesa_Especial.webp)
  — $12.99
 - **ID:** 13
 - **URL:** https://mibarruntonj.com/plato/13
 - **Descripción en Inglés:** Fried egg, bacon, cheese, lettuce, tomato and french fr
 
 ### Hamburguesa Royal
-![Hamburguesa Royal](https://mibarruntonj.com/logo/logo.png)
+![Hamburguesa Royal](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Hamburguesa_Royal.webp)
  — $14.99
 - **ID:** 14
 - **URL:** https://mibarruntonj.com/plato/14
 - **Descripción en Inglés:** Chorizo, fried egg, bacon and cheese, with lettuce and
 
 ### Hamburguesa Royal Especial
-![Hamburguesa Royal Especial](https://mibarruntonj.com/logo/logo.png)
+![Hamburguesa Royal Especial](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Hamburguesa_Royal_Especial.webp)
  — $19.99
 - **ID:** 15
 - **URL:** https://mibarruntonj.com/plato/15
 - **Descripción en Inglés:** Chorizo, fried egg, bacon, cheese and shredded chicken,
 
 ### Chorizo Especial
-![Chorizo Especial](https://mibarruntonj.com/logo/logo.png)
+![Chorizo Especial](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Chorizo_Especial.webp)
  — $12.99
 - **ID:** 16
 - **URL:** https://mibarruntonj.com/plato/16
 - **Descripción en Inglés:** Fried egg, bacon, cheese, lettuce, tomato and french fr
 
 ### Pan con pollo deshilachado Royal
-![Pan con pollo deshilachado Royal](https://mibarruntonj.com/logo/logo.png)
+![Pan con pollo deshilachado Royal](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Pan_con_pollo_deshilachado_Royal.webp)
  — $14.99
 - **ID:** 17
 - **URL:** https://mibarruntonj.com/plato/17
 - **Descripción en Inglés:** Shredded chicken, chorizo, fried egg, bacon and cheese,
 
 ### Pan con chorizo con lechuga y tomate
-![Pan con chorizo con lechuga y tomate](https://mibarruntonj.com/logo/logo.png)
+![Pan con chorizo con lechuga y tomate](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Pan_con_chorizo_con_lechuga_y_tomate.webp)
  — $9.99
 - **ID:** 18
 - **URL:** https://mibarruntonj.com/plato/18
 - **Descripción en Inglés:** Chorizo, lettuce, tomato and french fries
 
 ### Pan con atún
-![Pan con atún](https://mibarruntonj.com/logo/logo.png)
+![Pan con atún](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Peruvian-style_tuna_bread_20261017131431.webp)
  — $9.75
 - **ID:** 19
 - **URL:** https://mibarruntonj.com/plato/19
 - **Descripción en Inglés:** Tuna sandwich
 
 ### Pan con camote
-![Pan con camote](https://mibarruntonj.com/logo/logo.png)
+![Pan con camote](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Pan_con_camote.webp)
  — $6.99
 - **ID:** 20
 - **URL:** https://mibarruntonj.com/plato/20
 - **Descripción en Inglés:** Sweet potato sandwich
 
 ### Pan con huevo + hot dog
-![Pan con huevo + hot dog](https://mibarruntonj.com/logo/logo.png)
+![Pan con huevo + hot dog](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Pan_con_huevo_mas_hot_dog.webp)
  — $6.99
 - **ID:** 21
 - **URL:** https://mibarruntonj.com/plato/21
 - **Descripción en Inglés:** Fried egg and hot dog
 
 ### Pan con huevo frito
-![Pan con huevo frito](https://mibarruntonj.com/logo/logo.png)
+![Pan con huevo frito](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Pan_con_huevo_frito.webp)
  — $4.99
 - **ID:** 22
 - **URL:** https://mibarruntonj.com/plato/22
@@ -164,70 +164,70 @@
 ## Categoría: DESAYUNO PERUANO (10 platos)
 
 ### Porción de chicharrón
-![Porción de chicharrón](https://mibarruntonj.com/logo/logo.png)
+![Porción de chicharrón](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Chopped_pork_chicharron_with_cas__20261017131431.webp)
  — $19.99
 - **ID:** 23
 - **URL:** https://mibarruntonj.com/plato/23
 - **Descripción en Inglés:** Fried pork with fried sweet potato and salsa criolla
 
 ### Porción de chicharrón y relleno
-![Porción de chicharrón y relleno](https://mibarruntonj.com/logo/logo.png)
+![Porción de chicharrón y relleno](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Complete_breakfast_with_chicharron_20261017131431.webp)
  — $19.99
 - **ID:** 24
 - **URL:** https://mibarruntonj.com/plato/24
 - **Descripción en Inglés:** Fried pork and black sausage, sweet potato and salsa cr
 
 ### Porción de relleno
-![Porción de relleno](https://mibarruntonj.com/logo/logo.png)
+![Porción de relleno](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Blood_sausage_with_sweet_potato_20261017131431.webp)
  — $19.99
 - **ID:** 25
 - **URL:** https://mibarruntonj.com/plato/25
 - **Descripción en Inglés:** Fried black sausage with fried sweet potato and salsa c
 
 ### Lomo al jugo
-![Lomo al jugo](https://mibarruntonj.com/logo/logo.png)
+![Lomo al jugo](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Lomo_al_jugo_Peruvian_dish_20261017131431.webp)
  — $19.99
 - **ID:** 26
 - **URL:** https://mibarruntonj.com/plato/26
 - **Descripción en Inglés:** Sautéed beef in tomato-onion sauce
 
 ### Chancho a la caja china
-![Chancho a la caja china](https://mibarruntonj.com/logo/logo.png)
+![Chancho a la caja china](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Roasted_pork_belly_with_sides_20261017131431.webp)
  — $29.99
 - **ID:** 27
 - **URL:** https://mibarruntonj.com/plato/27
 - **Descripción en Inglés:** With huayro potato, corn, mote, rocoto cream and salsa
 
 ### Mi Barrunto Desayuno
-![Mi Barrunto Desayuno](https://mibarruntonj.com/logo/logo.png)
+![Mi Barrunto Desayuno](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Complete_breakfast_with_chicharron_20261017131431.webp)
  — $29.99
 - **ID:** 28
 - **URL:** https://mibarruntonj.com/plato/28
 - **Descripción en Inglés:** Chicharrón, relleno, tamal, mote, fried sweet potato an
 
 ### Escabeche de pescado
-![Escabeche de pescado](https://mibarruntonj.com/logo/logo.png)
+![Escabeche de pescado](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Pickled_fish_escabeche_with_potato_20261017131431.webp)
  — $19.99
 - **ID:** 29
 - **URL:** https://mibarruntonj.com/plato/29
 - **Descripción en Inglés:** Fried fish in onion sauce with boiled sweet potato and
 
 ### Escabeche de pollo
-![Escabeche de pollo](https://mibarruntonj.com/logo/logo.png)
+![Escabeche de pollo](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Peruvian_chicken_escabeche_dish_20261017131431.webp)
  — $18.99
 - **ID:** 30
 - **URL:** https://mibarruntonj.com/plato/30
 - **Descripción en Inglés:** Fried chicken in onion sauce with boiled sweet potato a
 
 ### Tamal de pollo
-![Tamal de pollo](https://mibarruntonj.com/logo/logo.png)
+![Tamal de pollo](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Chicken_tamale_with_criolla_sauce_20261017131431.webp)
  — $7.99
 - **ID:** 31
 - **URL:** https://mibarruntonj.com/plato/31
 - **Descripción en Inglés:** Corn tamale with chicken and salsa criolla
 
 ### Tamal de chancho
-![Tamal de chancho](https://mibarruntonj.com/logo/logo.png)
+![Tamal de chancho](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Pork_tamale_with_sarsa_criolla_20261017131431.webp)
  — $7.99
 - **ID:** 32
 - **URL:** https://mibarruntonj.com/plato/32
@@ -237,119 +237,119 @@
 ## Categoría: ENTRADAS (17 platos)
 
 ### Papa a la Huancaína
-![Papa a la Huancaína](https://mibarruntonj.com/logo/logo.png)
+![Papa a la Huancaína](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Papa_a_la_Huancaina_dish_20261017131431.webp)
  — $11.99
 - **ID:** 33
 - **URL:** https://mibarruntonj.com/plato/33
 - **Descripción en Inglés:** Potato in creamy huancaína sauce
 
 ### Yuca a la huancaína
-![Yuca a la huancaína](https://mibarruntonj.com/logo/logo.png)
+![Yuca a la huancaína](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Yuca_a_la_huancaina_with_20261017131431.webp)
  — $12.99
 - **ID:** 34
 - **URL:** https://mibarruntonj.com/plato/34
 - **Descripción en Inglés:** Cassava in huancaína sauce
 
 ### Papa huayro a la huancaína
-![Papa huayro a la huancaína](https://mibarruntonj.com/logo/logo.png)
+![Papa huayro a la huancaína](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Papa_Huayro_a_la_huancaina_20261017131431.webp)
  — $12.99
 - **ID:** 35
 - **URL:** https://mibarruntonj.com/plato/35
 - **Descripción en Inglés:** Huayro potato in huancaína sauce
 
 ### Choclo desgranado con queso
-![Choclo desgranado con queso](https://mibarruntonj.com/logo/logo.png)
+![Choclo desgranado con queso](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Corn_with_fresh_cheese_20261017131431.webp)
  — $11.99
 - **ID:** 36
 - **URL:** https://mibarruntonj.com/plato/36
 - **Descripción en Inglés:** Corn kernels with cheese
 
 ### Causa de pollo
-![Causa de pollo](https://mibarruntonj.com/logo/logo.png)
+![Causa de pollo](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Potato_causa_with_chicken_avocado_20261017131431.webp)
  — $14.99
 - **ID:** 37
 - **URL:** https://mibarruntonj.com/plato/37
 - **Descripción en Inglés:** Mashed potato terrine with chicken
 
 ### Causa de atún
-![Causa de atún](https://mibarruntonj.com/logo/logo.png)
+![Causa de atún](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Potato_and_tuna_casserole_20261017131431.webp)
  — $14.99
 - **ID:** 38
 - **URL:** https://mibarruntonj.com/plato/38
 - **Descripción en Inglés:** Mashed potato terrine with tuna
 
 ### Causa de camarón
-![Causa de camarón](https://mibarruntonj.com/logo/logo.png)
+![Causa de camarón](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Shrimp_causa_potato_layers_20261017131431.webp)
  — $16.99
 - **ID:** 39
 - **URL:** https://mibarruntonj.com/plato/39
 - **Descripción en Inglés:** Mashed potato terrine with shrimp
 
 ### Causa de cangrejo
-![Causa de cangrejo](https://mibarruntonj.com/logo/logo.png)
+![Causa de cangrejo](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Causa_with_crab_20261017131431.webp)
  — $16.99
 - **ID:** 40
 - **URL:** https://mibarruntonj.com/plato/40
 - **Descripción en Inglés:** Mashed potato terrine with crab
 
 ### Causa Acevichada
-![Causa Acevichada](https://mibarruntonj.com/logo/logo.png)
+![Causa Acevichada](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Causa_Acevichada_topped_with_cev__20261017131431.webp)
  — $21.99
 - **ID:** 41
 - **URL:** https://mibarruntonj.com/plato/41
 - **Descripción en Inglés:** Mashed potato terrine with ceviche
 
 ### Salchipapa con papa natural
-![Salchipapa con papa natural](https://mibarruntonj.com/logo/logo.png)
+![Salchipapa con papa natural](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Salchipapa_with_potatoes_and_sau__20261017131431.webp)
  — $13.99
 - **ID:** 42
 - **URL:** https://mibarruntonj.com/plato/42
 - **Descripción en Inglés:** Fresh-cut fries with hot dog
 
 ### Salchipapa con pollo desmenuzado
-![Salchipapa con pollo desmenuzado](https://mibarruntonj.com/logo/logo.png)
+![Salchipapa con pollo desmenuzado](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Salchipapa_with_shredded_chicken_20261017131431.webp)
  — $19.99
 - **ID:** 43
 - **URL:** https://mibarruntonj.com/plato/43
 - **Descripción en Inglés:** Fresh-cut fries with hot dog and shredded chicken
 
 ### Salchipapa Especial
-![Salchipapa Especial](https://mibarruntonj.com/logo/logo.png)
+![Salchipapa Especial](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Salchipapa_with_egg_and_chorizo_20261017131431.webp)
  — $24.99
 - **ID:** 44
 - **URL:** https://mibarruntonj.com/plato/44
 - **Descripción en Inglés:** Fresh-cut fries, hot dog, shredded chicken, chorizo and
 
 ### Salchipapa montada
-![Salchipapa montada](https://mibarruntonj.com/logo/logo.png)
+![Salchipapa montada](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Salchipapa_topped_with_fried_egg_20261017131431.webp)
  — $17.50
 - **ID:** 45
 - **URL:** https://mibarruntonj.com/plato/45
 - **Descripción en Inglés:** Fresh-cut fries, hot dog and fried egg
 
 ### Salchipapa a lo pobre
-![Salchipapa a lo pobre](https://mibarruntonj.com/logo/logo.png)
+![Salchipapa a lo pobre](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Salchipapa_with_plantain_and_egg_20261017131431.webp)
  — $19.99
 - **ID:** 46
 - **URL:** https://mibarruntonj.com/plato/46
 - **Descripción en Inglés:** Fresh-cut fries, hot dog, sweet plantain and fried egg
 
 ### Salchipapa con chaufa
-![Salchipapa con chaufa](https://mibarruntonj.com/logo/logo.png)
+![Salchipapa con chaufa](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Salchipapa_with_chaufa_rice_20261017131431.webp)
  — $19.99
 - **ID:** 47
 - **URL:** https://mibarruntonj.com/plato/47
 - **Descripción en Inglés:** Fresh-cut fries, hot dog and fried rice
 
 ### Tiritas de pollo
-![Tiritas de pollo](https://mibarruntonj.com/logo/logo.png)
+![Tiritas de pollo](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Chicken_strips_with_fries_20261017131431.webp)
  — $14.99
 - **ID:** 48
 - **URL:** https://mibarruntonj.com/plato/48
 - **Descripción en Inglés:** Chicken strips with french fries and hot dog
 
 ### Chicharrón de chancho picado
-![Chicharrón de chancho picado](https://mibarruntonj.com/logo/logo.png)
+![Chicharrón de chancho picado](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Chopped_pork_chicharron_with_cas__20261017131431.webp)
  — $19.99
 - **ID:** 49
 - **URL:** https://mibarruntonj.com/plato/49
@@ -359,140 +359,140 @@
 ## Categoría: SOPAS (20 platos)
 
 ### Caldo de gallina con papa amarilla
-![Caldo de gallina con papa amarilla](https://mibarruntonj.com/fotos/050-caldo-de-gallina.jpg)
+![Caldo de gallina con papa amarilla](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Chicken_soup_with_potato_20261017131431.webp)
  — $14.99
 - **ID:** 50
 - **URL:** https://mibarruntonj.com/plato/50
 - **Descripción en Inglés:** Hen stew with yellow potato, boiled egg and noodles
 
 ### Caldo de gallina Acevichado
-![Caldo de gallina Acevichado](https://mibarruntonj.com/logo/logo.png)
+![Caldo de gallina Acevichado](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Acevichado_chicken_soup_with_noo__20261017131431.webp)
  — $24.99
 - **ID:** 51
 - **URL:** https://mibarruntonj.com/plato/51
 - **Descripción en Inglés:** Hen stew with yellow potato, egg, noodles and acevichad
 
 ### Patasca
-![Patasca](https://mibarruntonj.com/logo/logo.png)
+![Patasca](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Peruvian_patasca_soup_with_beef_20261017131431.webp)
  — $22.99
 - **ID:** 52
 - **URL:** https://mibarruntonj.com/plato/52
 - **Descripción en Inglés:** Hearty peruvian soup with mote, mondongo and beef ribs
 
 ### Patasca con caldo de gallina
-![Patasca con caldo de gallina](https://mibarruntonj.com/logo/logo.png)
+![Patasca con caldo de gallina](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Patasca_and_chicken_soup_20261017131431.webp)
  — $28.99
 - **ID:** 53
 - **URL:** https://mibarruntonj.com/plato/53
 - **Descripción en Inglés:** House patasca with hen and noodles
 
 ### Sopa a la minuta con papa amarilla
-![Sopa a la minuta con papa amarilla](https://mibarruntonj.com/logo/logo.png)
+![Sopa a la minuta con papa amarilla](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Minuta_soup_with_beef_noodles_20261017131431.webp)
  — $14.99
 - **ID:** 54
 - **URL:** https://mibarruntonj.com/plato/54
 - **Descripción en Inglés:** Beef soup with milk, egg and yellow potato
 
 ### Sancochado de res
-![Sancochado de res](https://mibarruntonj.com/fotos/055-sancochado-de-res.jpg)
+![Sancochado de res](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Peruvian_beef_sancochado_soup_20261017131431.webp)
  — $19.99
 - **ID:** 55
 - **URL:** https://mibarruntonj.com/plato/55
 - **Descripción en Inglés:** Beef ribs with rice, carrot, celery, corn, cilantro, ca
 
 ### Menestrón de res
-![Menestrón de res](https://mibarruntonj.com/fotos/056-menestron-de-res.jpg)
+![Menestrón de res](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Peruvian_beef_menestron_soup_20261017131431.webp)
  — $19.99
 - **ID:** 56
 - **URL:** https://mibarruntonj.com/plato/56
 - **Descripción en Inglés:** Beef ribs, vegetables, beans, pesto cream and canuto no
 
 ### Sopa de carne
-![Sopa de carne](https://mibarruntonj.com/logo/logo.png)
+![Sopa de carne](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Beef_soup_with_noodles_20261017131431.webp)
  — $19.99
 - **ID:** 57
 - **URL:** https://mibarruntonj.com/plato/57
 - **Descripción en Inglés:** Beef ribs with vegetables and noodles
 
 ### Sustancia de pollo con fideo y papas
-![Sustancia de pollo con fideo y papas](https://mibarruntonj.com/logo/logo.png)
+![Sustancia de pollo con fideo y papas](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Chicken_soup_with_noodles_20261017131431.webp)
  — $14.99
 - **ID:** 58
 - **URL:** https://mibarruntonj.com/plato/58
 - **Descripción en Inglés:** Chicken soup with noodles and potatoes
 
 ### Sustancia de carne con fideo y papas
-![Sustancia de carne con fideo y papas](https://mibarruntonj.com/logo/logo.png)
+![Sustancia de carne con fideo y papas](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Beef_broth_with_noodles_20261017131431.webp)
  — $14.99
 - **ID:** 59
 - **URL:** https://mibarruntonj.com/plato/59
 - **Descripción en Inglés:** Beef soup with noodles and potatoes
 
 ### Parihuela
-![Parihuela](https://mibarruntonj.com/logo/logo.png)
+![Parihuela](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Peruvian_seafood_fish_soup_20261017131431.webp)
  — $24.99
 - **ID:** 60
 - **URL:** https://mibarruntonj.com/plato/60
 - **Descripción en Inglés:** Mixed seafood soup: calamari, fish, shrimp, crab, octop
 
 ### Sopa de mariscos
-![Sopa de mariscos](https://mibarruntonj.com/logo/logo.png)
+![Sopa de mariscos](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Mixed_seafood_soup_prepared_20261017131431.webp)
  — $24.99
 - **ID:** 61
 - **URL:** https://mibarruntonj.com/plato/61
 - **Descripción en Inglés:** Mixed seafood soup with noodles and potato
 
 ### Aguadito de mariscos
-![Aguadito de mariscos](https://mibarruntonj.com/fotos/062-aguadito-de-mariscos.jpg)
+![Aguadito de mariscos](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Peruvian_seafood_aguadito_soup_20261017131431.webp)
  — $24.99
 - **ID:** 62
 - **URL:** https://mibarruntonj.com/plato/62
 - **Descripción en Inglés:** Mixed seafood soup with rice and cilantro
 
 ### Chupe de camarón
-![Chupe de camarón](https://mibarruntonj.com/logo/logo.png)
+![Chupe de camarón](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Peruvian_shrimp_chowder_with_egg_20261017131431.webp)
  — $23.99
 - **ID:** 63
 - **URL:** https://mibarruntonj.com/plato/63
 - **Descripción en Inglés:** Shrimp chowder with rice, egg, milk, peas, carrot, chee
 
 ### Chupe de pescado
-![Chupe de pescado](https://mibarruntonj.com/logo/logo.png)
+![Chupe de pescado](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Peruvian_fish_chupe_soup_20261017131431.webp)
  — $19.99
 - **ID:** 64
 - **URL:** https://mibarruntonj.com/plato/64
 - **Descripción en Inglés:** Fish chowder with rice, egg, milk, peas, carrot, cheese
 
 ### Chupe de mariscos
-![Chupe de mariscos](https://mibarruntonj.com/logo/logo.png)
+![Chupe de mariscos](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Peruvian_seafood_chowder_with_milk_20261017131431.webp)
  — $24.99
 - **ID:** 65
 - **URL:** https://mibarruntonj.com/plato/65
 - **Descripción en Inglés:** Shellfish chowder with milk, cheese and vegetables
 
 ### Levanta muerto — la Resaca
-![Levanta muerto — la Resaca](https://mibarruntonj.com/logo/logo.png)
+![Levanta muerto — la Resaca](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Seafood_soup_hangover_cure_20261017131431.webp)
  — $32.75
 - **ID:** 66
 - **URL:** https://mibarruntonj.com/plato/66
 - **Descripción en Inglés:** Filling seafood soup with ceviche on top
 
 ### Sopa de pescado
-![Sopa de pescado](https://mibarruntonj.com/logo/logo.png)
+![Sopa de pescado](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Peruvian_concentrated_fish_soup_20261017131431.webp)
  — $19.99
 - **ID:** 67
 - **URL:** https://mibarruntonj.com/plato/67
 - **Descripción en Inglés:** Fish soup with noodles, potato, peas and carrot
 
 ### Sopa de camarón
-![Sopa de camarón](https://mibarruntonj.com/logo/logo.png)
+![Sopa de camarón](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Shrimp_soup_20261017131431.webp)
  — $23.99
 - **ID:** 68
 - **URL:** https://mibarruntonj.com/plato/68
 - **Descripción en Inglés:** Shrimp soup with noodles, potato, peas and carrot
 
 ### Sopa de choros
-![Sopa de choros](https://mibarruntonj.com/logo/logo.png)
+![Sopa de choros](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Peruvian_mussel_soup_with_noodles_20261017131431.webp)
  — $21.99
 - **ID:** 69
 - **URL:** https://mibarruntonj.com/plato/69
@@ -502,427 +502,427 @@
 ## Categoría: COMIDA CRIOLLA (61 platos)
 
 ### Lomo Saltado
-![Lomo Saltado](https://mibarruntonj.com/logo/logo.png)
+![Lomo Saltado](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Classic_Lomo_Saltado_with_rice_20261017131431.webp)
  — $18.99
 - **ID:** 70
 - **URL:** https://mibarruntonj.com/plato/70
 - **Descripción en Inglés:** Sautéed beef with onions and tomato, french fries and w
 
 ### Lomo Saltado con Huancaína
-![Lomo Saltado con Huancaína](https://mibarruntonj.com/logo/logo.png)
+![Lomo Saltado con Huancaína](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Lomo_Saltado_with_huancaina_sauce_20261017131431.webp)
  — $24.99
 - **ID:** 71
 - **URL:** https://mibarruntonj.com/plato/71
 - **Descripción en Inglés:** Sautéed beef with french fries and huancaína sauce
 
 ### Lomo saltado con chaufa
-![Lomo saltado con chaufa](https://mibarruntonj.com/logo/logo.png)
+![Lomo saltado con chaufa](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Lomo_saltado_with_chaufa_rice_20261017131431.webp)
  — $24.99
 - **ID:** 72
 - **URL:** https://mibarruntonj.com/plato/72
 - **Descripción en Inglés:** Sautéed beef with fried rice
 
 ### Lomo Saltado a lo pobre
-![Lomo Saltado a lo pobre](https://mibarruntonj.com/logo/logo.png)
+![Lomo Saltado a lo pobre](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Lomo_Saltado_with_egg_and_20261017131431.webp)
  — $24.99
 - **ID:** 73
 - **URL:** https://mibarruntonj.com/plato/73
 - **Descripción en Inglés:** Sautéed beef with sweet plantain and fried egg
 
 ### Lomo Saltado con chaufa a lo pobre
-![Lomo Saltado con chaufa a lo pobre](https://mibarruntonj.com/logo/logo.png)
+![Lomo Saltado con chaufa a lo pobre](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Peruvian_lomo_saltado_with_rice_20261017131431.webp)
  — $29.99
 - **ID:** 74
 - **URL:** https://mibarruntonj.com/plato/74
 - **Descripción en Inglés:** Sautéed beef with fried rice, sweet plantain and fried
 
 ### Lomo Saltado Especial
-![Lomo Saltado Especial](https://mibarruntonj.com/logo/logo.png)
+![Lomo Saltado Especial](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Lomo_Saltado_with_chaufa_rice_20261017131431_1_.webp)
  — $29.99
 - **ID:** 75
 - **URL:** https://mibarruntonj.com/plato/75
 - **Descripción en Inglés:** Sautéed beef with fried rice and huancaína sauce · chau
 
 ### Lomo Saltado Royal con Huancaína a lo pobre
-![Lomo Saltado Royal con Huancaína a lo pobre](https://mibarruntonj.com/logo/logo.png)
+![Lomo Saltado Royal con Huancaína a lo pobre](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Lomo_saltado_on_huancaina_cream_20261017131431.webp)
  — $29.99
 - **ID:** 76
 - **URL:** https://mibarruntonj.com/plato/76
 - **Descripción en Inglés:** Sautéed beef with huancaína sauce, sweet plantain and f
 
 ### Saltado de pollo
-![Saltado de pollo](https://mibarruntonj.com/logo/logo.png)
+![Saltado de pollo](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Peruvian_chicken_with_rice_20261017131431.webp)
  — $16.99
 - **ID:** 77
 - **URL:** https://mibarruntonj.com/plato/77
 - **Descripción en Inglés:** Sautéed chicken with onions and tomato, french fries an
 
 ### Bistec con papas fritas y arroz
-![Bistec con papas fritas y arroz](https://mibarruntonj.com/logo/logo.png)
+![Bistec con papas fritas y arroz](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Steak_with_fries_and_rice_20261017131431.webp)
  — $18.99
 - **ID:** 78
 - **URL:** https://mibarruntonj.com/plato/78
 - **Descripción en Inglés:** Steak with french fries and rice
 
 ### Bistec Encebollado
-![Bistec Encebollado](https://mibarruntonj.com/logo/logo.png)
+![Bistec Encebollado](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Steak_with_onions_and_fries_20261017131431.webp)
  — $19.99
 - **ID:** 79
 - **URL:** https://mibarruntonj.com/plato/79
 - **Descripción en Inglés:** Sautéed steak with onions and tomato, with white rice
 
 ### Bistec a lo pobre
-![Bistec a lo pobre](https://mibarruntonj.com/logo/logo.png)
+![Bistec a lo pobre](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Steak_with_egg_and_plantain_20261017131431.webp)
  — $20.99
 - **ID:** 80
 - **URL:** https://mibarruntonj.com/plato/80
 - **Descripción en Inglés:** Steak with french fries, sweet plantain, fried egg and
 
 ### Bistec con tostones y ensalada
-![Bistec con tostones y ensalada](https://mibarruntonj.com/logo/logo.png)
+![Bistec con tostones y ensalada](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Steak_with_plantains_and_salad_20261017131431.webp)
  — $19.99
 - **ID:** 81
 - **URL:** https://mibarruntonj.com/plato/81
 - **Descripción en Inglés:** Sautéed steak with fried green plantain and salad
 
 ### Bistec Mi Barrunto
-![Bistec Mi Barrunto](https://mibarruntonj.com/logo/logo.png)
+![Bistec Mi Barrunto](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Mi_Barrunto_steak_with_side_20261017131431.webp)
  — $24.99
 - **ID:** 82
 - **URL:** https://mibarruntonj.com/plato/82
 - **Descripción en Inglés:** Steak with rice, beans, fried egg and sweet plantain
 
 ### Bistec Empanizado a lo pobre
-![Bistec Empanizado a lo pobre](https://mibarruntonj.com/logo/logo.png)
+![Bistec Empanizado a lo pobre](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Peruvian_steak_with_eggs_and_20261017131431.webp)
  — $22.75
 - **ID:** 83
 - **URL:** https://mibarruntonj.com/plato/83
 - **Descripción en Inglés:** Breaded steak with white rice, french fries, fried egg
 
 ### Milanesa de pollo con arroz y papas fritas
-![Milanesa de pollo con arroz y papas fritas](https://mibarruntonj.com/logo/logo.png)
+![Milanesa de pollo con arroz y papas fritas](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Chicken_milanesa_with_rice_20261017131431.webp)
  — $18.99
 - **ID:** 84
 - **URL:** https://mibarruntonj.com/plato/84
 - **Descripción en Inglés:** Breaded chicken with white rice and french fries
 
 ### Chaufa de pollo
-![Chaufa de pollo](https://mibarruntonj.com/logo/logo.png)
+![Chaufa de pollo](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Chicken_arroz_chaufa_20261017131431.webp)
  — $16.99
 - **ID:** 85
 - **URL:** https://mibarruntonj.com/plato/85
 - **Descripción en Inglés:** Fried rice with egg, scallions and chicken
 
 ### Chaufa de carne
-![Chaufa de carne](https://mibarruntonj.com/logo/logo.png)
+![Chaufa de carne](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Beef_chaufa_rice_preparation_20261017131431.webp)
  — $18.75
 - **ID:** 86
 - **URL:** https://mibarruntonj.com/plato/86
 - **Descripción en Inglés:** Fried rice with egg, scallions and beef
 
 ### Chaufa Mixto carne–pollo
-![Chaufa Mixto carne–pollo](https://mibarruntonj.com/logo/logo.png)
+![Chaufa Mixto carne–pollo](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Beef_and_chicken_chaufa_rice_20261017131431.webp)
  — $20.99
 - **ID:** 87
 - **URL:** https://mibarruntonj.com/plato/87
 - **Descripción en Inglés:** Fried rice with egg, scallions, beef and chicken
 
 ### Chaufa de chancho
-![Chaufa de chancho](https://mibarruntonj.com/logo/logo.png)
+![Chaufa de chancho](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Roasted_pork_chaufa_rice_20261017131431.webp)
  — $19.99
 - **ID:** 88
 - **URL:** https://mibarruntonj.com/plato/88
 - **Descripción en Inglés:** Fried rice with egg, scallions and pork
 
 ### Chaufa de pescado
-![Chaufa de pescado](https://mibarruntonj.com/logo/logo.png)
+![Chaufa de pescado](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Peruvian_fish_chaufa_rice_20261017131431.webp)
  — $19.75
 - **ID:** 89
 - **URL:** https://mibarruntonj.com/plato/89
 - **Descripción en Inglés:** Fried rice with egg, scallions and fish
 
 ### Chaufa Especial
-![Chaufa Especial](https://mibarruntonj.com/logo/logo.png)
+![Chaufa Especial](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Peruvian_chaufa_rice_with_meats_20261017131431.webp)
  — $24.99
 - **ID:** 90
 - **URL:** https://mibarruntonj.com/plato/90
 - **Descripción en Inglés:** Fried rice with egg, scallions, beef, chicken and shrim
 
 ### Chaufa Especial Barrunto
-![Chaufa Especial Barrunto](https://mibarruntonj.com/logo/logo.png)
+![Chaufa Especial Barrunto](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Peruvian_chaufa_rice_with_meats_20261017131431_2.webp)
  — $29.99
 - **ID:** 91
 - **URL:** https://mibarruntonj.com/plato/91
 - **Descripción en Inglés:** Fried rice with egg, scallions, beef, chicken, shrimp a
 
 ### Tallarín Saltado de carne
-![Tallarín Saltado de carne](https://mibarruntonj.com/logo/logo.png)
+![Tallarín Saltado de carne](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Beef_stir-fry_noodles_with_onion_20261017131431.webp)
  — $18.99
 - **ID:** 92
 - **URL:** https://mibarruntonj.com/plato/92
 - **Descripción en Inglés:** Beef sautéed noodles with onions, tomato and peppers
 
 ### Tallarín Saltado de pollo
-![Tallarín Saltado de pollo](https://mibarruntonj.com/logo/logo.png)
+![Tallarín Saltado de pollo](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Chicken_tallarin_saltado_20261017131431.webp)
  — $17.99
 - **ID:** 93
 - **URL:** https://mibarruntonj.com/plato/93
 - **Descripción en Inglés:** Chicken sautéed noodles with onions, tomato and peppers
 
 ### Tallarín Saltado de chancho
-![Tallarín Saltado de chancho](https://mibarruntonj.com/logo/logo.png)
+![Tallarín Saltado de chancho](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Pork_tallarin_saltado_20261017131431.webp)
  — $18.99
 - **ID:** 94
 - **URL:** https://mibarruntonj.com/plato/94
 - **Descripción en Inglés:** Pork sautéed noodles with onions, tomato and peppers
 
 ### Tallarín Saltado Mixto carne–pollo
-![Tallarín Saltado Mixto carne–pollo](https://mibarruntonj.com/logo/logo.png)
+![Tallarín Saltado Mixto carne–pollo](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Beef_and_chicken_tallarin_saltado_20261017131431.webp)
  — $20.99
 - **ID:** 95
 - **URL:** https://mibarruntonj.com/plato/95
 - **Descripción en Inglés:** Beef and chicken sautéed noodles with onions, tomato an
 
 ### Tallarín Verde de Bistec a lo pobre
-![Tallarín Verde de Bistec a lo pobre](https://mibarruntonj.com/logo/logo.png)
+![Tallarín Verde de Bistec a lo pobre](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Green_fettuccine_with_bistec_20261017131431.webp)
  — $24.99
 - **ID:** 96
 - **URL:** https://mibarruntonj.com/plato/96
 - **Descripción en Inglés:** Pesto spaghetti with steak, sweet plantain and fried eg
 
 ### Tallarín Verde solo con papa dorada
-![Tallarín Verde solo con papa dorada](https://mibarruntonj.com/logo/logo.png)
+![Tallarín Verde solo con papa dorada](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Peruvian_green_pesto_tallarin_se__20261017131431.webp)
  — $14.99
 - **ID:** 97
 - **URL:** https://mibarruntonj.com/plato/97
 - **Descripción en Inglés:** Pesto spaghetti with parmesan cream and golden potato
 
 ### Tallarín Verde con Bistec
-![Tallarín Verde con Bistec](https://mibarruntonj.com/logo/logo.png)
+![Tallarín Verde con Bistec](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Green_tallarines_with_grilled_steak_20261017131431.webp)
  — $18.99
 - **ID:** 98
 - **URL:** https://mibarruntonj.com/plato/98
 - **Descripción en Inglés:** Pesto spaghetti with steak
 
 ### Tallarín Verde con pechuga parrilla
-![Tallarín Verde con pechuga parrilla](https://mibarruntonj.com/logo/logo.png)
+![Tallarín Verde con pechuga parrilla](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Tallarines_with_pesto_and_chicken_20261017131431.webp)
  — $17.99
 - **ID:** 99
 - **URL:** https://mibarruntonj.com/plato/99
 - **Descripción en Inglés:** Pesto spaghetti with grilled chicken breast
 
 ### Tallarín Verde con milanesa de pollo
-![Tallarín Verde con milanesa de pollo](https://mibarruntonj.com/logo/logo.png)
+![Tallarín Verde con milanesa de pollo](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Green_tallarin_al_pesto_with_20261017131431.webp)
  — $18.99
 - **ID:** 100
 - **URL:** https://mibarruntonj.com/plato/100
 - **Descripción en Inglés:** Pesto spaghetti with breaded chicken
 
 ### Tallarín Verde con chuleta parrilla
-![Tallarín Verde con chuleta parrilla](https://mibarruntonj.com/logo/logo.png)
+![Tallarín Verde con chuleta parrilla](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Green_tallarines_with_pork_chop_20261017131431.webp)
  — $19.99
 - **ID:** 101
 - **URL:** https://mibarruntonj.com/plato/101
 - **Descripción en Inglés:** Pesto spaghetti with grilled pork chop
 
 ### Tallarín Verde con churrasco a la parrilla
-![Tallarín Verde con churrasco a la parrilla](https://mibarruntonj.com/logo/logo.png)
+![Tallarín Verde con churrasco a la parrilla](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Green_pesto_tallarin_with_churrasco_20261017131431.webp)
  — $29.99
 - **ID:** 102
 - **URL:** https://mibarruntonj.com/plato/102
 - **Descripción en Inglés:** Pesto spaghetti with grilled bone-in steak
 
 ### Tallarín Verde con Lomo Saltado
-![Tallarín Verde con Lomo Saltado](https://mibarruntonj.com/logo/logo.png)
+![Tallarín Verde con Lomo Saltado](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Tallarin_verde_with_lomo_saltado_20261017131431.webp)
  — $24.99
 - **ID:** 103
 - **URL:** https://mibarruntonj.com/plato/103
 - **Descripción en Inglés:** Pesto spaghetti with sautéed beef, onions and tomato
 
 ### Tallarín a la Huancaína con Bistec
-![Tallarín a la Huancaína con Bistec](https://mibarruntonj.com/logo/logo.png)
+![Tallarín a la Huancaína con Bistec](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Tallarin_a_la_huancaina_with_20261017131431.webp)
  — $19.99
 - **ID:** 104
 - **URL:** https://mibarruntonj.com/plato/104
 - **Descripción en Inglés:** Spaghetti in huancaína sauce with steak
 
 ### Tallarín a la Huancaína de pechuga parrilla
-![Tallarín a la Huancaína de pechuga parrilla](https://mibarruntonj.com/logo/logo.png)
+![Tallarín a la Huancaína de pechuga parrilla](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Tallarines_a_la_huancaina_with_20261017131431.webp)
  — $19.99
 - **ID:** 105
 - **URL:** https://mibarruntonj.com/plato/105
 - **Descripción en Inglés:** Spaghetti in huancaína sauce with grilled chicken breas
 
 ### Tallarín a la Huancaína con milanesa pollo
-![Tallarín a la Huancaína con milanesa pollo](https://mibarruntonj.com/logo/logo.png)
+![Tallarín a la Huancaína con milanesa pollo](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Spaghetti_and_chicken_cutlet_20261017131431.webp)
  — $19.99
 - **ID:** 106
 - **URL:** https://mibarruntonj.com/plato/106
 - **Descripción en Inglés:** Spaghetti in huancaína sauce with breaded chicken
 
 ### Tallarín a la Huancaína con chuleta parrilla
-![Tallarín a la Huancaína con chuleta parrilla](https://mibarruntonj.com/logo/logo.png)
+![Tallarín a la Huancaína con chuleta parrilla](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Huancaina-style_noodles_with_gri__20261017131431.webp)
  — $19.99
 - **ID:** 107
 - **URL:** https://mibarruntonj.com/plato/107
 - **Descripción en Inglés:** Spaghetti in huancaína sauce with grilled pork chop
 
 ### Tallarín a la Huancaína con lomo saltado
-![Tallarín a la Huancaína con lomo saltado](https://mibarruntonj.com/logo/logo.png)
+![Tallarín a la Huancaína con lomo saltado](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Tallarin_a_la_huancaina_with_20261017131431_2.webp)
  — $24.99
 - **ID:** 108
 - **URL:** https://mibarruntonj.com/plato/108
 - **Descripción en Inglés:** Spaghetti in huancaína sauce with sautéed beef, onions
 
 ### Tallarín a la Huancaína con Bistec a lo pobre
-![Tallarín a la Huancaína con Bistec a lo pobre](https://mibarruntonj.com/logo/logo.png)
+![Tallarín a la Huancaína con Bistec a lo pobre](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Tallarin_a_la_huancaina_bistec_20261017131431.webp)
  — $24.99
 - **ID:** 109
 - **URL:** https://mibarruntonj.com/plato/109
 - **Descripción en Inglés:** Spaghetti in huancaína sauce with steak, sweet plantain
 
 ### Tallarín a la Huancaína con churrasco
-![Tallarín a la Huancaína con churrasco](https://mibarruntonj.com/logo/logo.png)
+![Tallarín a la Huancaína con churrasco](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Tallarin_a_la_huancaina_with_20261017131431_3.webp)
  — $29.99
 - **ID:** 110
 - **URL:** https://mibarruntonj.com/plato/110
 - **Descripción en Inglés:** Spaghetti in huancaína sauce with bone-in steak
 
 ### Tacu Tacu con Bistec
-![Tacu Tacu con Bistec](https://mibarruntonj.com/logo/logo.png)
+![Tacu Tacu con Bistec](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Tacu-tacu_with_steak_20261017131431.webp)
  — $19.99
 - **ID:** 111
 - **URL:** https://mibarruntonj.com/plato/111
 - **Descripción en Inglés:** Rice and bean mash-up with steak
 
 ### Tacu Tacu con Bistec a lo pobre
-![Tacu Tacu con Bistec a lo pobre](https://mibarruntonj.com/logo/logo.png)
+![Tacu Tacu con Bistec a lo pobre](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Tacu-Tacu_with_steak_and_eggs_20261017131431.webp)
  — $24.99
 - **ID:** 112
 - **URL:** https://mibarruntonj.com/plato/112
 - **Descripción en Inglés:** Rice and bean mash-up with steak, sweet plantain and fr
 
 ### Tacu Tacu con Bistec Encebollado
-![Tacu Tacu con Bistec Encebollado](https://mibarruntonj.com/logo/logo.png)
+![Tacu Tacu con Bistec Encebollado](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Tacu-Tacu_with_steak_20261017131431_1_.webp)
  — $22.99
 - **ID:** 113
 - **URL:** https://mibarruntonj.com/plato/113
 - **Descripción en Inglés:** Rice and bean mash-up with steak, onions and tomato
 
 ### Tacu Tacu con lomo saltado
-![Tacu Tacu con lomo saltado](https://mibarruntonj.com/logo/logo.png)
+![Tacu Tacu con lomo saltado](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Tacu-tacu_with_lomo_saltado_20261017131431.webp)
  — $24.99
 - **ID:** 114
 - **URL:** https://mibarruntonj.com/plato/114
 - **Descripción en Inglés:** Rice and bean mash-up with sautéed beef, onions and tom
 
 ### Tacu Tacu con pechuga a la parrilla
-![Tacu Tacu con pechuga a la parrilla](https://mibarruntonj.com/logo/logo.png)
+![Tacu Tacu con pechuga a la parrilla](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Tacu-tacu_with_grilled_chicken_20261017131431.webp)
  — $18.99
 - **ID:** 115
 - **URL:** https://mibarruntonj.com/plato/115
 - **Descripción en Inglés:** Rice and bean mash-up with grilled chicken breast
 
 ### Tacu Tacu con milanesa de pollo
-![Tacu Tacu con milanesa de pollo](https://mibarruntonj.com/logo/logo.png)
+![Tacu Tacu con milanesa de pollo](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Tacu-Tacu_with_breaded_chicken_c__20261017131431.webp)
  — $19.99
 - **ID:** 116
 - **URL:** https://mibarruntonj.com/plato/116
 - **Descripción en Inglés:** Rice and bean mash-up with breaded chicken
 
 ### Tacu Tacu con chuleta a la parrilla
-![Tacu Tacu con chuleta a la parrilla](https://mibarruntonj.com/logo/logo.png)
+![Tacu Tacu con chuleta a la parrilla](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Tacu-tacu_with_pork_chop_20261017131431.webp)
  — $19.99
 - **ID:** 117
 - **URL:** https://mibarruntonj.com/plato/117
 - **Descripción en Inglés:** Rice and bean mash-up with grilled pork chop
 
 ### Tacu Tacu con cabrito a la Norteña
-![Tacu Tacu con cabrito a la Norteña](https://mibarruntonj.com/logo/logo.png)
+![Tacu Tacu con cabrito a la Norteña](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Tacu-Tacu_with_northern-style_ca__20261017131431.webp)
  — $28.99
 - **ID:** 118
 - **URL:** https://mibarruntonj.com/plato/118
 - **Descripción en Inglés:** Rice and bean mash-up with northern-style goat stew
 
 ### Tacu Tacu con Seco de Costilla de Res
-![Tacu Tacu con Seco de Costilla de Res](https://mibarruntonj.com/logo/logo.png)
+![Tacu Tacu con Seco de Costilla de Res](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Tacu-Tacu_with_beef_rib_seco_20261017131431.webp)
  — $28.99
 - **ID:** 119
 - **URL:** https://mibarruntonj.com/plato/119
 - **Descripción en Inglés:** Rice and bean mash-up with beef rib stew
 
 ### Tallarín Rojo de pollo con Huancaína
-![Tallarín Rojo de pollo con Huancaína](https://mibarruntonj.com/logo/logo.png)
+![Tallarín Rojo de pollo con Huancaína](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Chicken_noodles_with_papa_huancaina_20261017131431.webp)
  — $19.99
 - **ID:** 120
 - **URL:** https://mibarruntonj.com/plato/120
 - **Descripción en Inglés:** Spaghetti in tomato sauce with chicken and huancaína sa
 
 ### Arroz con pollo con huancaína
-![Arroz con pollo con huancaína](https://mibarruntonj.com/logo/logo.png)
+![Arroz con pollo con huancaína](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Peruvian_chicken_rice_with_sauce_20261017131431.webp)
  — $18.99
 - **ID:** 121
 - **URL:** https://mibarruntonj.com/plato/121
 - **Descripción en Inglés:** Cilantro rice with chicken and huancaína sauce
 
 ### Arroz Verde con pollo frito
-![Arroz Verde con pollo frito](https://mibarruntonj.com/logo/logo.png)
+![Arroz Verde con pollo frito](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Green_rice_with_fried_chicken_20261017131431.webp)
  — $18.99
 - **ID:** 122
 - **URL:** https://mibarruntonj.com/plato/122
 - **Descripción en Inglés:** Cilantro rice with fried chicken
 
 ### Arroz con pato con Sarsa Criolla
-![Arroz con pato con Sarsa Criolla](https://mibarruntonj.com/logo/logo.png)
+![Arroz con pato con Sarsa Criolla](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Peruvian_duck_rice_served_with_20261017131431.webp)
  — $19.99
 - **ID:** 123
 - **URL:** https://mibarruntonj.com/plato/123
 - **Descripción en Inglés:** Green rice with duck and salsa criolla
 
 ### Arroz con pato con huancaína
-![Arroz con pato con huancaína](https://mibarruntonj.com/logo/logo.png)
+![Arroz con pato con huancaína](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Duck_fried_rice_with_potatoes_20261017131431.webp)
  — $24.99
 - **ID:** 124
 - **URL:** https://mibarruntonj.com/plato/124
 - **Descripción en Inglés:** Green rice with duck and huancaína sauce
 
 ### Pato a lo Norteño con arroz y frejol
-![Pato a lo Norteño con arroz y frejol](https://mibarruntonj.com/logo/logo.png)
+![Pato a lo Norteño con arroz y frejol](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Northern-style_duck_with_rice_20261017131431.webp)
  — $19.99
 - **ID:** 125
 - **URL:** https://mibarruntonj.com/plato/125
 - **Descripción en Inglés:** Stewed duck with rice and beans
 
 ### Cau-Cau
-![Cau-Cau](https://mibarruntonj.com/logo/logo.png)
+![Cau-Cau](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Peruvian_tripe_stew_cooking_20261017131431.webp)
  — $18.99
 - **ID:** 126
 - **URL:** https://mibarruntonj.com/plato/126
 - **Descripción en Inglés:** Stew of beef tripe with potato, turmeric and peas
 
 ### Ají de gallina
-![Ají de gallina](https://mibarruntonj.com/logo/logo.png)
+![Ají de gallina](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Creamy_aji_de_gallina_with_20261017131431.webp)
  — $18.35
 - **ID:** 127
 - **URL:** https://mibarruntonj.com/plato/127
 - **Descripción en Inglés:** Shredded chicken in mild ají cream with white rice
 
 ### Carapulcra de chancho
-![Carapulcra de chancho](https://mibarruntonj.com/logo/logo.png)
+![Carapulcra de chancho](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Pork_carapulcra_with_potatoes_20261017131431.webp)
  — $19.99
 - **ID:** 128
 - **URL:** https://mibarruntonj.com/plato/128
 - **Descripción en Inglés:** Pork stew with papa seca (dried potato) and spices
 
 ### Pollada con huancaína y ensalada
-![Pollada con huancaína y ensalada](https://mibarruntonj.com/fotos/129-pollada-con-huancaina.jpg)
+![Pollada con huancaína y ensalada](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Peruvian_chicken_stew_with_salad_20261017131431.webp)
  — $19.99
 - **ID:** 129
 - **URL:** https://mibarruntonj.com/plato/129
 - **Descripción en Inglés:** Marinated fried chicken with huancaína sauce and salad
 
 ### Pollo frito con arroz y papas fritas
-![Pollo frito con arroz y papas fritas](https://mibarruntonj.com/logo/logo.png)
+![Pollo frito con arroz y papas fritas](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Crispy_fried_chicken_with_fries_20261017131431.webp)
  — $18.99
 - **ID:** 130
 - **URL:** https://mibarruntonj.com/plato/130
@@ -932,119 +932,119 @@
 ## Categoría: PARRILLAS (19 platos)
 
 ### Anticucho de corazón con papa dorada y choclo
-![Anticucho de corazón con papa dorada y choclo](https://mibarruntonj.com/logo/logo.png)
+![Anticucho de corazón con papa dorada y choclo](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Beef_heart_anticuchos_with_potato_20261017131431.webp)
  — $14.99
 - **ID:** 131
 - **URL:** https://mibarruntonj.com/plato/131
 - **Descripción en Inglés:** Grilled beef heart skewers with golden potato and corn
 
 ### Anticucho de pollo con papa dorada y choclo
-![Anticucho de pollo con papa dorada y choclo](https://mibarruntonj.com/logo/logo.png)
+![Anticucho de pollo con papa dorada y choclo](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Chicken_anticuchos_with_potato_20261017131431.webp)
  — $19.99
 - **ID:** 132
 - **URL:** https://mibarruntonj.com/plato/132
 - **Descripción en Inglés:** Grilled chicken skewers with golden potato and corn
 
 ### Anticucho de bistec con papa dorada y choclo
-![Anticucho de bistec con papa dorada y choclo](https://mibarruntonj.com/logo/logo.png)
+![Anticucho de bistec con papa dorada y choclo](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Steak_anticuchos_with_potatoes_20261017131431.webp)
  — $23.99
 - **ID:** 133
 - **URL:** https://mibarruntonj.com/plato/133
 - **Descripción en Inglés:** Grilled steak skewers with golden potato and corn
 
 ### Anticucho de camarón con papa dorada y choclo
-![Anticucho de camarón con papa dorada y choclo](https://mibarruntonj.com/logo/logo.png)
+![Anticucho de camarón con papa dorada y choclo](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Shrimp_anticucho_with_potato_20261017131431.webp)
  — $23.99
 - **ID:** 134
 - **URL:** https://mibarruntonj.com/plato/134
 - **Descripción en Inglés:** Grilled shrimp skewers with golden potato and corn
 
 ### Anticucho de pulpo con papa dorada y choclo
-![Anticucho de pulpo con papa dorada y choclo](https://mibarruntonj.com/logo/logo.png)
+![Anticucho de pulpo con papa dorada y choclo](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Octopus_anticuchos_with_potato_a__20261017131431.webp)
  — $26.99
 - **ID:** 135
 - **URL:** https://mibarruntonj.com/plato/135
 - **Descripción en Inglés:** Grilled octopus skewers with golden potato and corn
 
 ### Anticucho con rachi con papa dorada y choclo
-![Anticucho con rachi con papa dorada y choclo](https://mibarruntonj.com/logo/logo.png)
+![Anticucho con rachi con papa dorada y choclo](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Anticucho_with_potato_and_corn_20261017131431.webp)
  — $23.99
 - **ID:** 136
 - **URL:** https://mibarruntonj.com/plato/136
 - **Descripción en Inglés:** Grilled beef tripe skewers with golden potato and corn
 
 ### Anticucho Combinado
-![Anticucho Combinado](https://mibarruntonj.com/logo/logo.png)
+![Anticucho Combinado](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Anticucho_with_meats_and_potatoes_20261017131431.webp)
  — $29.99
 - **ID:** 137
 - **URL:** https://mibarruntonj.com/plato/137
 - **Descripción en Inglés:** Anticucho, rachi and choncholí · anticucho, rachi, chon
 
 ### Higadito carretillero con yuca y ensalada
-![Higadito carretillero con yuca y ensalada](https://mibarruntonj.com/fotos/138-higadito-carretillero.jpg)
+![Higadito carretillero con yuca y ensalada](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Fried_chicken_liver_with_salad_20261017131431.webp)
  — $18.99
 - **ID:** 138
 - **URL:** https://mibarruntonj.com/plato/138
 - **Descripción en Inglés:** Marinated fried liver with cassava and salad
 
 ### Mollejita a la parrilla con papas fritas y ensalada
-![Mollejita a la parrilla con papas fritas y ensalada](https://mibarruntonj.com/logo/logo.png)
+![Mollejita a la parrilla con papas fritas y ensalada](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Grilled_chicken_sweetbreads_with__20261017131431.webp)
  — $16.99
 - **ID:** 139
 - **URL:** https://mibarruntonj.com/plato/139
 - **Descripción en Inglés:** Grilled chicken gizzards with french fries and salad
 
 ### Corazoncito de pollo a la parrilla con papas fritas y ensalada
-![Corazoncito de pollo a la parrilla con papas fritas y ensalada](https://mibarruntonj.com/logo/logo.png)
+![Corazoncito de pollo a la parrilla con papas fritas y ensalada](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Grilled_chicken_hearts_with_fries_20261017131431.webp)
  — $16.99
 - **ID:** 140
 - **URL:** https://mibarruntonj.com/plato/140
 - **Descripción en Inglés:** Grilled chicken hearts with french fries and salad
 
 ### Choclo entero solo
-![Choclo entero solo](https://mibarruntonj.com/logo/logo.png)
+![Choclo entero solo](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Peruvian_whole_corn_served_plain_20261017131431.webp)
  — $8.99
 - **ID:** 141
 - **URL:** https://mibarruntonj.com/plato/141
 - **Descripción en Inglés:** Whole boiled peruvian corn
 
 ### Bistec parrilla con papa dorada, choclo y ensalada
-![Bistec parrilla con papa dorada, choclo y ensalada](https://mibarruntonj.com/logo/logo.png)
+![Bistec parrilla con papa dorada, choclo y ensalada](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Grilled_steak_with_potatoes_20261017131431.webp)
  — $19.99
 - **ID:** 142
 - **URL:** https://mibarruntonj.com/plato/142
 - **Descripción en Inglés:** Grilled steak with golden potato, corn and salad
 
 ### Pechuga parrilla con papa dorada, choclo y ensalada
-![Pechuga parrilla con papa dorada, choclo y ensalada](https://mibarruntonj.com/logo/logo.png)
+![Pechuga parrilla con papa dorada, choclo y ensalada](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Grilled_chicken_with_potato_and_20261017131431.webp)
  — $19.99
 - **ID:** 143
 - **URL:** https://mibarruntonj.com/plato/143
 - **Descripción en Inglés:** Grilled chicken breast with golden potato, corn and sal
 
 ### Chuleta parrilla con papa dorada, choclo y ensalada
-![Chuleta parrilla con papa dorada, choclo y ensalada](https://mibarruntonj.com/logo/logo.png)
+![Chuleta parrilla con papa dorada, choclo y ensalada](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Grilled_pork_chop_with_potato_20261017131431.webp)
  — $19.99
 - **ID:** 144
 - **URL:** https://mibarruntonj.com/plato/144
 - **Descripción en Inglés:** Grilled pork chop with golden potato, corn and salad
 
 ### Churrasco a la parrilla con papa dorada, choclo y ensalada
-![Churrasco a la parrilla con papa dorada, choclo y ensalada](https://mibarruntonj.com/logo/logo.png)
+![Churrasco a la parrilla con papa dorada, choclo y ensalada](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Grilled_churrasco_with_potato_salad_20261017131431.webp)
  — $29.99
 - **ID:** 145
 - **URL:** https://mibarruntonj.com/plato/145
 - **Descripción en Inglés:** Grilled bone-in steak with golden potato, corn and sala
 
 ### Bistec a la parrilla con Huancaína y ensalada
-![Bistec a la parrilla con Huancaína y ensalada](https://mibarruntonj.com/logo/logo.png)
+![Bistec a la parrilla con Huancaína y ensalada](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Grilled_steak_with_Huancaina_sauce_20261017131431.webp)
  — $24.75
 - **ID:** 146
 - **URL:** https://mibarruntonj.com/plato/146
 - **Descripción en Inglés:** Grilled steak with huancaína sauce and salad
 
 ### Parrillero Mi Barrunto
-![Parrillero Mi Barrunto](https://mibarruntonj.com/logo/logo.png)
+![Parrillero Mi Barrunto](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Grilled_meat_platter_with_potatoes_20261017131431.webp)
  — $89.99
 - **ID:** 147
 - **URL:** https://mibarruntonj.com/plato/147
@@ -1052,14 +1052,14 @@
 - **Detalle / Glosa:** Churrasco, pechuga, chuleta, anticucho, chorizo y chicharrón de pollo
 
 ### Pulpo a la Parrilla
-![Pulpo a la Parrilla](https://mibarruntonj.com/logo/logo.png)
+![Pulpo a la Parrilla](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Grilled_octopus_with_Peruvian_sp__20261017131431.webp)
  — $25.99
 - **ID:** 148
 - **URL:** https://mibarruntonj.com/plato/148
 - **Descripción en Inglés:** Grilled octopus
 
 ### Parrilla con papa a la huancaína
-![Parrilla con papa a la huancaína](https://mibarruntonj.com/logo/logo.png)
+![Parrilla con papa a la huancaína](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Mixed_grill_with_potato_a_20261017131431.webp)
  — $16.99
 - **ID:** 149
 - **URL:** https://mibarruntonj.com/plato/149
@@ -1069,133 +1069,133 @@
 ## Categoría: CEVICHES (19 platos)
 
 ### Ceviche de pescado
-![Ceviche de pescado](https://mibarruntonj.com/logo/logo.png)
+![Ceviche de pescado](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Fresh_fish_ceviche_dish_20261017131431.webp)
  — $18.99
 - **ID:** 150
 - **URL:** https://mibarruntonj.com/plato/150
 - **Descripción en Inglés:** Fish cured in lime juice
 
 ### Ceviche Carretillero con Huancaína
-![Ceviche Carretillero con Huancaína](https://mibarruntonj.com/logo/logo.png)
+![Ceviche Carretillero con Huancaína](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Peruvian_ceviche_with_fried_squid_20261017131431.webp)
  — $25.99
 - **ID:** 151
 - **URL:** https://mibarruntonj.com/plato/151
 - **Descripción en Inglés:** Street-style ceviche with huancaína sauce
 
 ### Ceviche Mixto
-![Ceviche Mixto](https://mibarruntonj.com/logo/logo.png)
+![Ceviche Mixto](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Mixed_ceviche_with_seafood_20261017131431.webp)
  — $24.99
 - **ID:** 152
 - **URL:** https://mibarruntonj.com/plato/152
 - **Descripción en Inglés:** Mixed seafood cured in lime juice
 
 ### Ceviche Mixto + chorito a la chalaca
-![Ceviche Mixto + chorito a la chalaca](https://mibarruntonj.com/logo/logo.png)
+![Ceviche Mixto + chorito a la chalaca](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Mixed_ceviche_with_chorito_a_20261017131431.webp)
  — $34.99
 - **ID:** 153
 - **URL:** https://mibarruntonj.com/plato/153
 - **Descripción en Inglés:** Mixed ceviche with peruvian-style mussels
 
 ### Ceviche de camarones
-![Ceviche de camarones](https://mibarruntonj.com/logo/logo.png)
+![Ceviche de camarones](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Shrimp_ceviche_marinated_in_lime_20261017131431.webp)
  — $23.99
 - **ID:** 154
 - **URL:** https://mibarruntonj.com/plato/154
 - **Descripción en Inglés:** Shrimp cured in lime juice
 
 ### Ceviche de mariscos
-![Ceviche de mariscos](https://mibarruntonj.com/logo/logo.png)
+![Ceviche de mariscos](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Mixed_seafood_ceviche_20261017131431.webp)
  — $24.99
 - **ID:** 155
 - **URL:** https://mibarruntonj.com/plato/155
 - **Descripción en Inglés:** Seafood cured in lime juice
 
 ### Ceviche de pulpo
-![Ceviche de pulpo](https://mibarruntonj.com/logo/logo.png)
+![Ceviche de pulpo](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Octopus_ceviche_in_lime_juice_20261017131431.webp)
  — $24.99
 - **ID:** 156
 - **URL:** https://mibarruntonj.com/plato/156
 - **Descripción en Inglés:** Octopus cured in lime juice
 
 ### Ceviche de conchas negras
-![Ceviche de conchas negras](https://mibarruntonj.com/logo/logo.png)
+![Ceviche de conchas negras](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Black_clam_ceviche_20261017131431.webp)
  — $27.99
 - **ID:** 157
 - **URL:** https://mibarruntonj.com/plato/157
 - **Descripción en Inglés:** Black clam cured in lime juice
 
 ### Choritos a la chalaca (12)
-![Choritos a la chalaca (12)](https://mibarruntonj.com/logo/logo.png)
+![Choritos a la chalaca (12)](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Mussels_a_la_chalaca_20261017131431.webp)
  — $21.99
 - **ID:** 158
 - **URL:** https://mibarruntonj.com/plato/158
 - **Descripción en Inglés:** Dozen mussels in chalaca salsa
 
 ### Choritos a la chalaca (6)
-![Choritos a la chalaca (6)](https://mibarruntonj.com/logo/logo.png)
+![Choritos a la chalaca (6)](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Mussels_a_la_chalaca_20261017131431_2.webp)
  — $13.99
 - **ID:** 159
 - **URL:** https://mibarruntonj.com/plato/159
 - **Descripción en Inglés:** Half-dozen mussels in chalaca salsa
 
 ### Leche de tigre
-![Leche de tigre](https://mibarruntonj.com/logo/logo.png)
+![Leche de tigre](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Tiger_s_milk_served_in_glass_20261017131431.webp)
  — $15.99
 - **ID:** 160
 - **URL:** https://mibarruntonj.com/plato/160
 - **Descripción en Inglés:** Minced fish in lime juice with onion, corn and cilantro
 
 ### Leche de tigre Mi Barrunto
-![Leche de tigre Mi Barrunto](https://mibarruntonj.com/logo/logo.png)
+![Leche de tigre Mi Barrunto](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Tiger_milk_with_seafood_20261017131431.webp)
  — $22.99
 - **ID:** 161
 - **URL:** https://mibarruntonj.com/plato/161
 - **Descripción en Inglés:** Minced fish in lime juice with fried calamari
 
 ### Leche de tigre de pulpo
-![Leche de tigre de pulpo](https://mibarruntonj.com/logo/logo.png)
+![Leche de tigre de pulpo](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Octopus_ceviche_in_tiger_milk_20261017131431.webp)
  — $22.99
 - **ID:** 162
 - **URL:** https://mibarruntonj.com/plato/162
 - **Descripción en Inglés:** Minced octopus in lime juice
 
 ### Leche de tigre de pulpo Mi Barrunto
-![Leche de tigre de pulpo Mi Barrunto](https://mibarruntonj.com/logo/logo.png)
+![Leche de tigre de pulpo Mi Barrunto](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Seafood_and_octopus_tiger_milk_20261017131431.webp)
  — $29.99
 - **ID:** 163
 - **URL:** https://mibarruntonj.com/plato/163
 - **Descripción en Inglés:** Minced octopus in lime juice with fried calamari
 
 ### Leche de tigre de camarones
-![Leche de tigre de camarones](https://mibarruntonj.com/logo/logo.png)
+![Leche de tigre de camarones](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Tiger_s_milk_with_shrimp_20261017131431.webp)
  — $22.99
 - **ID:** 164
 - **URL:** https://mibarruntonj.com/plato/164
 - **Descripción en Inglés:** Minced shrimp in lime juice
 
 ### Leche de tigre de camarones Mi Barrunto
-![Leche de tigre de camarones Mi Barrunto](https://mibarruntonj.com/logo/logo.png)
+![Leche de tigre de camarones Mi Barrunto](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Tiger_milk_with_fresh_shrimp_20261017131431.webp)
  — $29.99
 - **ID:** 165
 - **URL:** https://mibarruntonj.com/plato/165
 - **Descripción en Inglés:** Minced shrimp in lime juice with fried calamari
 
 ### Leche de tigre chalaca
-![Leche de tigre chalaca](https://mibarruntonj.com/logo/logo.png)
+![Leche de tigre chalaca](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Chalaca_style_tiger_s_milk_20261017131431.webp)
  — $19.99
 - **ID:** 166
 - **URL:** https://mibarruntonj.com/plato/166
 - **Descripción en Inglés:** Minced mussels in lime juice
 
 ### Leche de tigre chalaca Mi Barrunto
-![Leche de tigre chalaca Mi Barrunto](https://mibarruntonj.com/logo/logo.png)
+![Leche de tigre chalaca Mi Barrunto](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Chalaca_tiger_s_milk_with_salsa_20261017131431.webp)
  — $26.99
 - **ID:** 167
 - **URL:** https://mibarruntonj.com/plato/167
 - **Descripción en Inglés:** Minced mussels in lime juice with fried calamari
 
 ### Tiradito
-![Tiradito](https://mibarruntonj.com/logo/logo.png)
+![Tiradito](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Fish_tiradito_in_aji_sauce_20261017131431.webp)
  — $19.99
 - **ID:** 168
 - **URL:** https://mibarruntonj.com/plato/168
@@ -1205,182 +1205,182 @@
 ## Categoría: MARISCOS (27 platos)
 
 ### Jalea con yuca frita
-![Jalea con yuca frita](https://mibarruntonj.com/logo/logo.png)
+![Jalea con yuca frita](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Peruvian_jalea_with_fried_cassava_20261017131431.webp)
  — $24.99
 - **ID:** 169
 - **URL:** https://mibarruntonj.com/plato/169
 - **Descripción en Inglés:** Fried mixed seafood with fried cassava, salsa criolla
 
 ### Chicharrón de calamar
-![Chicharrón de calamar](https://mibarruntonj.com/logo/logo.png)
+![Chicharrón de calamar](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Squid_chicharron_with_cassava_20261017131431.webp)
  — $29.99
 - **ID:** 170
 - **URL:** https://mibarruntonj.com/plato/170
 - **Descripción en Inglés:** Fried calamari with fried cassava, salsa criolla
 
 ### Chicharrón de pescado
-![Chicharrón de pescado](https://mibarruntonj.com/logo/logo.png)
+![Chicharrón de pescado](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Fried_fish_with_yucca_20261017131431.webp)
  — $17.75
 - **ID:** 171
 - **URL:** https://mibarruntonj.com/plato/171
 - **Descripción en Inglés:** Breaded fried fish with fried cassava, salsa criolla
 
 ### Lomo de pescado
-![Lomo de pescado](https://mibarruntonj.com/logo/logo.png)
+![Lomo de pescado](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Fish_fillet_saltado_with_vegetables_20261017131431.webp)
  — $19.75
 - **ID:** 172
 - **URL:** https://mibarruntonj.com/plato/172
 - **Descripción en Inglés:** Sautéed fish with onions and tomato, with french fries
 
 ### Tacu Tacu a lo macho
-![Tacu Tacu a lo macho](https://mibarruntonj.com/logo/logo.png)
+![Tacu Tacu a lo macho](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Tacu_tacu_with_seafood_sauce_20261017131431.webp)
  — $34.99
 - **ID:** 173
 - **URL:** https://mibarruntonj.com/plato/173
 - **Descripción en Inglés:** Rice and bean mash-up with fried fish in seafood cream
 
 ### Churrasco en salsa de mariscos
-![Churrasco en salsa de mariscos](https://mibarruntonj.com/logo/logo.png)
+![Churrasco en salsa de mariscos](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Steak_in_creamy_seafood_sauce_20261017131431.webp)
  — $38.99
 - **ID:** 174
 - **URL:** https://mibarruntonj.com/plato/174
 - **Descripción en Inglés:** Bone-in steak with seafood sauce
 
 ### Picante de camarón
-![Picante de camarón](https://mibarruntonj.com/logo/logo.png)
+![Picante de camarón](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Peruvian_shrimp_picante_with_rice_20261017131431.webp)
  — $24.99
 - **ID:** 175
 - **URL:** https://mibarruntonj.com/plato/175
 - **Descripción en Inglés:** Creamy shrimp stew with rice
 
 ### Picante de mariscos
-![Picante de mariscos](https://mibarruntonj.com/logo/logo.png)
+![Picante de mariscos](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Mixed_seafood_picante_with_rice_20261017131431.webp)
  — $24.99
 - **ID:** 176
 - **URL:** https://mibarruntonj.com/plato/176
 - **Descripción en Inglés:** Creamy seafood stew with rice
 
 ### Camarón al ajillo
-![Camarón al ajillo](https://mibarruntonj.com/logo/logo.png)
+![Camarón al ajillo](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Garlic_shrimp_sauteed_in_butter_20261017131431.webp)
  — $24.99
 - **ID:** 177
 - **URL:** https://mibarruntonj.com/plato/177
 - **Descripción en Inglés:** Shrimp in garlic sauce
 
 ### Sudado de mariscos
-![Sudado de mariscos](https://mibarruntonj.com/logo/logo.png)
+![Sudado de mariscos](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Peruvian_seafood_stew_photography_20261017131431.webp)
  — $24.99
 - **ID:** 178
 - **URL:** https://mibarruntonj.com/plato/178
 - **Descripción en Inglés:** Steamed mixed seafood with onions and tomato
 
 ### Sudado de pescado (filete)
-![Sudado de pescado (filete)](https://mibarruntonj.com/logo/logo.png)
+![Sudado de pescado (filete)](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Fish_stewing_with_vegetables_20261017131431.webp)
  — $18.99
 - **ID:** 179
 - **URL:** https://mibarruntonj.com/plato/179
 - **Descripción en Inglés:** Steamed fish fillet with onions, tomato and rice
 
 ### Pescado a lo macho (filete)
-![Pescado a lo macho (filete)](https://mibarruntonj.com/logo/logo.png)
+![Pescado a lo macho (filete)](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Fried_fish_fillet_with_sauce_20261017131431.webp)
  — $24.99
 - **ID:** 180
 - **URL:** https://mibarruntonj.com/plato/180
 - **Descripción en Inglés:** Fried fish fillet with seafood cream and rice
 
 ### Pescado a la chorrillana
-![Pescado a la chorrillana](https://mibarruntonj.com/logo/logo.png)
+![Pescado a la chorrillana](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Fish_fillet_a_la_chorrillana_20261017131431.webp)
  — $18.99
 - **ID:** 181
 - **URL:** https://mibarruntonj.com/plato/181
 - **Descripción en Inglés:** Fried fish with onions and tomato, with rice
 
 ### Filete de pescado con arroz, ensalada y yuca
-![Filete de pescado con arroz, ensalada y yuca](https://mibarruntonj.com/logo/logo.png)
+![Filete de pescado con arroz, ensalada y yuca](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Grilled_fish_with_rice_and_20261017131431.webp)
  — $18.99
 - **ID:** 182
 - **URL:** https://mibarruntonj.com/plato/182
 - **Descripción en Inglés:** Fried fish fillet with rice, salad and fried cassava
 
 ### Salmón a la parrilla con arroz y ensalada
-![Salmón a la parrilla con arroz y ensalada](https://mibarruntonj.com/logo/logo.png)
+![Salmón a la parrilla con arroz y ensalada](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Grilled_salmon_with_rice_20261017131431.webp)
  — $24.99
 - **ID:** 183
 - **URL:** https://mibarruntonj.com/plato/183
 - **Descripción en Inglés:** Grilled salmon with rice and salad
 
 ### Arroz con camarones
-![Arroz con camarones](https://mibarruntonj.com/logo/logo.png)
+![Arroz con camarones](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Peruvian_style_rice_with_shrimp_20261017131431.webp)
  — $24.99
 - **ID:** 184
 - **URL:** https://mibarruntonj.com/plato/184
 - **Descripción en Inglés:** Yellow rice with shrimp
 
 ### Arroz con pulpo
-![Arroz con pulpo](https://mibarruntonj.com/logo/logo.png)
+![Arroz con pulpo](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Peruvian_octopus_rice_dish_20261017131431.webp)
  — $24.99
 - **ID:** 185
 - **URL:** https://mibarruntonj.com/plato/185
 - **Descripción en Inglés:** Yellow rice with octopus
 
 ### Tallarín en salsa de mariscos
-![Tallarín en salsa de mariscos](https://mibarruntonj.com/logo/logo.png)
+![Tallarín en salsa de mariscos](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Tallarin_with_creamy_seafood_sauce_20261017131431.webp)
  — $24.99
 - **ID:** 186
 - **URL:** https://mibarruntonj.com/plato/186
 - **Descripción en Inglés:** Spaghetti with creamy seafood stew
 
 ### Pescado entero (Pargo) con arroz, ensalada y yuca
-![Pescado entero (Pargo) con arroz, ensalada y yuca](https://mibarruntonj.com/logo/logo.png)
+![Pescado entero (Pargo) con arroz, ensalada y yuca](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Fried_fish_served_with_sides_20261017131431.webp)
  — $29.99
 - **ID:** 187
 - **URL:** https://mibarruntonj.com/plato/187
 - **Descripción en Inglés:** Whole red snapper with rice, salad and fried cassava
 
 ### Arroz con mariscos
-![Arroz con mariscos](https://mibarruntonj.com/logo/logo.png)
+![Arroz con mariscos](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Peruvian_seafood_rice_dish_20261017131431.webp)
  — $24.99
 - **ID:** 188
 - **URL:** https://mibarruntonj.com/plato/188
 - **Descripción en Inglés:** Yellow seafood rice
 
 ### Chaufa de mariscos
-![Chaufa de mariscos](https://mibarruntonj.com/logo/logo.png)
+![Chaufa de mariscos](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Peruvian_seafood_chaufa_fried_rice_20261017131431.webp)
  — $24.99
 - **ID:** 189
 - **URL:** https://mibarruntonj.com/plato/189
 - **Descripción en Inglés:** Seafood fried rice
 
 ### Chaufa de camarones
-![Chaufa de camarones](https://mibarruntonj.com/logo/logo.png)
+![Chaufa de camarones](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Shrimp_chaufa_fried_rice_20261017131431.webp)
  — $23.99
 - **ID:** 190
 - **URL:** https://mibarruntonj.com/plato/190
 - **Descripción en Inglés:** Shrimp fried rice
 
 ### Jalea y ceviche
-![Jalea y ceviche](https://mibarruntonj.com/logo/logo.png)
+![Jalea y ceviche](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Seafood_jelly_and_fish_ceviche_20261017131431.webp)
  — $34.99
 - **ID:** 191
 - **URL:** https://mibarruntonj.com/plato/191
 - **Descripción en Inglés:** Fried mixed seafood with diced fish in lemon juice
 
 ### Arroz con mariscos y ceviche
-![Arroz con mariscos y ceviche](https://mibarruntonj.com/logo/logo.png)
+![Arroz con mariscos y ceviche](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Peruvian_rice_and_fish_ceviche_20261017131431.webp)
  — $34.99
 - **ID:** 192
 - **URL:** https://mibarruntonj.com/plato/192
 - **Descripción en Inglés:** Peruvian style seafood yellow rice with diced fish in lemon juice
 
 ### Chaufa de mariscos y ceviche
-![Chaufa de mariscos y ceviche](https://mibarruntonj.com/logo/logo.png)
+![Chaufa de mariscos y ceviche](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Peruvian_seafood_chaufa_and_ceviche_20261017131431.webp)
  — $34.99
 - **ID:** 193
 - **URL:** https://mibarruntonj.com/plato/193
 - **Descripción en Inglés:** Seafood fried rice with diced fish in lemon juice
 
 ### Tripleta Marina
-![Tripleta Marina](https://mibarruntonj.com/logo/logo.png)
+![Tripleta Marina](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Peruvian_seafood_dishes_served_20261017131431.webp)
  — $48.99
 - **ID:** 194
 - **URL:** https://mibarruntonj.com/plato/194
@@ -1388,7 +1388,7 @@
 - **Detalle / Glosa:** Arroz con mariscos, jalea y ceviche
 
 ### Ronda Marina
-![Ronda Marina](https://mibarruntonj.com/logo/logo.png)
+![Ronda Marina](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Complete_seafood_round_specialties_20261017131431.webp)
  — $74.99
 - **ID:** 195
 - **URL:** https://mibarruntonj.com/plato/195
@@ -1399,49 +1399,49 @@
 ## Categoría: RONDAS CRIOLLAS (7 platos)
 
 ### Arroz con pollo huancaína + ceviche
-![Arroz con pollo huancaína + ceviche](https://mibarruntonj.com/fotos/196-arroz-con-pollo-huancaina-ceviche.jpg)
+![Arroz con pollo huancaína + ceviche](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Peruvian_food_dishes_combined_20261017131431.webp)
  — $28.99
 - **ID:** 196
 - **URL:** https://mibarruntonj.com/plato/196
 - **Descripción en Inglés:** Cilantro rice with chicken in huancaína sauce, plus cev
 
 ### Tallarín Rojo huancaína + ceviche
-![Tallarín Rojo huancaína + ceviche](https://mibarruntonj.com/fotos/197-tallarin-rojo-huancaina-ceviche.jpg)
+![Tallarín Rojo huancaína + ceviche](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Peruvian_food_combination_plate_20261017131431.webp)
  — $28.99
 - **ID:** 197
 - **URL:** https://mibarruntonj.com/plato/197
 - **Descripción en Inglés:** Tomato spaghetti with huancaína sauce, plus ceviche
 
 ### Carapulcra Mixta con huancaína + ceviche
-![Carapulcra Mixta con huancaína + ceviche](https://mibarruntonj.com/logo/logo.png)
+![Carapulcra Mixta con huancaína + ceviche](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Peruvian_Creole_dish_mixed_combo_20261017131431.webp)
  — $28.99
 - **ID:** 198
 - **URL:** https://mibarruntonj.com/plato/198
 - **Descripción en Inglés:** Mixed carapulcra with huancaína sauce, plus ceviche
 
 ### Cau-Cau con huancaína + ceviche
-![Cau-Cau con huancaína + ceviche](https://mibarruntonj.com/fotos/199-cau-cau-ceviche.jpg)
+![Cau-Cau con huancaína + ceviche](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Peruvian_food_dishes_combined_20261017131431_2.webp)
  — $28.99
 - **ID:** 199
 - **URL:** https://mibarruntonj.com/plato/199
 - **Descripción en Inglés:** Beef tripe stew with huancaína sauce, plus ceviche
 
 ### Cabrito Norteño con arroz y frejol + ceviche
-![Cabrito Norteño con arroz y frejol + ceviche](https://mibarruntonj.com/logo/logo.png)
+![Cabrito Norteño con arroz y frejol + ceviche](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Goat_stew_with_rice_and_20261017131431.webp)
  — $34.99
 - **ID:** 200
 - **URL:** https://mibarruntonj.com/plato/200
 - **Descripción en Inglés:** Northern-style goat stew with rice and beans, plus cevi
 
 ### Seco de Costilla de Res con arroz y frejol + ceviche
-![Seco de Costilla de Res con arroz y frejol + ceviche](https://mibarruntonj.com/fotos/201-seco-de-costilla-ceviche.jpg)
+![Seco de Costilla de Res con arroz y frejol + ceviche](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Beef_rib_seco_with_sides_20261017131431.webp)
  — $34.99
 - **ID:** 201
 - **URL:** https://mibarruntonj.com/plato/201
 - **Descripción en Inglés:** Beef rib stew with rice and beans, plus ceviche
 
 ### Pato a la Norteña con arroz y frejol + ceviche
-![Pato a la Norteña con arroz y frejol + ceviche](https://mibarruntonj.com/logo/logo.png)
+![Pato a la Norteña con arroz y frejol + ceviche](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Northern-style_duck_rice_with_ce__20261017131431.webp)
  — $29.99
 - **ID:** 202
 - **URL:** https://mibarruntonj.com/plato/202
@@ -1451,105 +1451,105 @@
 ## Categoría: BROASTER (15 platos)
 
 ### Pollo broaster con papas fritas y ensalada
-![Pollo broaster con papas fritas y ensalada](https://mibarruntonj.com/logo/logo.png)
+![Pollo broaster con papas fritas y ensalada](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/BBQ_chicken_with_fries_20261017131431.webp)
  — $16.99
 - **ID:** 203
 - **URL:** https://mibarruntonj.com/plato/203
 - **Descripción en Inglés:** Broasted chicken with french fries and salad
 
 ### Pollo broaster a lo pobre
-![Pollo broaster a lo pobre](https://mibarruntonj.com/logo/logo.png)
+![Pollo broaster a lo pobre](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Fried_chicken_a_lo_pobre_20261017131431.webp)
  — $19.99
 - **ID:** 204
 - **URL:** https://mibarruntonj.com/plato/204
 - **Descripción en Inglés:** Broasted chicken with french fries, salad, sweet planta
 
 ### Pollo salchi-broaster
-![Pollo salchi-broaster](https://mibarruntonj.com/logo/logo.png)
+![Pollo salchi-broaster](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Broaster_chicken_with_fries_20261017131431.webp)
  — $19.99
 - **ID:** 205
 - **URL:** https://mibarruntonj.com/plato/205
 - **Descripción en Inglés:** Broasted chicken with french fries, salad and hot dog
 
 ### Pollo broaster Acevichado
-![Pollo broaster Acevichado](https://mibarruntonj.com/logo/logo.png)
+![Pollo broaster Acevichado](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Fried_chicken_with_sauce_20261017131431.webp)
  — $16.99
 - **ID:** 206
 - **URL:** https://mibarruntonj.com/plato/206
 - **Descripción en Inglés:** Broasted chicken with french fries, salad and acevichad
 
 ### Pollo broaster BBQ
-![Pollo broaster BBQ](https://mibarruntonj.com/logo/logo.png)
+![Pollo broaster BBQ](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Chicken_wings_with_fries_salad_20261017131431.webp)
  — $16.99
 - **ID:** 207
 - **URL:** https://mibarruntonj.com/plato/207
 - **Descripción en Inglés:** Broasted chicken with french fries, salad and BBQ sauce
 
 ### Pollo chori-broaster
-![Pollo chori-broaster](https://mibarruntonj.com/fotos/208-pollo-chori-broaster.jpg)
+![Pollo chori-broaster](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Broaster_chicken_with_fries_and_20261017131431_2.webp)
  — $19.99
 - **ID:** 208
 - **URL:** https://mibarruntonj.com/plato/208
 - **Descripción en Inglés:** Broasted chicken with french fries, salad and chorizo
 
 ### Alitas broaster
-![Alitas broaster](https://mibarruntonj.com/logo/logo.png)
+![Alitas broaster](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Broasted_wings_with_french_fries_20261017131431.webp)
  — $16.99
 - **ID:** 209
 - **URL:** https://mibarruntonj.com/plato/209
 - **Descripción en Inglés:** Broasted wings with french fries and salad
 
 ### Alitas Acevichadas
-![Alitas Acevichadas](https://mibarruntonj.com/logo/logo.png)
+![Alitas Acevichadas](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Chicken_wings_with_french_fries_20261017131431.webp)
  — $16.99
 - **ID:** 210
 - **URL:** https://mibarruntonj.com/plato/210
 - **Descripción en Inglés:** Broasted wings with french fries, salad and acevichado
 
 ### Pollo broaster mostrito
-![Pollo broaster mostrito](https://mibarruntonj.com/logo/logo.png)
+![Pollo broaster mostrito](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Broasted_chicken_with_chaufa_rice_20261017131431.webp)
  — $17.99
 - **ID:** 211
 - **URL:** https://mibarruntonj.com/plato/211
 - **Descripción en Inglés:** Broasted chicken with french fries and chaufa
 
 ### Pollo broaster mostrito a lo pobre
-![Pollo broaster mostrito a lo pobre](https://mibarruntonj.com/fotos/212-mostrito-a-lo-pobre.jpg)
+![Pollo broaster mostrito a lo pobre](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Broaster_chicken_with_chaufa_rice_20261017131431.webp)
  — $22.99
 - **ID:** 212
 - **URL:** https://mibarruntonj.com/plato/212
 - **Descripción en Inglés:** With french fries, chaufa, sweet plantain and fried egg
 
 ### Pollo broaster salchimosrito
-![Pollo broaster salchimosrito](https://mibarruntonj.com/logo/logo.png)
+![Pollo broaster salchimosrito](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Peruvian_dish_with_fried_chicken_20261017131431.webp)
  — $22.99
 - **ID:** 213
 - **URL:** https://mibarruntonj.com/plato/213
 - **Descripción en Inglés:** With french fries, chaufa and hot dog
 
 ### Pollo broaster chori-mosrito
-![Pollo broaster chori-mosrito](https://mibarruntonj.com/logo/logo.png)
+![Pollo broaster chori-mosrito](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Peruvian_fried_chicken_meal_served_20261017131431.webp)
  — $22.99
 - **ID:** 214
 - **URL:** https://mibarruntonj.com/plato/214
 - **Descripción en Inglés:** With french fries, chaufa and chorizo
 
 ### Pollo broaster mostrito Acevichado
-![Pollo broaster mostrito Acevichado](https://mibarruntonj.com/logo/logo.png)
+![Pollo broaster mostrito Acevichado](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Peruvian_broasted_chicken_with_c__20261017131431.webp)
  — $19.99
 - **ID:** 215
 - **URL:** https://mibarruntonj.com/plato/215
 - **Descripción en Inglés:** With french fries and chaufa in acevichado sauce
 
 ### Pollo broaster mostrito Acevichado a lo pobre
-![Pollo broaster mostrito Acevichado a lo pobre](https://mibarruntonj.com/logo/logo.png)
+![Pollo broaster mostrito Acevichado a lo pobre](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Broaster_chicken_with_chaufa_rice_20261017131431_2.webp)
  — $22.99
 - **ID:** 216
 - **URL:** https://mibarruntonj.com/plato/216
 - **Descripción en Inglés:** With french fries, chaufa, sweet plantain and fried egg
 
 ### Pollo broaster mostrito Especial
-![Pollo broaster mostrito Especial](https://mibarruntonj.com/logo/logo.png)
+![Pollo broaster mostrito Especial](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Broaster_chicken_with_chaufa_rice_20261017131431.webp)
  — $25.99
 - **ID:** 217
 - **URL:** https://mibarruntonj.com/plato/217
@@ -1559,105 +1559,105 @@
 ## Categoría: GUARNICIONES (15 platos)
 
 ### Porción de arroz blanco
-![Porción de arroz blanco](https://mibarruntonj.com/logo/logo.png)
+![Porción de arroz blanco](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Peruvian_white_rice_in_bowl_20261017131431.webp)
  — $4.99
 - **ID:** 218
 - **URL:** https://mibarruntonj.com/plato/218
 - **Descripción en Inglés:** White rice
 
 ### Porción de tostones
-![Porción de tostones](https://mibarruntonj.com/logo/logo.png)
+![Porción de tostones](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Crispy_fried_green_plantain_tost__20261017131431.webp)
  — $6.99
 - **ID:** 219
 - **URL:** https://mibarruntonj.com/plato/219
 - **Descripción en Inglés:** Fried green plantain
 
 ### Porción de maduros
-![Porción de maduros](https://mibarruntonj.com/logo/logo.png)
+![Porción de maduros](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Fried_plantains_on_plate_20261017131431.webp)
  — $6.99
 - **ID:** 220
 - **URL:** https://mibarruntonj.com/plato/220
 - **Descripción en Inglés:** Sweet fried plantain
 
 ### Porción de yuca
-![Porción de yuca](https://mibarruntonj.com/logo/logo.png)
+![Porción de yuca](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Fried_yucca_portion_20261017131431.webp)
  — $6.99
 - **ID:** 221
 - **URL:** https://mibarruntonj.com/plato/221
 - **Descripción en Inglés:** Cassava, boiled or fried
 
 ### Porción papas fritas Regular
-![Porción papas fritas Regular](https://mibarruntonj.com/logo/logo.png)
+![Porción papas fritas Regular](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/French_fries_on_plate_20261017131431.webp)
  — $7.99
 - **ID:** 222
 - **URL:** https://mibarruntonj.com/plato/222
 - **Descripción en Inglés:** Regular french fries
 
 ### Porción papas naturales
-![Porción papas naturales](https://mibarruntonj.com/logo/logo.png)
+![Porción papas naturales](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Peruvian_french_fries_20261017131431.webp)
  — $9.99
 - **ID:** 223
 - **URL:** https://mibarruntonj.com/plato/223
 - **Descripción en Inglés:** Fresh-cut fries with skin
 
 ### Porción Salsa Criolla
-![Porción Salsa Criolla](https://mibarruntonj.com/logo/logo.png)
+![Porción Salsa Criolla](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Peruvian_salsa_criolla_in_container_20261017131431.webp)
  — $6.99
 - **ID:** 224
 - **URL:** https://mibarruntonj.com/plato/224
 - **Descripción en Inglés:** Peruvian onion and cilantro relish
 
 ### Porción Ensalada Verde de lechuga
-![Porción Ensalada Verde de lechuga](https://mibarruntonj.com/logo/logo.png)
+![Porción Ensalada Verde de lechuga](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Portion_of_fresh_green_salad_20261017131431.webp)
  — $7.99
 - **ID:** 225
 - **URL:** https://mibarruntonj.com/plato/225
 - **Descripción en Inglés:** Green lettuce salad
 
 ### Porción de Cancha
-![Porción de Cancha](https://mibarruntonj.com/logo/logo.png)
+![Porción de Cancha](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Peruvian_cancha_serrana_in_bowl_20261017131431.webp)
  — $6.99
 - **ID:** 226
 - **URL:** https://mibarruntonj.com/plato/226
 - **Descripción en Inglés:** Roasted corn
 
 ### Crema de la huancaína 2 oz
-![Crema de la huancaína 2 oz](https://mibarruntonj.com/logo/logo.png)
+![Crema de la huancaína 2 oz](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Huancaina_cream_in_small_container_20261017131431.webp)
  — $1.99
 - **ID:** 227
 - **URL:** https://mibarruntonj.com/plato/227
 - **Descripción en Inglés:** Huancaína cream
 
 ### Ají verde 2 oz
-![Ají verde 2 oz](https://mibarruntonj.com/logo/logo.png)
+![Ají verde 2 oz](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Peruvian_green_chili_in_container_20261017131431.webp)
  — $0.99
 - **ID:** 228
 - **URL:** https://mibarruntonj.com/plato/228
 - **Descripción en Inglés:** Green ají sauce
 
 ### Mayonesa casera 2 oz
-![Mayonesa casera 2 oz](https://mibarruntonj.com/logo/logo.png)
+![Mayonesa casera 2 oz](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Mayonnaise_in_a_container_20261017131431.webp)
  — $1.49
 - **ID:** 229
 - **URL:** https://mibarruntonj.com/plato/229
 - **Descripción en Inglés:** House mayonnaise
 
 ### Aceituna casera 2 oz
-![Aceituna casera 2 oz](https://mibarruntonj.com/logo/logo.png)
+![Aceituna casera 2 oz](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Homemade_crushed_olive_in_container_20261017131431.webp)
  — $1.49
 - **ID:** 230
 - **URL:** https://mibarruntonj.com/plato/230
 - **Descripción en Inglés:** House olive sauce
 
 ### Salsa Rosada 2 oz
-![Salsa Rosada 2 oz](https://mibarruntonj.com/logo/logo.png)
+![Salsa Rosada 2 oz](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Pink_salsa_in_container_20261017131431.webp)
  — $1.49
 - **ID:** 231
 - **URL:** https://mibarruntonj.com/plato/231
 - **Descripción en Inglés:** Pink sauce
 
 ### Rocoto pamillero 2 oz
-![Rocoto pamillero 2 oz](https://mibarruntonj.com/logo/logo.png)
+![Rocoto pamillero 2 oz](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Red_rocoto_hot_sauce_container_20261017131431.webp)
  — $1.49
 - **ID:** 232
 - **URL:** https://mibarruntonj.com/plato/232
@@ -1667,42 +1667,42 @@
 ## Categoría: BEBIDAS (7 platos)
 
 ### Chicha morada
-![Chicha morada](https://mibarruntonj.com/logo/logo.png)
+![Chicha morada](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Pitcher_of_chicha_morada_20261017131431.webp)
  — $3.99
 - **ID:** 233
 - **URL:** https://mibarruntonj.com/plato/233
 - **Descripción en Inglés:** Purple corn drink · vaso o jarra / glass or pitcher
 
 ### Agua de manzana
-![Agua de manzana](https://mibarruntonj.com/fotos/234-agua-de-manzana.jpg)
+![Agua de manzana](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Glass_of_apple_water_20261017131431.webp)
  — $3.99
 - **ID:** 234
 - **URL:** https://mibarruntonj.com/plato/234
 - **Descripción en Inglés:** Apple water · vaso o jarra / glass or pitcher
 
 ### Agua de maracuyá
-![Agua de maracuyá](https://mibarruntonj.com/fotos/235-agua-de-maracuya.jpg)
+![Agua de maracuyá](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Glass_of_iced_passion_fruit_20261017131431.webp)
  — $3.99
 - **ID:** 235
 - **URL:** https://mibarruntonj.com/plato/235
 - **Descripción en Inglés:** Passion fruit water · vaso o jarra / glass or pitcher
 
 ### Agua de piña
-![Agua de piña](https://mibarruntonj.com/fotos/236-agua-de-pina.jpg)
+![Agua de piña](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Glass_of_Peruvian_pineapple_water_20261017131431.webp)
  — $3.99
 - **ID:** 236
 - **URL:** https://mibarruntonj.com/plato/236
 - **Descripción en Inglés:** Pineapple water · vaso o jarra / glass or pitcher
 
 ### Emoliente
-![Emoliente](https://mibarruntonj.com/fotos/237-emoliente.jpg)
+![Emoliente](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Peruvian_emolient_glass_with_barley_20261017131431.webp)
  — $3.99
 - **ID:** 237
 - **URL:** https://mibarruntonj.com/plato/237
 - **Descripción en Inglés:** Peruvian herb beverage
 
 ### Inca Kola 2 Litros
-![Inca Kola 2 Litros](https://mibarruntonj.com/platos_webp/inca_kola_2l.webp)
+![Inca Kola 2 Litros](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/inca_kola_2l.webp)
  — $6.99
 - **ID:** 238
 - **URL:** https://mibarruntonj.com/plato/238
@@ -1710,7 +1710,7 @@
 - **Detalle / Glosa:** Inca Kola 2 Litros
 
 ### Sodas en lata (12 oz)
-![Sodas en lata (12 oz)](https://mibarruntonj.com/logo/logo.png)
+![Sodas en lata (12 oz)](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/Soda_can_on_table_20261017131431.webp)
  — $1.99
 - **ID:** 239
 - **URL:** https://mibarruntonj.com/plato/239
@@ -1720,63 +1720,63 @@
 ## Categoría: POSTRES CASEROS (9 platos)
 
 ### Crema Volteada
-![Crema Volteada](https://mibarruntonj.com/platos_webp/crema_volteada.webp)
+![Crema Volteada](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/crema_volteada.webp)
  — $7.99
 - **ID:** 240
 - **URL:** https://mibarruntonj.com/plato/240
 - **Descripción en Inglés:** Traditional Peruvian caramel egg custard
 
 ### Tres Leches
-![Tres Leches](https://mibarruntonj.com/platos_webp/tres_leches.webp)
+![Tres Leches](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/tres_leches.webp)
  — $7.99
 - **ID:** 241
 - **URL:** https://mibarruntonj.com/plato/241
 - **Descripción en Inglés:** Rich sponge cake soaked in three milks
 
 ### Torta de chocolate
-![Torta de chocolate](https://mibarruntonj.com/platos_webp/torta_chocolate.webp)
+![Torta de chocolate](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/torta_chocolate.webp)
  — $7.99
 - **ID:** 242
 - **URL:** https://mibarruntonj.com/plato/242
 - **Descripción en Inglés:** Classic Peruvian chocolate cake with fudge
 
 ### Picarones
-![Picarones](https://mibarruntonj.com/platos_webp/picarones.webp)
+![Picarones](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/picarones.webp)
  — $8.99
 - **ID:** 243
 - **URL:** https://mibarruntonj.com/plato/243
 - **Descripción en Inglés:** Crispy sweet potato & squash rings with chancaca spiced syrup
 
 ### Tiramisú
-![Tiramisú](https://mibarruntonj.com/platos_webp/tiramisu.webp)
+![Tiramisú](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/tiramisu.webp)
  — $7.99
 - **ID:** 244
 - **URL:** https://mibarruntonj.com/plato/244
 - **Descripción en Inglés:** Coffee-flavoured Italian-Peruvian dessert
 
 ### Gelatina sola
-![Gelatina sola](https://mibarruntonj.com/platos_webp/gelatina_sola.webp)
+![Gelatina sola](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/gelatina_sola.webp)
  — $4.99
 - **ID:** 245
 - **URL:** https://mibarruntonj.com/plato/245
 - **Descripción en Inglés:** Fruit gelatin dessert
 
 ### Gelatina con flan
-![Gelatina con flan](https://mibarruntonj.com/platos_webp/gelatina_con_flan.webp)
+![Gelatina con flan](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/gelatina_con_flan.webp)
  — $4.99
 - **ID:** 246
 - **URL:** https://mibarruntonj.com/plato/246
 - **Descripción en Inglés:** Layered gelatin and vanilla flan
 
 ### Mazamorra morada
-![Mazamorra morada](https://mibarruntonj.com/platos_webp/mazamorra_morada.webp)
+![Mazamorra morada](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/mazamorra_morada.webp)
  — $4.99
 - **ID:** 247
 - **URL:** https://mibarruntonj.com/plato/247
 - **Descripción en Inglés:** Traditional purple corn pudding with dried fruit
 
 ### Arroz con leche
-![Arroz con leche](https://mibarruntonj.com/platos_webp/arroz_con_leche.webp)
+![Arroz con leche](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/arroz_con_leche.webp)
  — $4.99
 - **ID:** 248
 - **URL:** https://mibarruntonj.com/plato/248
@@ -1786,113 +1786,113 @@
 ## Categoría: BATIDOS & JUGOS (14 platos)
 
 ### Jugo de naranja natural
-![Jugo de naranja natural](https://mibarruntonj.com/platos_webp/jugo_de_naranja.webp)
+![Jugo de naranja natural](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/jugo_de_naranja.webp)
  — $7.99
 - **ID:** 249
 - **URL:** https://mibarruntonj.com/plato/249
 - **Descripción en Inglés:** Freshly squeezed natural orange juice
 
 ### Batido de Piña
-![Batido de Piña](https://mibarruntonj.com/platos_webp/batido_de_pina.webp)
+![Batido de Piña](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/batido_de_pina.webp)
  — $6.99
 - **ID:** 250
 - **URL:** https://mibarruntonj.com/plato/250
 - **Descripción en Inglés:** Pineapple Smoothie
-- **Detalle / Glosa:** Piña dorada seleccionada licuada con hielo al punto perfecto
+- **Detalle / Glosa:** Piña dorada seleccionada licuada con hielo al punto perfecto. Elige entre agua/leche regular o leche Carnation.
 
 ### Batido de Fresa
-![Batido de Fresa](https://mibarruntonj.com/platos_webp/batido_de_fresa.webp)
+![Batido de Fresa](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/batido_de_fresa.webp)
  — $6.99
 - **ID:** 251
 - **URL:** https://mibarruntonj.com/plato/251
 - **Descripción en Inglés:** Strawberry Smoothie
-- **Detalle / Glosa:** Fresas frescas seleccionadas licuadas con la base de tu preferencia
+- **Detalle / Glosa:** Fresas frescas seleccionadas licuadas con la base de tu preferencia: agua, leche regular o leche Carnation.
 
 ### Batido de Papaya
-![Batido de Papaya](https://mibarruntonj.com/platos_webp/batido_de_papaya.webp)
+![Batido de Papaya](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/batido_de_papaya.webp)
  — $6.99
 - **ID:** 252
 - **URL:** https://mibarruntonj.com/plato/252
 - **Descripción en Inglés:** Papaya Smoothie
-- **Detalle / Glosa:** Papaya fresca licuada a tu gusto
+- **Detalle / Glosa:** Papaya fresca licuada a tu gusto.
 
 ### Batido de Maracuyá
-![Batido de Maracuyá](https://mibarruntonj.com/platos_webp/batido_de_maracuya.webp)
+![Batido de Maracuyá](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/batido_de_maracuya.webp)
  — $6.99
 - **ID:** 253
 - **URL:** https://mibarruntonj.com/plato/253
 - **Descripción en Inglés:** Passion Fruit Smoothie
-- **Detalle / Glosa:** Pura pulpa aromática de maracuyá fresca y refrescante
+- **Detalle / Glosa:** Pura pulpa aromática de maracuyá fresca y refrescante.
 
 ### Batido de Mango
-![Batido de Mango](https://mibarruntonj.com/platos_webp/batido_de_mango.webp)
+![Batido de Mango](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/batido_de_mango.webp)
  — $6.99
 - **ID:** 254
 - **URL:** https://mibarruntonj.com/plato/254
 - **Descripción en Inglés:** Mango Smoothie
-- **Detalle / Glosa:** Mango maduro dulce y cremoso licuado al instante
+- **Detalle / Glosa:** Mango maduro dulce y cremoso licuado al instante.
 
 ### Batido de Guanábana
-![Batido de Guanábana](https://mibarruntonj.com/platos_webp/batido_de_guanabana.webp)
+![Batido de Guanábana](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/batido_de_guanabana.webp)
  — $6.99
 - **ID:** 255
 - **URL:** https://mibarruntonj.com/plato/255
 - **Descripción en Inglés:** Soursop Smoothie
-- **Detalle / Glosa:** Deliciosa pulpa exótica de guanábana natural, cremosa y digestiva
+- **Detalle / Glosa:** Deliciosa pulpa exótica de guanábana natural, cremosa y digestiva.
 
 ### Batido de Plátano
-![Batido de Plátano](https://mibarruntonj.com/platos_webp/batido_de_platano.webp)
+![Batido de Plátano](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/batido_de_platano.webp)
  — $6.99
 - **ID:** 256
 - **URL:** https://mibarruntonj.com/plato/256
 - **Descripción en Inglés:** Banana Smoothie
-- **Detalle / Glosa:** Plátanos de seda maduros licuados, nutritivo y energizante
+- **Detalle / Glosa:** Plátanos de seda maduros licuados, nutritivo y energizante.
 
 ### Batido de Chocolate
-![Batido de Chocolate](https://mibarruntonj.com/platos_webp/batido_de_chocolate.webp)
+![Batido de Chocolate](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/batido_de_chocolate.webp)
  — $6.99
 - **ID:** 257
 - **URL:** https://mibarruntonj.com/plato/257
 - **Descripción en Inglés:** Chocolate Smoothie
-- **Detalle / Glosa:** Cremoso y tentador batido de chocolate preparado con selecto cacao
+- **Detalle / Glosa:** Cremoso y tentador batido de chocolate preparado con selecto cacao.
 
 ### Batido de Vainilla
-![Batido de Vainilla](https://mibarruntonj.com/platos_webp/batido_de_vainilla.webp)
+![Batido de Vainilla](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/batido_de_vainilla.webp)
  — $6.99
 - **ID:** 258
 - **URL:** https://mibarruntonj.com/plato/258
 - **Descripción en Inglés:** Vanilla Smoothie
-- **Detalle / Glosa:** Clásico y suave batido con esencia aromática de vainilla
+- **Detalle / Glosa:** Clásico y suave batido con esencia aromática de vainilla.
 
 ### Batido de Lúcuma
-![Batido de Lúcuma](https://mibarruntonj.com/platos_webp/batido_de_lucuma.webp)
+![Batido de Lúcuma](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/batido_de_lucuma.webp)
  — $6.99
 - **ID:** 259
 - **URL:** https://mibarruntonj.com/plato/259
 - **Descripción en Inglés:** Lucuma Smoothie
-- **Detalle / Glosa:** El auténtico oro de los Incas: lúcuma peruana cremosa y de sabor inigualable
+- **Detalle / Glosa:** El auténtico oro de los Incas: lúcuma peruana cremosa y de sabor inigualable.
 
 ### Batido de Mora
-![Batido de Mora](https://mibarruntonj.com/platos_webp/batido_de_mora.webp)
+![Batido de Mora](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/batido_de_mora.webp)
  — $6.99
 - **ID:** 260
 - **URL:** https://mibarruntonj.com/plato/260
 - **Descripción en Inglés:** Blackberry Smoothie
-- **Detalle / Glosa:** Moras silvestres frescas con el balance ideal de acidez y dulzor
+- **Detalle / Glosa:** Moras silvestres frescas con el balance ideal de acidez y dulzor.
 
 ### Batido Surtido Peruano
-![Batido Surtido Peruano](https://mibarruntonj.com/platos_webp/batido_surtido_peruano.webp)
+![Batido Surtido Peruano](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/batido_surtido_peruano.webp)
  — $6.99
 - **ID:** 261
 - **URL:** https://mibarruntonj.com/plato/261
 - **Descripción en Inglés:** Peruvian Mixed Fruit Smoothie
-- **Detalle / Glosa:** El tradicional surtido de las juguerías peruanas: papaya, fresa, piña, mango, beterraga y plátano
+- **Detalle / Glosa:** El tradicional surtido de las juguerías peruanas: papaya, fresa, piña, mango, beterraga y plátano.
 
 ### Batido Especial Peruano
-![Batido Especial Peruano](https://mibarruntonj.com/platos_webp/batido_especial_peruano.webp)
+![Batido Especial Peruano](https://scvlxcgmhbwjmvycrttf.supabase.co/storage/v1/object/public/dishes/platos_webp/batido_especial_peruano.webp)
  — $6.99
 - **ID:** 262
 - **URL:** https://mibarruntonj.com/plato/262
 - **Descripción en Inglés:** Peruvian Special Rich Smoothie
-- **Detalle / Glosa:** El clásico reconstituyente peruano: fresa, piña, mango, beterraga, plátano, leche, huevo y algarrobina
+- **Detalle / Glosa:** El clásico reconstituyente peruano: fresa, piña, mango, beterraga, plátano, leche, huevo y algarrobina.
 

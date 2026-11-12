@@ -1,12 +1,66 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { createClient } from '@supabase/supabase-js';
+import './env_loader.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, '..');
 const distDir = path.join(rootDir, 'dist');
 const distIndexPath = path.join(distDir, 'index.html');
+
+async function loadMergedCatalog() {
+  const { DISHES_DATA, CATEGORIES_DATA } = await import('../src/data/menuData.js');
+  const dishesMap = new Map(DISHES_DATA.map(d => [String(d.id), { ...d }]));
+  const categoriesMap = new Map(CATEGORIES_DATA.map(c => [String(c.id), { ...c }]));
+
+  try {
+    const supabaseUrl = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL || 'https://scvlxcgmhbwjmvycrttf.supabase.co';
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY;
+    if (supabaseUrl && supabaseKey) {
+      const supabase = createClient(supabaseUrl, supabaseKey);
+      const [{ data: remoteCats }, { data: remoteDishes }] = await Promise.all([
+        supabase.from('categories').select('*').neq('is_active', false),
+        supabase.from('dishes').select('*').neq('is_active', false)
+      ]);
+      if (Array.isArray(remoteCats)) {
+        for (const rc of remoteCats) {
+          if (!categoriesMap.has(String(rc.id))) {
+            categoriesMap.set(String(rc.id), {
+              id: rc.id,
+              name: rc.name,
+              nameEn: rc.name_en || ''
+            });
+          }
+        }
+      }
+      if (Array.isArray(remoteDishes)) {
+        for (const rd of remoteDishes) {
+          const existing = dishesMap.get(String(rd.id)) || {};
+          const price = Number(rd.price ?? existing.price ?? 0);
+          dishesMap.set(String(rd.id), {
+            ...existing,
+            id: existing.id ?? rd.id,
+            name: rd.name || existing.name,
+            nameEn: rd.name_en || rd.description || existing.nameEn || '',
+            glosa: rd.description || existing.glosa || '',
+            price,
+            priceDisplay: `$${price.toFixed(2)}`,
+            category: rd.category_id || existing.category || 'criolla',
+            platosImage: rd.platos_image || existing.platosImage || null,
+            image: rd.image_url || existing.image || null
+          });
+        }
+      }
+    }
+  } catch (_) {}
+
+  return {
+    DISHES_DATA: Array.from(dishesMap.values()),
+    CATEGORIES_DATA: Array.from(categoriesMap.values())
+  };
+}
 
 async function prerenderOpenGraph() {
   if (!fs.existsSync(distIndexPath)) {
@@ -26,7 +80,7 @@ async function prerenderOpenGraph() {
       console.log(`[prerender-og] Inlined ${cssRelPath} (${(cssContent.length / 1024).toFixed(1)} KB) into dist/index.html to eliminate render-blocking CSS.`);
     }
   }
-  const { DISHES_DATA, CATEGORIES_DATA } = await import('../src/data/menuData.js');
+  const { DISHES_DATA, CATEGORIES_DATA } = await loadMergedCatalog();
   
   let platosMap = {};
   try {
@@ -95,11 +149,12 @@ async function prerenderOpenGraph() {
       ? `${dish.nameEn}. ¡Prueba nuestra especialidad en Mi Barrunto, auténtica comida criolla y marina en Paterson, NJ!`
       : `${dish.name} preparado al momento con la receta tradicional de Mi Barrunto en Paterson, NJ.`;
 
-    // Resolver ruta de imagen
+    // Resolver ruta de imagen (soporta rutas locales y URLs absolutas de Supabase Storage)
     let relImage = dish.platosImage || platosMap[dish.id] || dish.image || '/logo/logo.png';
     if (relImage.startsWith('./')) relImage = relImage.replace(/^\.\//, '/');
-    if (!relImage.startsWith('/')) relImage = '/' + relImage;
-    const fullImageUrl = `${baseUrl}${relImage}`;
+    const fullImageUrl = relImage.startsWith('http')
+      ? relImage
+      : `${baseUrl}${relImage.startsWith('/') ? '' : '/'}${relImage}`;
     const pageUrl = `${baseUrl}/plato/${dish.id}`;
 
     let dishHtml = baseHtml
@@ -172,6 +227,11 @@ async function prerenderOpenGraph() {
 
   // Copia fallback a dist/plato/index.html
   fs.writeFileSync(path.join(distDir, 'plato', 'index.html'), baseHtml, 'utf-8');
+
+  // Eliminar dist/sitemap.xml y dist/llms.txt estáticos para que los rewrites de vercel.json
+  // sirvan siempre /api/sitemap y /api/llms en tiempo real desde Supabase
+  try { fs.unlinkSync(path.join(distDir, 'sitemap.xml')); } catch (_) {}
+  try { fs.unlinkSync(path.join(distDir, 'llms.txt')); } catch (_) {}
 
   console.log(`[prerender-og] Generadas ${generatedCount} páginas estáticas con metadatos Open Graph listos para redes sociales.`);
 }

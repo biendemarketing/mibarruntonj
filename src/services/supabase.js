@@ -166,10 +166,6 @@ export const ordersService = {
       .single();
 
     if (error) throw error;
-    // Ping automático para indexación inmediata del nuevo plato en Google & Bing
-    try {
-      notifySearchEngines(`https://mibarruntonj.com/plato/${data.id || id}`);
-    } catch (_) {}
     return data;
   },
 
@@ -439,6 +435,9 @@ export const menuService = {
       .single();
 
     if (error) throw error;
+    try {
+      notifySearchEngines(`https://mibarruntonj.com/plato/${data.id || id}`);
+    } catch (_) {}
     return data;
   },
 
@@ -455,6 +454,9 @@ export const menuService = {
       .single();
 
     if (error) throw error;
+    try {
+      notifySearchEngines(`https://mibarruntonj.com/plato/${data.id || id}`);
+    } catch (_) {}
     return data;
   },
 

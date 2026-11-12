@@ -20,11 +20,11 @@ export default async function handler(req, res) {
       { loc: `${baseUrl}/llms-full.txt`, priority: '0.7', changefreq: 'weekly' }
     ];
 
-    // Consultar platos activos directamente en Supabase en tiempo real
-    const { data: dishes, error } = await supabase
-      .from('dishes')
-      .select('id, updated_at, is_active')
-      .neq('is_active', false);
+    // Consultar categorías y platos activos directamente en Supabase en tiempo real
+    const [{ data: dbCategories }, { data: dishes }] = await Promise.all([
+      supabase.from('categories').select('id, is_active').neq('is_active', false),
+      supabase.from('dishes').select('id, updated_at, is_active').neq('is_active', false)
+    ]);
 
     let xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -40,14 +40,17 @@ export default async function handler(req, res) {
 `;
     }
 
-    
     // Categorías principales de la carta para Google Sitelinks
-    const categories = [
+    const defaultCategories = [
       'sandwiches', 'desayuno', 'entradas', 'sopas', 'criolla',
       'parrillas', 'ceviches', 'mariscos', 'rondas', 'broaster',
       'sides', 'bebidas', 'postres', 'batidos'
     ];
-    for (const cat of categories) {
+    const categoryIds = Array.from(new Set([
+      ...defaultCategories,
+      ...(dbCategories ? dbCategories.map(c => c.id) : [])
+    ]));
+    for (const cat of categoryIds) {
       xml += `  <url>
     <loc>${baseUrl}/categoria/${cat}</loc>
     <lastmod>${lastmod}</lastmod>
@@ -73,8 +76,7 @@ export default async function handler(req, res) {
     xml += `</urlset>`;
 
     res.setHeader('Content-Type', 'application/xml; charset=utf-8');
-    // Cache de 1 hora en CDN perimetral, se revalida al fondo
-    res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=86400');
+    res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=600');
     return res.status(200).send(xml);
   } catch (err) {
     console.error('Error generating dynamic sitemap:', err);

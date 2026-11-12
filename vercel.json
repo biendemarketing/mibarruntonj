@@ -87,6 +87,10 @@
       "destination": "/logo/logo.png"
     },
     {
+      "source": "/plato/:id",
+      "destination": "/api/plato-seo?id=:id"
+    },
+    {
       "source": "/((?!api/|assets/|fotos/|logo/|LogoPWA/|platos_webp/|fonts/|.*\\..*).*)",
       "destination": "/index.html"
     }
